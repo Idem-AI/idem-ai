@@ -1,9 +1,4 @@
-import {
-  Component,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -29,130 +24,20 @@ import { DeploymentService } from '../../../../../services/deployment.service';
 import { Router } from '@angular/router';
 import { CookieService } from '../../../../../../../shared/services/cookie.service';
 import { Select } from 'primeng/select';
+import { ALL_COMPONENTS_LIST } from './datas';
 
-const ALL_COMPONENTS_LIST: CloudComponentDetailed[] = [
-  {
-    id: 'ec2',
-    name: 'EC2 Instance',
-    description: 'Virtual compute capacity in the cloud',
-    category: 'Compute',
-    provider: 'aws',
-
-    icon: 'pi pi-server',
-    pricing: '$0.0116/hour',
-    options: [
-      {
-        name: 'instanceType',
-        label: 'Instance Type',
-        type: 'select',
-        required: true,
-        options: [
-          { label: 't2.micro', value: 't2.micro' },
-          { label: 't2.small', value: 't2.small' },
-          { label: 't2.medium', value: 't2.medium' },
-        ],
-      },
-      {
-        name: 'storage',
-        label: 'Storage (GB)',
-        type: 'number',
-        required: true,
-        defaultValue: 20,
-      },
-    ],
-  },
-  {
-    id: 'rds',
-    name: 'RDS Database',
-    description: 'Managed relational database service',
-    category: 'Database',
-    provider: 'aws',
-    icon: 'pi pi-database',
-    pricing: '$0.017/hour',
-    options: [
-      {
-        name: 'engine',
-        label: 'Database Engine',
-        type: 'select',
-        required: true,
-        options: [
-          { label: 'MySQL', value: 'mysql' },
-          { label: 'PostgreSQL', value: 'postgres' },
-          { label: 'MariaDB', value: 'mariadb' },
-        ],
-      },
-      {
-        name: 'multiAZ',
-        label: 'Multi-AZ Deployment',
-        type: 'toggle',
-        required: false,
-        defaultValue: false,
-      },
-    ],
-  },
-  {
-    id: 'compute-engine',
-    name: 'Compute Engine',
-    description: 'Virtual machines running in Google Cloud',
-    category: 'Compute',
-    provider: 'gcp',
-    icon: 'pi pi-server',
-    pricing: '$0.0104/hour',
-    options: [
-      {
-        name: 'machineType',
-        label: 'Machine Type',
-        type: 'select',
-        required: true,
-        options: [
-          { label: 'e2-micro', value: 'e2-micro' },
-          { label: 'e2-small', value: 'e2-small' },
-          { label: 'e2-medium', value: 'e2-medium' },
-        ],
-      },
-      {
-        name: 'bootDiskSize',
-        label: 'Boot Disk Size (GB)',
-        type: 'number',
-        required: true,
-        defaultValue: 10,
-      },
-    ],
-  },
-  {
-    id: 'virtual-machine',
-    name: 'Virtual Machine',
-    description: 'Virtual machines in Azure',
-    category: 'Compute',
-    provider: 'azure',
-    icon: 'pi pi-server',
-    pricing: '$0.0124/hour',
-    options: [
-      {
-        name: 'vmSize',
-        label: 'VM Size',
-        type: 'select',
-        required: true,
-        options: [
-          { label: 'Standard_B1s', value: 'Standard_B1s' },
-          { label: 'Standard_B1ms', value: 'Standard_B1ms' },
-          { label: 'Standard_B2s', value: 'Standard_B2s' },
-        ],
-      },
-      {
-        name: 'osDiskSize',
-        label: 'OS Disk Size (GB)',
-        type: 'number',
-        required: true,
-        defaultValue: 30,
-      },
-    ],
-  },
-];
 @Component({
   selector: 'app-expert-deployment',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, DialogModule, InputTextModule, ButtonModule, Select],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    DialogModule,
+    InputTextModule,
+    ButtonModule,
+    Select,
+  ],
   templateUrl: './expert-deployment.html',
   styleUrl: './expert-deployment.css',
 })
@@ -174,30 +59,30 @@ export class ExpertDeployment {
   // Git repository state
   protected readonly gitBranches = signal<string[]>([]);
   protected readonly loadingGitInfo = signal<boolean>(false);
-  
+
   /**
    * Fetches Git branches for the repository URL in the form
    */
   protected fetchGitBranches(): void {
     const repoUrl = this.deploymentConfigForm.get('repoUrl')?.value;
-    
+
     if (!repoUrl || repoUrl.trim() === '') {
       this.gitBranches.set([]);
       return;
     }
-    
+
     this.loadingGitInfo.set(true);
-    
+
     this.deploymentService.validateGitRepository(repoUrl).subscribe({
       next: (branches) => {
         this.gitBranches.set(branches);
-        
+
         // If branches are available and current branch is not in the list, select the first branch
         const currentBranch = this.deploymentConfigForm.get('branch')?.value;
         if (branches.length > 0 && !branches.includes(currentBranch)) {
           this.deploymentConfigForm.get('branch')?.setValue(branches[0]);
         }
-        
+
         this.loadingGitInfo.set(false);
       },
       error: (error) => {
@@ -205,7 +90,7 @@ export class ExpertDeployment {
         this.gitBranches.set([]);
         this.loadingGitInfo.set(false);
         // Don't show error message to user as this is optional
-      }
+      },
     });
   }
 
@@ -240,7 +125,7 @@ export class ExpertDeployment {
   protected submitDeployment(): void {
     if (this.deploymentConfigForm.invalid) {
       // Mark form controls as touched to show validation errors
-      Object.keys(this.deploymentConfigForm.controls).forEach(key => {
+      Object.keys(this.deploymentConfigForm.controls).forEach((key) => {
         this.deploymentConfigForm.get(key)?.markAsTouched();
       });
       return;
@@ -298,8 +183,6 @@ export class ExpertDeployment {
 
     this.expertForm = this.formBuilder.group({});
   }
-  
-
 
   // --- EXPERT MODE ---
   protected addComponentToArchitecture(componentId: string): void {

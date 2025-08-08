@@ -18,7 +18,7 @@ export const environment = {
       llmModel: 'gpt-3.5-turbo',
     },
     webgen: {
-      url: 'https://webgen.idem.africa',
+      url: 'https://appgen.idem.africa',
     },
     diagen: {
       url: 'http://chart.idem.africa',
