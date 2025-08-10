@@ -170,7 +170,7 @@
         <!-- Form Mode for tfvars -->
         <div class="bg-gray-900 rounded border border-gray-600 overflow-hidden">
           <app-tfvars-form-editor
-            [formData]="tfVarsFormDataSignal()"
+            [formData]="tfVarsFormDataSignal()!"
             [readonly]="false"
             (formDataChanged)="onTfVarsFormDataChanged($event)"
           ></app-tfvars-form-editor>

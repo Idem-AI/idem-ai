@@ -1,4 +1,4 @@
-<div class="tfvars-form-editor h-full flex flex-col">
+<div class="tfvars-form-editor h-full flex flex-col p-4">
   @if (hasData()) {
   <!-- Form Header -->
   <div class="flex-shrink-0 glass-card p-4 mb-4">
@@ -10,7 +10,6 @@
         label="Add Variable"
         icon="pi pi-plus"
         size="small"
-        class="outer-button"
         (onClick)="startAddingCustomField()"
         [disabled]="readonlySignal() || isAddingCustomField()"
         pTooltip="Add a new custom variable"
@@ -22,15 +21,12 @@
   <!-- Form Content -->
   <div class="flex-1 overflow-y-auto space-y-6 p-4">
     <form [formGroup]="mainForm()" class="space-y-6">
-      <!-- Sections -->
-      @for (section of sectionsWithData(); track trackSection($index, section))
-      {
-      <p-card class="glass-card mb-4">
-        <ng-template pTemplate="header">
-          <div
-            class="flex items-center justify-between p-4 cursor-pointer"
-            (click)="toggleSection(section.name)"
-          >
+      <!-- Sections using PrimeNG Accordion -->
+      <p-accordion [multiple]="true" class="glass-card">
+        @for (section of sectionsWithData(); track trackSection($index,
+        section)) {
+        <p-accordion-panel [value]="$index.toString()">
+          <p-accordion-header>
             <div class="flex items-center">
               <h4 class="text-lg font-medium text-white text-glow-primary">
                 {{ section.name }}
@@ -43,151 +39,142 @@
               ></p-tag>
               }
             </div>
-            <i
-              class="pi text-white"
-              [class.pi-chevron-down]="!isSectionExpanded(section.name)"
-              [class.pi-chevron-up]="isSectionExpanded(section.name)"
-            ></i>
-          </div>
-        </ng-template>
+          </p-accordion-header>
 
-        <ng-template pTemplate="content">
-          @if (isSectionExpanded(section.name)) {
-          <div class="space-y-4 p-4" [formGroupName]="section.name">
-            @for (field of section.fields; track trackField($index, field)) {
-            <div class="space-y-2">
-              <!-- Field Input with PrimNG -->
+          <p-accordion-content>
+            <div class="space-y-4 p-4" [formGroupName]="section.name">
+              @for (field of section.fields; track trackField($index, field)) {
               <div class="space-y-2">
-                @switch (field.type) { @case ('text') {
-                <p-floatlabel>
-                  <input
-                    pInputText
-                    [id]="section.name + '_' + field.key"
-                    [formControlName]="field.key"
-                    [readonly]="readonlySignal()"
-                    class="input w-full"
-                  />
-                  <label [for]="section.name + '_' + field.key">
-                    {{ field.label }}
-                  </label>
-                </p-floatlabel>
-                } @case ('textarea') {
-                <p-floatlabel>
-                  <textarea
-                    pTextarea
-                    [id]="section.name + '_' + field.key"
-                    [formControlName]="field.key"
-                    [readonly]="readonlySignal()"
-                    rows="3"
-                    class="input w-full"
-                  ></textarea>
-                  <label [for]="section.name + '_' + field.key">
-                    {{ field.label }}
-                  </label>
-                </p-floatlabel>
-                } @case ('number') {
-                <p-floatlabel>
-                  <p-inputnumber
-                    [id]="section.name + '_' + field.key"
-                    [formControlName]="field.key"
-                    [readonly]="readonlySignal()"
-                    class="input w-full"
-                  ></p-inputnumber>
-                  <label [for]="section.name + '_' + field.key">
-                    {{ field.label }}
-                  </label>
-                </p-floatlabel>
-                } @case ('boolean') {
-                <div class="flex items-center space-x-3">
-                  <p-toggleswitch
-                    [id]="section.name + '_' + field.key"
-                    [formControlName]="field.key"
-                    [disabled]="readonlySignal()"
-                  ></p-toggleswitch>
-                  <label
-                    [for]="section.name + '_' + field.key"
-                    class="text-sm text-white"
-                  >
-                    {{ field.label }}
-                  </label>
-                </div>
-                } @case ('array') {
+                <!-- Field Input with PrimeNG -->
                 <div class="space-y-2">
-                  @for (item of getFieldControl(section.name, field.key)?.value
-                  || []; track trackArrayItem($index, item)) {
-                  <div class="flex items-center space-x-2">
+                  @switch (field.type) { @case ('text') {
+                  <p-floatlabel>
                     <input
                       pInputText
-                      [value]="item"
-                      (input)="updateArrayItem(section.name, field.key, $index, $any($event).target.value)"
+                      [id]="section.name + '_' + field.key"
+                      [formControlName]="field.key"
                       [readonly]="readonlySignal()"
-                      [placeholder]="'Item ' + ($index + 1)"
-                      class="input flex-1"
+                      class="input w-full"
                     />
-                    @if (!readonlySignal()) {
+                    <label [for]="section.name + '_' + field.key">
+                      {{ field.label }}
+                    </label>
+                  </p-floatlabel>
+                  } @case ('textarea') {
+                  <p-floatlabel>
+                    <textarea
+                      pTextarea
+                      [id]="section.name + '_' + field.key"
+                      [formControlName]="field.key"
+                      [readonly]="readonlySignal()"
+                      rows="3"
+                      class="input w-full"
+                    ></textarea>
+                    <label [for]="section.name + '_' + field.key">
+                      {{ field.label }}
+                    </label>
+                  </p-floatlabel>
+                  } @case ('number') {
+                  <p-floatlabel>
+                    <p-inputnumber
+                      [id]="section.name + '_' + field.key"
+                      [formControlName]="field.key"
+                      [readonly]="readonlySignal()"
+                      class="input w-full"
+                    ></p-inputnumber>
+                    <label [for]="section.name + '_' + field.key">
+                      {{ field.label }}
+                    </label>
+                  </p-floatlabel>
+                  } @case ('boolean') {
+                  <div class="flex items-center space-x-3">
+                    <p-toggleswitch
+                      [id]="section.name + '_' + field.key"
+                      [formControlName]="field.key"
+                      [disabled]="readonlySignal()"
+                    ></p-toggleswitch>
+                    <label
+                      [for]="section.name + '_' + field.key"
+                      class="text-sm text-white"
+                    >
+                      {{ field.label }}
+                    </label>
+                  </div>
+                  } @case ('array') {
+                  <div class="space-y-2">
+                    @for (item of getFieldControl(section.name,
+                    field.key)?.value || []; track trackArrayItem($index, item))
+                    {
+                    <div class="flex items-center space-x-2">
+                      <input
+                        pInputText
+                        [value]="item"
+                        (input)="updateArrayItem(section.name, field.key, $index, $any($event).target.value)"
+                        [readonly]="readonlySignal()"
+                        [placeholder]="'Item ' + ($index + 1)"
+                        class="input flex-1"
+                      />
+                      @if (!readonlySignal()) {
+                      <p-button
+                        icon="pi pi-times"
+                        size="small"
+                        severity="danger"
+                        [text]="true"
+                        (onClick)="removeArrayItem(section.name, field.key, $index)"
+                      ></p-button>
+                      }
+                    </div>
+                    } @if (!readonlySignal()) {
                     <p-button
-                      icon="pi pi-times"
+                      label="Add Item"
+                      icon="pi pi-plus"
                       size="small"
-                      severity="danger"
+                      severity="secondary"
                       [text]="true"
-                      (onClick)="removeArrayItem(section.name, field.key, $index)"
+                      (onClick)="addArrayItem(section.name, field.key)"
                     ></p-button>
                     }
                   </div>
-                  } @if (!readonlySignal()) {
-                  <p-button
-                    label="Add Item"
-                    icon="pi pi-plus"
-                    size="small"
-                    severity="secondary"
-                    [text]="true"
-                    (onClick)="addArrayItem(section.name, field.key)"
-                  ></p-button>
+                  } @case ('object') {
+                  <p-floatlabel>
+                    <textarea
+                      pTextarea
+                      [id]="section.name + '_' + field.key"
+                      [value]="getFieldControl(section.name, field.key)?.value | json"
+                      [readonly]="readonlySignal()"
+                      (input)="onObjectInputChange(section.name, field.key, $any($event).target.value)"
+                      rows="4"
+                      class="input w-full font-mono"
+                    ></textarea>
+                    <label [for]="section.name + '_' + field.key">
+                      {{ field.label }} (JSON)
+                    </label>
+                  </p-floatlabel>
+                  } }
+
+                  <!-- Field Error -->
+                  @if (getFieldError(section.name, field.key)) {
+                  <p-message
+                    severity="error"
+                    [text]="getFieldError(section.name, field.key)!"
+                    class="mt-1"
+                  ></p-message>
                   }
                 </div>
-                } @case ('object') {
-                <p-floatlabel>
-                  <textarea
-                    pTextarea
-                    [id]="section.name + '_' + field.key"
-                    [value]="getFieldControl(section.name, field.key)?.value | json"
-                    [readonly]="readonlySignal()"
-                    (input)="onObjectInputChange(section.name, field.key, $any($event).target.value)"
-                    rows="4"
-                    class="input w-full font-mono"
-                  ></textarea>
-                  <label [for]="section.name + '_' + field.key">
-                    {{ field.label }} (JSON)
-                  </label>
-                </p-floatlabel>
-                } }
-
-                <!-- Field Error -->
-                @if (getFieldError(section.name, field.key)) {
-                <p-message
-                  severity="error"
-                  [text]="getFieldError(section.name, field.key)!"
-                  class="mt-1"
-                ></p-message>
-                }
               </div>
+              }
             </div>
-            }
-          </div>
-          }
-        </ng-template>
-      </p-card>
-      }
+          </p-accordion-content>
+        </p-accordion-panel>
+        }
+      </p-accordion>
 
       <!-- Custom Fields Section -->
       @if (formDataSignal()?.customFields &&
       formDataSignal()!.customFields.length > 0) {
-      <p-card class="glass-card mb-4">
-        <ng-template pTemplate="header">
-          <div
-            class="flex items-center justify-between p-4 cursor-pointer"
-            (click)="toggleSection('custom')"
-          >
+      <p-accordion [multiple]="true" class="glass-card">
+        <p-accordion-panel value="custom">
+          <p-accordion-header>
             <div class="flex items-center">
               <h4 class="text-lg font-medium text-white text-glow-primary">
                 Custom Variables
@@ -198,153 +185,154 @@
                 class="ml-3"
               ></p-tag>
             </div>
-            <i
-              class="pi text-white"
-              [class.pi-chevron-down]="!isSectionExpanded('custom')"
-              [class.pi-chevron-up]="isSectionExpanded('custom')"
-            ></i>
-          </div>
-        </ng-template>
+          </p-accordion-header>
 
-        <ng-template pTemplate="content">
-          @if (isSectionExpanded('custom')) {
-          <div class="space-y-4 p-4" formGroupName="custom">
-            @for (field of formDataSignal()!.customFields; track
-            trackField($index, field)) {
-            <div class="space-y-2">
-              <div class="flex items-center justify-between mb-2">
-                <label class="block text-sm font-medium text-white">
-                  {{ formatLabel(field.label) }} @if (field.required) {
-                  <span class="text-red-400 ml-1">*</span>
-                  }
-                </label>
-                @if (!readonlySignal()) {
-                <p-button
-                  icon="pi pi-times"
-                  size="small"
-                  severity="danger"
-                  [text]="true"
-                  (onClick)="removeFieldFromSection('custom', field.key)"
-                  pTooltip="Remove field"
-                ></p-button>
-                }
-              </div>
-
-              @if (field.description) {
-              <p class="text-xs text-gray-400 mb-2">{{ field.description }}</p>
-              }
-
+          <p-accordion-content>
+            <div class="space-y-4 p-4" formGroupName="custom">
+              @for (field of formDataSignal()!.customFields; track
+              trackField($index, field)) {
               <div class="space-y-2">
-                @switch (field.type) { @case ('text') {
-                <p-floatlabel>
-                  <input
-                    pInputText
-                    [id]="'custom_' + field.key"
-                    [formControlName]="field.key"
-                    [readonly]="readonlySignal()"
-                    class="input w-full"
-                  />
-                  <label [for]="'custom_' + field.key">{{ field.label }}</label>
-                </p-floatlabel>
-                } @case ('textarea') {
-                <p-floatlabel>
-                  <textarea
-                    pTextarea
-                    [id]="'custom_' + field.key"
-                    [formControlName]="field.key"
-                    [readonly]="readonlySignal()"
-                    rows="3"
-                    class="input w-full"
-                  ></textarea>
-                  <label [for]="'custom_' + field.key">{{ field.label }}</label>
-                </p-floatlabel>
-                } @case ('number') {
-                <p-floatlabel>
-                  <p-inputnumber
-                    [id]="'custom_' + field.key"
-                    [formControlName]="field.key"
-                    [readonly]="readonlySignal()"
-                    class="input w-full"
-                  ></p-inputnumber>
-                  <label [for]="'custom_' + field.key">{{ field.label }}</label>
-                </p-floatlabel>
-                } @case ('boolean') {
-                <div class="flex items-center space-x-3">
-                  <p-toggleswitch
-                    [id]="'custom_' + field.key"
-                    [formControlName]="field.key"
-                    [disabled]="readonlySignal()"
-                  ></p-toggleswitch>
-                  <label
-                    [for]="'custom_' + field.key"
-                    class="text-sm text-white"
-                  >
-                    {{ field.label }}
-                  </label>
-                </div>
-                } @case ('array') {
-                <div class="space-y-2">
-                  @for (item of getFieldControl('custom', field.key)?.value ||
-                  []; track trackArrayItem($index, item)) {
-                  <div class="flex items-center space-x-2">
-                    <input
-                      pInputText
-                      [value]="item"
-                      (input)="updateArrayItem('custom', field.key, $index, $any($event).target.value)"
-                      [readonly]="readonlySignal()"
-                      [placeholder]="'Item ' + ($index + 1)"
-                      class="input flex-1"
-                    />
-                    @if (!readonlySignal()) {
-                    <p-button
-                      icon="pi pi-times"
-                      size="small"
-                      severity="danger"
-                      [text]="true"
-                      (onClick)="removeArrayItem('custom', field.key, $index)"
-                    ></p-button>
+                <div class="flex items-center justify-between mb-2">
+                  <label class="block text-sm font-medium text-white">
+                    {{ formatLabel(field.label) }} @if (field.required) {
+                    <span class="text-red-400 ml-1">*</span>
                     }
-                  </div>
-                  } @if (!readonlySignal()) {
+                  </label>
+                  @if (!readonlySignal()) {
                   <p-button
-                    label="Add Item"
-                    icon="pi pi-plus"
+                    icon="pi pi-times"
                     size="small"
-                    severity="secondary"
+                    severity="danger"
                     [text]="true"
-                    (onClick)="addArrayItem('custom', field.key)"
+                    (onClick)="removeFieldFromSection('custom', field.key)"
+                    pTooltip="Remove field"
                   ></p-button>
                   }
                 </div>
-                } @case ('object') {
-                <p-floatlabel>
-                  <textarea
-                    pTextarea
-                    [id]="'custom_' + field.key"
-                    [value]="getFieldControl('custom', field.key)?.value | json"
-                    [readonly]="readonlySignal()"
-                    (input)="onObjectInputChange('custom', field.key, $any($event).target.value)"
-                    rows="4"
-                    class="input w-full font-mono"
-                  ></textarea>
-                  <label [for]="'custom_' + field.key"
-                    >{{ field.label }} (JSON)</label
-                  >
-                </p-floatlabel>
-                } } @if (getFieldError('custom', field.key)) {
-                <p-message
-                  severity="error"
-                  [text]="getFieldError('custom', field.key)!"
-                  class="mt-1"
-                ></p-message>
+
+                @if (field.description) {
+                <p class="text-xs text-gray-400 mb-2">
+                  {{ field.description }}
+                </p>
                 }
+
+                <div class="space-y-2">
+                  @switch (field.type) { @case ('text') {
+                  <p-floatlabel>
+                    <input
+                      pInputText
+                      [id]="'custom_' + field.key"
+                      [formControlName]="field.key"
+                      [readonly]="readonlySignal()"
+                      class="input w-full"
+                    />
+                    <label [for]="'custom_' + field.key"
+                      >{{ field.label }}</label
+                    >
+                  </p-floatlabel>
+                  } @case ('textarea') {
+                  <p-floatlabel>
+                    <textarea
+                      pTextarea
+                      [id]="'custom_' + field.key"
+                      [formControlName]="field.key"
+                      [readonly]="readonlySignal()"
+                      rows="3"
+                      class="input w-full"
+                    ></textarea>
+                    <label [for]="'custom_' + field.key"
+                      >{{ field.label }}</label
+                    >
+                  </p-floatlabel>
+                  } @case ('number') {
+                  <p-floatlabel>
+                    <p-inputnumber
+                      [id]="'custom_' + field.key"
+                      [formControlName]="field.key"
+                      [readonly]="readonlySignal()"
+                      class="input w-full"
+                    ></p-inputnumber>
+                    <label [for]="'custom_' + field.key"
+                      >{{ field.label }}</label
+                    >
+                  </p-floatlabel>
+                  } @case ('boolean') {
+                  <div class="flex items-center space-x-3">
+                    <p-toggleswitch
+                      [id]="'custom_' + field.key"
+                      [formControlName]="field.key"
+                      [disabled]="readonlySignal()"
+                    ></p-toggleswitch>
+                    <label
+                      [for]="'custom_' + field.key"
+                      class="text-sm text-white"
+                    >
+                      {{ field.label }}
+                    </label>
+                  </div>
+                  } @case ('array') {
+                  <div class="space-y-2">
+                    @for (item of getFieldControl('custom', field.key)?.value ||
+                    []; track trackArrayItem($index, item)) {
+                    <div class="flex items-center space-x-2">
+                      <input
+                        pInputText
+                        [value]="item"
+                        (input)="updateArrayItem('custom', field.key, $index, $any($event).target.value)"
+                        [readonly]="readonlySignal()"
+                        [placeholder]="'Item ' + ($index + 1)"
+                        class="input flex-1"
+                      />
+                      @if (!readonlySignal()) {
+                      <p-button
+                        icon="pi pi-times"
+                        size="small"
+                        severity="danger"
+                        [text]="true"
+                        (onClick)="removeArrayItem('custom', field.key, $index)"
+                      ></p-button>
+                      }
+                    </div>
+                    } @if (!readonlySignal()) {
+                    <p-button
+                      label="Add Item"
+                      icon="pi pi-plus"
+                      size="small"
+                      severity="secondary"
+                      [text]="true"
+                      (onClick)="addArrayItem('custom', field.key)"
+                    ></p-button>
+                    }
+                  </div>
+                  } @case ('object') {
+                  <p-floatlabel>
+                    <textarea
+                      pTextarea
+                      [id]="'custom_' + field.key"
+                      [value]="getFieldControl('custom', field.key)?.value | json"
+                      [readonly]="readonlySignal()"
+                      (input)="onObjectInputChange('custom', field.key, $any($event).target.value)"
+                      rows="4"
+                      class="input w-full font-mono"
+                    ></textarea>
+                    <label [for]="'custom_' + field.key"
+                      >{{ field.label }} (JSON)</label
+                    >
+                  </p-floatlabel>
+                  } } @if (getFieldError('custom', field.key)) {
+                  <p-message
+                    severity="error"
+                    [text]="getFieldError('custom', field.key)!"
+                    class="mt-1"
+                  ></p-message>
+                  }
+                </div>
               </div>
+              }
             </div>
-            }
-          </div>
-          }
-        </ng-template>
-      </p-card>
+          </p-accordion-content>
+        </p-accordion-panel>
+      </p-accordion>
       }
 
       <!-- Add Custom Field Form -->
