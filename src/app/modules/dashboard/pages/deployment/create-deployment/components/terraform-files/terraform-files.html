@@ -1,16 +1,17 @@
 @if (showComponent()) {
   <div class="w-full">
     <div class="mb-4">
-      <h2 class="text-xl font-semibold mb-2 text-gray-200">Generated Terraform Files</h2>
+      <h2 class="text-xl font-semibold mb-2 text-gray-200">Terraform Configuration</h2>
       <p class="text-gray-400 text-sm">
-        These files contain the infrastructure code generated for your deployment. You can download them to use with Terraform CLI.
+        Edit your Terraform variables file directly in the application. Changes can be downloaded or saved to your deployment.
       </p>
     </div>
     
-    <app-terraform-viewer 
-      [mainFile]="mainFile()" 
-      [variablesFile]="variablesFile()" 
-      [variablesMapFile]="variablesMapFile()">
-    </app-terraform-viewer>
+    <app-file-content-editor 
+      [fileContents]="fileContents()"
+      [config]="fileConfig()"
+      (fileContentChanged)="onFileContentChanged($event)"
+      (fileDownloaded)="onFileDownloaded($event)">
+    </app-file-content-editor>
   </div>
 }

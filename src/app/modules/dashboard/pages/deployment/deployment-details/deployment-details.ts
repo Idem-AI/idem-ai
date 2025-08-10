@@ -37,7 +37,7 @@ export class DeploymentDetails implements OnInit {
   protected readonly showTerraformFiles = computed(
     () =>
       this.hasDeployment() &&
-      this.deployment()?.generatedTerraformFiles !== undefined
+      this.deployment()?.generatedTerraformTfvarsFileContent !== undefined
   );
 
   // Services

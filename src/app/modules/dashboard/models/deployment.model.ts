@@ -40,6 +40,32 @@ export interface CostEstimation {
   }[];
 }
 
+/**
+ * Flexible file content structure for different file types
+ */
+export interface FileContent {
+  id: string;
+  name: string;
+  type: 'terraform-tfvars' | 'terraform-main' | 'terraform-variables' | 'docker-compose' | 'kubernetes-yaml' | 'config-json';
+  content: string;
+  language: 'hcl' | 'yaml' | 'json' | 'dockerfile' | 'bash';
+  isEditable: boolean;
+  lastModified?: Date;
+  originalContent?: string; // Pour pouvoir revenir en arrière
+}
+
+/**
+ * Configuration for file content display and editing
+ */
+export interface FileContentConfig {
+  showLineNumbers: boolean;
+  enableSyntaxHighlighting: boolean;
+  enableEditing: boolean;
+  enableDownload: boolean;
+  maxHeight?: string;
+  theme?: 'dark' | 'light';
+}
+
 export interface ChatMessage {
   sender: 'user' | 'ai';
   text: string;
@@ -144,11 +170,14 @@ export interface BaseDeploymentModel {
   version?: string; // ex: commit hash or semantic version
   logs?: string; // Link to the deployment logs
   deployedAt?: Date; // Timestamp of the end of the deployment
+  generatedTerraformTfvarsFileContent?: string;
   generatedTerraformFiles?: {
     main: string;
     variables: string;
     variablesMap: string;
   };
+  // New flexible file content structure
+  fileContents?: FileContent[];
   // Rollback management
   rollbackVersions?: string[]; // Previous versions for rollback
   lastSuccessfulDeployment?: string; // ID of the last successful deployment
