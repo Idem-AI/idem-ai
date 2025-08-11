@@ -90,6 +90,7 @@
 
 ::ng-deep .p-accordion {
   background-color: red !important;
+  color: white !important;
 }
 
 /* Responsive adjustments */

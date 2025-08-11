@@ -274,19 +274,19 @@ export class FileContentEditor implements OnInit {
   protected getFileTypeIcon(type: FileContent['type']): string {
     switch (type) {
       case 'terraform-main':
-        return '🏗️';
+        return '';
       case 'terraform-variables':
-        return '⚙️';
+        return '';
       case 'terraform-tfvars':
-        return '📝';
+        return '';
       case 'docker-compose':
-        return '🐳';
+        return '';
       case 'kubernetes-yaml':
-        return '☸️';
+        return '';
       case 'config-json':
-        return '⚙️';
+        return '';
       default:
-        return '📄';
+        return '';
     }
   }
 

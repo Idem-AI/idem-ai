@@ -447,7 +447,6 @@
       >
         @for (pipeline of deployment()?.pipelines; track $index) {
         <p-accordion
-
           styleClass="bg-gray-800/30 backdrop-blur-xl rounded-2xl shadow-sm shadow-blue-900/10 border border-gray-700/30 transition-all duration-300 hover:shadow-blue-900/15"
         >
           <ng-template pTemplate="header">
@@ -594,25 +593,7 @@
         <div
           class="w-16 h-16 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/30 mb-2"
         >
-          <svg
-            class="w-8 h-8 text-blue-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              d="M19 9l-7 7-7-7"
-            ></path>
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              d="M14 15v5M10 15v5M19 14h-5M10 19H5"
-            ></path>
-          </svg>
+          <i class="pi pi-building text-blue-400 text-2xl"></i>
         </div>
         <h3 class="text-lg font-medium text-gray-200">
           No Deployment Pipelines Available

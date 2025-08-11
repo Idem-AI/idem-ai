@@ -44,7 +44,7 @@
           <p-accordion-content>
             <div class="space-y-4 p-4" [formGroupName]="section.name">
               @for (field of section.fields; track trackField($index, field)) {
-              <div class="space-y-2">
+              <div class="space-y-2 mx-4">
                 <!-- Field Input with PrimeNG -->
                 <div class="space-y-2">
                   @switch (field.type) { @case ('text') {
