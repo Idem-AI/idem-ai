@@ -56,6 +56,7 @@ import { initializeServerApp } from '@angular/fire/app';
 import { ProjectService } from './modules/dashboard/services/project.service';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './app.routes';
+import { MyPreset } from './my-preset';
 
 const firebaseConfig = {
   apiKey: environment.firebase.apiKey,
@@ -83,12 +84,7 @@ export const appConfig: ApplicationConfig = {
     provideStorage(() => getStorage()),
     providePrimeNG({
       theme: {
-        preset: Aura,
-        options: {
-          prefix: 'p',
-          darkModeSelector: 'system',
-          cssLayer: false,
-        },
+        preset: MyPreset,
       },
     }),
     provideAnimations(),

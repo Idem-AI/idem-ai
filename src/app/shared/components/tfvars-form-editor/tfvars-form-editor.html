@@ -22,7 +22,7 @@
   <div class="flex-1 overflow-y-auto space-y-6 p-4">
     <form [formGroup]="mainForm()" class="space-y-6">
       <!-- Sections using PrimeNG Accordion -->
-      <p-accordion [multiple]="true" class="glass-card">
+      <p-accordion [multiple]="true" [className]="'bg-red-500'">
         @for (section of sectionsWithData(); track trackSection($index,
         section)) {
         <p-accordion-panel [value]="$index.toString()">

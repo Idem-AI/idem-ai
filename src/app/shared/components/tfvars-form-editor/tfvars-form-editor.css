@@ -75,7 +75,7 @@
 
 /* Custom field form styling */
 .tfvars-form-editor .custom-field-form {
-  border-left: 4px solid theme('colors.blue.500');
+  border-left: 4px solid theme("colors.blue.500");
 }
 
 /* Section header hover effects */
@@ -88,10 +88,6 @@
   margin-top: 1rem;
 }
 
-::ng-deep .p-accordion {
-  background-color: red !important;
-  color: white !important;
-}
 
 /* Responsive adjustments */
 @media (max-width: 640px) {
