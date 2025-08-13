@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { environment } from '../../../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
 import { SeoService } from '../../../../shared/services/seo.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,7 @@ export class Login implements OnInit {
 
   // Check if the app is in beta mode from environment
   protected readonly isBeta = signal(environment.isBeta);
-
+  private readonly router = inject(Router);
   // Get waitlist form URL from environment
   protected readonly waitlistFormUrl = signal(environment.waitlistUrl);
 
@@ -77,10 +78,14 @@ export class Login implements OnInit {
   }
 
   protected loginWithGoogle(): void {
-    this.authService.loginWithGoogle();
+    this.authService
+      .loginWithGoogle()
+      .then(() => this.router.navigate(['/console/dashboard']));
   }
 
   protected loginWithGithub(): void {
-    this.authService.loginWithGithub();
+    this.authService
+      .loginWithGithub()
+      .then(() => this.router.navigate(['/console/dashboard']));
   }
 }

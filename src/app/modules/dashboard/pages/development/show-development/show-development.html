@@ -318,9 +318,9 @@
           <h3 class="text-white font-medium text-lg">
             {{ (developmentConfigs()?.database)!.provider }}
           </h3>
-          @if (developmentConfigs()?.database!.version) {
+          @if (developmentConfigs()?.database!.providerVersion) {
           <span class="text-purple-300 text-sm"
-            >v{{ (developmentConfigs()?.database)!.version }}</span
+            >v{{ (developmentConfigs()?.database)!.providerVersion }}</span
           >
           } @if (developmentConfigs()?.database!.type) {
           <span class="text-gray-400 text-xs"
