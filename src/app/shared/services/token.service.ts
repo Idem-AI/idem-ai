@@ -41,6 +41,7 @@ export class TokenService {
       console.log('User found');
 
       const token = await currentUser.getIdToken(true);
+      console.log('Token:', token);
       this.setToken(token);
       return token;
     } catch (error) {

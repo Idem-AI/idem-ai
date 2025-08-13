@@ -11,7 +11,7 @@ import {
   user,
   User,
 } from '@angular/fire/auth';
-import { from, Observable } from 'rxjs';
+import { from, Observable, firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 
 @Injectable({
@@ -62,9 +62,16 @@ export class AuthService {
 
     try {
       console.log('User:', user);
-      await this.http
-        .post<void>(`${this.apiUrl}/sessionLogin`, { token, user })
-        .toPromise();
+      await firstValueFrom(
+        this.http.post<void>(
+          `${this.apiUrl}/sessionLogin`,
+          { token, user },
+          {
+            withCredentials: true,
+            headers: { 'Content-Type': 'application/json' },
+          }
+        )
+      );
     } catch (error) {
       console.error("Erreur lors de l'envoi du token au backend:", error);
     }
