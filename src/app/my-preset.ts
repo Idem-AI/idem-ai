@@ -67,7 +67,7 @@ export const MyPreset = definePreset(Aura, {
         activeHoverColor: '{text.color}',
         padding: '1rem',
         fontWeight: '600',
-        borderWidth: '1px',
+        borderWidth: '0.5px',
         borderColor: '{content.border.color}',
         // glass-like backgrounds (match styles.css glass vars)
         background: 'rgba(15, 20, 27, 0.7)',
@@ -97,7 +97,6 @@ export const MyPreset = definePreset(Aura, {
         }
       },
       content: {
-        borderWidth: '1px',
         borderColor: '{content.border.color}',
         background: 'rgba(15, 20, 27, 0.7)',
         color: '{text.color}',

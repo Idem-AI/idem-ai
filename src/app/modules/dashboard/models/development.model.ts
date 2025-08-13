@@ -1,8 +1,45 @@
 /**
+ * Generation types for development
+ */
+export type GenerationType = 'landing' | 'app' | 'both';
+
+/**
+ * Development modes
+ */
+export type DevelopmentMode = 'quick' | 'advanced';
+
+/**
+ * Quick generation preset configurations
+ */
+export interface QuickGenerationPreset {
+  name: string;
+  description: string;
+  frontend: {
+    framework: string;
+    styling: string[];
+    features: string[];
+  };
+  backend: {
+    language: string;
+    framework: string;
+    apiType: string;
+    features: string[];
+  };
+  database: {
+    type: string;
+    provider: string;
+    features: string[];
+  };
+}
+
+/**
  * Model for development configurations that will be sent to the backend
  */
 export interface DevelopmentConfigsModel {
+  mode: DevelopmentMode;
+  generationType: GenerationType;
   constraints: string[];
+  preset?: string; // For quick generation mode
   frontend: {
     framework: string;
     frameworkVersion?: string;
@@ -48,8 +85,10 @@ export interface DevelopmentConfigsModel {
 
   database: {
     type?: string;
+    typeVersion?: string;
+    typeIconUrl?: string;
     provider: string;
-    version?: string;
+    providerVersion?: string;
     providerIconUrl?: string;
     orm?: string;
     ormVersion?: string;
@@ -60,9 +99,29 @@ export interface DevelopmentConfigsModel {
           seeders?: boolean;
           caching?: boolean;
           replication?: boolean;
+          realTimeSubscriptions?: boolean;
+          authentication?: boolean;
+          storage?: boolean;
+          edgeFunctions?: boolean;
+          vectorSearch?: boolean;
           [key: string]: boolean | undefined;
         }
       | string[];
+  };
+
+  deployment?: {
+    platform?: string;
+    platformVersion?: string;
+    platformIconUrl?: string;
+    environment?: string;
+    features?: {
+      cicd?: boolean;
+      monitoring?: boolean;
+      analytics?: boolean;
+      scaling?: boolean;
+      ssl?: boolean;
+      [key: string]: boolean | undefined;
+    } | string[];
   };
 
   projectConfig: {

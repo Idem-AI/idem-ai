@@ -3,7 +3,12 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
-import { DevelopmentConfigsModel } from '../../models/development.model';
+import { 
+  DevelopmentConfigsModel, 
+  QuickGenerationPreset, 
+  GenerationType,
+  DevelopmentMode 
+} from '../../models/development.model';
 import { ProjectModel } from '../../models/project.model';
 
 // Define a basic interface for Development items
@@ -25,6 +30,130 @@ export class DevelopmentService {
   constructor() {}
 
   /**
+   * Get quick generation presets
+   */
+  getQuickGenerationPresets(): QuickGenerationPreset[] {
+    return [
+      {
+        name: 'React + Express + Supabase',
+        description: 'Modern full-stack setup with React frontend, Express.js backend, and Supabase database',
+        frontend: {
+          framework: 'React',
+          styling: ['Tailwind CSS', 'CSS Modules'],
+          features: ['Routing', 'State Management', 'Component Library']
+        },
+        backend: {
+          language: 'JavaScript',
+          framework: 'Express.js',
+          apiType: 'REST API',
+          features: ['Authentication', 'Authorization', 'Documentation']
+        },
+        database: {
+          type: 'PostgreSQL',
+          provider: 'Supabase',
+          features: ['Real-time subscriptions', 'Authentication', 'Storage']
+        }
+      }
+    ];
+  }
+
+  /**
+   * Generate quick development configuration based on preset and generation type
+   */
+  generateQuickConfig(generationType: GenerationType): DevelopmentConfigsModel {
+    const preset = this.getQuickGenerationPresets()[0]; // React + Express + Supabase
+    
+    return {
+      mode: 'quick',
+      generationType,
+      preset: preset.name,
+      constraints: [
+        `Generate a ${generationType === 'landing' ? 'landing page' : generationType === 'app' ? 'web application' : 'landing page with web application'}`,
+        'Use modern development practices',
+        'Implement responsive design',
+        'Include proper error handling'
+      ],
+      frontend: {
+        framework: preset.frontend.framework,
+        frameworkVersion: '18.0.0',
+        frameworkIconUrl: '/assets/icons/react.svg',
+        styling: preset.frontend.styling,
+        stateManagement: 'Redux Toolkit',
+        features: {
+          routing: true,
+          componentLibrary: true,
+          testing: true,
+          pwa: generationType !== 'landing',
+          seo: true
+        }
+      },
+      backend: {
+        language: preset.backend.language,
+        languageVersion: '18.0.0',
+        languageIconUrl: '/assets/icons/nodejs.svg',
+        framework: preset.backend.framework,
+        frameworkVersion: '4.18.0',
+        frameworkIconUrl: '/assets/icons/express.svg',
+        apiType: preset.backend.apiType,
+        apiVersion: '1.0.0',
+        apiIconUrl: '/assets/icons/rest.svg',
+        orm: 'Prisma',
+        ormVersion: '5.0.0',
+        ormIconUrl: '/assets/icons/prisma.svg',
+        features: {
+          authentication: true,
+          authorization: true,
+          documentation: true,
+          testing: true,
+          logging: true
+        }
+      },
+      database: {
+        type: preset.database.type,
+        typeVersion: '15.0',
+        typeIconUrl: '/assets/icons/postgresql.svg',
+        provider: preset.database.provider,
+        providerVersion: '2.0.0',
+        providerIconUrl: '/assets/icons/supabase.svg',
+        features: {
+          realTimeSubscriptions: true,
+          authentication: true,
+          storage: true,
+          edgeFunctions: true,
+          vectorSearch: false
+        }
+      },
+      deployment: {
+        platform: 'Vercel',
+        platformVersion: '1.0.0',
+        platformIconUrl: '/assets/icons/vercel.svg',
+        environment: 'production',
+        features: {
+          cicd: true,
+          monitoring: true,
+          analytics: true,
+          scaling: true,
+          ssl: true
+        }
+      },
+      projectConfig: {
+        seoEnabled: true,
+        contactFormEnabled: generationType !== 'app',
+        analyticsEnabled: true,
+        i18nEnabled: false,
+        performanceOptimized: true,
+        authentication: true,
+        authorization: true,
+        paymentIntegration: generationType === 'app',
+        customOptions: {
+          generationType,
+          preset: preset.name
+        }
+      }
+    };
+  }
+
+  /**
    * Authentication headers are now handled by the centralized auth.interceptor
    * No need for manual token management in each service
    */
@@ -32,12 +161,16 @@ export class DevelopmentService {
   // Save development configurations
   saveDevelopmentConfigs(
     developmentConfigs: DevelopmentConfigsModel,
-    projectId: string
+    projectId: string,
+    generationType?: GenerationType
   ): Observable<ProjectModel> {
-    return this.http.post<ProjectModel>(`${this.apiUrl}/configs`, {
+    const payload = {
       developmentConfigs,
       projectId,
-    });
+      ...(generationType && { generation: generationType })
+    };
+    
+    return this.http.post<ProjectModel>(`${this.apiUrl}/configs`, payload);
   }
 
   // Create a new development item

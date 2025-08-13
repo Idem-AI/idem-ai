@@ -22,7 +22,12 @@ import { AnalysisResultModel } from '../../../models/analysisResult.model';
 import { ProjectModel } from '../../../models/project.model';
 import { ProjectService } from '../../../services/project.service';
 import { Loader } from '../../../../../components/loader/loader';
-import { DevelopmentConfigsModel } from '../../../models/development.model';
+import { 
+  DevelopmentConfigsModel, 
+  GenerationType, 
+  DevelopmentMode,
+  QuickGenerationPreset 
+} from '../../../models/development.model';
 import { CookieService } from '../../../../../shared/services/cookie.service';
 import { User } from '@angular/fire/auth';
 import { first } from 'rxjs/operators';
@@ -69,6 +74,12 @@ export class CreateDevelopmentComponent implements OnInit {
   );
   protected readonly showAdvancedOptions = signal<boolean>(false);
   protected readonly selectedStylingPreferences = signal<string[]>([]);
+  
+  // - New generation mode state
+  protected readonly currentStep = signal<'mode-selection' | 'generation-type' | 'configuration'>('mode-selection');
+  protected readonly selectedMode = signal<DevelopmentMode | null>(null);
+  protected readonly selectedGenerationType = signal<GenerationType | null>(null);
+  protected readonly quickPresets = signal<QuickGenerationPreset[]>([]);
 
   /**
    * Select a tab in the form
@@ -76,6 +87,45 @@ export class CreateDevelopmentComponent implements OnInit {
    */
   protected selectTab(tab: 'frontend' | 'backend' | 'database'): void {
     this.selectedTab.set(tab);
+  }
+
+  /**
+   * Select development mode (quick or advanced)
+   */
+  protected selectMode(mode: DevelopmentMode): void {
+    this.selectedMode.set(mode);
+    if (mode === 'quick') {
+      this.currentStep.set('generation-type');
+    } else {
+      this.currentStep.set('configuration');
+    }
+  }
+
+  /**
+   * Select generation type (landing, app, or both)
+   */
+  protected selectGenerationType(type: GenerationType): void {
+    this.selectedGenerationType.set(type);
+    this.currentStep.set('configuration');
+  }
+
+  /**
+   * Go back to previous step
+   */
+  protected goBack(): void {
+    const current = this.currentStep();
+    if (current === 'generation-type') {
+      this.currentStep.set('mode-selection');
+      this.selectedMode.set(null);
+    } else if (current === 'configuration') {
+      if (this.selectedMode() === 'quick') {
+        this.currentStep.set('generation-type');
+        this.selectedGenerationType.set(null);
+      } else {
+        this.currentStep.set('mode-selection');
+        this.selectedMode.set(null);
+      }
+    }
   }
   protected readonly formSubmitted = signal(false);
   protected readonly formHasErrors = signal(false);
@@ -102,6 +152,103 @@ export class CreateDevelopmentComponent implements OnInit {
    */
   protected goToShowDevelopment(): void {
     this.router.navigate(['/console/development']);
+  }
+
+  /**
+   * Validate the form before submission
+   */
+  private validateForm(): boolean {
+    const mode = this.selectedMode();
+    if (mode === 'quick') {
+      return this.selectedGenerationType() !== null;
+    }
+    
+    // For advanced mode, validate the form groups
+    return this.frontendForm.valid && this.backendForm.valid && this.databaseForm.valid;
+  }
+
+  /**
+   * Build development configuration from form data
+   */
+  private buildDevelopmentConfigs(): DevelopmentConfigsModel {
+    const mode = this.selectedMode() || 'advanced';
+    const generationType = this.selectedGenerationType() || 'app';
+
+    return {
+      mode,
+      generationType,
+      constraints: [],
+      frontend: {
+        framework: this.frontendForm.get('framework')?.value || '',
+        frameworkVersion: this.frontendForm.get('frameworkVersion')?.value,
+        frameworkIconUrl: this.frontendForm.get('frameworkIconUrl')?.value,
+        styling: this.frontendForm.get('styling')?.value || [],
+        stateManagement: this.frontendForm.get('stateManagement')?.value,
+        features: {
+          routing: this.frontendForm.get('routing')?.value || false,
+          componentLibrary: this.frontendForm.get('componentLibrary')?.value || false,
+          testing: this.frontendForm.get('testing')?.value || false,
+          pwa: this.frontendForm.get('pwa')?.value || false,
+          seo: this.frontendForm.get('seo')?.value || false,
+        },
+      },
+      backend: {
+        language: this.backendForm.get('language')?.value,
+        languageVersion: this.backendForm.get('languageVersion')?.value,
+        languageIconUrl: this.backendForm.get('languageIconUrl')?.value,
+        framework: this.backendForm.get('framework')?.value || '',
+        frameworkVersion: this.backendForm.get('frameworkVersion')?.value,
+        frameworkIconUrl: this.backendForm.get('frameworkIconUrl')?.value,
+        apiType: this.backendForm.get('apiType')?.value || '',
+        apiVersion: this.backendForm.get('apiVersion')?.value,
+        apiIconUrl: this.backendForm.get('apiIconUrl')?.value,
+        orm: this.backendForm.get('orm')?.value,
+        ormVersion: this.backendForm.get('ormVersion')?.value,
+        ormIconUrl: this.backendForm.get('ormIconUrl')?.value,
+        features: {
+          authentication: this.backendForm.get('authentication')?.value || false,
+          authorization: this.backendForm.get('authorization')?.value || false,
+          documentation: this.backendForm.get('documentation')?.value || false,
+          testing: this.backendForm.get('testing')?.value || false,
+          logging: this.backendForm.get('logging')?.value || false,
+        },
+      },
+      database: {
+        type: this.databaseForm.get('type')?.value,
+        typeVersion: this.databaseForm.get('typeVersion')?.value,
+        typeIconUrl: this.databaseForm.get('typeIconUrl')?.value,
+        provider: this.databaseForm.get('provider')?.value || '',
+        providerVersion: this.databaseForm.get('providerVersion')?.value,
+        providerIconUrl: this.databaseForm.get('providerIconUrl')?.value,
+        orm: this.databaseForm.get('orm')?.value,
+        ormVersion: this.databaseForm.get('ormVersion')?.value,
+        ormIconUrl: this.databaseForm.get('ormIconUrl')?.value,
+        features: {
+          migrations: this.databaseForm.get('migrations')?.value || false,
+          seeders: this.databaseForm.get('seeders')?.value || false,
+          caching: this.databaseForm.get('caching')?.value || false,
+          replication: this.databaseForm.get('replication')?.value || false,
+        },
+      },
+      projectConfig: {
+        seoEnabled: true,
+        contactFormEnabled: generationType !== 'app',
+        analyticsEnabled: true,
+        i18nEnabled: false,
+        performanceOptimized: true,
+        authentication: true,
+        authorization: true,
+        paymentIntegration: generationType === 'app',
+      },
+    };
+  }
+
+  /**
+   * Initialize all form groups
+   */
+  private initializeForms(): void {
+    // Forms are already initialized in constructor
+    // This method can be used for additional form setup if needed
   }
 
   constructor() {
@@ -243,62 +390,43 @@ export class CreateDevelopmentComponent implements OnInit {
    * Save the development configurations and generate the application
    */
   protected async onSaveConfiguration(): Promise<void> {
-    this.formSubmitted.set(true);
-    this.errorMessages.set([]);
-
-    this.isLoaded.set(true);
-    const projectId = this.projectId();
-
-    if (!projectId) {
-      this.errorMessages.set(['Project ID not found']);
-      this.isLoaded.set(false);
-      return;
-    }
-
     try {
-      // Get the current project
-      const currentProject = this.project();
+      this.formSubmitted.set(true);
+      this.errorMessages.set([]);
 
-      // Create the development config from the form data
-      const developmentConfig: DevelopmentConfigsModel =
-        this.developmentForm.value;
-
-      // Add the development config to the project
-      if (!currentProject.analysisResultModel) {
-        currentProject.analysisResultModel =
-          initEmptyObject<AnalysisResultModel>();
+      const mode = this.selectedMode();
+      const generationType = this.selectedGenerationType();
+      
+      let developmentConfigs: DevelopmentConfigsModel;
+      
+      if (mode === 'quick' && generationType) {
+        // Generate quick configuration
+        developmentConfigs = this.developmentService.generateQuickConfig(generationType);
+      } else {
+        // Use advanced configuration
+        if (!this.validateForm()) {
+          return;
+        }
+        developmentConfigs = this.buildDevelopmentConfigs();
       }
 
-      // Update the project's development configuration
-      currentProject.analysisResultModel.development = developmentConfig;
+      this.isLoaded.set(true);
+      const projectId = this.projectId();
 
-      console.log('Saving development configuration:', developmentConfig);
+      console.log('Saving development configs:', developmentConfigs);
 
-      // Update the project in the backend
-      this.developmentService
-        .saveDevelopmentConfigs(developmentConfig, projectId)
-        .subscribe({
-          next: (project) => {
-            console.log(
-              'Development configuration saved successfully:',
-              project
-            );
-            this.project.set(project);
-            this.isLoaded.set(false);
-            this.goToShowDevelopment();
-          },
-          error: (error) => {
-            console.error('Error saving development configuration:', error);
-            this.errorMessages.set([
-              'Failed to save development configuration',
-            ]);
-            this.isLoaded.set(false);
-          },
-        });
+      await this.developmentService
+        .saveDevelopmentConfigs(developmentConfigs, projectId, generationType || undefined)
+        .pipe(first())
+        .toPromise();
+
+      console.log('Development configuration saved successfully');
+      
+      // Navigate to show-development page
+      this.router.navigate(['/console/development']);
     } catch (error) {
       console.error('Error saving development configuration:', error);
       this.errorMessages.set(['Failed to save development configuration']);
-      this.isLoaded.set(false);
     } finally {
       this.isLoaded.set(false);
     }
@@ -307,64 +435,34 @@ export class CreateDevelopmentComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     try {
       this.isLoaded.set(true);
-
-      // Get current user
-      const user = await this.auth.user$.pipe(first()).toPromise();
-      this.currentUser.set(user!);
-
-      if (!user) {
-        console.log('User not logged in');
-        return;
-      }
-
-      // Get project ID from cookie
       const projectId = this.cookieService.get('projectId');
       if (!projectId) {
-        console.log('Project ID not found');
-        this.isLoaded.set(false);
+        console.error('No project ID found');
         return;
       }
-
       this.projectId.set(projectId);
 
-      // Fetch project data
-      this.projectService.getProjectById(projectId).subscribe({
-        next: (project) => {
-          if (!project) {
-            console.log('Project not found');
-            this.isLoaded.set(false);
-            return;
-          }
+      const project = await this.projectService.getProjectById(projectId).pipe(first()).toPromise();
+      if (project) {
+        this.project.set(project);
 
-          // Initialize analysis result if not present
-          if (!project.analysisResultModel) {
-            project.analysisResultModel =
-              initEmptyObject<AnalysisResultModel>();
-          }
+        // If the project already has development configuration, populate the form
+        if (project.analysisResultModel?.development) {
+          const developmentConfig = project.analysisResultModel.development;
+          this.developmentForm.patchValue(developmentConfig);
+          console.log('Loaded existing development configuration:', developmentConfig);
+        }
+      }
 
-          this.project.set(project);
+      // Load quick generation presets
+      const presets = this.developmentService.getQuickGenerationPresets();
+      this.quickPresets.set(presets);
 
-          // If the project already has development configuration, populate the form
-          if (project.analysisResultModel?.development) {
-            const developmentConfig = project.analysisResultModel.development;
-            this.developmentForm.patchValue(developmentConfig);
-            console.log(
-              'Loaded existing development configuration:',
-              developmentConfig
-            );
-          }
-
-          this.isLoaded.set(false);
-        },
-        error: (err) => {
-          console.error('Error retrieving project:', err);
-          this.errorMessages.set(['Failed to load project data']);
-          this.isLoaded.set(false);
-        },
-      });
+      this.initializeForms();
     } catch (error) {
-      console.error('Error loading project or user data:', error);
-      this.errorMessages.set(['An unexpected error occurred']);
+      console.error('Error loading project:', error);
+      this.errorMessages.set(['Failed to load project data']);
+    } finally {
       this.isLoaded.set(false);
     }
   }
