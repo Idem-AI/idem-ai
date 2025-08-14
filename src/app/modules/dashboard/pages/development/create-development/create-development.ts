@@ -26,7 +26,8 @@ import {
   DevelopmentConfigsModel, 
   GenerationType, 
   DevelopmentMode,
-  QuickGenerationPreset 
+  QuickGenerationPreset,
+  LandingPageConfig 
 } from '../../../models/development.model';
 import { CookieService } from '../../../../../shared/services/cookie.service';
 import { User } from '@angular/fire/auth';
@@ -174,6 +175,23 @@ export class CreateDevelopmentComponent implements OnInit {
     const mode = this.selectedMode() || 'advanced';
     const generationType = this.selectedGenerationType() || 'app';
 
+    // Set landing page configuration based on generation type
+    let landingPageConfig: LandingPageConfig;
+    switch (generationType) {
+      case 'landing':
+        landingPageConfig = LandingPageConfig.INTEGRATED;
+        break;
+      case 'both':
+        landingPageConfig = LandingPageConfig.SEPARATE;
+        break;
+      case 'app':
+      default:
+        landingPageConfig = LandingPageConfig.NONE;
+        break;
+    }
+
+    const hasLandingPage = landingPageConfig !== LandingPageConfig.NONE;
+
     return {
       mode,
       generationType,
@@ -230,6 +248,11 @@ export class CreateDevelopmentComponent implements OnInit {
           replication: this.databaseForm.get('replication')?.value || false,
         },
       },
+      landingPageConfig,
+      landingPage: hasLandingPage ? {
+        url: '',
+        codeUrl: ''
+      } : undefined,
       projectConfig: {
         seoEnabled: true,
         contactFormEnabled: generationType !== 'app',

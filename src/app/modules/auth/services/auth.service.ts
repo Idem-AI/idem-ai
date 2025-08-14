@@ -61,7 +61,6 @@ export class AuthService {
     }
 
     try {
-      console.log('User:', user);
       await firstValueFrom(
         this.http.post<void>(
           `${this.apiUrl}/sessionLogin`,

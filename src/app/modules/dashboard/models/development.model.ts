@@ -108,20 +108,10 @@ export interface DevelopmentConfigsModel {
         }
       | string[];
   };
-
-  deployment?: {
-    platform?: string;
-    platformVersion?: string;
-    platformIconUrl?: string;
-    environment?: string;
-    features?: {
-      cicd?: boolean;
-      monitoring?: boolean;
-      analytics?: boolean;
-      scaling?: boolean;
-      ssl?: boolean;
-      [key: string]: boolean | undefined;
-    } | string[];
+  landingPageConfig: LandingPageConfig;
+  landingPage?: {
+    url: string;
+    codeUrl: string;
   };
 
   projectConfig: {
@@ -135,4 +125,10 @@ export interface DevelopmentConfigsModel {
     paymentIntegration?: boolean;
     customOptions?: Record<string, any>;
   };
+}
+
+export enum LandingPageConfig {
+  NONE = "NONE",
+  SEPARATE = "SEPARATE",
+  INTEGRATED = "INTEGRATED",
 }

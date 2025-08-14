@@ -8,7 +8,9 @@ export interface AnalysisResultModel {
   id?: string;
   businessPlan?: BusinessPlanModel;
   design: DiagramModel;
-  development: DevelopmentConfigsModel;
+  development: {
+    configs: DevelopmentConfigsModel;
+  };
   branding: BrandIdentityModel;
   landing: LandingModel;
   testing: string;

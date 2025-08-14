@@ -7,7 +7,8 @@ import {
   DevelopmentConfigsModel, 
   QuickGenerationPreset, 
   GenerationType,
-  DevelopmentMode 
+  DevelopmentMode,
+  LandingPageConfig 
 } from '../../models/development.model';
 import { ProjectModel } from '../../models/project.model';
 
@@ -62,6 +63,23 @@ export class DevelopmentService {
    */
   generateQuickConfig(generationType: GenerationType): DevelopmentConfigsModel {
     const preset = this.getQuickGenerationPresets()[0]; // React + Express + Supabase
+    
+    // Set landing page configuration based on generation type
+    let landingPageConfig: LandingPageConfig;
+    switch (generationType) {
+      case 'landing':
+        landingPageConfig = LandingPageConfig.INTEGRATED;
+        break;
+      case 'both':
+        landingPageConfig = LandingPageConfig.SEPARATE;
+        break;
+      case 'app':
+      default:
+        landingPageConfig = LandingPageConfig.NONE;
+        break;
+    }
+
+    const hasLandingPage = landingPageConfig !== LandingPageConfig.NONE;
     
     return {
       mode: 'quick',
@@ -123,19 +141,11 @@ export class DevelopmentService {
           vectorSearch: false
         }
       },
-      deployment: {
-        platform: 'Vercel',
-        platformVersion: '1.0.0',
-        platformIconUrl: '/assets/icons/vercel.svg',
-        environment: 'production',
-        features: {
-          cicd: true,
-          monitoring: true,
-          analytics: true,
-          scaling: true,
-          ssl: true
-        }
-      },
+      landingPageConfig,
+      landingPage: hasLandingPage ? {
+        url: '',
+        codeUrl: ''
+      } : undefined,
       projectConfig: {
         seoEnabled: true,
         contactFormEnabled: generationType !== 'app',
