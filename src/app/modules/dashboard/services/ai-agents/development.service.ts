@@ -68,6 +68,9 @@ export class DevelopmentService {
     let landingPageConfig: LandingPageConfig;
     switch (generationType) {
       case 'landing':
+        landingPageConfig = LandingPageConfig.ONLY_LANDING;
+        break;
+      case 'integrated':
         landingPageConfig = LandingPageConfig.INTEGRATED;
         break;
       case 'both':

@@ -1,7 +1,7 @@
 /**
  * Generation types for development
  */
-export type GenerationType = 'landing' | 'app' | 'both';
+export type GenerationType = 'landing' | 'app' | 'both' | 'integrated';
 
 /**
  * Development modes
@@ -131,4 +131,5 @@ export enum LandingPageConfig {
   NONE = "NONE",
   SEPARATE = "SEPARATE",
   INTEGRATED = "INTEGRATED",
+  ONLY_LANDING = "ONLY_LANDING",
 }
