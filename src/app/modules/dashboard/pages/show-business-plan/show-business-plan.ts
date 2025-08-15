@@ -29,7 +29,9 @@ export class ShowBusinessPlan implements OnInit {
 
   // Signals for state management
   protected readonly isLoading = signal<boolean>(true);
-  protected readonly existingBusinessPlan = signal<BusinessPlanModel | null>(null);
+  protected readonly existingBusinessPlan = signal<BusinessPlanModel | null>(
+    null
+  );
   protected readonly projectIdFromCookie = signal<string | null>(null);
 
   ngOnInit(): void {
@@ -50,12 +52,18 @@ export class ShowBusinessPlan implements OnInit {
   private loadExistingBusinessPlan(projectId: string): void {
     this.businessPlanService.getBusinessplanItems(projectId).subscribe({
       next: (businessPlan: BusinessPlanModel) => {
-        if (businessPlan && businessPlan.sections && businessPlan.sections.length > 0) {
+        if (
+          businessPlan &&
+          businessPlan.sections &&
+          businessPlan.sections.length > 0
+        ) {
           // Existing business plan found - show it
           this.existingBusinessPlan.set(businessPlan);
         } else {
           // No existing business plan - show generate button (no redirect)
-          console.log('No existing business plan found, showing generate button');
+          console.log(
+            'No existing business plan found, showing generate button'
+          );
           this.existingBusinessPlan.set(null);
         }
 

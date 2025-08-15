@@ -1,5 +1,47 @@
 <!-- Completed Diagram Display -->
 <div class="max-w-6xl mx-auto space-y-8">
+  <!-- Sticky action bar -->
+  <div class="sticky top-0 z-30 bg-white/80 dark:bg-gray-900/80 backdrop-blur border-b border-gray-200 dark:border-gray-800">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="text-sm font-medium text-gray-700 dark:text-gray-200">
+        Diagram Actions
+      </div>
+      <div class="flex items-center gap-2">
+        <!-- Add / Regenerate -->
+        <button
+          class="px-3 py-2 rounded-md text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-colors flex items-center"
+          (click)="generateNewDiagrams()"
+        >
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Add
+        </button>
+
+        <!-- Download PDF -->
+        <button
+          class="px-3 py-2 rounded-md text-sm font-medium bg-gray-900 hover:bg-black text-white shadow-sm transition-colors flex items-center dark:bg-gray-700 dark:hover:bg-gray-600"
+          (click)="makePdf()"
+        >
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          Download PDF
+        </button>
+
+        <!-- Edit Diagrams (open chart service) -->
+        <button
+          class="px-3 py-2 rounded-md text-sm font-medium bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm transition-colors flex items-center"
+          (click)="openEditor()"
+        >
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5h2m2 0h2m-6 4h6m-6 4h6m-6 4h6M7 9h.01M7 13h.01M7 17h.01" />
+          </svg>
+          Edit Diagrams
+        </button>
+      </div>
+    </div>
+  </div>
   <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
     <div class="text-center mb-8">
       <div
@@ -69,27 +111,6 @@
     </div>
     }
 
-    <!-- Action Buttons -->
-    <div class="flex justify-center space-x-4 mt-8">
-      <button
-        class="inner-button text-white px-6 py-2 rounded-md flex items-center transition-colors"
-        (click)="makePdf()"
-      >
-        <svg
-          class="w-5 h-5 mr-2"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-          ></path>
-        </svg>
-        Download PDF
-      </button>
-    </div>
+    <!-- bottom actions removed; actions moved to sticky bar -->
   </div>
 </div>

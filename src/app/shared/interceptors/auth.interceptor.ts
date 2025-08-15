@@ -7,8 +7,8 @@ import {
 import { PLATFORM_ID, inject } from '@angular/core';
 import { TokenService } from '../services/token.service';
 import { isPlatformServer } from '@angular/common';
-import { Observable, from } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable, from, of } from 'rxjs';
+import { switchMap, catchError } from 'rxjs/operators';
 
 /**
  * Interceptor function to add JWT to requests.
@@ -40,21 +40,45 @@ export const authInterceptor: HttpInterceptorFn = (
     return next(req);
   }
 
-  // Convert token retrieval to an Observable stream
-  return from(Promise.resolve(tokenService.getToken())).pipe(
-    switchMap((token: string | null) => {
+  // Wait for auth to be ready, then proceed with token logic
+  return from(tokenService.waitForAuthReady()).pipe(
+    switchMap(() => {
+      // Get token after auth is ready
+      const token = tokenService.getToken();
+      
       if (!token) {
-        // If no token, proceed with the original request
-        return next(req);
+        // No token available, try to get fresh token asynchronously as fallback
+        return from(tokenService.getTokenAsync()).pipe(
+          switchMap((freshToken: string | null) => {
+            if (!freshToken) {
+              console.warn('No authentication token available for request:', req.url);
+              return next(req);
+            }
+            
+            const authReq = req.clone({
+              headers: req.headers.set('Authorization', `Bearer ${freshToken}`),
+            });
+            
+            return next(authReq);
+          }),
+          catchError((error) => {
+            console.error('Error in auth interceptor fallback:', error);
+            return next(req);
+          })
+        );
       }
 
-      // If a token exists, clone the request to add the new header
+      // Token available, use it
       const authReq = req.clone({
         headers: req.headers.set('Authorization', `Bearer ${token}`),
       });
 
-      // Pass the cloned request to the next handler
       return next(authReq);
+    }),
+    catchError((error) => {
+      console.error('Error waiting for auth ready in interceptor:', error);
+      // If auth ready fails, proceed without token
+      return next(req);
     })
   );
 };

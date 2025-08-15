@@ -21,7 +21,7 @@ export const environment = {
       url: 'http://localhost:5173',
     },
     diagen: {
-      url: 'http://localhost:3001',
+      url: 'http://localhost:3002',
     },
   },
 };

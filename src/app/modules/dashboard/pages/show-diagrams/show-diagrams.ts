@@ -40,6 +40,7 @@ export class ShowDiagramsComponent implements OnInit {
     // Get project ID from cookies
     const projectId = this.cookieService.get('projectId');
     this.projectIdFromCookie.set(projectId);
+    console.log('Project ID from cookies: ', projectId);
 
     if (projectId) {
       this.loadExistingDiagram(projectId);

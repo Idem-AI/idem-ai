@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Auth, User, onAuthStateChanged } from '@angular/fire/auth';
+import { filter, take } from 'rxjs/operators';
 
 /**
  * Service responsible for managing authentication tokens.
@@ -12,19 +13,52 @@ import { Auth, User, onAuthStateChanged } from '@angular/fire/auth';
 export class TokenService {
   private auth = inject(Auth);
   private tokenSubject = new BehaviorSubject<string | null>(null);
+  private authReadySubject = new BehaviorSubject<boolean>(false);
 
   // Observable that emits the current token
   public token$ = this.tokenSubject.asObservable();
+  
+  // Observable that emits when auth is ready (true when initialized)
+  public authReady$ = this.authReadySubject.asObservable();
 
   constructor() {
     // Listen for auth state changes and update token accordingly
     onAuthStateChanged(this.auth, (user) => {
       if (user) {
+        console.log('Auth state changed: User authenticated, refreshing token');
         this.refreshToken(user);
       } else {
+        console.log(
+          'Auth state changed: User not authenticated, clearing token'
+        );
         this.clearToken();
       }
+      
+      // Mark auth as ready after first state change
+      if (!this.authReadySubject.value) {
+        console.log('Auth initialization complete');
+        this.authReadySubject.next(true);
+      }
     });
+
+    // Initialize token immediately if user is already authenticated
+    this.initializeToken();
+  }
+
+  /**
+   * Initialize token on service startup
+   */
+  private async initializeToken(): Promise<void> {
+    try {
+      if (this.auth.currentUser) {
+        console.log('Initializing token for existing user');
+        await this.refreshToken(this.auth.currentUser);
+      } else {
+        console.log('No user found during token initialization');
+      }
+    } catch (error) {
+      console.error('Error during token initialization:', error);
+    }
   }
 
   /**
@@ -52,10 +86,27 @@ export class TokenService {
 
   /**
    * Get the current token value synchronously
+   * Returns the cached token from BehaviorSubject for immediate access
    */
-  public async getToken(): Promise<string | null> {
-    const token = await this.auth.currentUser?.getIdToken();
-    return token || null;
+  public getToken(): string | null {
+    return this.tokenSubject.value;
+  }
+
+  /**
+   * Get the current token value asynchronously
+   * Waits for Firebase Auth to be ready and returns fresh token
+   */
+  public async getTokenAsync(): Promise<string | null> {
+    try {
+      const token = await this.auth.currentUser?.getIdToken();
+      if (token) {
+        this.setToken(token);
+      }
+      return token || null;
+    } catch (error) {
+      console.error('Error getting token async:', error);
+      return null;
+    }
   }
 
   /**
@@ -70,5 +121,16 @@ export class TokenService {
    */
   public clearToken(): void {
     this.tokenSubject.next(null);
+  }
+
+  /**
+   * Wait for auth to be ready
+   * Returns a Promise that resolves when Firebase Auth has initialized
+   */
+  public waitForAuthReady(): Promise<void> {
+    return this.authReady$.pipe(
+      filter(ready => ready === true),
+      take(1)
+    ).toPromise().then(() => void 0);
   }
 }
