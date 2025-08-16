@@ -1,260 +1,150 @@
-<div
-  class="hero-section relative min-h-screen parallax overflow-hidden pt-24 sm:pt-0"
->
-  <!-- Background layers with parallax effect -->
-  <div class="absolute inset-0 bg-grid z-0"></div>
+<div class="hero-section relative min-h-screen overflow-hidden" style="background-color: var(--color-bg-dark);">
+  <!-- Glass Floating Elements -->
+  <div class="absolute inset-0 pointer-events-none">
+    <div class="absolute top-[15%] right-[10%] w-32 h-32 rounded-full blur-xl animate-float-slow glow-primary opacity-20"></div>
+    <div class="absolute bottom-[20%] left-[15%] w-24 h-24 rounded-full blur-lg animate-float-slow-delay glow-secondary opacity-15"></div>
+    <div class="absolute top-[60%] left-[5%] w-16 h-16 rounded-full blur-md animate-float-slow glow-accent opacity-10"></div>
+  </div>
 
-  <!-- Parallax background elements -->
-  <div
-    class="absolute top-0 right-0 w-[500px] h-[800px] rounded-full bg-gradient-to-br from-primary to-primary-glow/40 opacity-20 blur-[120px] parallax-layer"
-    data-depth="0.1"
-  ></div>
-  <div
-    class="absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-primary/30 to-accent opacity-10 blur-[100px] parallax-layer"
-    data-depth="0.15"
-  ></div>
-
-  <!-- Glass elements with parallax -->
-  <div
-    class="absolute top-[15%] left-[5%] w-32 h-32 glass rounded-full opacity-30 parallax-layer"
-    data-depth="0.25"
-  ></div>
-  <div
-    class="absolute top-[60%] right-[8%] w-40 h-40 glass-dark rounded-3xl opacity-20 rotate-12 parallax-layer"
-    data-depth="0.2"
-  ></div>
-  <div
-    class="absolute bottom-[20%] left-[15%] w-24 h-24 glass opacity-30 rounded-xl rotate-45 parallax-layer"
-    data-depth="0.3"
-  ></div>
-
-  <!-- Main content container -->
-  <div
-    class="relative z-10 min-h-screen flex items-center justify-center px-4 md:px-0"
-  >
+  <!-- Main Content Container -->
+  <div class="relative z-10 min-h-screen flex items-center justify-center px-4 md:px-0">
     <div class="w-full max-w-7xl mx-auto">
-      <!-- Hero content with glass effect -->
-      <div class="flex flex-col md:flex-row items-center gap-8 md:gap-16">
-        <!-- Left content (text) -->
-        <div class="w-full md:w-1/2 text-center md:text-left">
-          <!-- Animated headline -->
-          <h1
-            class="text-4xl md:text-6xl xl:text-7xl font-extrabold mb-6 leading-tight reveal-left text-white"
-          >
-            <span class="block text-gradient text-white"
-              >From Idea to Professional Brand,
-              <span
-                class="relative z-10 underline decoration-primary text-white"
-                >in One Prompt!</span
-              >
-            </span>
+      <!-- Professional Two-Column Layout -->
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        
+        <!-- Left Content - Text -->
+        <div class="text-center lg:text-left">
+          <!-- Badge -->
+          <div class="inline-flex items-center gap-2 px-4 py-2 glass rounded-full text-sm font-medium mb-6" style="color: var(--color-light-text); border-color: var(--color-primary);">
+            <i class="pi pi-sparkles text-xs" style="color: var(--color-primary);"></i>
+            All-in-One AI Platform
+          </div>
+          
+          <!-- Main Headline -->
+          <h1 class="font-bold mb-6 leading-tight" style="font-size: var(--font-size-title); color: var(--color-light-text);">
+            From Idea to Success,
+            <span style="color: var(--color-primary);">in Minutes</span>
           </h1>
-
-          <p
-            class="text-xl md:text-2xl text-gray-100 mb-8 font-medium max-w-2xl mx-auto md:mx-0 reveal-left"
-          >
-            <span class="font-bold text-gradient">Free & Open-Source</span>
-            AI platform that creates complete brands with logos, visual
-            identity, UML analysis, business plans, and ready-to-deploy
-            applications
+          
+          <!-- Subtitle -->
+          <p class="mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0" style="font-size: var(--font-size-subtitle); color: var(--color-light-text); opacity: 0.8;">
+            IDEM transforms your concept into a complete business: visual identity, technical architecture, business plan, and deployed application.
           </p>
-
-          <!-- CTA Button with glow effect -->
-          <div class="mt-8 mb-12 reveal-left">
-            <a routerLink="/login" class="relative group">
-              <span
-                class="absolute inset-0 rounded-xl bg-gradient-to-r from-primary via-secondary to-accent blur-lg opacity-70 group-hover:opacity-100 transition-opacity duration-300 -z-10 group-hover:animate-pulse"
-              ></span>
-              <button
-                class="glass-card-hover text-xl md:text-2xl font-semibold py-4 px-8 md:py-5 md:px-10 rounded-xl bg-gradient-to-r from-primary/20 to-secondary/20 text-white border border-white/20 relative overflow-hidden group cursor-pointer"
-              >
-                <span class="relative z-10">Try for Free</span>
-                <span
-                  class="absolute inset-0 bg-gradient-to-r from-primary to-secondary opacity-0 group-hover:opacity-30 transition-opacity duration-300"
-                ></span>
-              </button>
-            </a>
-            <p class="text-sm text-gray-400 mt-3">
-              Trusted by
-              <span class="font-semibold text-white">1,200+</span>
-              entrepreneurs, businesses & creators
-            </p>
-          </div>
-        </div>
-
-        <!-- Right content (features section) - Ultra modern futuristic design -->
-        <div class="w-full md:w-1/2 md:mt-0 relative">
-          <!-- Glass orbs background elements -->
-          <div class="absolute inset-0 z-0 overflow-hidden">
-            <div
-              class="absolute top-[-5%] right-[10%] w-32 h-32 rounded-full bg-primary/20 blur-xl animate-pulse-slow"
-            ></div>
-            <div
-              class="absolute bottom-[15%] left-[5%] w-40 h-40 rounded-full bg-secondary/10 blur-xl animate-float opacity-70"
-            ></div>
-            <div
-              class="absolute -z-10 top-[30%] left-[20%] w-full h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent transform rotate-[-35deg]"
-            ></div>
-            <div
-              class="absolute -z-10 top-[60%] left-[-10%] w-full h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent transform rotate-[25deg]"
-            ></div>
-          </div>
-
-          <!-- Main content container with advanced glass effect -->
-          <div
-            class="relative z-10 rounded-3xl overflow-hidden backdrop-blur-xl border border-white/10 bg-gradient-to-br from-white/10 to-white/5"
-          >
-            <!-- Header with asymmetric design -->
-            <div class="relative px-4 sm:px-6 md:px-8 pt-8 pb-4">
-              <span
-                class="inline-block px-3 py-1 text-xs font-medium rounded-full bg-gradient-to-r from-primary/30 to-secondary/30 border border-white/10 mb-2"
-                >IDEM Platform</span
-              >
-              <h3 class="text-2xl md:text-3xl font-bold mb-2">
-                <span
-                  class="bg-clip-text text-transparent bg-gradient-to-r from-white via-primary-glow to-white"
-                  >AI-Powered Creation</span
-                >
-                <span
-                  class="absolute ml-1 w-1.5 h-1.5 bg-accent rounded-full animate-ping-slow"
-                ></span>
-              </h3>
-              <div
-                class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-primary/40 to-transparent rounded-bl-[100px] opacity-30 blur-sm"
-              ></div>
+          
+          <!-- Key Benefits -->
+          <div class="grid sm:grid-cols-2 gap-4 mb-8">
+            <div class="flex items-center gap-3" style="color: var(--color-light-text);">
+              <div class="w-8 h-8 glass rounded-lg flex items-center justify-center">
+                <i class="pi pi-check text-sm" style="color: var(--color-success);"></i>
+              </div>
+              <span class="font-medium">100% Free</span>
             </div>
-
-            <!-- Modern asymmetric feature layout -->
-            <div class="features-container px-4 sm:px-6 md:px-8 pb-8">
-              <!-- Featured item with special styling -->
-              <div
-                class="mb-6 p-4 rounded-xl bg-gradient-to-r from-primary/10 to-secondary/5 backdrop-blur-md border border-white/10 relative overflow-hidden"
-              >
-                <div class="flex items-center gap-4">
-                  <div
-                    class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-primary/30 to-secondary/20 backdrop-blur-md border border-white/10 flex items-center justify-center relative group-hover:scale-110 transition-all duration-300"
-                  >
-                    <i
-                      class="pi pi-bolt text-xl text-white group-hover:text-accent"
-                    ></i>
-                    <div
-                      class="absolute inset-0 bg-white/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    ></div>
-                  </div>
-                  <div>
-                    <h4 class="font-semibold text-lg text-white">
-                      Develop from Scratch to Deploy
-                    </h4>
-                    <p class="text-sm text-gray-300">
-                      Develop from Scratch to Deploy in One Platform
-                    </p>
-                  </div>
-                </div>
-                <div
-                  class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/20 to-transparent rounded-bl-[100%] opacity-30 blur-lg"
-                ></div>
+            <div class="flex items-center gap-3" style="color: var(--color-light-text);">
+              <div class="w-8 h-8 glass rounded-lg flex items-center justify-center">
+                <i class="pi pi-bolt text-sm" style="color: var(--color-warning);"></i>
               </div>
-
-              <!-- Advanced feature grid with hover effects -->
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Feature 1 - Unique Branding & Design -->
-                <div
-                  class="feature-card group p-3 rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm hover:bg-gradient-to-br hover:from-primary/10 hover:to-transparent transition-all duration-300 relative overflow-hidden"
-                >
-                  <div class="flex items-center gap-3">
-                    <div
-                      class="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center relative group-hover:scale-110 transition-all duration-300"
-                    >
-                      <i
-                        class="pi pi-palette text-sm text-white group-hover:text-accent"
-                      ></i>
-                    </div>
-                    <p class="text-sm text-white">Logo & Visual Identity</p>
-                  </div>
-                  <div
-                    class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-primary/10 to-transparent rounded-bl-[100%] opacity-0 group-hover:opacity-30 transition-all duration-500 blur-md"
-                  ></div>
-                </div>
-
-                <!-- Feature 2 - Feasibility Analysis -->
-                <div
-                  class="feature-card group p-3 rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm hover:bg-gradient-to-br hover:from-secondary/10 hover:to-transparent transition-all duration-300 relative overflow-hidden"
-                >
-                  <div class="flex items-center gap-3">
-                    <div
-                      class="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center relative group-hover:scale-110 transition-all duration-300"
-                    >
-                      <i
-                        class="pi pi-chart-bar text-sm text-white group-hover:text-accent"
-                      ></i>
-                    </div>
-                    <p class="text-sm text-white">UML Analysis</p>
-                  </div>
-                  <div
-                    class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-secondary/10 to-transparent rounded-bl-[100%] opacity-0 group-hover:opacity-30 transition-all duration-500 blur-md"
-                  ></div>
-                </div>
-
-                <!-- Feature 3 - Optimized Tech Stack -->
-                <div
-                  class="feature-card group p-3 rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm hover:bg-gradient-to-br hover:from-accent/10 hover:to-transparent transition-all duration-300 relative overflow-hidden"
-                >
-                  <div class="flex items-center gap-3">
-                    <div
-                      class="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center relative group-hover:scale-110 transition-all duration-300"
-                    >
-                      <i
-                        class="pi pi-cog text-sm text-white group-hover:text-accent"
-                      ></i>
-                    </div>
-                    <p class="text-sm text-white">Business Plan</p>
-                  </div>
-                  <div
-                    class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent/10 to-transparent rounded-bl-[100%] opacity-0 group-hover:opacity-30 transition-all duration-500 blur-md"
-                  ></div>
-                </div>
-
-                <!-- Feature 4 - Automatic Documentation -->
-                <div
-                  class="feature-card group p-3 rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm hover:bg-gradient-to-br hover:from-primary/10 hover:to-transparent transition-all duration-300 relative overflow-hidden"
-                >
-                  <div class="flex items-center gap-3">
-                    <div
-                      class="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center relative group-hover:scale-110 transition-all duration-300"
-                    >
-                      <i
-                        class="pi pi-file-edit text-sm text-white group-hover:text-accent"
-                      ></i>
-                    </div>
-                    <p class="text-sm text-white">Web/Mobile Application</p>
-                  </div>
-                  <div
-                    class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-primary/10 to-transparent rounded-bl-[100%] opacity-0 group-hover:opacity-30 transition-all duration-500 blur-md"
-                  ></div>
-                </div>
-
-                <!-- Feature 5 - Extra feature with full width -->
-                <div
-                  class="feature-card group p-3 rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm hover:bg-gradient-to-br hover:from-secondary/10 hover:to-transparent transition-all duration-300 relative overflow-hidden md:col-span-2"
-                >
-                  <div class="flex items-center gap-3">
-                    <div
-                      class="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center relative group-hover:scale-110 transition-all duration-300"
-                    >
-                      <i
-                        class="pi pi-code text-sm text-white group-hover:text-accent"
-                      ></i>
-                    </div>
-                    <p class="text-sm text-white">One-Click Deployment</p>
-                  </div>
-                  <div
-                    class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-secondary/10 to-transparent rounded-bl-[100%] opacity-0 group-hover:opacity-30 transition-all duration-500 blur-md"
-                  ></div>
-                </div>
+              <span class="font-medium">Fast Results</span>
+            </div>
+            <div class="flex items-center gap-3" style="color: var(--color-light-text);">
+              <div class="w-8 h-8 glass rounded-lg flex items-center justify-center">
+                <i class="pi pi-users text-sm" style="color: var(--color-accent);"></i>
               </div>
+              <span class="font-medium">All Profiles</span>
+            </div>
+            <div class="flex items-center gap-3" style="color: var(--color-light-text);">
+              <div class="w-8 h-8 glass rounded-lg flex items-center justify-center">
+                <i class="pi pi-shield text-sm" style="color: var(--color-primary);"></i>
+              </div>
+              <span class="font-medium">Secure & Reliable</span>
+            </div>
+          </div>
+          
+          <!-- CTA Buttons -->
+          <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <button class="px-8 py-4 font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 glow-primary" style="background-color: var(--color-primary); color: var(--color-light-text);">
+              <i class="pi pi-play mr-2"></i>
+              Start Now
+            </button>
+            <button class="px-8 py-4 glass font-semibold rounded-xl transition-all duration-300 hover:glow-primary" style="color: var(--color-light-text); border-color: var(--color-primary);">
+              <i class="pi pi-eye mr-2"></i>
+              View Demo
+            </button>
+          </div>
+          
+          <!-- Trust Indicators -->
+          <div class="flex flex-col sm:flex-row items-center gap-6 pt-8" style="font-size: var(--font-size-light-text); color: var(--color-light-text); opacity: 0.7; border-top: 1px solid var(--glass-border);">
+            <div class="flex items-center gap-2">
+              <i class="pi pi-users" style="color: var(--color-primary);"></i>
+              <span>1,200+ entrepreneurs</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="pi pi-star-fill" style="color: var(--color-warning);"></i>
+              <span>4.9/5 satisfaction</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="pi pi-clock" style="color: var(--color-accent);"></i>
+              <span>Average 15 minutes</span>
             </div>
           </div>
         </div>
+        
+        <!-- Right Content - Visual -->
+        <div class="relative">
+          <!-- Main Visual Card -->
+          <div class="glass-card overflow-hidden">
+            <!-- Header -->
+            <div class="px-6 py-4" style="background: var(--glass-bg-darker); border-bottom: 1px solid var(--glass-border);">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-3 h-3 rounded-full" style="background-color: var(--color-danger);"></div>
+                  <div class="w-3 h-3 rounded-full" style="background-color: var(--color-warning);"></div>
+                  <div class="w-3 h-3 rounded-full" style="background-color: var(--color-success);"></div>
+                </div>
+                <span class="text-sm font-medium" style="color: var(--color-light-text); opacity: 0.8;">IDEM Platform</span>
+              </div>
+            </div>
+            
+            <!-- Progress Steps -->
+            <div class="p-6 space-y-4">
+              <div class="flex items-center gap-3">
+                <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
+                  <i class="pi pi-check text-green-600 text-xs"></i>
+                </div>
+                <span class="text-gray-700">Identité visuelle créée</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
+                  <i class="pi pi-check text-green-600 text-xs"></i>
+                </div>
+                <span class="text-gray-700">Plan d'affaires généré</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center animate-pulse">
+                  <div class="w-2 h-2 bg-primary rounded-full"></div>
+                </div>
+                <span class="text-gray-700">Application en déploiement...</span>
+              </div>
+              <div class="flex items-center gap-3 opacity-50">
+                <div class="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center">
+                  <div class="w-2 h-2 bg-gray-300 rounded-full"></div>
+                </div>
+                <span class="text-gray-400">Finalisation</span>
+              </div>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="px-6 pb-6">
+              <div class="bg-gray-100 rounded-full h-2 overflow-hidden">
+                <div class="bg-gradient-to-r from-primary to-primary/80 h-full rounded-full transition-all duration-1000 animate-progress" style="width: 75%"></div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Floating Elements -->
+          <div class="absolute -top-4 -right-4 w-20 h-20 bg-primary/10 rounded-2xl rotate-12 animate-float-slow"></div>
+          <div class="absolute -bottom-6 -left-6 w-16 h-16 bg-primary/5 rounded-xl -rotate-12 animate-float-slow-delay"></div>
+        </div>
+        
       </div>
     </div>
   </div>
