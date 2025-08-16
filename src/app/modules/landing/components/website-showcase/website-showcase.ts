@@ -1,0 +1,117 @@
+import { Component, signal, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+interface WebsiteExample {
+  id: string;
+  title: string;
+  category: string;
+  description: string;
+  imageUrl: string;
+  liveUrl: string;
+  technologies: string[];
+}
+
+@Component({
+  selector: 'app-website-showcase',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './website-showcase.html',
+  styleUrl: './website-showcase.css'
+})
+export class WebsiteShowcase implements OnInit, OnDestroy {
+  protected readonly websites = signal<WebsiteExample[]>([
+    {
+      id: '1',
+      title: 'TechFlow Solutions',
+      category: 'SaaS Platform',
+      description: 'Modern B2B software solution with clean design and powerful features',
+      imageUrl: '/assets/showcase/website-1.jpg',
+      liveUrl: 'https://techflow-demo.idem.africa',
+      technologies: ['Angular', 'Node.js', 'PostgreSQL']
+    },
+    {
+      id: '2',
+      title: 'EcoGreen Marketplace',
+      category: 'E-commerce',
+      description: 'Sustainable products marketplace with integrated payment system',
+      imageUrl: '/assets/showcase/website-2.jpg',
+      liveUrl: 'https://ecogreen-demo.idem.africa',
+      technologies: ['React', 'Express', 'MongoDB']
+    },
+    {
+      id: '3',
+      title: 'HealthCare Connect',
+      category: 'Healthcare',
+      description: 'Patient management system with telemedicine capabilities',
+      imageUrl: '/assets/showcase/website-3.jpg',
+      liveUrl: 'https://healthcare-demo.idem.africa',
+      technologies: ['Vue.js', 'Laravel', 'MySQL']
+    },
+    {
+      id: '4',
+      title: 'EduLearn Platform',
+      category: 'Education',
+      description: 'Interactive learning platform with video streaming and assessments',
+      imageUrl: '/assets/showcase/website-4.jpg',
+      liveUrl: 'https://edulearn-demo.idem.africa',
+      technologies: ['Angular', 'NestJS', 'PostgreSQL']
+    },
+    {
+      id: '5',
+      title: 'FinTech Dashboard',
+      category: 'Finance',
+      description: 'Real-time financial analytics and trading dashboard',
+      imageUrl: '/assets/showcase/website-5.jpg',
+      liveUrl: 'https://fintech-demo.idem.africa',
+      technologies: ['React', 'FastAPI', 'Redis']
+    },
+    {
+      id: '6',
+      title: 'Creative Portfolio',
+      category: 'Portfolio',
+      description: 'Artist portfolio with interactive galleries and booking system',
+      imageUrl: '/assets/showcase/website-6.jpg',
+      liveUrl: 'https://portfolio-demo.idem.africa',
+      technologies: ['Next.js', 'Strapi', 'PostgreSQL']
+    }
+  ]);
+
+  protected readonly currentIndex = signal(0);
+  private intervalId?: number;
+
+  ngOnInit(): void {
+    this.startAutoScroll();
+  }
+
+  ngOnDestroy(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+  }
+
+  private startAutoScroll(): void {
+    this.intervalId = window.setInterval(() => {
+      const websites = this.websites();
+      const current = this.currentIndex();
+      const next = (current + 1) % websites.length;
+      this.currentIndex.set(next);
+    }, 4000);
+  }
+
+  protected goToSlide(index: number): void {
+    this.currentIndex.set(index);
+  }
+
+  protected getVisibleWebsites(): WebsiteExample[] {
+    const websites = this.websites();
+    const current = this.currentIndex();
+    const result: WebsiteExample[] = [];
+    
+    for (let i = 0; i < 3; i++) {
+      const index = (current + i) % websites.length;
+      result.push(websites[index]);
+    }
+    
+    return result;
+  }
+}

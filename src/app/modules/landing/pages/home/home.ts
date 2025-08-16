@@ -15,13 +15,33 @@ import { SeoService } from '../../../../shared/services/seo.service';
 // Import standalone components
 import { Hero } from '../../components/hero/hero';
 import { Features } from '../../components/features/features';
+import { WebsiteShowcase } from '../../components/website-showcase/website-showcase';
+import { VideoTrailer } from '../../components/video-trailer/video-trailer';
+import { LogosShowcase } from '../../components/logos-showcase/logos-showcase';
+import { BrandCharter } from '../../components/brand-charter/brand-charter';
+import { BusinessPlan } from '../../components/business-plan/business-plan';
+import { Diagrams } from '../../components/diagrams/diagrams';
+import { CtaSection } from '../../components/cta-section/cta-section';
 import { Cta } from '../../components/cta/cta';
 import { Pricing } from '../../components/pricing/pricing';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, Hero, Features, Cta, Pricing],
+  imports: [
+    CommonModule,
+    Hero,
+    Features,
+    WebsiteShowcase,
+    VideoTrailer,
+    LogosShowcase,
+    BrandCharter,
+    BusinessPlan,
+    Diagrams,
+    CtaSection,
+    Cta,
+    Pricing
+  ],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })

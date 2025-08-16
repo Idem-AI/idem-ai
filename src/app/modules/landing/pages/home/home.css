@@ -138,6 +138,17 @@
 .stagger-delay-7 { transition-delay: 0.7s; }
 .stagger-delay-8 { transition-delay: 0.8s; }
 
+/* Additional reveal delay classes for new sections */
+.reveal-delay-1 { transition-delay: 0.2s; }
+.reveal-delay-2 { transition-delay: 0.4s; }
+.reveal-delay-3 { transition-delay: 0.6s; }
+.reveal-delay-4 { transition-delay: 0.8s; }
+.reveal-delay-5 { transition-delay: 1.0s; }
+.reveal-delay-6 { transition-delay: 1.2s; }
+.reveal-delay-7 { transition-delay: 1.4s; }
+.reveal-delay-8 { transition-delay: 1.6s; }
+.reveal-delay-9 { transition-delay: 1.8s; }
+
 /* Custom tailwind classes for color utilities using CSS variables */
 .from-primary { --tw-gradient-from: var(--color-primary); }
 .from-secondary { --tw-gradient-from: var(--color-secondary); }

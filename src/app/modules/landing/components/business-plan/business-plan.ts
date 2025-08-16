@@ -1,0 +1,146 @@
+import { Component, signal, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+interface BusinessPlanSection {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  keyPoints: string[];
+}
+
+interface BusinessPlanExample {
+  id: string;
+  companyName: string;
+  industry: string;
+  stage: string;
+  revenue: string;
+  description: string;
+  highlights: string[];
+  color: string;
+}
+
+@Component({
+  selector: 'app-business-plan',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './business-plan.html',
+  styleUrl: './business-plan.css'
+})
+export class BusinessPlan implements OnInit {
+  protected readonly activeExample = signal<number>(0);
+  
+  protected readonly planSections = signal<BusinessPlanSection[]>([
+    {
+      id: 'executive',
+      title: 'Executive Summary',
+      description: 'Compelling overview of your business concept, mission, and key success factors',
+      icon: 'pi-crown',
+      keyPoints: ['Business Concept', 'Mission Statement', 'Success Factors', 'Financial Summary']
+    },
+    {
+      id: 'market',
+      title: 'Market Analysis',
+      description: 'In-depth research of your target market, competition, and industry trends',
+      icon: 'pi-chart-line',
+      keyPoints: ['Market Size', 'Target Audience', 'Competitive Analysis', 'Market Trends']
+    },
+    {
+      id: 'strategy',
+      title: 'Business Strategy',
+      description: 'Your unique value proposition and strategic approach to market entry',
+      icon: 'pi-sitemap',
+      keyPoints: ['Value Proposition', 'Business Model', 'Go-to-Market Strategy', 'Competitive Advantage']
+    },
+    {
+      id: 'operations',
+      title: 'Operations Plan',
+      description: 'Detailed operational structure, processes, and resource requirements',
+      icon: 'pi-cog',
+      keyPoints: ['Operational Structure', 'Key Processes', 'Resource Requirements', 'Quality Control']
+    },
+    {
+      id: 'marketing',
+      title: 'Marketing Strategy',
+      description: 'Comprehensive marketing and sales approach to reach your target customers',
+      icon: 'pi-megaphone',
+      keyPoints: ['Marketing Mix', 'Sales Strategy', 'Customer Acquisition', 'Brand Positioning']
+    },
+    {
+      id: 'financial',
+      title: 'Financial Projections',
+      description: 'Detailed financial forecasts, funding requirements, and return projections',
+      icon: 'pi-dollar',
+      keyPoints: ['Revenue Projections', 'Cost Structure', 'Funding Requirements', 'ROI Analysis']
+    }
+  ]);
+
+  protected readonly businessExamples = signal<BusinessPlanExample[]>([
+    {
+      id: '1',
+      companyName: 'TechFlow Solutions',
+      industry: 'SaaS Technology',
+      stage: 'Startup',
+      revenue: '$500K ARR Target',
+      description: 'B2B workflow automation platform targeting mid-market companies',
+      highlights: [
+        '3-year revenue projection: $5M',
+        'Target market: 50,000+ companies',
+        'Competitive advantage: AI-powered automation',
+        'Funding requirement: $2M Series A'
+      ],
+      color: '#1447e6'
+    },
+    {
+      id: '2',
+      companyName: 'EcoGreen Marketplace',
+      industry: 'E-commerce',
+      stage: 'Growth',
+      revenue: '$2M ARR Current',
+      description: 'Sustainable products marketplace connecting eco-conscious consumers with green brands',
+      highlights: [
+        '5-year revenue projection: $25M',
+        'Target market: 10M+ eco-consumers',
+        'Competitive advantage: Verified sustainability',
+        'Expansion plan: International markets'
+      ],
+      color: '#22c55e'
+    },
+    {
+      id: '3',
+      companyName: 'HealthCare Connect',
+      industry: 'Healthcare',
+      stage: 'Scale-up',
+      revenue: '$10M ARR Current',
+      description: 'Telemedicine platform providing accessible healthcare to underserved communities',
+      highlights: [
+        '5-year revenue projection: $100M',
+        'Target market: 50M+ patients',
+        'Competitive advantage: Rural healthcare focus',
+        'Partnership strategy: Healthcare systems'
+      ],
+      color: '#3b82f6'
+    }
+  ]);
+
+  ngOnInit(): void {
+    this.startAutoRotation();
+  }
+
+  private startAutoRotation(): void {
+    setInterval(() => {
+      const examples = this.businessExamples();
+      const current = this.activeExample();
+      const next = (current + 1) % examples.length;
+      this.activeExample.set(next);
+    }, 5000);
+  }
+
+  protected selectExample(index: number): void {
+    this.activeExample.set(index);
+  }
+
+  protected getCurrentExample(): BusinessPlanExample {
+    return this.businessExamples()[this.activeExample()];
+  }
+}
