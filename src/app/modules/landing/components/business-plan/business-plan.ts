@@ -49,7 +49,7 @@ export class BusinessPlan implements OnInit, OnDestroy {
     {
       id: 'strategy',
       title: 'Business Strategy',
-      description: 'Your unique value proposition and strategic approach to market entry',
+      description: 'AI fitness app with personalized workouts, approach to market entry',
       icon: 'pi-sitemap',
       keyPoints: ['Value Proposition', 'Business Model', 'Go-to-Market Strategy', 'Competitive Advantage']
     },
@@ -83,12 +83,11 @@ export class BusinessPlan implements OnInit, OnDestroy {
       industry: 'SaaS Technology',
       stage: 'Startup',
       revenue: '$500K ARR Target',
-      description: 'B2B workflow automation platform targeting mid-market companies',
+      description: 'AI fitness app with personalized workouts',
       highlights: [
-        '3-year revenue projection: $5M',
-        'Target market: 50,000+ companies',
-        'Competitive advantage: AI-powered automation',
-        'Funding requirement: $2M Series A'
+        '5-year revenue projection: $50M',
+        'Target market: 500M+ mobile users',
+        'AI-powered personalization'
       ],
       color: '#1447e6'
     },
@@ -98,12 +97,11 @@ export class BusinessPlan implements OnInit, OnDestroy {
       industry: 'E-commerce',
       stage: 'Growth',
       revenue: '$2M ARR Current',
-      description: 'Sustainable products marketplace connecting eco-conscious consumers with green brands',
+      description: 'Sustainable products marketplace',
       highlights: [
         '5-year revenue projection: $25M',
         'Target market: 10M+ eco-consumers',
-        'Competitive advantage: Verified sustainability',
-        'Expansion plan: International markets'
+        'Verified sustainability focus'
       ],
       color: '#22c55e'
     },
@@ -113,12 +111,11 @@ export class BusinessPlan implements OnInit, OnDestroy {
       industry: 'Healthcare',
       stage: 'Scale-up',
       revenue: '$10M ARR Current',
-      description: 'Telemedicine platform providing accessible healthcare to underserved communities',
+      description: 'Telemedicine platform for underserved communities',
       highlights: [
         '5-year revenue projection: $100M',
         'Target market: 50M+ patients',
-        'Competitive advantage: Rural healthcare focus',
-        'Partnership strategy: Healthcare systems'
+        'Rural healthcare focus'
       ],
       color: '#3b82f6'
     }

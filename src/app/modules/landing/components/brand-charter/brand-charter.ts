@@ -34,30 +34,30 @@ export class BrandCharter implements OnInit {
     {
       id: 'colors',
       title: 'Color Palette',
-      description: 'Carefully selected colors that reflect your brand personality and create emotional connections',
+      description: 'Colors that reflect your brand personality',
       icon: 'pi-palette',
-      examples: ['Primary Colors', 'Secondary Colors', 'Accent Colors', 'Neutral Tones']
+      examples: ['Primary Colors', 'Secondary Colors', 'Accent Colors']
     },
     {
       id: 'typography',
       title: 'Typography',
-      description: 'Font families and text styles that ensure consistent communication across all touchpoints',
+      description: 'Font families for consistent communication',
       icon: 'pi-font',
-      examples: ['Headings Font', 'Body Text Font', 'Display Font', 'Monospace Font']
+      examples: ['Headings Font', 'Body Text Font', 'Display Font']
     },
     {
       id: 'logo',
       title: 'Logo Variations',
-      description: 'Multiple logo formats and variations for different use cases and applications',
+      description: 'Logo formats for different use cases',
       icon: 'pi-star',
-      examples: ['Primary Logo', 'Secondary Mark', 'Icon Version', 'Monochrome']
+      examples: ['Primary Logo', 'Secondary Mark', 'Icon Version']
     },
     {
       id: 'imagery',
       title: 'Visual Style',
-      description: 'Guidelines for photography, illustrations, and visual elements that support your brand',
+      description: 'Visual elements that support your brand',
       icon: 'pi-image',
-      examples: ['Photography Style', 'Illustration Style', 'Icon Style', 'Pattern Library']
+      examples: ['Photography Style', 'Illustration Style', 'Icon Style']
     }
   ]);
 
@@ -70,7 +70,7 @@ export class BrandCharter implements OnInit {
       secondaryColor: '#22d3ee',
       fontFamily: 'Inter',
       logoStyle: 'Modern Geometric',
-      description: 'Clean, professional brand identity for a B2B SaaS platform'
+      description: 'Professional B2B SaaS brand identity'
     },
     {
       id: '2',
@@ -80,7 +80,7 @@ export class BrandCharter implements OnInit {
       secondaryColor: '#16a34a',
       fontFamily: 'Poppins',
       logoStyle: 'Organic Natural',
-      description: 'Sustainable and eco-friendly brand identity for green products'
+      description: 'Eco-friendly brand for green products'
     },
     {
       id: '3',
@@ -90,7 +90,7 @@ export class BrandCharter implements OnInit {
       secondaryColor: '#9333ea',
       fontFamily: 'Montserrat',
       logoStyle: 'Artistic Bold',
-      description: 'Dynamic and creative brand identity for a design agency'
+      description: 'Creative brand for design agency'
     }
   ]);
 

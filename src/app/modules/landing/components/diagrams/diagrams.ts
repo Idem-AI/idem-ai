@@ -41,7 +41,7 @@ export class Diagrams implements OnInit, OnDestroy {
       description: 'Visual representation of system functionality and user interactions',
       icon: 'pi-users',
       color: '#1447e6',
-      examples: ['User Registration', 'Payment Processing', 'Content Management', 'Admin Dashboard']
+      examples: ['User Registration', 'Payment Processing', 'Content Management']
     },
     {
       id: 'class',
@@ -49,7 +49,7 @@ export class Diagrams implements OnInit, OnDestroy {
       description: 'Object-oriented system structure with classes, attributes, and relationships',
       icon: 'pi-sitemap',
       color: '#22c55e',
-      examples: ['User Management', 'Product Catalog', 'Order System', 'Authentication']
+      examples: ['User Management', 'Product Catalog', 'Order System']
     },
     {
       id: 'sequence',
@@ -57,7 +57,7 @@ export class Diagrams implements OnInit, OnDestroy {
       description: 'Time-ordered interaction between system components and actors',
       icon: 'pi-arrows-h',
       color: '#d11ec0',
-      examples: ['Login Flow', 'API Calls', 'Data Processing', 'Error Handling']
+      examples: ['Login Flow', 'API Calls', 'Data Processing']
     },
     {
       id: 'activity',
@@ -65,7 +65,7 @@ export class Diagrams implements OnInit, OnDestroy {
       description: 'Workflow and business process modeling with decision points',
       icon: 'pi-share-alt',
       color: '#f59e0b',
-      examples: ['Order Processing', 'User Onboarding', 'Content Approval', 'Data Migration']
+      examples: ['Order Processing', 'User Onboarding', 'Content Approval']
     },
     {
       id: 'component',
@@ -73,7 +73,7 @@ export class Diagrams implements OnInit, OnDestroy {
       description: 'System architecture showing components and their dependencies',
       icon: 'pi-th-large',
       color: '#8b5cf6',
-      examples: ['Microservices', 'Frontend Architecture', 'Database Design', 'API Structure']
+      examples: ['Microservices', 'Frontend Architecture', 'Database Design']
     },
     {
       id: 'deployment',
@@ -81,7 +81,7 @@ export class Diagrams implements OnInit, OnDestroy {
       description: 'Infrastructure and deployment architecture visualization',
       icon: 'pi-cloud',
       color: '#06b6d4',
-      examples: ['Cloud Infrastructure', 'Server Architecture', 'Network Topology', 'CI/CD Pipeline']
+      examples: ['Cloud Infrastructure', 'Server Architecture', 'Network Topology']
     }
   ]);
 
@@ -92,7 +92,7 @@ export class Diagrams implements OnInit, OnDestroy {
       type: 'Use Case',
       industry: 'E-commerce',
       complexity: 'Complex',
-      description: 'Complete user journey from registration to order completion',
+      description: 'User journey from registration to checkout',
       elements: 12,
       connections: 18,
       previewData: 'User → Browse Products → Add to Cart → Checkout → Payment → Order Confirmation'
@@ -103,7 +103,7 @@ export class Diagrams implements OnInit, OnDestroy {
       type: 'Class Diagram',
       industry: 'SaaS',
       complexity: 'Medium',
-      description: 'Object-oriented design for multi-tenant SaaS application',
+      description: 'Multi-tenant SaaS application structure',
       elements: 8,
       connections: 14,
       previewData: 'User ← extends → Admin | Product → contains → Features | Subscription → manages → Billing'
@@ -114,7 +114,7 @@ export class Diagrams implements OnInit, OnDestroy {
       type: 'Sequence',
       industry: 'Technology',
       complexity: 'Simple',
-      description: 'JWT token-based authentication flow with refresh mechanism',
+      description: 'JWT authentication flow',
       elements: 5,
       connections: 10,
       previewData: 'Client → Auth Server → Database → Token Generation → Response'
@@ -125,7 +125,7 @@ export class Diagrams implements OnInit, OnDestroy {
       type: 'Activity',
       industry: 'Healthcare',
       complexity: 'Complex',
-      description: 'Patient registration and treatment workflow with decision points',
+      description: 'Patient treatment workflow',
       elements: 15,
       connections: 22,
       previewData: 'Patient Registration → Triage → Doctor Assignment → Treatment → Billing → Discharge'
