@@ -108,7 +108,7 @@
 
             <!-- Technologies -->
             <div class="flex flex-wrap gap-2">
-              @for (tech of website.technologies; track tech) {
+              @for (tech of website.technologies; track $index) {
               <span
                 class="px-2 py-1 text-xs bg-white/10 rounded-md text-white/80 border border-white/10"
               >

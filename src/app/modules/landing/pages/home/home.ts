@@ -1,12 +1,4 @@
-import {
-  Component,
-  inject,
-  PLATFORM_ID,
-  signal,
-  AfterViewInit,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { Component, inject, PLATFORM_ID, signal, OnInit } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 
 // Import services
@@ -40,31 +32,21 @@ import { Pricing } from '../../components/pricing/pricing';
     Diagrams,
     CtaSection,
     Cta,
-    Pricing
+    Pricing,
   ],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
-export class Home implements OnInit, AfterViewInit, OnDestroy {
+export class Home implements OnInit {
   // Angular-initialized properties
   protected readonly isBrowser = signal(isPlatformBrowser(inject(PLATFORM_ID)));
-  private readonly platformId = inject(PLATFORM_ID);
   private readonly seoService = inject(SeoService);
 
   // State properties
-  protected scrollObserver: IntersectionObserver | null = null;
 
   // Lifecycle methods
   ngOnInit(): void {
-    this.setupSeo();
-  }
-
-  ngAfterViewInit(): void {
-    this.initScrollAnimations();
-  }
-
-  ngOnDestroy(): void {
-    this.destroyScrollAnimations();
+    // this.setupSeo();
   }
 
   // SEO setup
@@ -99,49 +81,9 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       },
     ];
 
-    // this.seoService.updateTitle(title);
-    // this.seoService.updateMetaTags(metaTags);
-    // this.seoService.updateOgTags(ogTags);
-    // this.seoService.setCanonicalUrl('/');
-  }
-
-  // Animation methods
-  private initScrollAnimations(): void {
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
-
-    // Configure the intersection observer for scroll animations
-    const options = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.2,
-    };
-
-    this.scrollObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        // Add the active class when the element is in the viewport
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-          // Optionally stop observing after animation is triggered
-          // this.scrollObserver?.unobserve(entry.target);
-        } else {
-          // Optional: remove the class when out of viewport for re-animation on scroll up
-          // entry.target.classList.remove('active');
-        }
-      });
-    }, options);
-
-    // Observe all elements with the 'reveal' class
-    document.querySelectorAll('.reveal').forEach((element) => {
-      this.scrollObserver?.observe(element);
-    });
-  }
-
-  private destroyScrollAnimations(): void {
-    if (this.scrollObserver) {
-      this.scrollObserver.disconnect();
-      this.scrollObserver = null;
-    }
+    this.seoService.updateTitle(title);
+    this.seoService.updateMetaTags(metaTags);
+    this.seoService.updateOgTags(ogTags);
+    this.seoService.setCanonicalUrl('/');
   }
 }

@@ -1,52 +1,45 @@
-/* Ultra-modern asymmetric glass design system for features */
+/* Features Component - Minimal Custom CSS, Tailwind-first approach */
 
-.features-section {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  min-height: 100vh;
+/* Only complex styles that can't be achieved with Tailwind */
+
+/* Gradient text effect for hero title */
+.gradient-text {
+  background: linear-gradient(135deg, #ffffff 0%, #e5e7eb 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  will-change: auto;
 }
 
-/* Elegant glass background gradient */
-.bg-glass-gradient {
-  background: linear-gradient(
-    to bottom right,
-    rgba(10, 10, 20, 0.98),
-    rgba(25, 25, 45, 0.99)
-  );
-  background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
+/* Complex hover animations for cards */
+.feature-card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 }
 
-/* Dynamic background elements */
-.glass-orb-1 {
-  width: 60vw;
-  height: 60vw;
-  border-radius: 50%;
-  top: -20vw;
-  right: -20vw;
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(255, 255, 255, 0.03),
-    rgba(79, 182, 255, 0.01)
-  );
-  border: 1px solid rgba(255, 255, 255, 0.02);
-  filter: blur(30px);
+.feature-card-hover:hover {
+  transform: translateY(-4px) scale(1.02);
 }
 
-.glass-orb-2 {
-  width: 40vw;
-  height: 40vw;
-  border-radius: 50%;
-  bottom: -15vw;
-  left: -15vw;
-  background: radial-gradient(
-    circle at 70% 70%,
-    rgba(255, 255, 255, 0.02),
-    rgba(148, 108, 255, 0.01)
-  );
-  border: 1px solid rgba(255, 255, 255, 0.02);
-  filter: blur(30px);
+/* Complex gradient backgrounds for decorative elements */
+.gradient-decoration-blue {
+  background: radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.15), rgba(147, 51, 234, 0.1));
+}
+
+.gradient-decoration-pink {
+  background: radial-gradient(circle at 30% 30%, rgba(236, 72, 153, 0.15), rgba(244, 63, 94, 0.1));
+}
+
+.gradient-decoration-cyan {
+  background: radial-gradient(circle at 30% 30%, rgba(6, 182, 212, 0.15), rgba(20, 184, 166, 0.1));
+}
+
+.gradient-decoration-orange {
+  background: radial-gradient(circle at 30% 30%, rgba(249, 115, 22, 0.15), rgba(245, 158, 11, 0.1));
+}
+
+.gradient-decoration-green {
+  background: radial-gradient(circle at 30% 30%, rgba(34, 197, 94, 0.15), rgba(16, 185, 129, 0.1));
 }
 
 .glass-orb-3 {
@@ -55,11 +48,11 @@
   border-radius: 50%;
   bottom: 20vh;
   right: 10vw;
-  background: radial-gradient(
+  /* background: radial-gradient(
     circle at 30% 30%,
     rgba(255, 255, 255, 0.02),
     transparent
-  );
+  ); */
   border: 1px solid rgba(255, 255, 255, 0.01);
   filter: blur(20px);
 }

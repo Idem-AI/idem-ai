@@ -1,3 +1,4 @@
+/* Simple Splash Screen - Following UI Specs */
 .splash-container {
   position: fixed;
   top: 0;
@@ -7,10 +8,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #06080d 0%, #0f141b 50%, #121a25 100%);
-  overflow-x: hidden;
+  background-color: var(--color-bg-dark);
+  color: var(--color-light-text);
   z-index: 9999;
-  transition: opacity 0.5s ease-out;
+  transition: opacity 0.8s ease-out;
 }
 
 .splash-container.fade-out {
@@ -18,65 +19,91 @@
 }
 
 .splash-content {
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
+  text-align: center;
 }
 
-/* Logo styling */
-.logo-container {
-  position: relative;
-  width: 120px;
-  height: 120px;
-  margin-bottom: 40px;
+/* Simple Logo Styling */
+.logo-simple {
+  margin-bottom: 3rem;
 }
 
-.logo-inner {
-  position: absolute;
-  width: 100%;
-  height: 100%;
+.logo-text {
   display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.logo-letter {
+  font-size: 3rem;
+  font-weight: bold;
+  color: var(--color-light-text);
+  opacity: 0;
+  animation: letterFadeIn 0.6s ease-out forwards;
+}
+
+.logo-letter.i {
+  animation-delay: 0.1s;
+  color: var(--color-primary);
+}
+
+.logo-letter.d {
+  animation-delay: 0.2s;
+}
+
+.logo-letter.e {
+  animation-delay: 0.3s;
+}
+
+.logo-letter.m {
+  animation-delay: 0.4s;
+}
+
+.logo-tagline {
+  font-size: 0.875rem;
+  color: var(--color-light-text);
+  opacity: 0.7;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  animation: fadeInUp 0.8s ease-out 0.6s forwards;
+  opacity: 0;
+}
+
+/* Simple Progress Styling */
+.progress-simple {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  animation: rotate 8s linear infinite;
+  gap: 1rem;
 }
 
-.logo-hexagon {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  border: 4px solid rgba(20, 71, 230, 0.7);
-  clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
-  animation: pulse 3s ease-in-out infinite alternate;
+.progress-dots {
+  display: flex;
+  gap: 0.75rem;
 }
 
-.logo-circle {
-  position: absolute;
-  width: 70%;
-  height: 70%;
-  background: transparent;
-  border: 3px solid rgba(209, 30, 192, 0.7);
+.dot {
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  animation: pulse 2s ease-in-out infinite alternate-reverse;
+  background-color: var(--glass-border);
+  transition: all 0.4s ease;
 }
 
-.logo-glow {
-  position: absolute;
-  width: 40%;
-  height: 40%;
-  background: radial-gradient(
-    circle,
-    rgba(34, 211, 238, 0.8) 0%,
-    rgba(34, 211, 238, 0) 70%
-  );
-  border-radius: 50%;
-  filter: blur(8px);
-  animation: glow 2s ease-in-out infinite alternate;
+.dot.active {
+  background-color: var(--color-primary);
+  box-shadow: 0 0 8px var(--color-primary-glow);
+  transform: scale(1.2);
+}
+
+.progress-text {
+  font-size: 0.875rem;
+  color: var(--color-light-text);
+  opacity: 0.6;
+  animation: pulse 2s ease-in-out infinite;
 }
 
 /* Progress bar */
@@ -276,5 +303,69 @@
   100% {
     transform: translate(-50%, -50%) scale(1.2);
     opacity: 0;
+  }
+}
+
+@keyframes letterFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 0.7;
+    transform: translateY(0);
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .logo-letter,
+  .logo-tagline,
+  .progress-text {
+    animation: none;
+    opacity: 1;
+  }
+  
+  .logo-tagline {
+    opacity: 0.7;
+  }
+  
+  .progress-text {
+    opacity: 0.6;
+  }
+  
+  .dot {
+    transition: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .logo-letter {
+    color: white;
+  }
+  
+  .logo-letter.i {
+    color: #4a90ff;
+  }
+  
+  .dot {
+    background-color: white;
+  }
+  
+  .dot.active {
+    background-color: #4a90ff;
+    box-shadow: none;
   }
 }

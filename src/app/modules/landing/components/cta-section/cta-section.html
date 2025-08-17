@@ -65,7 +65,7 @@
 
     <!-- Features Grid -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-      @for (feature of features(); track feature.icon) {
+      @for (feature of features(); track feature.id) {
         <div class="text-center group">
           <div class="w-16 h-16 glass-card rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
             <i class="pi {{ feature.icon }} text-2xl text-primary group-hover:text-secondary transition-colors duration-300"></i>
@@ -109,7 +109,7 @@
       <div class="mt-12 text-center">
         <div class="glass-dark rounded-2xl p-6 max-w-2xl mx-auto">
           <div class="flex justify-center mb-4">
-            @for (star of [1,2,3,4,5]; track star) {
+            @for (star of [1,2,3,4,5]; track $index) {
               <i class="pi pi-star-fill text-yellow-400"></i>
             }
           </div>

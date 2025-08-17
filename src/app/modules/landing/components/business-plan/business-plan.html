@@ -51,7 +51,7 @@
 
           <!-- Key Points -->
           <div class="space-y-2">
-            @for (point of section.keyPoints; track point) {
+            @for (point of section.keyPoints; track $index) {
               <div class="flex items-center gap-2 text-sm text-white/60">
                 <div class="w-1.5 h-1.5 bg-primary rounded-full"></div>
                 <span>{{ point }}</span>
@@ -103,7 +103,7 @@
 
             <!-- Highlights -->
             <div class="space-y-3">
-              @for (highlight of getCurrentExample().highlights; track highlight) {
+              @for (highlight of getCurrentExample().highlights; track $index) {
                 <div class="flex items-start gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
                   <div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
                   <span class="text-white/80 text-sm">{{ highlight }}</span>

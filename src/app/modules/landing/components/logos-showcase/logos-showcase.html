@@ -84,7 +84,7 @@
             
             <!-- Color Palette -->
             <div class="flex justify-center gap-2 mb-3">
-              @for (color of logo.colors; track color) {
+              @for (color of logo.colors; track $index) {
                 <div 
                   class="w-4 h-4 rounded-full border border-white/20"
                   [style.background-color]="color"

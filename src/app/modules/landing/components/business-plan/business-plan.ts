@@ -1,4 +1,4 @@
-import { Component, signal, OnInit } from '@angular/core';
+import { Component, signal, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 interface BusinessPlanSection {
@@ -27,8 +27,9 @@ interface BusinessPlanExample {
   templateUrl: './business-plan.html',
   styleUrl: './business-plan.css'
 })
-export class BusinessPlan implements OnInit {
+export class BusinessPlan implements OnInit, OnDestroy {
   protected readonly activeExample = signal<number>(0);
+  private rotationInterval?: number;
   
   protected readonly planSections = signal<BusinessPlanSection[]>([
     {
@@ -127,8 +128,15 @@ export class BusinessPlan implements OnInit {
     this.startAutoRotation();
   }
 
+  ngOnDestroy(): void {
+    if (this.rotationInterval) {
+      clearInterval(this.rotationInterval);
+      this.rotationInterval = undefined;
+    }
+  }
+
   private startAutoRotation(): void {
-    setInterval(() => {
+    this.rotationInterval = window.setInterval(() => {
       const examples = this.businessExamples();
       const current = this.activeExample();
       const next = (current + 1) % examples.length;

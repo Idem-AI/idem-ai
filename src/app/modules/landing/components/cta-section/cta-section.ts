@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 interface CtaFeature {
+  id: string;
   icon: string;
   title: string;
   description: string;
@@ -17,16 +18,19 @@ interface CtaFeature {
 export class CtaSection {
   protected readonly features = signal<CtaFeature[]>([
     {
+      id: 'launch-minutes',
       icon: 'pi-bolt',
       title: 'Launch in Minutes',
       description: 'From idea to deployed application in under 10 minutes'
     },
     {
+      id: 'enterprise-ready',
       icon: 'pi-shield',
       title: 'Enterprise Ready',
       description: 'Production-grade security and scalability built-in'
     },
     {
+      id: 'free-forever',
       icon: 'pi-heart',
       title: 'Free Forever',
       description: 'Core features always free, no hidden costs or limits'

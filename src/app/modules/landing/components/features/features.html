@@ -1,119 +1,278 @@
-<div class="features-section relative px-6 py-20 text-white bg-glass-gradient">
-  <!-- Dynamic background elements -->
-  <div class="absolute inset-0 z-0">
-    <div class="glass-orb glass-orb-1 absolute"></div>
-    <div class="glass-orb glass-orb-2 absolute"></div>
-    <div class="glass-orb glass-orb-3 absolute"></div>
-    <div class="diagonal-line absolute top-1/4 left-0 right-0"></div>
-    <div class="diagonal-line absolute top-3/4 left-0 right-0"></div>
+<div
+  class="features-section relative px-6 py-20"
+  style="color: var(--color-light-text)"
+>
+  <!-- Glass floating elements following UI specs -->
+  <div class="absolute inset-0 pointer-events-none">
+    <div
+      class="absolute top-[10%] right-[15%] w-40 h-40 rounded-full blur-3xl glow-primary opacity-10"
+    ></div>
+    <div
+      class="absolute bottom-[20%] left-[10%] w-32 h-32 rounded-full blur-2xl glow-secondary opacity-8"
+    ></div>
+    <div
+      class="absolute top-[60%] right-[5%] w-24 h-24 rounded-full blur-xl glow-accent opacity-6"
+    ></div>
   </div>
 
-  <div class="container max-w-7xl mx-auto relative z-10">
-    <!-- Header with asymmetric design -->
-    <div
-      class="flex flex-col md:flex-row items-start md:items-end justify-between mb-16"
-    >
-      <div class="md:w-1/2">
-        <span class="inline-block glass-pill px-4 py-1.5 mb-3"
-          >Our Features</span
-        >
-        <h1
-          class="text-4xl md:text-6xl font-bold glass-text mb-2 leading-tight"
-        >
-          Transform Ideas Into
-          <span class="inline-block"
-            >Reality<span
-              class="absolute -top-1 -right-2 w-2 h-2 bg-white rounded-full glass-dot pulse-animation"
-            ></span
-          ></span>
-        </h1>
+  <div class="max-w-7xl mx-auto relative z-10">
+    <!-- Header following UI specs -->
+    <div class="text-center mb-16">
+      <div
+        class="inline-flex items-center gap-2 px-4 py-2 glass rounded-full text-sm font-medium mb-6"
+        style="
+          color: var(--color-light-text);
+          border-color: var(--color-primary);
+        "
+      >
+        <i
+          class="pi pi-sparkles text-xs"
+          style="color: var(--color-primary)"
+        ></i>
+        Platform Features
       </div>
-      <p class="md:w-2/5 text-lg opacity-90 mt-4 md:mt-0">
-        IDEM is a free and open-source platform that empowers entrepreneurs, businesses, and enthusiasts to create professional brands from simple ideas with AI assistance
+
+      <h2
+        class="font-bold mb-6 leading-tight"
+        style="
+          font-size: var(--font-size-title);
+          color: var(--color-light-text);
+        "
+      >
+        Transform Ideas Into
+        <span style="color: var(--color-primary)">Reality</span>
+      </h2>
+
+      <p
+        class="max-w-3xl mx-auto leading-relaxed"
+        style="
+          font-size: var(--font-size-subtitle);
+          color: var(--color-light-text);
+          opacity: 0.8;
+        "
+      >
+        IDEM empowers entrepreneurs and businesses to create professional brands
+        from simple ideas with AI assistance.
       </p>
     </div>
 
-    <!-- Ultra-modern asymmetric feature layout -->
-    <div class="features-grid">
-      <!-- Hero feature with dynamic placement -->
+    <!-- Modern Bento Grid Layout -->
+    <div
+      class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-6 auto-rows-fr"
+    >
+      <!-- Hero Feature - Large Card -->
       <div
-        class="feature-card feature-hero glass-feature-card flex flex-col justify-between relative overflow-hidden"
+        class="md:col-span-4 lg:col-span-3 md:row-span-2 glass-card p-8 relative overflow-hidden group hover:-translate-y-1 transition-all duration-500"
+      >
+        <!-- Featured Badge -->
+        <div class="absolute top-6 right-6 z-10">
+          <div
+            class="px-3 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg"
+          >
+            ✨ Featured
+          </div>
+        </div>
+
+        <!-- Floating Decoration -->
+        <div
+          class="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-full blur-xl group-hover:scale-110 transition-transform duration-700"
+        ></div>
+
+        <div class="relative z-10">
+          <!-- Icon -->
+          <div
+            class="w-16 h-16 glass rounded-2xl flex items-center justify-center mb-6 glow-primary group-hover:scale-110 transition-transform duration-300"
+          >
+            <i
+              class="pi pi-sparkles text-2xl"
+              style="color: var(--color-primary)"
+            ></i>
+          </div>
+
+          <!-- Content -->
+          <h3
+            class="text-3xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent"
+          >
+            AI-Powered Brand Creation
+          </h3>
+          <p
+            class="text-lg leading-relaxed mb-8"
+            style="color: var(--color-light-text); opacity: 0.8"
+          >
+            Complete AI platform that generates unique logos, visual identity,
+            technical architecture, business plans, and ready-to-deploy
+            applications.
+          </p>
+
+          <!-- Feature Highlight -->
+          <div class="flex items-center gap-4 p-4 glass rounded-xl">
+            <div
+              class="w-10 h-10 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 rounded-lg flex items-center justify-center"
+            >
+              <i class="pi pi-rocket text-white"></i>
+            </div>
+            <div>
+              <p class="font-semibold" style="color: var(--color-light-text)">
+                Instant Deployment
+              </p>
+              <p
+                class="text-sm opacity-70"
+                style="color: var(--color-light-text)"
+              >
+                Go online in minutes
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual Identity Card -->
+      <div
+        class="md:col-span-2 lg:col-span-2 glass-card p-6 relative overflow-hidden group hover:-translate-y-1 hover:glow-secondary transition-all duration-300"
       >
         <div
-          class="relative z-10 p-6 md:p-8 h-full flex flex-col justify-between"
-        >
-          <div>
-            <span class="glass-chip mb-4">Featured</span>
-            <h3 class="text-2xl font-semibold mb-3">AI-Powered Brand Creation</h3>
-            <p class="opacity-80 md:max-w-md">
-              AI platform that generates unique logos, complete visual identity, UML analysis, business plans, and ready-to-deploy web or mobile applications.
-            </p>
-          </div>
-          <div class="mt-6 flex items-center gap-2">
-            <span class="glass-icon-wrapper text-xl"
-              ><i class="pi pi-rocket"></i
-            ></span>
-            <span class="text-sm font-medium opacity-80"
-            >AI-assisted deployment to instantly go online</span
-          >  
-          </div>
-        </div>
-        <div
-          class="absolute top-1/2 -right-12 transform -translate-y-1/2 opacity-10 w-64 h-64 blur-3xl bg-white rounded-full"
+          class="absolute -top-2 -right-2 w-16 h-16 bg-gradient-to-br from-pink-500/20 to-rose-600/20 rounded-full blur-lg group-hover:scale-125 transition-transform duration-500"
         ></div>
-      </div>
 
-      <!-- Asymmetrically placed features in dynamic grid -->
-      <div class="feature-card glass-feature-card relative overflow-hidden">
-        <div class="glass-highlight"></div>
-        <div class="p-6 relative z-10">
-          <span class="glass-icon-wrapper mb-4"
-            ><i class="pi pi-palette"></i
-          ></span>
-          <h3 class="font-semibold text-lg mb-2">Complete Visual Identity</h3>
-          <p class="opacity-80 text-sm">
-            Unique logo, colors, typography and visual elements that express your brand's personality.
+        <div class="relative z-10">
+          <div
+            class="w-12 h-12 glass rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+          >
+            <i
+              class="pi pi-palette text-xl"
+              style="color: var(--color-secondary)"
+            ></i>
+          </div>
+          <h3
+            class="text-xl font-bold mb-3"
+            style="color: var(--color-light-text)"
+          >
+            Visual Identity
+          </h3>
+          <p
+            class="text-sm leading-relaxed"
+            style="color: var(--color-light-text); opacity: 0.8"
+          >
+            Unique logo, colors, typography and visual elements.
           </p>
         </div>
       </div>
 
-      <div class="feature-card glass-feature-card relative overflow-hidden">
-        <div class="glass-highlight"></div>
-        <div class="p-6 relative z-10">
-          <span class="glass-icon-wrapper mb-4"
-            ><i class="pi pi-chart-bar"></i
-          ></span>
-          <h3 class="font-semibold text-lg mb-2">Detailed UML Analysis</h3>
-          <p class="opacity-80 text-sm">
-            Professional UML diagrams and technical specifications for your project architecture.
+      <!-- Technical Architecture Card -->
+      <div
+        class="md:col-span-2 lg:col-span-1 glass-card p-6 relative overflow-hidden group hover:-translate-y-1 hover:glow-accent transition-all duration-300"
+      >
+        <div
+          class="absolute -top-2 -right-2 w-16 h-16 bg-gradient-to-br from-cyan-500/20 to-teal-600/20 rounded-full blur-lg group-hover:scale-125 transition-transform duration-500"
+        ></div>
+
+        <div class="relative z-10">
+          <div
+            class="w-12 h-12 glass rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+          >
+            <i
+              class="pi pi-sitemap text-xl"
+              style="color: var(--color-accent)"
+            ></i>
+          </div>
+          <h3
+            class="text-lg font-bold mb-3"
+            style="color: var(--color-light-text)"
+          >
+            Architecture
+          </h3>
+          <p
+            class="text-sm leading-relaxed"
+            style="color: var(--color-light-text); opacity: 0.8"
+          >
+            Professional diagrams and specifications.
           </p>
         </div>
       </div>
 
-      <div class="feature-card glass-feature-card relative overflow-hidden">
-        <div class="glass-highlight"></div>
-        <div class="p-6 relative z-10">
-          <span class="glass-icon-wrapper mb-4"
-            ><i class="pi pi-bolt"></i
-          ></span>
-          <h3 class="font-semibold text-lg mb-2">Structured Business Plan</h3>
-          <p class="opacity-80 text-sm">
-            Clear business plan with value proposition, target market and revenue strategy.
+      <!-- Business Plan Card -->
+      <div
+        class="md:col-span-2 lg:col-span-2 glass-card p-6 relative overflow-hidden group hover:-translate-y-1 hover:glow-primary transition-all duration-300"
+      >
+        <div
+          class="absolute -top-2 -right-2 w-16 h-16 bg-gradient-to-br from-orange-500/20 to-yellow-600/20 rounded-full blur-lg group-hover:scale-125 transition-transform duration-500"
+        ></div>
+
+        <div class="relative z-10">
+          <div
+            class="w-12 h-12 glass rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+          >
+            <i
+              class="pi pi-chart-line text-xl"
+              style="color: var(--color-warning)"
+            ></i>
+          </div>
+          <h3
+            class="text-xl font-bold mb-3"
+            style="color: var(--color-light-text)"
+          >
+            Business Plan
+          </h3>
+          <p
+            class="text-sm leading-relaxed"
+            style="color: var(--color-light-text); opacity: 0.8"
+          >
+            Clear strategy with value proposition and revenue model.
           </p>
         </div>
       </div>
 
-      <div class="feature-card glass-feature-card relative overflow-hidden">
-        <div class="glass-highlight"></div>
-        <div class="p-6 relative z-10">
-          <span class="glass-icon-wrapper mb-4"
-            ><i class="pi pi-file-edit"></i
-          ></span>
-          <h3 class="font-semibold text-lg mb-2">Ready-to-Use Applications</h3>
-          <p class="opacity-80 text-sm">
-            Ready-to-launch web or mobile applications with your branding built-in.
+      <!-- Ready Applications Card -->
+      <div
+        class="md:col-span-2 lg:col-span-1 glass-card p-6 relative overflow-hidden group hover:-translate-y-1 hover:glow-primary transition-all duration-300"
+      >
+        <div
+          class="absolute -top-2 -right-2 w-16 h-16 bg-gradient-to-br from-green-500/20 to-emerald-600/20 rounded-full blur-lg group-hover:scale-125 transition-transform duration-500"
+        ></div>
+
+        <div class="relative z-10">
+          <div
+            class="w-12 h-12 glass rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+          >
+            <i
+              class="pi pi-mobile text-xl"
+              style="color: var(--color-success)"
+            ></i>
+          </div>
+          <h3
+            class="text-lg font-bold mb-3"
+            style="color: var(--color-light-text)"
+          >
+            Ready Apps
+          </h3>
+          <p
+            class="text-sm leading-relaxed"
+            style="color: var(--color-light-text); opacity: 0.8"
+          >
+            Launch-ready applications with your branding.
           </p>
         </div>
+      </div>
+    </div>
+
+    <!-- Call to Action Section -->
+    <div class="mt-16 text-center">
+      <div class="glass-card p-8 max-w-2xl mx-auto">
+        <h3
+          class="text-2xl font-bold mb-4"
+          style="color: var(--color-light-text)"
+        >
+          Ready to Transform Your Idea?
+        </h3>
+        <p class="mb-6" style="color: var(--color-light-text); opacity: 0.8">
+          Join thousands of entrepreneurs who've built their brands with IDEM.
+        </p>
+        <button
+          class="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transform hover:-translate-y-0.5 transition-all duration-300 shadow-lg hover:shadow-xl"
+        >
+          <i class="pi pi-arrow-right mr-2"></i>
+          Start Building Now
+        </button>
       </div>
     </div>
   </div>
