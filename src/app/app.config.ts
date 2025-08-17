@@ -50,9 +50,6 @@ import 'prismjs/themes/prism-tomorrow.css';
 import { AuthService } from './modules/auth/services/auth.service';
 import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 
-import { PLATFORM_ID, inject } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { initializeServerApp } from '@angular/fire/app';
 import { ProjectService } from './modules/dashboard/services/project.service';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './app.routes';
@@ -88,10 +85,7 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     provideAnimations(),
-    provideHttpClient(
-      withFetch(),
-      withInterceptors([authInterceptor])
-    ),
+    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     provideMarkdown({
       sanitize: SecurityContext.NONE,
       markedOptions: {
