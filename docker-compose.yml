@@ -1,11 +1,26 @@
 version: '3.8'
 
 services:
-  idem:
-    image: ghcr.io/idem-ia/idem:cd72d89
-    container_name: idem
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: idem-ssr
     ports:
-      - "4200:4200"
+      - "4000:4000"
+    restart: always
+    networks:
+      - idem
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    container_name: idem-nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - app
     restart: always
     networks:
       - idem
