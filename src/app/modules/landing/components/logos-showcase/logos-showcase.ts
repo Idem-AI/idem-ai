@@ -96,6 +96,8 @@ export class LogosShowcase implements OnInit, OnDestroy {
 
   protected readonly selectedCategory = signal<string>('all');
   protected readonly hoveredLogo = signal<string | null>(null);
+  protected readonly showAll = signal<boolean>(false);
+  protected readonly visibleCount = signal<number>(8);
   private animationId?: number;
 
   protected readonly categories = [
@@ -153,5 +155,17 @@ export class LogosShowcase implements OnInit, OnDestroy {
       return colors[0];
     }
     return `linear-gradient(135deg, ${colors.join(', ')})`;
+  }
+
+  protected loadMore(): void {
+    this.showAll.set(true);
+  }
+
+  protected getVisibleLogos(): LogoExample[] {
+    const filtered = this.getFilteredLogos();
+    if (this.showAll()) {
+      return filtered;
+    }
+    return filtered.slice(0, this.visibleCount());
   }
 }

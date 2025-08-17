@@ -1,4 +1,4 @@
-import { Component, signal, OnInit, OnDestroy } from '@angular/core';
+import { Component, signal, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 interface WebsiteExample {
@@ -77,9 +77,11 @@ export class WebsiteShowcase implements OnInit, OnDestroy {
   ]);
 
   protected readonly currentIndex = signal(0);
+  protected readonly isMobile = signal(false);
   private intervalId?: number;
 
   ngOnInit(): void {
+    this.checkScreenSize();
     this.startAutoScroll();
   }
 
@@ -102,16 +104,32 @@ export class WebsiteShowcase implements OnInit, OnDestroy {
     this.currentIndex.set(index);
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(): void {
+    this.checkScreenSize();
+  }
+
+  private checkScreenSize(): void {
+    this.isMobile.set(window.innerWidth < 640); // sm breakpoint
+  }
+
   protected getVisibleWebsites(): WebsiteExample[] {
     const websites = this.websites();
     const current = this.currentIndex();
     const result: WebsiteExample[] = [];
     
-    for (let i = 0; i < 3; i++) {
+    // Sur mobile, afficher seulement 1 élément, sinon 3
+    const itemsToShow = this.isMobile() ? 1 : 3;
+    
+    for (let i = 0; i < itemsToShow; i++) {
       const index = (current + i) % websites.length;
       result.push(websites[index]);
     }
     
     return result;
+  }
+
+  protected getItemsPerSlide(): number {
+    return this.isMobile() ? 1 : 3;
   }
 }

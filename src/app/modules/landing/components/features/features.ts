@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Cta } from "../cta/cta";
 
 interface Feature {
   id: string;
@@ -23,7 +24,7 @@ interface FeatureCategory {
 @Component({
   selector: 'app-features',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, Cta],
   templateUrl: './features.html',
   styleUrl: './features.css',
 })
