@@ -4,7 +4,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 // Import services
 import { SeoService } from '../../../../shared/services/seo.service';
 
-// Import standalone components
+// Import components
 import { Hero } from '../../components/hero/hero';
 import { Features } from '../../components/features/features';
 import { WebsiteShowcase } from '../../components/website-showcase/website-showcase';
@@ -13,6 +13,8 @@ import { LogosShowcase } from '../../components/logos-showcase/logos-showcase';
 import { BrandCharter } from '../../components/brand-charter/brand-charter';
 import { BusinessPlan } from '../../components/business-plan/business-plan';
 import { Diagrams } from '../../components/diagrams/diagrams';
+import { Deployment } from '../../components/deployment/deployment';
+import { DeploymentScreenshots } from '../../components/deployment-screenshots/deployment-screenshots';
 import { CtaSection } from '../../components/cta-section/cta-section';
 import { Cta } from '../../components/cta/cta';
 import { Pricing } from '../../components/pricing/pricing';
@@ -30,6 +32,8 @@ import { Pricing } from '../../components/pricing/pricing';
     BrandCharter,
     BusinessPlan,
     Diagrams,
+    Deployment,
+    DeploymentScreenshots,
     CtaSection,
     Cta,
     Pricing,

@@ -1,0 +1,170 @@
+<!-- Deployment Section -->
+<section 
+  class="relative min-h-screen py-20 px-4 overflow-hidden"
+  style="background-color: var(--color-bg-dark); color: var(--color-light-text);"
+>
+  <!-- Background Elements -->
+  <div class="absolute inset-0 opacity-30">
+    <div 
+      class="absolute top-20 left-10 w-32 h-32 rounded-full blur-xl opacity-20"
+      style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));"
+    ></div>
+    <div 
+      class="absolute bottom-20 right-10 w-40 h-40 rounded-full blur-xl opacity-20"
+      style="background: linear-gradient(135deg, var(--color-secondary), var(--color-accent));"
+    ></div>
+  </div>
+
+  <div class="max-w-7xl mx-auto relative z-10">
+    <!-- Section Header -->
+    <div class="text-center mb-16">
+      <h2 
+        class="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent"
+      >
+        Architecture Design Modes
+      </h2>
+      <p 
+        class="text-xl max-w-3xl mx-auto leading-relaxed"
+        style="color: var(--color-light-text); opacity: 0.8;"
+      >
+        Choose the method that best suits your needs to define your infrastructure. 
+        From conversational AI to expert-level component selection.
+      </p>
+    </div>
+
+    <!-- Deployment Modes Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+      @for (mode of deploymentModes(); track mode.id) {
+        <div 
+          class="glass-card p-6 rounded-2xl border transition-all duration-300 cursor-pointer group hover:scale-105"
+          [class.ring-2]="selectedMode() === mode.id"
+          [style.border-color]="selectedMode() === mode.id ? mode.color : 'var(--glass-border)'"
+          [style.ring-color]="mode.color"
+          (click)="selectMode(mode.id)"
+        >
+          <!-- Mode Icon -->
+          <div 
+            class="w-16 h-16 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+            [style.background]="'linear-gradient(135deg, ' + mode.color + '20, ' + mode.color + '10)'"
+          >
+            <i 
+              class="pi {{ mode.icon }} text-2xl"
+              [style.color]="mode.color"
+            ></i>
+          </div>
+
+          <!-- Mode Title -->
+          <h3 class="text-xl font-bold mb-2" style="color: var(--color-light-text);">
+            {{ mode.title }}
+          </h3>
+          <p 
+            class="text-sm font-medium mb-3 opacity-80"
+            [style.color]="mode.color"
+          >
+            {{ mode.subtitle }}
+          </p>
+
+          <!-- Mode Description -->
+          <p 
+            class="text-sm leading-relaxed mb-4 opacity-70"
+            style="color: var(--color-light-text);"
+          >
+            {{ mode.description }}
+          </p>
+
+          <!-- Target Audience -->
+          <div class="flex items-center gap-2 mb-4">
+            <i class="pi pi-users text-xs opacity-60" style="color: var(--color-light-text);"></i>
+            <span 
+              class="text-xs font-medium opacity-60"
+              style="color: var(--color-light-text);"
+            >
+              {{ mode.targetAudience }}
+            </span>
+          </div>
+
+          <!-- Features List -->
+          <div class="space-y-2">
+            @for (feature of mode.features; track $index) {
+              <div class="flex items-center gap-2">
+                <div 
+                  class="w-1.5 h-1.5 rounded-full"
+                  [style.background-color]="mode.color"
+                ></div>
+                <span 
+                  class="text-xs opacity-60"
+                  style="color: var(--color-light-text);"
+                >
+                  {{ feature }}
+                </span>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Selected Mode Details -->
+    <div class="glass-card p-8 rounded-2xl border" style="border-color: var(--glass-border);">
+      <div class="flex items-start gap-6">
+        <!-- Selected Mode Icon -->
+        <div 
+          class="w-20 h-20 rounded-2xl flex items-center justify-center flex-shrink-0"
+          [style.background]="'linear-gradient(135deg, ' + getSelectedMode().color + '20, ' + getSelectedMode().color + '10)'"
+        >
+          <i 
+            class="pi {{ getSelectedMode().icon }} text-3xl"
+            [style.color]="getSelectedMode().color"
+          ></i>
+        </div>
+
+        <!-- Selected Mode Content -->
+        <div class="flex-1">
+          <h3 class="text-2xl font-bold mb-2" style="color: var(--color-light-text);">
+            {{ getSelectedMode().title }}
+          </h3>
+          <p 
+            class="text-lg font-medium mb-4"
+            [style.color]="getSelectedMode().color"
+          >
+            {{ getSelectedMode().subtitle }}
+          </p>
+          <p 
+            class="text-base leading-relaxed mb-6 opacity-80"
+            style="color: var(--color-light-text);"
+          >
+            {{ getSelectedMode().description }}
+          </p>
+
+          <!-- Features Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            @for (feature of getSelectedMode().features; track $index) {
+              <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+                <div 
+                  class="w-2 h-2 rounded-full flex-shrink-0"
+                  [style.background-color]="getSelectedMode().color"
+                ></div>
+                <span 
+                  class="text-sm"
+                  style="color: var(--color-light-text);"
+                >
+                  {{ feature }}
+                </span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="text-center mt-12">
+      <button 
+        class="px-8 py-4 rounded-xl font-semibold text-white transition-all duration-300 hover:scale-105 hover:shadow-lg"
+        [style.background]="'linear-gradient(135deg, ' + getSelectedMode().color + ', ' + getSelectedMode().color + 'cc)'"
+      >
+        Try {{ getSelectedMode().title }} Mode
+      </button>
+    </div>
+  </div>
+</section>
