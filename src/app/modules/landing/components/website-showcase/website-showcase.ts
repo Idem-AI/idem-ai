@@ -1,4 +1,10 @@
-import { Component, signal, OnInit, OnDestroy, HostListener } from '@angular/core';
+import {
+  Component,
+  signal,
+  OnInit,
+  OnDestroy,
+  HostListener,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 interface WebsiteExample {
@@ -16,7 +22,7 @@ interface WebsiteExample {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './website-showcase.html',
-  styleUrl: './website-showcase.css'
+  styleUrl: './website-showcase.css',
 })
 export class WebsiteShowcase implements OnInit, OnDestroy {
   protected readonly websites = signal<WebsiteExample[]>([
@@ -24,19 +30,21 @@ export class WebsiteShowcase implements OnInit, OnDestroy {
       id: '1',
       title: 'TechFlow Solutions',
       category: 'SaaS Platform',
-      description: 'Modern B2B software solution with clean design and powerful features',
+      description:
+        'Modern B2B software solution with clean design and powerful features',
       imageUrl: '/assets/showcase/website-1.jpg',
       liveUrl: 'https://techflow-demo.idem.africa',
-      technologies: ['Angular', 'Node.js', 'PostgreSQL']
+      technologies: ['Angular', 'Node.js', 'PostgreSQL'],
     },
     {
       id: '2',
       title: 'EcoGreen Marketplace',
       category: 'E-commerce',
-      description: 'Sustainable products marketplace with integrated payment system',
+      description:
+        'Sustainable products marketplace with integrated payment system',
       imageUrl: '/assets/showcase/website-2.jpg',
       liveUrl: 'https://ecogreen-demo.idem.africa',
-      technologies: ['React', 'Express', 'MongoDB']
+      technologies: ['React', 'Express', 'MongoDB'],
     },
     {
       id: '3',
@@ -45,16 +53,17 @@ export class WebsiteShowcase implements OnInit, OnDestroy {
       description: 'Patient management system with telemedicine capabilities',
       imageUrl: '/assets/showcase/website-3.jpg',
       liveUrl: 'https://healthcare-demo.idem.africa',
-      technologies: ['Vue.js', 'Laravel', 'MySQL']
+      technologies: ['Vue.js', 'Laravel', 'MySQL'],
     },
     {
       id: '4',
       title: 'EduLearn Platform',
       category: 'Education',
-      description: 'Interactive learning platform with video streaming and assessments',
+      description:
+        'Interactive learning platform with video streaming and assessments',
       imageUrl: '/assets/showcase/website-4.jpg',
       liveUrl: 'https://edulearn-demo.idem.africa',
-      technologies: ['Angular', 'NestJS', 'PostgreSQL']
+      technologies: ['Angular', 'NestJS', 'PostgreSQL'],
     },
     {
       id: '5',
@@ -63,17 +72,18 @@ export class WebsiteShowcase implements OnInit, OnDestroy {
       description: 'Real-time financial analytics and trading dashboard',
       imageUrl: '/assets/showcase/website-5.jpg',
       liveUrl: 'https://fintech-demo.idem.africa',
-      technologies: ['React', 'FastAPI', 'Redis']
+      technologies: ['React', 'FastAPI', 'Redis'],
     },
     {
       id: '6',
       title: 'Creative Portfolio',
       category: 'Portfolio',
-      description: 'Artist portfolio with interactive galleries and booking system',
+      description:
+        'Artist portfolio with interactive galleries and booking system',
       imageUrl: '/assets/showcase/website-6.jpg',
       liveUrl: 'https://portfolio-demo.idem.africa',
-      technologies: ['Next.js', 'Strapi', 'PostgreSQL']
-    }
+      technologies: ['Next.js', 'Strapi', 'PostgreSQL'],
+    },
   ]);
 
   protected readonly currentIndex = signal(0);
@@ -117,15 +127,15 @@ export class WebsiteShowcase implements OnInit, OnDestroy {
     const websites = this.websites();
     const current = this.currentIndex();
     const result: WebsiteExample[] = [];
-    
+
     // Sur mobile, afficher seulement 1 élément, sinon 3
     const itemsToShow = this.isMobile() ? 1 : 3;
-    
+
     for (let i = 0; i < itemsToShow; i++) {
       const index = (current + i) % websites.length;
       result.push(websites[index]);
     }
-    
+
     return result;
   }
 
