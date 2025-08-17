@@ -54,7 +54,7 @@ import { PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { initializeServerApp } from '@angular/fire/app';
 import { ProjectService } from './modules/dashboard/services/project.service';
-import { provideRouter, withComponentInputBinding, withHashLocation } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './app.routes';
 import { MyPreset } from './my-preset';
 
@@ -70,7 +70,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideClientHydration(withEventReplay()),
-    provideRouter(routes, withComponentInputBinding(), withHashLocation()),
+    provideRouter(routes, withComponentInputBinding()),
     provideFirebaseApp(() => {
       return initializeApp(firebaseConfig);
     }),
