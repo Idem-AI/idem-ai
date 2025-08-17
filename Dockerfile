@@ -1,4 +1,3 @@
-# Build stage
 FROM node:20-alpine AS builder
 
 WORKDIR /app
@@ -11,24 +10,16 @@ COPY . .
 
 RUN node -r dotenv/config mynode.js
 
-# Build for SSR
-RUN npm run build
+RUN npm run build -- --configuration=production
 
-# Production stage for SSR server
-FROM node:20-alpine
+FROM nginx:1.25-alpine
 
-WORKDIR /app
+RUN rm -rf /usr/share/nginx/html/*
 
-# Copy package files
-COPY package*.json ./
+COPY --from=builder /app/dist/idem /usr/share/nginx/html
 
-# Install only production dependencies
-RUN npm ci --only=production
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy built application
-COPY --from=builder /app/dist ./dist
+EXPOSE 80
 
-EXPOSE 4000
-
-# Start SSR server
-CMD ["npm", "run", "serve:ssr"]
+CMD ["nginx", "-g", "daemon off;"]
