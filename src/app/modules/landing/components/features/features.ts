@@ -1,5 +1,24 @@
-import { Component, HostBinding, HostListener, ElementRef, inject, signal, AfterViewInit, OnDestroy, PLATFORM_ID } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+interface Feature {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  category: 'business' | 'branding' | 'development' | 'deployment';
+  benefits: string[];
+  color: string;
+  isPopular?: boolean;
+}
+
+interface FeatureCategory {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  color: string;
+}
 
 @Component({
   selector: 'app-features',
@@ -8,108 +27,220 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
   templateUrl: './features.html',
   styleUrl: './features.css',
 })
-export class Features implements AfterViewInit, OnDestroy {
-  // Angular-initialized properties
-  protected readonly isBrowser = signal(isPlatformBrowser(inject(PLATFORM_ID)));
-  private readonly elementRef = inject(ElementRef);
+export class Features {
+  protected readonly selectedCategory = signal<string>('business');
+  protected readonly hoveredFeature = signal<string | null>(null);
   
-  // Apply host class for animation timing
-  @HostBinding('class.animate-in')
-  protected readonly animateIn = signal(false);
-  
-  // State properties
-  protected mouseX = signal(0);
-  protected mouseY = signal(0);
-  protected observer: IntersectionObserver | null = null;
-  
-  ngAfterViewInit(): void {
-    if (this.isBrowser()) {
-      this.initAnimations();
-      this.setupParallaxEffect();
-      this.setupIntersectionObserver();
+  protected readonly categories = signal<FeatureCategory[]>([
+    {
+      id: 'business',
+      name: 'Business',
+      description: 'Strategic planning',
+      icon: 'pi-chart-line',
+      color: '#22c55e'
+    },
+    {
+      id: 'branding',
+      name: 'Branding',
+      description: 'Visual identity',
+      icon: 'pi-palette',
+      color: '#d11ec0'
+    },
+    {
+      id: 'development',
+      name: 'Development',
+      description: 'Code & architecture',
+      icon: 'pi-code',
+      color: '#8b5cf6'
+    },
+    {
+      id: 'deployment',
+      name: 'Deployment',
+      description: 'App deployment',
+      icon: 'pi-rocket',
+      color: '#06b6d4'
     }
-  }
-  
-  ngOnDestroy(): void {
-    this.destroyIntersectionObserver();
-  }
-  
-  @HostListener('mousemove', ['$event'])
-  protected handleMouseMove(event: MouseEvent): void {
-    if (this.isBrowser()) {
-      this.mouseX.set(event.clientX);
-      this.mouseY.set(event.clientY);
-      this.updateParallaxElements(event);
+  ]);
+
+  protected readonly features = signal<Feature[]>([
+    // Business Features (4)
+    {
+      id: 'business-plans',
+      title: 'Business Plans',
+      description: 'Generate comprehensive business plans with market analysis and financial projections',
+      icon: 'pi-chart-line',
+      category: 'business',
+      benefits: ['Market analysis', 'Financial projections', 'Investor-ready'],
+      color: '#22c55e',
+      isPopular: true
+    },
+    {
+      id: 'financial-modeling',
+      title: 'Financial Models',
+      description: 'Create detailed revenue models and cost analysis for your business',
+      icon: 'pi-dollar',
+      category: 'business',
+      benefits: ['Revenue forecasts', 'Cost breakdown', 'ROI calculations'],
+      color: '#22c55e'
+    },
+    {
+      id: 'market-research',
+      title: 'Market Research',
+      description: 'Analyze competitors and identify market opportunities automatically',
+      icon: 'pi-search',
+      category: 'business',
+      benefits: ['Competitor analysis', 'Market trends', 'Growth opportunities'],
+      color: '#22c55e'
+    },
+    {
+      id: 'strategy-planning',
+      title: 'Strategy Planning',
+      description: 'Build strategic roadmaps with clear goals and milestones',
+      icon: 'pi-map',
+      category: 'business',
+      benefits: ['Strategic roadmap', 'Clear objectives', 'Timeline planning'],
+      color: '#22c55e'
+    },
+    
+    // Branding Features (4)
+    {
+      id: 'ai-logos',
+      title: 'AI Logo Generator',
+      description: 'Create unique, professional logos instantly with AI-powered design',
+      icon: 'pi-star',
+      category: 'branding',
+      benefits: ['Instant creation', 'Vector format', 'Brand-specific'],
+      color: '#d11ec0',
+      isPopular: true
+    },
+    {
+      id: 'brand-charter',
+      title: 'Brand Charter',
+      description: 'Develop complete brand guidelines with colors, fonts, and usage rules',
+      icon: 'pi-bookmark',
+      category: 'branding',
+      benefits: ['Brand guidelines', 'Usage standards', 'Consistency rules'],
+      color: '#d11ec0'
+    },
+    {
+      id: 'color-palettes',
+      title: 'Color Palettes',
+      description: 'Generate harmonious color schemes that reflect your brand identity',
+      icon: 'pi-palette',
+      category: 'branding',
+      benefits: ['Color harmony', 'Brand alignment', 'Accessibility'],
+      color: '#d11ec0'
+    },
+    {
+      id: 'typography',
+      title: 'Typography System',
+      description: 'Select perfect font combinations for your brand communication',
+      icon: 'pi-font',
+      category: 'branding',
+      benefits: ['Font pairing', 'Brand consistency', 'Readability'],
+      color: '#d11ec0'
+    },
+    
+    // Development Features (4)
+    {
+      id: 'architecture-diagrams',
+      title: 'System Architecture',
+      description: 'Generate UML diagrams and technical documentation automatically',
+      icon: 'pi-sitemap',
+      category: 'development',
+      benefits: ['UML diagrams', 'Auto-generated', 'Documentation'],
+      color: '#8b5cf6',
+      isPopular: true
+    },
+    {
+      id: 'code-generation',
+      title: 'Code Generation',
+      description: 'AI-powered code creation with clean, documented, and tested output',
+      icon: 'pi-code',
+      category: 'development',
+      benefits: ['Clean code', 'Documentation', 'Best practices'],
+      color: '#8b5cf6'
+    },
+    {
+      id: 'api-design',
+      title: 'API Design',
+      description: 'Design and document RESTful APIs with automatic testing setup',
+      icon: 'pi-link',
+      category: 'development',
+      benefits: ['RESTful design', 'Auto-documentation', 'Testing included'],
+      color: '#8b5cf6'
+    },
+    {
+      id: 'database-design',
+      title: 'Database Design',
+      description: 'Create optimized database schemas with performance considerations',
+      icon: 'pi-database',
+      category: 'development',
+      benefits: ['Optimized schema', 'Performance tuned', 'Scalable design'],
+      color: '#8b5cf6'
+    },
+    
+    // Deployment Features (4)
+    {
+      id: 'one-click-deploy',
+      title: 'One-Click Deploy',
+      description: 'Deploy applications instantly without configuration or setup hassles',
+      icon: 'pi-bolt',
+      category: 'deployment',
+      benefits: ['Zero configuration', 'Instant deployment', 'Auto-scaling'],
+      color: '#06b6d4',
+      isPopular: true
+    },
+    {
+      id: 'ai-assistant',
+      title: 'Deployment Assistant',
+      description: 'Get guided deployment help through conversational AI interface',
+      icon: 'pi-comments',
+      category: 'deployment',
+      benefits: ['Natural conversation', 'Step-by-step guide', 'Smart suggestions'],
+      color: '#06b6d4'
+    },
+    {
+      id: 'template-deploy',
+      title: 'Deployment Templates',
+      description: 'Use pre-configured deployment templates for common architectures',
+      icon: 'pi-th-large',
+      category: 'deployment',
+      benefits: ['Pre-configured', 'Best practices', 'Quick setup'],
+      color: '#06b6d4'
+    },
+    {
+      id: 'expert-mode',
+      title: 'Expert Configuration',
+      description: 'Advanced deployment settings with full control over infrastructure',
+      icon: 'pi-cog',
+      category: 'deployment',
+      benefits: ['Full control', 'Advanced settings', 'Custom infrastructure'],
+      color: '#06b6d4'
     }
+  ]);
+
+  protected selectCategory(categoryId: string): void {
+    this.selectedCategory.set(categoryId);
   }
-  
-  private initAnimations(): void {
-    // Add animate-in class to host with slight delay for entrance animation
-    setTimeout(() => {
-      this.animateIn.set(true);
-    }, 300);
+
+  protected setHoveredFeature(featureId: string | null): void {
+    this.hoveredFeature.set(featureId);
   }
-  
-  private setupParallaxEffect(): void {
-    // Handle initial setup for parallax elements
-    const featureItems = this.elementRef.nativeElement.querySelectorAll('.parallax-feature');
+
+  protected getFilteredFeatures(): Feature[] {
+    const features = this.features();
+    const selectedCat = this.selectedCategory();
     
-    featureItems.forEach((item: Element) => {
-      // Add data-depth attribute if not present
-      if (!item.getAttribute('data-depth')) {
-        const depth = (Math.random() * 0.2 + 0.05).toFixed(2); // Random depth between 0.05 and 0.25
-        item.setAttribute('data-depth', depth);
-      }
-    });
+    
+    return features.filter(feature => feature.category === selectedCat);
   }
-  
-  private updateParallaxElements(event: MouseEvent): void {
-    const featureContainer = this.elementRef.nativeElement.querySelector('.features-section');
-    if (!featureContainer) return;
-    
-    const rect = featureContainer.getBoundingClientRect();
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    
-    // Calculate mouse position relative to center
-    const relX = (this.mouseX() - rect.left) - centerX;
-    const relY = (this.mouseY() - rect.top) - centerY;
-    
-    // Update parallax elements
-    const parallaxItems = this.elementRef.nativeElement.querySelectorAll('.parallax-feature');
-    
-    parallaxItems.forEach((element: Element) => {
-      const el = element as HTMLElement;
-      const depth = parseFloat(el.getAttribute('data-depth') || '0.1');
-      const translateX = relX * depth * 0.03;
-      const translateY = relY * depth * 0.03;
-      
-      el.style.transform = `translate3d(${translateX}px, ${translateY}px, 0)`;  
-    });
+
+  protected getSelectedCategory(): FeatureCategory {
+    const categories = this.categories();
+    const selectedId = this.selectedCategory();
+    return categories.find(cat => cat.id === selectedId) || categories[0];
   }
-  
-  private setupIntersectionObserver(): void {
-    this.observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            // Add animation class when section becomes visible
-            this.animateIn.set(true);
-            this.observer?.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.2 }
-    );
-    
-    const featuresSection = this.elementRef.nativeElement.querySelector('.features-section');
-    if (featuresSection) {
-      this.observer.observe(featuresSection);
-    }
-  }
-  
-  private destroyIntersectionObserver(): void {
-    this.observer?.disconnect();
-    this.observer = null;
-  }
+
+
 }

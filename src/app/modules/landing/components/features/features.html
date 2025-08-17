@@ -1,279 +1,139 @@
-<div
-  class="features-section relative px-6 py-20"
-  style="color: var(--color-light-text)"
->
-  <!-- Glass floating elements following UI specs -->
-  <div class="absolute inset-0 pointer-events-none">
+<!-- Features Section -->
+<section class="relative min-h-screen py-24 overflow-hidden">
+  <!-- Animated Background Particles -->
+  <div class="absolute inset-0 overflow-hidden">
     <div
-      class="absolute top-[10%] right-[15%] w-40 h-40 rounded-full blur-3xl glow-primary opacity-10"
+      class="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse"
     ></div>
     <div
-      class="absolute bottom-[20%] left-[10%] w-32 h-32 rounded-full blur-2xl glow-secondary opacity-8"
+      class="absolute top-3/4 right-1/4 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse delay-1000"
     ></div>
     <div
-      class="absolute top-[60%] right-[5%] w-24 h-24 rounded-full blur-xl glow-accent opacity-6"
+      class="absolute bottom-1/4 left-1/3 w-72 h-72 bg-pink-500/20 rounded-full blur-3xl animate-pulse delay-2000"
     ></div>
   </div>
 
-  <div class="max-w-7xl mx-auto relative z-10">
-    <!-- Header following UI specs -->
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Section Header -->
     <div class="text-center mb-16">
+      <h2
+        class="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-6"
+      >
+        Features
+      </h2>
+    </div>
+
+    <!-- Category Navigation -->
+    <div class="flex flex-wrap justify-center gap-4 mb-16">
+      @for (category of categories(); track category.id) {
+      <button
+        (click)="selectCategory(category.id)"
+        class="group relative px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
+        [class]="selectedCategory() === category.id 
+            ? ' text-white shadow-lg bg-primary' 
+            : 'bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white'"
+      >
+        <div class="flex items-center space-x-3">
+          <i [class]="'pi ' + category.icon + ' text-lg'"></i>
+          <span>{{ category.name }}</span>
+        </div>
+
+        @if (selectedCategory() === category.id) {
+        <div
+          class="absolute inset-0 rounded-xl bg-gradient-to-r opacity-20 transition-opacity duration-300"
+          [style.background]="'linear-gradient(135deg, ' + category.color + '40, ' + category.color + '20)'"
+        ></div>
+        }
+      </button>
+      }
+    </div>
+
+    <!-- Selected Category Info -->
+    <div class="text-center mb-12">
       <div
-        class="inline-flex items-center gap-2 px-4 py-2 glass rounded-full text-sm font-medium mb-6"
-        style="
-          color: var(--color-light-text);
-          border-color: var(--color-primary);
-        "
+        class="inline-flex items-center space-x-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl px-8 py-4"
       >
         <i
-          class="pi pi-sparkles text-xs"
-          style="color: var(--color-primary)"
+          [class]="'pi ' + getSelectedCategory().icon + ' text-2xl'"
+          [style.color]="getSelectedCategory().color"
         ></i>
-        Platform Features
+        <div class="text-left">
+          <h3 class="text-xl font-bold text-white">
+            {{ getSelectedCategory().name }}
+          </h3>
+          <p class="text-gray-300 text-sm">
+            {{ getSelectedCategory().description }}
+          </p>
+        </div>
       </div>
-
-      <h2
-        class="font-bold mb-6 leading-tight"
-        style="
-          font-size: var(--font-size-title);
-          color: var(--color-light-text);
-        "
-      >
-        Transform Ideas Into
-        <span style="color: var(--color-primary)">Reality</span>
-      </h2>
-
-      <p
-        class="max-w-3xl mx-auto leading-relaxed"
-        style="
-          font-size: var(--font-size-subtitle);
-          color: var(--color-light-text);
-          opacity: 0.8;
-        "
-      >
-        IDEM empowers entrepreneurs and businesses to create professional brands
-        from simple ideas with AI assistance.
-      </p>
     </div>
 
-    <!-- Modern Bento Grid Layout -->
-    <div
-      class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-6 auto-rows-fr"
-    >
-      <!-- Hero Feature - Large Card -->
+    <!-- Features Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      @for (feature of getFilteredFeatures(); track feature.id) {
       <div
-        class="md:col-span-4 lg:col-span-3 md:row-span-2 glass-card p-8 relative overflow-hidden group hover:-translate-y-1 transition-all duration-500"
+        (mouseenter)="setHoveredFeature(feature.id)"
+        (mouseleave)="setHoveredFeature(null)"
+        class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-500 hover:scale-105 hover:shadow-2xl"
+        [style.box-shadow]="hoveredFeature() === feature.id ? '0 25px 50px -12px ' + feature.color + '40' : ''"
       >
-        <!-- Featured Badge -->
-        <div class="absolute top-6 right-6 z-10">
-          <div
-            class="px-3 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg"
-          >
-            ✨ Featured
-          </div>
-        </div>
-
-        <!-- Floating Decoration -->
+        <!-- Popular Badge -->
+        @if (feature.isPopular) {
         <div
-          class="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-full blur-xl group-hover:scale-110 transition-transform duration-700"
+          class="absolute -top-3 -right-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-xs font-bold px-3 py-1 rounded-full shadow-lg"
+        >
+          POPULAR
+        </div>
+        }
+
+        <!-- Hover Gradient Overlay -->
+        <div
+          class="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          [style.background]="'linear-gradient(135deg, ' + feature.color + '20, ' + feature.color + '10)'"
         ></div>
 
         <div class="relative z-10">
-          <!-- Icon -->
+          <!-- Feature Icon -->
           <div
-            class="w-16 h-16 glass rounded-2xl flex items-center justify-center mb-6 glow-primary group-hover:scale-110 transition-transform duration-300"
+            class="w-16 h-16 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300"
+            [style.background]="'linear-gradient(135deg, ' + feature.color + ', ' + feature.color + 'CC)'"
           >
-            <i
-              class="pi pi-sparkles text-2xl"
-              style="color: var(--color-primary)"
-            ></i>
+            <i [class]="'pi ' + feature.icon + ' text-2xl text-white'"></i>
           </div>
 
-          <!-- Content -->
+          <!-- Feature Title -->
           <h3
-            class="text-3xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent"
+            class="text-xl font-bold text-white mb-2 group-hover:transition-colors duration-300"
+            [style.color]="hoveredFeature() === feature.id ? feature.color : ''"
           >
-            AI-Powered Brand Creation
+            {{ feature.title }}
           </h3>
-          <p
-            class="text-lg leading-relaxed mb-8"
-            style="color: var(--color-light-text); opacity: 0.8"
-          >
-            Complete AI platform that generates unique logos, visual identity,
-            technical architecture, business plans, and ready-to-deploy
-            applications.
-          </p>
 
-          <!-- Feature Highlight -->
-          <div class="flex items-center gap-4 p-4 glass rounded-xl">
-            <div
-              class="w-10 h-10 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 rounded-lg flex items-center justify-center"
+          <!-- Feature Description -->
+          <p class="text-gray-400 text-sm mb-4">{{ feature.description }}</p>
+
+          <!-- Feature Benefits -->
+          <div class="flex flex-wrap gap-2">
+            @for (benefit of feature.benefits; track benefit) {
+            <span
+              class="px-2 py-1 text-xs rounded-full bg-white/10 text-gray-300"
             >
-              <i class="pi pi-rocket text-white"></i>
-            </div>
-            <div>
-              <p class="font-semibold" style="color: var(--color-light-text)">
-                Instant Deployment
-              </p>
-              <p
-                class="text-sm opacity-70"
-                style="color: var(--color-light-text)"
-              >
-                Go online in minutes
-              </p>
-            </div>
+              {{ benefit }}
+            </span>
+            }
           </div>
         </div>
       </div>
-
-      <!-- Visual Identity Card -->
-      <div
-        class="md:col-span-2 lg:col-span-2 glass-card p-6 relative overflow-hidden group hover:-translate-y-1 hover:glow-secondary transition-all duration-300"
-      >
-        <div
-          class="absolute -top-2 -right-2 w-16 h-16 bg-gradient-to-br from-pink-500/20 to-rose-600/20 rounded-full blur-lg group-hover:scale-125 transition-transform duration-500"
-        ></div>
-
-        <div class="relative z-10">
-          <div
-            class="w-12 h-12 glass rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
-          >
-            <i
-              class="pi pi-palette text-xl"
-              style="color: var(--color-secondary)"
-            ></i>
-          </div>
-          <h3
-            class="text-xl font-bold mb-3"
-            style="color: var(--color-light-text)"
-          >
-            Visual Identity
-          </h3>
-          <p
-            class="text-sm leading-relaxed"
-            style="color: var(--color-light-text); opacity: 0.8"
-          >
-            Unique logo, colors, typography and visual elements.
-          </p>
-        </div>
-      </div>
-
-      <!-- Technical Architecture Card -->
-      <div
-        class="md:col-span-2 lg:col-span-1 glass-card p-6 relative overflow-hidden group hover:-translate-y-1 hover:glow-accent transition-all duration-300"
-      >
-        <div
-          class="absolute -top-2 -right-2 w-16 h-16 bg-gradient-to-br from-cyan-500/20 to-teal-600/20 rounded-full blur-lg group-hover:scale-125 transition-transform duration-500"
-        ></div>
-
-        <div class="relative z-10">
-          <div
-            class="w-12 h-12 glass rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
-          >
-            <i
-              class="pi pi-sitemap text-xl"
-              style="color: var(--color-accent)"
-            ></i>
-          </div>
-          <h3
-            class="text-lg font-bold mb-3"
-            style="color: var(--color-light-text)"
-          >
-            Architecture
-          </h3>
-          <p
-            class="text-sm leading-relaxed"
-            style="color: var(--color-light-text); opacity: 0.8"
-          >
-            Professional diagrams and specifications.
-          </p>
-        </div>
-      </div>
-
-      <!-- Business Plan Card -->
-      <div
-        class="md:col-span-2 lg:col-span-2 glass-card p-6 relative overflow-hidden group hover:-translate-y-1 hover:glow-primary transition-all duration-300"
-      >
-        <div
-          class="absolute -top-2 -right-2 w-16 h-16 bg-gradient-to-br from-orange-500/20 to-yellow-600/20 rounded-full blur-lg group-hover:scale-125 transition-transform duration-500"
-        ></div>
-
-        <div class="relative z-10">
-          <div
-            class="w-12 h-12 glass rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
-          >
-            <i
-              class="pi pi-chart-line text-xl"
-              style="color: var(--color-warning)"
-            ></i>
-          </div>
-          <h3
-            class="text-xl font-bold mb-3"
-            style="color: var(--color-light-text)"
-          >
-            Business Plan
-          </h3>
-          <p
-            class="text-sm leading-relaxed"
-            style="color: var(--color-light-text); opacity: 0.8"
-          >
-            Clear strategy with value proposition and revenue model.
-          </p>
-        </div>
-      </div>
-
-      <!-- Ready Applications Card -->
-      <div
-        class="md:col-span-2 lg:col-span-1 glass-card p-6 relative overflow-hidden group hover:-translate-y-1 hover:glow-primary transition-all duration-300"
-      >
-        <div
-          class="absolute -top-2 -right-2 w-16 h-16 bg-gradient-to-br from-green-500/20 to-emerald-600/20 rounded-full blur-lg group-hover:scale-125 transition-transform duration-500"
-        ></div>
-
-        <div class="relative z-10">
-          <div
-            class="w-12 h-12 glass rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
-          >
-            <i
-              class="pi pi-mobile text-xl"
-              style="color: var(--color-success)"
-            ></i>
-          </div>
-          <h3
-            class="text-lg font-bold mb-3"
-            style="color: var(--color-light-text)"
-          >
-            Ready Apps
-          </h3>
-          <p
-            class="text-sm leading-relaxed"
-            style="color: var(--color-light-text); opacity: 0.8"
-          >
-            Launch-ready applications with your branding.
-          </p>
-        </div>
-      </div>
+      }
     </div>
 
-    <!-- Call to Action Section -->
-    <div class="mt-16 text-center">
-      <div class="glass-card p-8 max-w-2xl mx-auto">
-        <h3
-          class="text-2xl font-bold mb-4"
-          style="color: var(--color-light-text)"
-        >
-          Ready to Transform Your Idea?
-        </h3>
-        <p class="mb-6" style="color: var(--color-light-text); opacity: 0.8">
-          Join thousands of entrepreneurs who've built their brands with IDEM.
-        </p>
-        <button
-          class="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transform hover:-translate-y-0.5 transition-all duration-300 shadow-lg hover:shadow-xl"
-        >
-          <i class="pi pi-arrow-right mr-2"></i>
-          Start Building Now
-        </button>
-      </div>
+    <!-- Call to Action -->
+    <div class="text-center mt-16">
+      <button
+        class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25"
+      >
+        Get Started
+      </button>
     </div>
   </div>
-</div>
+</section>
