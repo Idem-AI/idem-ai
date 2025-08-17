@@ -30,8 +30,8 @@
     </div>
 
     <!-- Business Plan Sections Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-      @for (section of planSections(); track section.id) {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      @for (section of getVisibleSections(); track section.id) {
         <div class="glass-card rounded-2xl p-6 group hover:scale-[1.02] transition-all duration-500">
           <!-- Section Header -->
           <div class="flex items-start gap-4 mb-4">
@@ -60,6 +60,17 @@
           </div>
         </div>
       }
+    </div>
+    
+    <!-- Show More/Less Button for Sections -->
+    <div class="text-center mb-16">
+      <button
+        (click)="toggleShowAllSections()"
+        class="inline-flex items-center gap-3 px-6 py-3 bg-white/10 hover:bg-white/20 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 border border-white/20 hover:border-white/30"
+      >
+        <i [class]="showAllSections() ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" class="text-sm"></i>
+        <span>{{ showAllSections() ? 'Show Less' : 'Show More' }}</span>
+      </button>
     </div>
 
     <!-- Business Plan Examples -->
@@ -171,12 +182,12 @@
 
       <!-- Example Navigation -->
       <div class="flex justify-center gap-3 mt-8">
-        @for (example of businessExamples(); track example.id; let i = $index) {
+        @for (example of getVisibleExamples(); track example.id; let i = $index) {
           <button
             (click)="selectExample(i)"
             class="w-3 h-3 rounded-full transition-all duration-300 border border-white/20"
-            [class.scale-125]="i === activeExample()"
-            [style.background-color]="i === activeExample() ? example.color : 'rgba(255,255,255,0.2)'"
+            [class.scale-125]="i === selectedExample()"
+            [style.background-color]="i === selectedExample() ? example.color : 'rgba(255,255,255,0.2)'"
           ></button>
         }
       </div>

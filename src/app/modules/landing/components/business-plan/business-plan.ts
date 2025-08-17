@@ -27,9 +27,12 @@ interface BusinessPlanExample {
   templateUrl: './business-plan.html',
   styleUrl: './business-plan.css'
 })
-export class BusinessPlan implements OnInit, OnDestroy {
-  protected readonly activeExample = signal<number>(0);
-  private rotationInterval?: number;
+export class BusinessPlan implements OnInit {
+  protected readonly activeTab = signal<string>('overview');
+  protected readonly selectedExample = signal<number>(0);
+  protected readonly showAll = signal<boolean>(false);
+  protected readonly showAllSections = signal<boolean>(false);
+  private intervalId?: number;
   
   protected readonly planSections = signal<BusinessPlanSection[]>([
     {
@@ -125,27 +128,38 @@ export class BusinessPlan implements OnInit, OnDestroy {
     this.startAutoRotation();
   }
 
-  ngOnDestroy(): void {
-    if (this.rotationInterval) {
-      clearInterval(this.rotationInterval);
-      this.rotationInterval = undefined;
-    }
-  }
-
   private startAutoRotation(): void {
-    this.rotationInterval = window.setInterval(() => {
+    this.intervalId = window.setInterval(() => {
       const examples = this.businessExamples();
-      const current = this.activeExample();
+      const current = this.selectedExample();
       const next = (current + 1) % examples.length;
-      this.activeExample.set(next);
+      this.selectedExample.set(next);
     }, 5000);
   }
 
   protected selectExample(index: number): void {
-    this.activeExample.set(index);
+    this.selectedExample.set(index);
+  }
+
+  protected toggleShowAll(): void {
+    this.showAll.set(!this.showAll());
+  }
+
+  protected getVisibleExamples(): BusinessPlanExample[] {
+    const examples = this.businessExamples();
+    return this.showAll() ? examples : examples.slice(0, 2);
+  }
+
+  protected toggleShowAllSections(): void {
+    this.showAllSections.set(!this.showAllSections());
+  }
+
+  protected getVisibleSections(): BusinessPlanSection[] {
+    const sections = this.planSections();
+    return this.showAllSections() ? sections : sections.slice(0, 3);
   }
 
   protected getCurrentExample(): BusinessPlanExample {
-    return this.businessExamples()[this.activeExample()];
+    return this.businessExamples()[this.selectedExample()];
   }
 }

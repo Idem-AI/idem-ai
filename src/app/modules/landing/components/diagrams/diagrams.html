@@ -51,85 +51,60 @@
       </p>
     </div>
 
-    <!-- Diagram Type Filter -->
-    <div class="flex flex-wrap justify-center gap-3 mb-12">
-      <button
-        (click)="selectType('all')"
-        class="px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 border"
-        [class.bg-primary]="selectedType() === 'all'"
-        [class.text-white]="selectedType() === 'all'"
-        [class.border-primary]="selectedType() === 'all'"
-        [class.bg-transparent]="selectedType() !== 'all'"
-        [class.text-white]="selectedType() !== 'all'"
-        [class.border-white]="selectedType() !== 'all'"
-        [class.hover:bg-white]="selectedType() !== 'all'"
-      >
-        All Diagrams
-      </button>
-      @for (type of diagramTypes(); track type.id) {
-      <button
-        (click)="selectType(type.id)"
-        class="px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 border"
-        [class.text-white]="selectedType() === type.id"
-        [class.border-primary]="selectedType() === type.id"
-        [class.bg-transparent]="selectedType() !== type.id"
-        [class.text-white]="selectedType() !== type.id"
-        [class.border-white]="selectedType() !== type.id"
-        [class.hover:bg-white]="selectedType() !== type.id"
-        [style.background-color]="selectedType() === type.id ? type.color : ''"
-      >
-        {{ type.title }}
-      </button>
-      }
-    </div>
+
 
     <!-- Diagram Types Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-      @for (type of getFilteredTypes(); track type.id) {
-      <div
-        class="glass-card rounded-2xl p-6 group hover:scale-[1.02] transition-all duration-500"
-      >
-        <!-- Type Header -->
-        <div class="flex items-start gap-4 mb-4">
-          <div
-            class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 text-white"
-            [style.background-color]="type.color"
-          >
-            <i class="pi {{ type.icon }} text-xl"></i>
-          </div>
-          <div>
-            <h3
-              class="text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors duration-200"
-            >
-              {{ type.title }}
-            </h3>
-          </div>
-        </div>
-
-        <p class="text-white/70 text-sm mb-4 leading-relaxed">
-          {{ type.description }}
-        </p>
-
-        <!-- Examples -->
-        <div class="space-y-2">
-          @for (example of type.examples; track $index) {
-          <div class="flex items-center gap-2 text-sm text-white/60">
-            <div
-              class="w-1.5 h-1.5 rounded-full"
-              [style.background-color]="type.color"
-            ></div>
-            <span>{{ example }}</span>
-          </div>
-          }
-        </div>
-
-        <!-- Hover Effect Border -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-8">
+      @for (type of getFilteredTypes().slice(0, showAll() ? getFilteredTypes().length : 3); track type.id) {
+      <div class="group relative glass-card rounded-2xl p-6 sm:p-8 hover:scale-105 transition-all duration-500 cursor-pointer">
+        <!-- Icon -->
         <div
-          class="absolute inset-0 rounded-2xl border opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          [style.border-color]="type.color + '50'"
-        ></div>
+          class="w-12 h-12 sm:w-16 sm:h-16 rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300"
+          [style.background-color]="type.color + '20'"
+        >
+          <i
+            [class]="'pi ' + type.icon + ' text-xl sm:text-2xl'"
+            [style.color]="type.color"
+          ></i>
+        </div>
+
+        <!-- Content -->
+        <div>
+          <h3 class="text-lg sm:text-xl font-bold text-white mb-2 sm:mb-3 group-hover:text-primary transition-colors duration-300">
+            {{ type.title }}
+          </h3>
+          <p class="text-white/70 text-sm sm:text-base mb-4 sm:mb-6 leading-relaxed">
+            {{ type.description }}
+          </p>
+
+          <!-- Examples -->
+          <div class="space-y-2">
+            <p class="text-white/60 text-xs sm:text-sm font-medium mb-2">Examples:</p>
+            <div class="flex flex-wrap gap-2">
+              @for (example of type.examples; track $index) {
+              <span class="px-2 py-1 bg-white/10 rounded-md text-xs text-white/80">
+                {{ example }}
+              </span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Hover Border -->
+        <div class="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-primary/30 transition-colors duration-300"></div>
       </div>
       }
+    </div>
+    
+    <!-- Show More/Less Button -->
+    <div class="text-center mb-12 sm:mb-16">
+      <button
+        (click)="toggleShowAll()"
+        class="inline-flex items-center gap-3 px-6 py-3 bg-white/10 hover:bg-white/20 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 border border-white/20 hover:border-white/30"
+      >
+        <i [class]="showAll() ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" class="text-sm"></i>
+        <span>{{ showAll() ? 'Show Less' : 'Show More' }}</span>
+      </button>
     </div>
 
     <!-- Diagram Examples Showcase -->

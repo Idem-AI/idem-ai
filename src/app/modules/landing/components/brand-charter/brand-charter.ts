@@ -29,6 +29,8 @@ interface BrandShowcase {
 })
 export class BrandCharter implements OnInit {
   protected readonly activeTab = signal<string>('elements');
+  protected readonly showAll = signal<boolean>(false);
+  protected readonly showAllElements = signal<boolean>(false);
   
   protected readonly brandElements = signal<BrandElement[]>([
     {
@@ -100,6 +102,24 @@ export class BrandCharter implements OnInit {
 
   protected setActiveTab(tab: string): void {
     this.activeTab.set(tab);
+  }
+
+  protected toggleShowAll(): void {
+    this.showAll.set(!this.showAll());
+  }
+
+  protected getVisibleShowcases(): BrandShowcase[] {
+    const showcases = this.brandShowcases();
+    return this.showAll() ? showcases : showcases.slice(0, 2);
+  }
+
+  protected toggleShowAllElements(): void {
+    this.showAllElements.set(!this.showAllElements());
+  }
+
+  protected getVisibleElements(): BrandElement[] {
+    const elements = this.brandElements();
+    return this.showAllElements() ? elements : elements.slice(0, 2);
   }
 
   protected getColorContrast(color: string): string {

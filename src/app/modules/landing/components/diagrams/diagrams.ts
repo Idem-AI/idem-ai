@@ -30,7 +30,7 @@ interface DiagramExample {
   styleUrl: './diagrams.css'
 })
 export class Diagrams implements OnInit, OnDestroy {
-  protected readonly selectedType = signal<string>('all');
+  protected readonly showAll = signal<boolean>(false);
   protected readonly activeExample = signal<number>(0);
   private intervalId?: number;
 
@@ -151,8 +151,13 @@ export class Diagrams implements OnInit, OnDestroy {
     }, 4000);
   }
 
-  protected selectType(typeId: string): void {
-    this.selectedType.set(typeId);
+  protected toggleShowAll(): void {
+    this.showAll.set(!this.showAll());
+  }
+
+  protected getVisibleExamples(): DiagramExample[] {
+    const examples = this.diagramExamples();
+    return this.showAll() ? examples : examples.slice(0, 3);
   }
 
   protected selectExample(index: number): void {
@@ -160,11 +165,7 @@ export class Diagrams implements OnInit, OnDestroy {
   }
 
   protected getFilteredTypes(): DiagramType[] {
-    const selected = this.selectedType();
-    if (selected === 'all') {
-      return this.diagramTypes();
-    }
-    return this.diagramTypes().filter(type => type.id === selected);
+    return this.diagramTypes();
   }
 
   protected getCurrentExample(): DiagramExample {

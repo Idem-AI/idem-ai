@@ -74,8 +74,8 @@
 
     <!-- Brand Elements Tab -->
     @if (activeTab() === 'elements') {
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-      @for (element of brandElements(); track element.id) {
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+      @for (element of getVisibleElements(); track element.id) {
       <div
         class="glass-card rounded-2xl p-8 group hover:scale-[1.02] transition-all duration-500"
       >
@@ -148,12 +148,22 @@
       </div>
       }
     </div>
+    <!-- Show More/Less Button for Elements -->
+    <div class="text-center mb-16">
+      <button
+        (click)="toggleShowAllElements()"
+        class="inline-flex items-center gap-3 px-6 py-3 bg-white/10 hover:bg-white/20 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 border border-white/20 hover:border-white/30"
+      >
+        <i [class]="showAllElements() ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" class="text-sm"></i>
+        <span>{{ showAllElements() ? 'Show Less' : 'Show More' }}</span>
+      </button>
+    </div>
     }
 
     <!-- Brand Showcase Tab -->
     @if (activeTab() === 'showcase') {
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-      @for (brand of brandShowcases(); track brand.id) {
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+      @for (brand of getVisibleShowcases(); track brand.id) {
       <div
         class="glass-card rounded-2xl overflow-hidden group hover:scale-[1.02] transition-all duration-500"
       >
@@ -220,5 +230,6 @@
       }
     </div>
     }
+
   </div>
 </section>
