@@ -16,6 +16,7 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MenuItem } from 'primeng/api';
 import { PanelMenu } from 'primeng/panelmenu';
+import { DrawerModule } from 'primeng/drawer';
 import { AuthService } from '../../../auth/services/auth.service';
 import { CommonModule } from '@angular/common';
 import {
@@ -58,6 +59,7 @@ import {
     FormsModule,
     BetaBadgeComponent,
     QuotaDisplayComponent,
+    DrawerModule,
   ],
   animations: [
     trigger('slideInOut', [
@@ -107,6 +109,7 @@ export class SidebarDashboard implements OnInit {
   isMenuOpen = signal(false);
   isDropdownOpen = signal(false);
   protected readonly isSidebarCollapsed = signal(false);
+  protected readonly isMobileDrawerOpen = signal(false);
 
   // Quota Signals (managed locally)
   protected readonly quotaInfo = signal<QuotaInfoResponse | null>(null);
@@ -433,6 +436,8 @@ export class SidebarDashboard implements OnInit {
       }
       
       // Regular project selection - save to cookie
+      // Also set selectedProject signal so UI updates immediately
+      this.selectedProject.set(event.value);
       this.cookieService.set('projectId', projectId);
       this.projectIdFromCookie.set(projectId);
 
@@ -470,43 +475,88 @@ export class SidebarDashboard implements OnInit {
       {
         label: this.isSidebarCollapsed() ? '' : 'Dashboard',
         icon: 'pi pi-fw pi-home',
-        command: () => this.navigateTo(`console/dashboard`),
-        styleClass: getStyleClass('console/dashboard'),
+        command: () => {
+          this.isMobileDrawerOpen.set(false);
+          this.navigateTo('/console/dashboard');
+        },
+        styleClass: getStyleClass('/console/dashboard'),
+      },
+      {
+        label: this.isSidebarCollapsed() ? '' : 'Projects',
+        icon: 'pi pi-fw pi-briefcase',
+        items: [
+          {
+            label: 'All Projects',
+            icon: 'pi pi-fw pi-list',
+            command: () => {
+              this.isMobileDrawerOpen.set(false);
+              this.navigateTo('/console/projects');
+            },
+            styleClass: getStyleClass('/console/projects'),
+          },
+          {
+            label: 'Create Project',
+            icon: 'pi pi-fw pi-plus',
+            command: () => {
+              this.isMobileDrawerOpen.set(false);
+              this.navigateTo('/console/projects/create');
+            },
+            styleClass: getStyleClass('/console/projects/create'),
+          },
+        ],
       },
       {
         label: this.isSidebarCollapsed() ? '' : 'Branding',
         icon: 'pi pi-fw pi-palette',
-        command: () => this.navigateTo(`console/branding`),
-        styleClass: getStyleClass('console/branding'),
+        command: () => {
+          this.isMobileDrawerOpen.set(false);
+          this.navigateTo(`/console/projects/${this.selectedProject()?.code}/branding`);
+        },
+        styleClass: getStyleClass(`/console/projects/${this.selectedProject()?.code}/branding`),
       },
       {
         label: this.isSidebarCollapsed() ? '' : 'Business Plan',
-        icon: 'pi pi-fw pi-calendar',
-        command: () => this.navigateTo(`console/business-plan`),
-        styleClass: getStyleClass('console/business-plan'),
+        icon: 'pi pi-fw pi-chart-line',
+        command: () => {
+          this.isMobileDrawerOpen.set(false);
+          this.navigateTo(`/console/projects/${this.selectedProject()?.code}/business-plan`);
+        },
+        styleClass: getStyleClass(`/console/projects/${this.selectedProject()?.code}/business-plan`),
       },
       {
         label: this.isSidebarCollapsed() ? '' : 'Diagrams',
-        icon: 'pi pi-fw pi-chart-line',
-        command: () => this.navigateTo(`console/diagrams`),
-        styleClass: getStyleClass('console/diagrams'),
+        icon: 'pi pi-fw pi-sitemap',
+        command: () => {
+          this.isMobileDrawerOpen.set(false);
+          this.navigateTo(`/console/projects/${this.selectedProject()?.code}/diagrams`);
+        },
+        styleClass: getStyleClass(`/console/projects/${this.selectedProject()?.code}/diagrams`),
       },
       {
         label: this.isSidebarCollapsed() ? '' : 'Developement',
         icon: 'pi pi-fw pi-code',
-        command: () => this.navigateTo(`console/development`),
+        command: () => {
+          this.isMobileDrawerOpen.set(false);
+          this.navigateTo(`console/development`);
+        },
         styleClass: getStyleClass('console/development'),
       },
       {
         label: this.isSidebarCollapsed() ? '' : 'Tests',
         icon: 'pi pi-fw pi-check-square',
-        command: () => this.navigateTo(`console/tests`),
+        command: () => {
+          this.isMobileDrawerOpen.set(false);
+          this.navigateTo(`/console/tests`);
+        },
         styleClass: getStyleClass('console/tests'),
       },
       {
         label: this.isSidebarCollapsed() ? '' : 'Deployment',
         icon: 'pi pi-fw pi-globe',
-        command: () => this.navigateTo(`/console/deployments`),
+        command: () => {
+          this.isMobileDrawerOpen.set(false);
+          this.navigateTo(`/console/deployments`);
+        },
         styleClass: getStyleClass('console/deployments'),
       },
     ]);
@@ -516,12 +566,17 @@ export class SidebarDashboard implements OnInit {
     this.isMenuOpen.update((open) => !open);
   }
 
+  toggleMobileDrawer() {
+    this.isMobileDrawerOpen.update((open) => !open);
+  }
+
   toggleDropdown() {
     this.isDropdownOpen.update((open) => !open);
   }
 
   navigateTo(path: string) {
     this.isDropdownOpen.set(false);
+    this.isMobileDrawerOpen.set(false); // Close mobile drawer on navigation
     // Ne pas ajouter de slash car les chemins de menu incluent déjà 'console/'
     this.router.navigate([path]);
   }

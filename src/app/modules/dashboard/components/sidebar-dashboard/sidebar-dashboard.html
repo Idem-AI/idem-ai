@@ -1,9 +1,53 @@
+<!-- Navbar -->
 <nav
-  class="bg-bg-dark text-white overflow-hidden shadow-2xl fixed w-full z-50 top-0 shadow-primary/35"
+  class="fixed top-0 left-0 right-0 z-50 glass border-b border-gray-200 px-3 py-3 lg:px-6"
 >
-  <div class="max-w-8xl mx-auto px-4">
-    <div class="flex justify-between h-16">
-      <!-- Logo -->
+  <div class="flex items-center justify-between">
+    <div class="flex items-center">
+      <!-- Mobile menu button - visible only on mobile, placed before logo -->
+      <button
+        type="button"
+        class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 mr-2"
+        (click)="toggleMobileDrawer()"
+      >
+        <span class="sr-only">Open mobile menu</span>
+        <svg
+          class="w-6 h-6"
+          aria-hidden="true"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            clip-rule="evenodd"
+            fill-rule="evenodd"
+            d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
+          ></path>
+        </svg>
+      </button>
+
+      <!-- Desktop sidebar toggle - visible only on desktop -->
+      <button
+        type="button"
+        class="hidden md:inline-flex items-center p-2 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 mr-2"
+        (click)="toggleSidebar()"
+      >
+        <span class="sr-only">Toggle sidebar</span>
+        <svg
+          class="w-6 h-6"
+          aria-hidden="true"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            clip-rule="evenodd"
+            fill-rule="evenodd"
+            d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
+          ></path>
+        </svg>
+      </button>
+
       <div class="flex-shrink-0 flex items-center">
         <a
           routerLink="/"
@@ -17,178 +61,87 @@
           <app-beta-badge></app-beta-badge>
         </a>
       </div>
-
-      @if (isLoading()) {
-      <div class="flex items-center h-16">
-        <div class="w-1/3 h-6 bg-gray-700 rounded-lg"></div>
-        <div class="w-1/3 mx-2 h-6 bg-gray-700 rounded-lg"></div>
-        <div class="w-1/3 h-6 bg-gray-700 rounded-lg"></div>
-      </div>
-
-      } @else {
-
-      <div class="w-[300px] z-50 fixed left-64 h-[90px]">
+      <!-- Desktop Project Selector in Navbar -->
+      <div class="hidden md:block ml-4 w-64">
         <p-select
           [options]="dropDownProjects()"
-          (onChange)="onProjectChange($event)"
-          [placeholder]="selectedProject()?.name || 'Select Project'"
-          [editable]="false"
+          [ngModel]="selectedProject()"
           optionLabel="name"
-          styleClass=" w-full h-[50px] mt-2"
-        />
+          placeholder="Select a project"
+          (onChange)="onProjectChange($event)"
+          styleClass="w-full"
+        ></p-select>
       </div>
-      }
+    </div>
 
-      <!-- Bouton de connexion (visible sur desktop) -->
-      <div class="hidden md:flex items-center relative z-50">
-        @if (user()) {
-        <!-- Badge Beta et Quotas -->
-        <div class="hidden md:flex items-center space-x-4 mr-4">
-          <app-quota-display
-            [quotaInfo]="quotaInfo() ?? null"
-            [quotaDisplay]="quotaDisplay() ?? null"
-            [isBeta]="isBeta()"
-            [betaRestrictions]="betaRestrictions() ?? null"
-            [isLoading]="isQuotaLoading()"
-          ></app-quota-display>
-        </div>
-        <div class="relative">
-          <!-- Avatar -->
-          <button (click)="toggleDropdown()" class="flex items-center">
-            <img
-              [src]="user()!.photoURL"
-              alt="Avatar"
-              class="w-10 h-10 rounded-full cursor-pointer"
-            />
-          </button>
+    <!-- User profile section - always visible on right -->
+    <div class="flex items-center relative z-50">
+      @if (user()) {
+      <!-- Badge Beta et Quotas - hidden on mobile -->
+      <div class="hidden md:flex items-center space-x-4 mr-4">
+        <app-quota-display
+          [quotaInfo]="quotaInfo() ?? null"
+          [quotaDisplay]="quotaDisplay() ?? null"
+          [isBeta]="isBeta()"
+          [betaRestrictions]="betaRestrictions() ?? null"
+          [isLoading]="isQuotaLoading()"
+        ></app-quota-display>
+      </div>
+      <div class="relative">
+        <!-- Avatar -->
+        <button (click)="toggleDropdown()" class="flex items-center">
+          <img
+            [src]="user()!.photoURL"
+            alt="Avatar"
+            class="w-8 h-8 md:w-10 md:h-10 rounded-full cursor-pointer"
+          />
+        </button>
 
-          <!-- Dropdown Menu -->
-          @if (isDropdownOpen()) {
-          <div
-            class="fixed right-0 mt-2 w-48 bg-gradient-to-r from-gray-900 to-gray-800 border border-gray-200 rounded-lg shadow-lg flex flex-col z-50 mr-[38px] p-2 [&_.child]:cursor-pointer"
+        <!-- Dropdown Menu -->
+        @if (isDropdownOpen()) {
+        <div
+          class="absolute right-0 mt-2 w-48 bg-gradient-to-r from-gray-900 to-gray-800 border border-gray-200 rounded-lg shadow-lg flex flex-col z-50 p-2"
+        >
+          <a
+            routerLink="/profile"
+            (click)="navigateTo('/profile')"
+            class="dropdown-item p-3 hover:bg-primary rounded-2xl cursor-pointer text-white"
+            >Profil</a
           >
-            <a
-              routerLink="/profile"
-              (click)="navigateTo('/profile')"
-              class="dropdown-item p-3 hover:bg-primary rounded-2xl cursor-pointer"
-              >Profil</a
-            >
-            <a
-              routerLink="/console/projects"
-              (click)="navigateTo('/console/projects')"
-              class="dropdown-item p-3 hover:bg-primary rounded-2xl cursor-pointer"
-              >Projets</a
-            >
-            <a
-              routerLink="settings"
-              (click)="navigateTo('settings')"
-              class="dropdown-item p-3 hover:bg-primary rounded-2xl cursor-pointer"
-              >Settings</a
-            >
-            <a
-              (click)="logout()"
-              class="dropdown-item border-t p-3 hover:bg-primary cursor-pointer"
-              >Logout</a
-            >
-          </div>
-          }
-        </div>
-        } @else {
-        <div>
-          <div
-            class="w-[50px] h-[50px] rounded-full h-10 bg-gray-300 animate-pulse"
-          ></div>
+          <a
+            routerLink="/console/projects"
+            (click)="navigateTo('/console/projects')"
+            class="dropdown-item p-3 hover:bg-primary rounded-2xl cursor-pointer text-white"
+            >Projets</a
+          >
+          <a
+            routerLink="settings"
+            (click)="navigateTo('settings')"
+            class="dropdown-item p-3 hover:bg-primary rounded-2xl cursor-pointer text-white"
+            >Settings</a
+          >
+          <a
+            (click)="logout()"
+            class="dropdown-item border-t p-3 hover:bg-primary cursor-pointer text-white"
+            >Logout</a
+          >
         </div>
         }
       </div>
-
-      <!-- Menu mobile (visible sur mobile) -->
-      <div class="flex items-center md:hidden">
-        <button
-          (click)="toggleMenu()"
-          class="inline-flex items-center justify-center p-2 rounded-md hover:text-primary z-50 focus:outline-none transition duration-300"
-        >
-          <svg
-            class="h-6 w-6"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 6h16M4 12h16m-7 6h7"
-            />
-          </svg>
-        </button>
+      } @else {
+      <div>
+        <div
+          class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-300 animate-pulse"
+        ></div>
       </div>
+      }
     </div>
   </div>
-
-  <!-- Menu mobile (ouvert/fermé) -->
-  @if (isMenuOpen()) {
-  <div
-    class="md:hidden shadow-xl bg-gradient-to-t from-gray-800 to-gray-700"
-    #menu
-    [@slideInOut]="isMenuOpen() ? 'open' : 'closed'"
-  >
-    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-      <a
-        routerLink="/home"
-        (click)="toggleMenu()"
-        routerLinkActive="text-primary bg-blue-50"
-        class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:text-primary hover:bg-blue-50 transition duration-300"
-      >
-        Accueil
-      </a>
-      <a
-        routerLink="/project/create"
-        (click)="toggleMenu()"
-        routerLinkActive="text-primary bg-blue-50"
-        class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:text-primary hover:bg-blue-50 transition duration-300"
-      >
-        Projets
-      </a>
-      <a
-        routerLink="/analysis"
-        (click)="toggleMenu()"
-        routerLinkActive="text-primary bg-blue-50"
-        class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:text-primary hover:bg-blue-50 transition duration-300"
-      >
-        Analyse
-      </a>
-      <a
-        routerLink="/profile"
-        (click)="toggleMenu()"
-        routerLinkActive="text-primary bg-blue-50"
-        class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:text-primary hover:bg-blue-50 transition duration-300"
-      >
-        Profil
-      </a>
-      <a
-        routerLink="/console/projects"
-        (click)="toggleMenu()"
-        routerLinkActive="text-primary bg-blue-50"
-        class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:text-primary hover:bg-blue-50 transition duration-300"
-      >
-        Projets
-      </a>
-      <a
-        routerLink="/login"
-        (click)="toggleMenu()"
-        class="block outer-button rounded-md transition duration-300"
-      >
-        Connexion
-      </a>
-    </div>
-  </div>
-  }
 </nav>
+<!-- Desktop Sidebar - hidden on mobile -->
 <div
   [@sidebarExpand]="sidebarState()"
-  class="p-4 pt-[70px] h-screen fixed border-r-1 border-gray-800 shadow-lg shadow-primary/10 overflow-y-auto overflow-x-hidden transition-all duration-300 glass-effect"
+  class="hidden md:block p-4 pt-[70px] h-screen fixed glass border-r-1 border-gray-800 shadow-lg shadow-primary/10 overflow-y-auto overflow-x-hidden transition-all duration-300 glass-effect"
   [ngClass]="{'sidebar-collapsed': isSidebarCollapsed()}"
 >
   <button
@@ -202,3 +155,50 @@
   </button>
   <p-panelMenu [model]="items()" [style]="{ width: '100%' }"></p-panelMenu>
 </div>
+
+<!-- Mobile Drawer -->
+<p-drawer
+  [(visible)]="isMobileDrawerOpen"
+  position="left"
+  [modal]="true"
+  [dismissible]="true"
+  [closeOnEscape]="true"
+  styleClass="md:hidden"
+>
+  <ng-template pTemplate="header">
+    <div class="flex items-center gap-2">
+      <img src="assets/images/logo.png" class="h-8" alt="Lexi Logo" />
+      <span class="text-xl font-semibold">Lexi</span>
+    </div>
+  </ng-template>
+
+  <div class="p-4">
+    <!-- Mobile Quota Display -->
+    @if (user()) {
+    <div class="mb-4 pb-4 border-b border-gray-200">
+      <app-quota-display
+        [quotaInfo]="quotaInfo() ?? null"
+        [quotaDisplay]="quotaDisplay() ?? null"
+        [isBeta]="isBeta()"
+        [betaRestrictions]="betaRestrictions() ?? null"
+        [isLoading]="isQuotaLoading()"
+      ></app-quota-display>
+    </div>
+    }
+
+    <!-- Mobile Project Selector -->
+    <div class="mb-4">
+      <p-select
+        [options]="dropDownProjects()"
+        [ngModel]="selectedProject()"
+        optionLabel="name"
+        placeholder="Select a project"
+        (onChange)="onProjectChange($event)"
+        styleClass="w-full"
+      ></p-select>
+    </div>
+
+    <!-- Mobile Menu -->
+    <p-panelMenu [model]="items()" [style]="{ width: '100%' }"></p-panelMenu>
+  </div>
+</p-drawer>

@@ -1,14 +1,1 @@
-.color-option {
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
-}
-
-.color-option:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-  transform: translateY(-4px);
-}
-
-.color-option.selected {
-  border-color: #3b82f6;
-  background-color: rgba(59, 130, 246, 0.1);
-}
+/* All styles migrated to Tailwind CSS classes in the HTML template */

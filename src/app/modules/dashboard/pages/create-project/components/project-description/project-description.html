@@ -1,46 +1,46 @@
-<section class="flex flex-col items-center justify-center w-full">
+<section class="flex flex-col items-center justify-center w-full px-4 sm:px-6 lg:px-8">
   <h1
-    class="text-2xl w-full md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2"
+    class="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-center font-bold text-gray-100 mb-6 lg:mb-8 max-w-4xl"
   >
     DESCRIBE YOUR PROJECT
   </h1>
   <div
-    class="bg-gray-700 rounded-2xl px-4 py-2 w-full sm:min-w-[500px] sm:max-w-[750px]"
+    class="bg-gray-700 rounded-2xl px-4 sm:px-6 py-3 sm:py-4 w-full max-w-2xl lg:max-w-3xl"
   >
     <!-- Input area -->
     <textarea
       id="projectDescription"
       [(ngModel)]="project()!.description"
       rows="4"
-      class="bg-transparent text-gray-300 w-full outline-none placeholder-gray-500 text-lg resize-none overflow-y-auto max-h-[400px]"
+      class="bg-transparent text-gray-300 w-full outline-none placeholder-gray-500 text-base sm:text-lg resize-none overflow-y-auto max-h-[300px] sm:max-h-[400px]"
       placeholder="Message Idem"
       (input)="autoResize($event)"
     ></textarea>
 
     <!-- Bottom buttons -->
-    <div class="flex justify-between items-center mt-2">
+    <div class="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0 mt-3 sm:mt-2">
       <!-- Left buttons -->
-      <div class="flex space-x-2">
+      <div class="flex flex-wrap gap-2 justify-center sm:justify-start">
         <button
-          class="flex items-center bg-gray-600 text-gray-300 px-3 py-1 rounded-full hover:bg-gray-500"
+          class="flex items-center bg-gray-600 text-gray-300 px-3 py-1.5 sm:py-1 rounded-full hover:bg-gray-500 transition-colors text-sm sm:text-base"
         >
-          <i class="pi pi-brain mr-2"></i> Reformuler
+          <i class="pi pi-brain mr-1 sm:mr-2 text-sm"></i> Reformuler
         </button>
         <button
-          class="flex items-center bg-blue-600 text-white px-3 py-1 rounded-full hover:bg-blue-500"
+          class="flex items-center bg-blue-600 text-white px-3 py-1.5 sm:py-1 rounded-full hover:bg-blue-500 transition-colors text-sm sm:text-base"
         >
-          <i class="pi pi-globe mr-2"></i> Corriger
+          <i class="pi pi-globe mr-1 sm:mr-2 text-sm"></i> Corriger
         </button>
       </div>
 
       <!-- Right icons -->
       <div class="flex items-center space-x-3">
-        <i class="pi pi-paperclip text-gray-400 text-xl cursor-pointer"></i>
+        <i class="pi pi-paperclip text-gray-400 text-lg sm:text-xl cursor-pointer hover:text-gray-300 transition-colors"></i>
         <button
-          class="flex items-center justify-center w-8 h-8 bg-gray-500 text-gray-300 rounded-full hover:bg-gray-400"
+          class="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-gray-500 text-gray-300 rounded-full hover:bg-gray-400 transition-colors"
           (click)="goToNextStep()"
         >
-          <i class="pi pi-arrow-up"></i>
+          <i class="pi pi-arrow-up text-sm sm:text-base"></i>
         </button>
       </div>
     </div>

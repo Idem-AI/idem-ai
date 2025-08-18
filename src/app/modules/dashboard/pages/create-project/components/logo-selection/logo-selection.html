@@ -1,28 +1,27 @@
 <section
-  class="flex flex-col items-center justify-center w-full"
+  class="flex flex-col items-center justify-center w-full px-4 sm:px-6 lg:px-8"
   #logoSelection
 >
   <h1
-    class="text-2xl md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2 w-[80%] md:w-[60%]"
+    class="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-center font-bold text-gray-100 mb-6 lg:mb-8 max-w-4xl"
   >
     Choose a stunning logo for your project
   </h1>
 
-  <div class="flex justify-center w-full">
-    <div class="max-w-4xl mx-auto p-4 w-full">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-        @for (logo of logos(); track logo.id) {
-        <div
-          class="p-6 md:p-8 border border-gray-700/50 rounded-2xl backdrop-blur-sm hover:shadow-lg hover:shadow-primary/30 hover:bg-gray-900/50 transition-all duration-300 cursor-pointer flex flex-col items-center group relative overflow-hidden bg-black/20 hover:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary/50"
-          [class.border-primary]="selectedLogo() === logo.id"
-          [class.bg-gray-900]="selectedLogo() === logo.id"
-          [class.shadow-md]="selectedLogo() === logo.id"
-          (click)="selectLogo(logo.id)"
-          tabindex="0"
-          role="button"
-          [attr.aria-pressed]="selectedLogo() === logo.id"
-          [attr.aria-label]="'Select ' + logo.name + ' logo'"
-        >
+  <div class="w-full max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
+      @for (logo of logos(); track logo.id) {
+      <div
+        class="p-4 sm:p-6 lg:p-8 border border-gray-700/50 rounded-2xl backdrop-blur-sm hover:shadow-lg hover:shadow-primary/30 hover:bg-gray-900/50 transition-all duration-300 cursor-pointer flex flex-col items-center group relative overflow-hidden bg-black/20 hover:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary/50"
+        [class.border-primary]="selectedLogo() === logo.id"
+        [class.bg-gray-900]="selectedLogo() === logo.id"
+        [class.shadow-md]="selectedLogo() === logo.id"
+        (click)="selectLogo(logo.id)"
+        tabindex="0"
+        role="button"
+        [attr.aria-pressed]="selectedLogo() === logo.id"
+        [attr.aria-label]="'Select ' + logo.name + ' logo'"
+      >
           <!-- Background gradient effect - preserved from original -->
           <div
             class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -30,49 +29,48 @@
           ></div>
 
           <!-- Logo container with preserved hover animation -->
+        <div
+          class="w-full h-40 sm:h-44 lg:h-48 mb-3 sm:mb-4 z-10 transition-transform duration-300 group-hover:scale-105 flex items-center justify-center"
+          [class.scale-105]="selectedLogo() === logo.id"
+        >
           <div
-            class="w-full h-48 mb-4 z-10 transition-transform duration-300 group-hover:scale-105 flex items-center justify-center"
-            [class.scale-105]="selectedLogo() === logo.id"
+            class="bg-white p-2 sm:p-3 rounded-lg shadow-sm w-auto h-auto max-h-full max-w-full flex items-center justify-center"
           >
             <div
-              class="bg-white p-3 rounded-lg shadow-sm w-auto h-auto max-h-full max-w-full flex items-center justify-center"
-            >
-              <div
-                [innerHTML]="logo.svg | safeHtml"
-                class="w-48 h-48 flex items-center justify-center object-contain"
-              ></div>
-            </div>
+              [innerHTML]="logo.svg | safeHtml"
+              class="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 flex items-center justify-center object-contain"
+            ></div>
           </div>
-
-          <!-- Logo name with improved typography -->
-          <h3
-            class="text-white text-lg font-semibold z-10 tracking-wide text-center mt-2"
-          >
-            {{ logo.name }}
-          </h3>
-
-          <!-- Logo concept -->
-          <p
-            class="text-gray-400 text-xs mt-1 mb-3 z-10 text-center px-3 max-w-xs"
-          >
-            {{ logo.concept }}
-          </p>
-
-          <!-- Animated indicator line - preserved from original -->
-          <div
-            class="w-0 group-hover:w-full h-1 bg-primary transition-all duration-300 rounded-full"
-            [class.w-full]="selectedLogo() === logo.id"
-          ></div>
-
-          <!-- Selected indicator dot -->
-          @if (selectedLogo() === logo.id) {
-          <div
-            class="absolute top-4 right-4 w-3 h-3 rounded-full bg-primary z-20 animate-pulse"
-          ></div>
-          }
         </div>
+
+        <!-- Logo name with improved typography -->
+        <h3
+          class="text-white text-base sm:text-lg font-semibold z-10 tracking-wide text-center mt-2"
+        >
+          {{ logo.name }}
+        </h3>
+
+        <!-- Logo concept -->
+        <p
+          class="text-gray-400 text-xs sm:text-sm mt-1 mb-3 z-10 text-center px-2 sm:px-3 max-w-xs"
+        >
+          {{ logo.concept }}
+        </p>
+
+        <!-- Animated indicator line - preserved from original -->
+        <div
+          class="w-0 group-hover:w-full h-1 bg-primary transition-all duration-300 rounded-full"
+          [class.w-full]="selectedLogo() === logo.id"
+        ></div>
+
+        <!-- Selected indicator dot -->
+        @if (selectedLogo() === logo.id) {
+        <div
+          class="absolute top-3 sm:top-4 right-3 sm:right-4 w-3 h-3 rounded-full bg-primary z-20 animate-pulse"
+        ></div>
         }
       </div>
+      }
     </div>
   </div>
 </section>

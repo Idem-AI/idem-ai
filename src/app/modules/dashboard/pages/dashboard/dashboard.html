@@ -12,24 +12,25 @@
   <p>{{ error() }}</p>
 </div>
 } @else {
-<div class="p-4 md:p-8 text-gray-300 min-h-screen">
+<div class="p-4 sm:p-6 lg:p-8 text-gray-300 min-h-screen">
   @if (project(); as currentProject) {
-  <div class="space-y-8">
+  <div class="space-y-6 sm:space-y-8">
     <!-- Project Header -->
-    <header class="bg-gray-900 shadow-md rounded-lg p-6">
-      <div class="flex flex-col md:flex-row justify-between items-start">
-        <div>
-          <h1 class="text-3xl font-bold text-gray-100">
+    <header class="bg-gray-900 shadow-md rounded-lg p-4 sm:p-6">
+      <div class="flex flex-col lg:flex-row justify-between items-start gap-4">
+        <div class="flex-1 min-w-0">
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-100 truncate">
             {{ currentProject.name }}
           </h1>
-          <p class="text-sm text-gray-400 mt-1">
-            Created: {{ currentProject.createdAt | date : "mediumDate" }} | Last
-            Updated: {{ currentProject.updatedAt | date : "mediumDate" }}
+          <p class="text-xs sm:text-sm text-gray-400 mt-1 flex flex-col sm:flex-row sm:gap-2">
+            <span>Created: {{ currentProject.createdAt | date : "mediumDate" }}</span>
+            <span class="hidden sm:inline">|</span>
+            <span>Last Updated: {{ currentProject.updatedAt | date : "mediumDate" }}</span>
           </p>
         </div>
-        <div class="mt-4 md:mt-0">
+        <div class="w-full lg:w-auto">
           <button
-            class="inner-button text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-150 ease-in-out"
+            class="w-full lg:w-auto inner-button text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-150 ease-in-out text-sm sm:text-base"
           >
             Project Settings (Soon)
           </button>
@@ -38,47 +39,47 @@
     </header>
 
     <!-- Project Vitals -->
-    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div class="bg-gray-900 shadow-md rounded-lg p-6">
-        <h2 class="text-xl font-semibold text-gray-300 mb-3">Description</h2>
-        <p class="text-gray-400 text-sm leading-relaxed">
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      <div class="bg-gray-900 shadow-md rounded-lg p-4 sm:p-6">
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-300 mb-3">Description</h2>
+        <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
           {{ currentProject.description || "No description provided." }}
         </p>
       </div>
-      <div class="bg-gray-900 shadow-md rounded-lg p-6">
-        <h2 class="text-xl font-semibold text-gray-300 mb-3">Scope</h2>
-        <p class="text-gray-400 text-sm">
+      <div class="bg-gray-900 shadow-md rounded-lg p-4 sm:p-6">
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-300 mb-3">Scope</h2>
+        <p class="text-gray-400 text-sm sm:text-base">
           {{ currentProject.scope || "Not specified." }}
         </p>
       </div>
-      <div class="bg-gray-900 shadow-md rounded-lg p-6">
-        <h2 class="text-xl font-semibold text-gray-300 mb-3">
+      <div class="bg-gray-900 shadow-md rounded-lg p-4 sm:p-6">
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-300 mb-3">
           Target Audience
         </h2>
-        <p class="text-gray-400 text-sm">
+        <p class="text-gray-400 text-sm sm:text-base">
           {{ currentProject.targets || "Not specified." }}
         </p>
       </div>
-      <div class="bg-gray-900 shadow-md rounded-lg p-6">
-        <h2 class="text-xl font-semibold text-gray-300 mb-3">Budget</h2>
-        <p class="text-gray-400 text-sm">
+      <div class="bg-gray-900 shadow-md rounded-lg p-4 sm:p-6">
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-300 mb-3">Budget</h2>
+        <p class="text-gray-400 text-sm sm:text-base">
           {{ currentProject.budgetIntervals || "Not specified." }}
         </p>
       </div>
-      <div class="bg-gray-900 shadow-md rounded-lg p-6">
-        <h2 class="text-xl font-semibold text-gray-300 mb-3">Team Size</h2>
-        <p class="text-gray-400 text-sm">
+      <div class="bg-gray-900 shadow-md rounded-lg p-4 sm:p-6">
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-300 mb-3">Team Size</h2>
+        <p class="text-gray-400 text-sm sm:text-base">
           {{ currentProject.teamSize || "Not specified." }}
         </p>
       </div>
     </section>
 
     <!-- Development Lifecycle Stages -->
-    <section class="bg-gray-900 shadow-md rounded-lg p-6">
-      <h2 class="text-2xl font-semibold text-gray-100 mb-6">
+    <section class="bg-gray-900 shadow-md rounded-lg p-4 sm:p-6">
+      <h2 class="text-xl sm:text-2xl font-semibold text-gray-100 mb-4 sm:mb-6">
         Software Development Lifecycle
       </h2>
-      <div class="space-y-6">
+      <div class="space-y-4 sm:space-y-6">
         <div>
           <h3 class="text-xl font-medium text-indigo-400 mb-2">
             Analysis & Business Plan
