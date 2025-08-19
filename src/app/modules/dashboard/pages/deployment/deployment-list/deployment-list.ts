@@ -106,23 +106,60 @@ export class DeploymentList implements OnInit {
   }
 
   protected getStatusClass(status: string): string {
+    const base = 'inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm whitespace-nowrap';
     switch (status) {
       case 'deployed':
-        return 'status-success';
+        return `${base} bg-green-500/15 text-green-400`;
       case 'building':
       case 'infrastructure-provisioning':
       case 'deploying':
-        return 'status-progress';
+        return `${base} bg-blue-500/15 text-blue-400`;
       case 'failed':
       case 'cancelled':
-        return 'status-error';
+        return `${base} bg-red-500/15 text-red-400`;
       case 'configuring':
       case 'pending':
-        return 'status-pending';
+        return `${base} bg-gray-500/15 text-gray-300`;
       case 'rollback':
-        return 'status-warning';
+        return `${base} bg-yellow-500/15 text-yellow-400`;
       default:
-        return 'status-default';
+        return `${base} bg-white/10 text-gray-200`;
+    }
+  }
+
+  protected getStatusIndicatorClass(status: string): string {
+    const base = 'inline-block w-2 h-2 rounded-full';
+    switch (status) {
+      case 'deployed':
+        return `${base} bg-green-400`;
+      case 'building':
+      case 'infrastructure-provisioning':
+      case 'deploying':
+        return `${base} bg-blue-400`;
+      case 'failed':
+      case 'cancelled':
+        return `${base} bg-red-400`;
+      case 'configuring':
+      case 'pending':
+        return `${base} bg-gray-400`;
+      case 'rollback':
+        return `${base} bg-yellow-400`;
+      default:
+        return `${base} bg-white/40`;
+    }
+  }
+
+  protected getEnvClass(env: string): string {
+    const base = 'inline-block px-3 py-1 rounded-full text-sm capitalize';
+    switch (env) {
+      case 'development':
+        return `${base} bg-blue-500/15 text-blue-400`;
+      case 'staging':
+        return `${base} bg-yellow-500/15 text-yellow-400`;
+      case 'production':
+        return `${base} bg-green-500/15 text-green-400`;
+      default:
+        return `${base} bg-white/10 text-gray-200`;
     }
   }
 

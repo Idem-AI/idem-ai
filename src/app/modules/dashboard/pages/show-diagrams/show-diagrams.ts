@@ -74,7 +74,7 @@ export class ShowDiagramsComponent implements OnInit {
           this.existingDiagram.set(null);
         }
 
-        this.isLoading.set(false);
+        this.isLoading.set(false); 
       },
       error: (err: any) => {
         console.error('Error loading diagram:', err);

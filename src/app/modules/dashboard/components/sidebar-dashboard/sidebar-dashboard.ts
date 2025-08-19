@@ -144,15 +144,15 @@ export class SidebarDashboard implements OnInit {
     // Add "View All Projects" as the first option
     const allProjectsOption = {
       name: 'View All Projects',
-      code: 'all-projects'
+      code: 'all-projects',
     };
-    
+
     // Get the regular project options
     const projectOptions = this._userProjects().map((p) => ({
       name: p.name,
       code: p.id!,
     }));
-    
+
     // Return the special option at the top followed by the regular projects
     return [allProjectsOption, ...projectOptions];
   });
@@ -434,7 +434,7 @@ export class SidebarDashboard implements OnInit {
         this.router.navigate(['/console/projects']);
         return;
       }
-      
+
       // Regular project selection - save to cookie
       // Also set selectedProject signal so UI updates immediately
       this.selectedProject.set(event.value);
@@ -470,96 +470,7 @@ export class SidebarDashboard implements OnInit {
       return `${isCollapsed} ${isActive}`.trim();
     };
 
-    // Create menu items with expanded style options and active route highlight
-    this.items.set([
-      {
-        label: this.isSidebarCollapsed() ? '' : 'Dashboard',
-        icon: 'pi pi-fw pi-home',
-        command: () => {
-          this.isMobileDrawerOpen.set(false);
-          this.navigateTo('/console/dashboard');
-        },
-        styleClass: getStyleClass('/console/dashboard'),
-      },
-      {
-        label: this.isSidebarCollapsed() ? '' : 'Projects',
-        icon: 'pi pi-fw pi-briefcase',
-        items: [
-          {
-            label: 'All Projects',
-            icon: 'pi pi-fw pi-list',
-            command: () => {
-              this.isMobileDrawerOpen.set(false);
-              this.navigateTo('/console/projects');
-            },
-            styleClass: getStyleClass('/console/projects'),
-          },
-          {
-            label: 'Create Project',
-            icon: 'pi pi-fw pi-plus',
-            command: () => {
-              this.isMobileDrawerOpen.set(false);
-              this.navigateTo('/console/projects/create');
-            },
-            styleClass: getStyleClass('/console/projects/create'),
-          },
-        ],
-      },
-      {
-        label: this.isSidebarCollapsed() ? '' : 'Branding',
-        icon: 'pi pi-fw pi-palette',
-        command: () => {
-          this.isMobileDrawerOpen.set(false);
-          this.navigateTo(`/console/projects/${this.selectedProject()?.code}/branding`);
-        },
-        styleClass: getStyleClass(`/console/projects/${this.selectedProject()?.code}/branding`),
-      },
-      {
-        label: this.isSidebarCollapsed() ? '' : 'Business Plan',
-        icon: 'pi pi-fw pi-chart-line',
-        command: () => {
-          this.isMobileDrawerOpen.set(false);
-          this.navigateTo(`/console/projects/${this.selectedProject()?.code}/business-plan`);
-        },
-        styleClass: getStyleClass(`/console/projects/${this.selectedProject()?.code}/business-plan`),
-      },
-      {
-        label: this.isSidebarCollapsed() ? '' : 'Diagrams',
-        icon: 'pi pi-fw pi-sitemap',
-        command: () => {
-          this.isMobileDrawerOpen.set(false);
-          this.navigateTo(`/console/projects/${this.selectedProject()?.code}/diagrams`);
-        },
-        styleClass: getStyleClass(`/console/projects/${this.selectedProject()?.code}/diagrams`),
-      },
-      {
-        label: this.isSidebarCollapsed() ? '' : 'Developement',
-        icon: 'pi pi-fw pi-code',
-        command: () => {
-          this.isMobileDrawerOpen.set(false);
-          this.navigateTo(`console/development`);
-        },
-        styleClass: getStyleClass('console/development'),
-      },
-      {
-        label: this.isSidebarCollapsed() ? '' : 'Tests',
-        icon: 'pi pi-fw pi-check-square',
-        command: () => {
-          this.isMobileDrawerOpen.set(false);
-          this.navigateTo(`/console/tests`);
-        },
-        styleClass: getStyleClass('console/tests'),
-      },
-      {
-        label: this.isSidebarCollapsed() ? '' : 'Deployment',
-        icon: 'pi pi-fw pi-globe',
-        command: () => {
-          this.isMobileDrawerOpen.set(false);
-          this.navigateTo(`/console/deployments`);
-        },
-        styleClass: getStyleClass('console/deployments'),
-      },
-    ]);
+  
   }
 
   toggleMenu() {
@@ -577,8 +488,9 @@ export class SidebarDashboard implements OnInit {
   navigateTo(path: string) {
     this.isDropdownOpen.set(false);
     this.isMobileDrawerOpen.set(false); // Close mobile drawer on navigation
-    // Ne pas ajouter de slash car les chemins de menu incluent déjà 'console/'
-    this.router.navigate([path]);
+    // Normalize to absolute URL and navigate reliably
+    const url = path.startsWith('/') ? path : `/${path}`;
+    this.router.navigateByUrl(url);
   }
 
   logout() {
