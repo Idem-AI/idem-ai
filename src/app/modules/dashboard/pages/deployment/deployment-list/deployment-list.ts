@@ -6,7 +6,7 @@ import { environment } from '../../../../../../environments/environment';
 import { DeploymentModel } from '../../../models/deployment.model';
 import { CookieService } from '../../../../../shared/services/cookie.service';
 import { DeploymentService } from '../../../services/deployment.service';
-import { Loader } from "../../../../../components/loader/loader";
+import { Loader } from '../../../../../components/loader/loader';
 
 @Component({
   selector: 'app-deployment-list',
@@ -106,7 +106,8 @@ export class DeploymentList implements OnInit {
   }
 
   protected getStatusClass(status: string): string {
-    const base = 'inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm whitespace-nowrap';
+    const base =
+      'inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm whitespace-nowrap';
     switch (status) {
       case 'deployed':
         return `${base} bg-green-500/15 text-green-400`;
@@ -166,18 +167,21 @@ export class DeploymentList implements OnInit {
   /**
    * Navigates to the deployment details page for the selected deployment
    */
-  protected viewDeploymentDetails(deploymentId: string, event: MouseEvent): void {
+  protected viewDeploymentDetails(
+    deploymentId: string,
+    event: MouseEvent
+  ): void {
     // Don't trigger if clicking on an interactive element (links, buttons)
     const target = event.target as HTMLElement;
     if (
-      target.closest('a') || 
-      target.closest('button') || 
-      target.tagName.toLowerCase() === 'a' || 
+      target.closest('a') ||
+      target.closest('button') ||
+      target.tagName.toLowerCase() === 'a' ||
       target.tagName.toLowerCase() === 'button'
     ) {
       return;
     }
-    
+
     // Navigate to the deployment details page
     this.router.navigate(['/console/deployments', deploymentId]);
   }

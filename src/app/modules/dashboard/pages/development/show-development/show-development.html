@@ -1,4 +1,6 @@
-<div class="w-full min-h-[80vh] max-w-6xl mx-auto p-6 bg-gradient-glow flex flex-col items-center justify-center">
+<div
+  class="w-full min-h-[80vh] max-w-6xl mx-auto sm:p-6 bg-gradient-glow flex flex-col items-center justify-center"
+>
   <!-- Loading state -->
   @if (loading()) {
   <app-loader />
@@ -15,12 +17,19 @@
 
   <!-- Development configs display -->
   @if (!loading() && developmentConfigs() && !error()) {
-  <div class="flex justify-between items-center mb-6 w-full gap-4">
-    <h1 class="text-2xl font-bold text-white text-glow-primary">
+  <div
+    class="flex sm:justify-between items-center mb-6 w-full gap-4 flex-wrap justify-end"
+  >
+    <h1
+      class="sm:text-2xl text-xl font-bold text-white text-glow-primary w-full"
+    >
       Development Configuration
     </h1>
-    <button (click)="redirectToWebGenerator(projectId())" class="inner-button flex items-center">
-      <span>Open Application</span>
+    <button
+      (click)="redirectToWebGenerator(projectId())"
+      class="inner-button flex items-center"
+    >
+      <span>Open App</span>
       <i class="pi pi-external-link ml-2 text-xl"></i>
     </button>
   </div>
