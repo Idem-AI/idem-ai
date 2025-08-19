@@ -20,20 +20,54 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 0 8px var(--accent-glow);
 }
 
-/* Styles for panel menu in collapsed mode */
-:host ::ng-deep .sidebar-collapsed .p-panelmenu .p-panelmenu-header-link {
+/* Styles for panel menu in collapsed mode (desktop-only sidebar) */
+:host ::ng-deep .sidebar-collapsed .p-panelmenu .p-panelmenu-header-link,
+:host ::ng-deep .sidebar-collapsed .p-panelmenu .p-menuitem-link {
+  display: flex;
+  align-items: center;
   justify-content: center;
+  padding: 0.75rem;
+  text-align: center;
 }
 
+/* Center the whole panel menu content area */
+:host ::ng-deep .sidebar-collapsed .p-panelmenu {
+  text-align: center;
+}
+
+:host ::ng-deep .sidebar-collapsed .p-panelmenu .p-panelmenu-content {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Hide all texts and submenus when collapsed */
 :host ::ng-deep .sidebar-collapsed .p-panelmenu .p-panelmenu-header-text,
 :host ::ng-deep .sidebar-collapsed .p-panelmenu .p-submenu-list,
 :host ::ng-deep .sidebar-collapsed .p-panelmenu .p-menuitem-text {
-  display: none;
+  display: none !important;
 }
 
+/* Hide toggler chevrons when collapsed */
+:host ::ng-deep .sidebar-collapsed .p-panelmenu .p-panelmenu-toggle-icon {
+  display: none !important;
+}
+
+/* Icon-only sizing */
 :host ::ng-deep .sidebar-collapsed .p-panelmenu .p-menuitem-icon {
   margin-right: 0;
   font-size: 1.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Remove unintended left padding/margins that could offset the icon */
+:host ::ng-deep .sidebar-collapsed .p-panelmenu .p-panelmenu-header,
+:host ::ng-deep .sidebar-collapsed .p-panelmenu .p-menuitem-content {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
 }
 
 /* Hover effects for menu items */
@@ -133,4 +167,38 @@
   opacity: 0.15;
   pointer-events: none;
   z-index: -1;
+}
+
+/* ============================= */
+/* Glass Drawer (Mobile Drawer)  */
+/* ============================= */
+
+/* Drawer panel glass effect */
+:host ::ng-deep .p-drawer.glass .p-drawer-content {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-shadow);
+}
+
+/* Drawer header styling */
+:host ::ng-deep .p-drawer.glass .p-drawer-header {
+  background: transparent;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+/* Close button style */
+:host ::ng-deep .p-drawer.glass .p-drawer-close-button {
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* Mask blur for nicer depth */
+:host ::ng-deep .p-drawer-mask.p-overlay-mask {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.35);
 }

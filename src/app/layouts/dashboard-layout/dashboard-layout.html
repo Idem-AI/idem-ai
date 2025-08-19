@@ -2,11 +2,19 @@
   <app-sidebar-dashboard (sidebarCollapsedChange)="onSidebarCollapsedChange($event)" />
 </div>
 
+<!-- Mobile content: no left margin, no animation -->
+<div class="md:hidden mt-[80px] p-4 min-h-screen bg-opacity-95 relative">
+  <div class="glass-card relative p-4 rounded-xl shadow-xl shadow-primary/5 border border-gray-800/30">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+<!-- Desktop content: with sidebar spacing animation -->
 <div 
+  class="hidden md:block transition-all duration-300 mt-[80px] p-8 min-h-screen bg-opacity-95 relative"
   [@contentExpand]="isSidebarCollapsed() ? 'collapsed' : 'expanded'"
-  class="transition-all duration-300 mt-[80px] p-8 min-h-screen bg-opacity-95 relative"
 >
-  <div class="glass-card relative p-6 rounded-xl shadow-xl shadow-primary/5  border border-gray-800/30">
+  <div class="glass-card relative p-6 rounded-xl shadow-xl shadow-primary/5 border border-gray-800/30">
     <router-outlet></router-outlet>
   </div>
 </div>
