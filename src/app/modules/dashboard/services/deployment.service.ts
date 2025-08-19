@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
+import { SseClient } from 'ngx-sse-client';
 import {
   DeploymentModel,
   QuickDeploymentModel,
@@ -24,11 +25,29 @@ interface GitRepositoryValidationResponse {
   error?: string;
 }
 
+// SSE event payload for deployment execution streaming
+export interface DeploymentExecutionEvent {
+  type:
+    | 'connected'
+    | 'start'
+    | 'status'
+    | 'log'
+    | 'error'
+    | 'end'
+    | 'completed';
+  level?: 'info' | 'warn' | 'error';
+  message?: string;
+  timestamp?: string;
+  // Allow additional backend-provided fields
+  [key: string]: unknown;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class DeploymentService {
   private readonly http = inject(HttpClient);
+  private readonly sseClient = inject(SseClient);
   private readonly apiUrl = `${environment.services.api.url}/project`;
 
   /**
@@ -83,15 +102,17 @@ export class DeploymentService {
     deployment: Partial<T>
   ): Observable<T> {
     console.log('Creating deployment:', deployment);
-    return this.http.post<T>(`${this.apiUrl}/deployments/create`, deployment).pipe(
-      tap((createdDeployment) =>
-        console.log('Created deployment', createdDeployment)
-      ),
-      catchError((error) => {
-        console.error('Error creating deployment', error);
-        return throwError(() => error);
-      })
-    );
+    return this.http
+      .post<T>(`${this.apiUrl}/deployments/create`, deployment)
+      .pipe(
+        tap((createdDeployment) =>
+          console.log('Created deployment', createdDeployment)
+        ),
+        catchError((error) => {
+          console.error('Error creating deployment', error);
+          return throwError(() => error);
+        })
+      );
   }
 
   /**
@@ -99,15 +120,15 @@ export class DeploymentService {
    * @param projectId The ID of the project
    */
   getProjectDeployments(projectId: string): Observable<DeploymentModel[]> {
-    return this.http.get<DeploymentModel[]>(
-      `${this.apiUrl}/deployments/${projectId}`
-    ).pipe(
-      tap((deployments) => console.log('Fetched deployments', deployments)),
-      catchError((error) => {
-        console.error('Error fetching deployments', error);
-        return throwError(() => error);
-      })
-    );
+    return this.http
+      .get<DeploymentModel[]>(`${this.apiUrl}/deployments/${projectId}`)
+      .pipe(
+        tap((deployments) => console.log('Fetched deployments', deployments)),
+        catchError((error) => {
+          console.error('Error fetching deployments', error);
+          return throwError(() => error);
+        })
+      );
   }
 
   /**
@@ -130,6 +151,80 @@ export class DeploymentService {
           return throwError(() => error);
         })
       );
+  }
+
+  executeDeployment(deploymentId: string): Observable<DeploymentModel> {
+    return this.http
+      .post<DeploymentModel>(
+        `${this.apiUrl}/deployments/execute/${deploymentId}`,
+        {}
+      )
+      .pipe(
+        tap((deployment) => console.log('Executed deployment', deployment)),
+        catchError((error) => {
+          console.error('Error executing deployment', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  /**
+   * Stream live execution logs and statuses for a deployment using Server-Sent Events.
+   * Mirrors native EventSource example but via ngx-sse-client.
+   *
+   * Backend is expected to emit JSON messages with fields like:
+   * { type: "connected" | "start" | "status" | "log" | "error" | "end" | "completed", level, message, ... }
+   *
+   * @param deploymentId The deployment ID to execute/stream
+   * @param token Optional auth token if required as query param (use proxy/cookie when possible)
+   */
+  executeDeploymentStream(
+    deploymentId: string,
+    token?: string
+  ): Observable<DeploymentExecutionEvent> {
+    let url = `${this.apiUrl}/deployments/execute-stream/${deploymentId}`;
+    if (token) {
+      const sep = url.includes('?') ? '&' : '?';
+      url = `${url}${sep}token=${encodeURIComponent(token)}`;
+    }
+
+    return new Observable<DeploymentExecutionEvent>((observer) => {
+      const sub = this.sseClient
+        .stream(url, {
+          keepAlive: true,
+          reconnectionDelay: 1500,
+          responseType: 'event',
+        })
+        .subscribe({
+          next: (ev: Event) => {
+            try {
+              // Only MessageEvent carries data
+              const anyEv = ev as MessageEvent<string>;
+              if (anyEv && typeof anyEv.data === 'string') {
+                const parsed = JSON.parse(
+                  anyEv.data
+                ) as DeploymentExecutionEvent;
+                observer.next(parsed);
+              } else {
+                // Fallback minimal event
+                observer.next({ type: 'status', message: 'heartbeat' });
+              }
+            } catch (e) {
+              observer.next({
+                type: 'error',
+                level: 'error',
+                message: (e as Error).message,
+              });
+            }
+          },
+          error: (err) => {
+            observer.error(err);
+          },
+          complete: () => observer.complete(),
+        });
+
+      return () => sub.unsubscribe();
+    });
   }
 
   /**

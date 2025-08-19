@@ -45,7 +45,7 @@ export class ShowDevelopment implements OnInit {
     } else {
       this.error.set('No project ID found. Please select a project first.');
     }
-  } 
+  }
 
   private fetchDevelopmentConfigs(projectId: string): void {
     this.loading.set(true);

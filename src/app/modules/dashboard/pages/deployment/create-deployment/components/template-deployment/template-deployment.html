@@ -175,8 +175,8 @@
           [disabled]="deploymentConfigForm.invalid || validationErrors().length > 0 || loadingDeployment()"
         >
           @if (loadingDeployment()) {
-          <i class="pi pi-spinner animate-spin"></i> Deploying... } @else {
-          <i class="pi pi-rocket"></i> Deploy Template }
+          <i class="pi pi-spinner animate-spin"></i> Saving... } @else {
+          <i class="pi pi-rocket"></i> Save Template }
         </button>
       </div>
     </form>
