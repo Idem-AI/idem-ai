@@ -12,14 +12,16 @@ RUN node -r dotenv/config mynode.js
 
 RUN npm run build -- --configuration=production
 
-FROM nginx:1.25-alpine
+FROM node:20-alpine AS runner
 
-RUN rm -rf /usr/share/nginx/html/*
+WORKDIR /app
 
-COPY --from=builder /app/dist/idem /usr/share/nginx/html
+# Copier seulement ce qui est nécessaire depuis le builder
+COPY --from=builder /app/dist/idem ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 4000
 
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+# Lancer le serveur Angular SSR
+CMD ["node", "dist/server/server.mjs"]
