@@ -379,39 +379,86 @@ export class DeploymentDetails implements OnInit, OnDestroy {
   }
 
   /**
-   * Adds a log entry with proper formatting
+   * Adds a log entry with modern formatting
    */
   private addExecutionLog(type: string, message: string): void {
-    const timestamp = new Date().toLocaleTimeString();
+    const timestamp = new Date().toISOString();
     
-    // Format different log types with appropriate prefixes
-    let prefix = '';
-    switch (type.toLowerCase()) {
-      case 'info':
-        prefix = 'ℹ️ INFO';
-        break;
-      case 'status':
-        prefix = '📊 STATUS';
-        break;
-      case 'stdout':
-        prefix = '📤 OUTPUT';
-        break;
-      case 'stderr':
-        prefix = '⚠️ ERROR';
-        break;
-      case 'error':
-        prefix = '❌ ERROR';
-        break;
-      case 'success':
-      case 'completed':
-        prefix = '✅ SUCCESS';
-        break;
-      default:
-        prefix = type.toUpperCase();
+    // Create structured log entry for modern display
+    const logEntry = {
+      timestamp,
+      type: type.toLowerCase(),
+      message,
+      id: Date.now() + Math.random() // Unique ID for tracking
+    };
+    
+    this.executionLogs.update(logs => [...logs, JSON.stringify(logEntry)]);
+  }
+
+  /**
+   * Parses a log entry for display
+   */
+  protected parseLogEntry(logString: string): any {
+    try {
+      return JSON.parse(logString);
+    } catch {
+      // Fallback for old format logs
+      return {
+        timestamp: new Date().toISOString(),
+        type: 'info',
+        message: logString,
+        id: Date.now()
+      };
     }
-    
-    const logEntry = `[${timestamp}] ${prefix}: ${message}`;
-    this.executionLogs.update(logs => [...logs, logEntry]);
+  }
+
+  /**
+   * Gets the PrimeIcon class for a log type
+   */
+  protected getLogIcon(type: string): string {
+    switch (type) {
+      case 'info': return 'pi pi-info-circle';
+      case 'status': return 'pi pi-sync';
+      case 'stdout': return 'pi pi-arrow-up';
+      case 'stderr': return 'pi pi-exclamation-triangle';
+      case 'error': return 'pi pi-times-circle';
+      case 'success':
+      case 'completed': return 'pi pi-check-circle';
+      default: return 'pi pi-file';
+    }
+  }
+
+  /**
+   * Gets the CSS class for a log type
+   */
+  protected getLogClass(type: string): string {
+    switch (type) {
+      case 'info': return 'log-info';
+      case 'status': return 'log-status';
+      case 'stdout': return 'log-output';
+      case 'stderr': return 'log-warning';
+      case 'error': return 'log-error';
+      case 'success':
+      case 'completed': return 'log-success';
+      default: return 'log-default';
+    }
+  }
+
+  /**
+   * Formats timestamp for display
+   */
+  protected formatLogTime(timestamp: string): string {
+    try {
+      const date = new Date(timestamp);
+      return date.toLocaleTimeString('en-US', { 
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+    } catch {
+      return new Date().toLocaleTimeString();
+    }
   }
 
   /**
@@ -453,5 +500,25 @@ export class DeploymentDetails implements OnInit, OnDestroy {
     this.executionStatus.set('idle');
     this.executionStartTime.set(null);
     this.executionEndTime.set(null);
+  }
+
+  /**
+   * Gets log statistics for display
+   */
+  protected getLogStats(): { total: number; errors: number; warnings: number; success: number } {
+    const logs = this.executionLogs();
+    let errors = 0, warnings = 0, success = 0;
+    
+    logs.forEach(logString => {
+      const log = this.parseLogEntry(logString);
+      switch (log.type) {
+        case 'error': errors++; break;
+        case 'stderr': warnings++; break;
+        case 'success':
+        case 'completed': success++; break;
+      }
+    });
+    
+    return { total: logs.length, errors, warnings, success };
   }
 }

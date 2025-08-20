@@ -742,17 +742,76 @@
         </div>
         
         <p-scrollPanel [style]="{width: '100%', height: 'calc(70vh - 200px)'}" styleClass="custom-scrollbar">
-          <div class="p-3 font-mono text-sm space-y-1">
+          <div class="p-3 space-y-2">
             @if (executionLogs().length === 0) {
-            <div class="text-gray-500 italic">No logs yet...</div>
+            <div class="flex items-center justify-center h-32 text-gray-500">
+              <div class="text-center">
+                <i class="pi pi-file text-4xl mb-2"></i>
+                <div class="text-sm italic">No logs yet...</div>
+              </div>
+            </div>
             } @else {
-            @for (log of executionLogs(); track $index) {
-            <div class="text-gray-300 whitespace-pre-wrap break-words"
-                 [class.text-blue-400]="log.includes('[INFO]')"
-                 [class.text-yellow-400]="log.includes('[STATUS]') || log.includes('[STDOUT]')"
-                 [class.text-red-400]="log.includes('[ERROR]') || log.includes('[STDERR]')"
-                 [class.text-green-400]="log.includes('[COMPLETE]')">
-              {{ log }}
+            <!-- Log Statistics -->
+            <div class="mb-4 p-3 bg-gray-800/50 rounded-lg border border-gray-700/50">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-gray-400">Log Statistics</span>
+                <div class="flex gap-4">
+                  <span class="text-blue-400"><i class="pi pi-chart-bar mr-1"></i>Total: {{ getLogStats().total }}</span>
+                  @if (getLogStats().errors > 0) {
+                  <span class="text-red-400"><i class="pi pi-times-circle mr-1"></i>Errors: {{ getLogStats().errors }}</span>
+                  }
+                  @if (getLogStats().warnings > 0) {
+                  <span class="text-yellow-400"><i class="pi pi-exclamation-triangle mr-1"></i>Warnings: {{ getLogStats().warnings }}</span>
+                  }
+                  @if (getLogStats().success > 0) {
+                  <span class="text-green-400"><i class="pi pi-check-circle mr-1"></i>Success: {{ getLogStats().success }}</span>
+                  }
+                </div>
+              </div>
+            </div>
+            
+            <!-- Modern Log Entries -->
+            @for (logString of executionLogs(); track $index) {
+            @let logEntry = parseLogEntry(logString);
+            <div class="group hover:bg-gray-800/30 rounded-lg p-3 border border-transparent hover:border-gray-700/30 transition-all duration-200"
+                 [ngClass]="getLogClass(logEntry.type)">
+              <div class="flex items-start gap-3">
+                <!-- Log Icon -->
+                <div class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full text-sm"
+                     [ngClass]="{
+                       'bg-blue-500/20 text-blue-400': logEntry.type === 'info',
+                       'bg-purple-500/20 text-purple-400': logEntry.type === 'status',
+                       'bg-cyan-500/20 text-cyan-400': logEntry.type === 'stdout',
+                       'bg-yellow-500/20 text-yellow-400': logEntry.type === 'stderr',
+                       'bg-red-500/20 text-red-400': logEntry.type === 'error',
+                       'bg-green-500/20 text-green-400': logEntry.type === 'success' || logEntry.type === 'completed',
+                       'bg-gray-500/20 text-gray-400': !['info', 'status', 'stdout', 'stderr', 'error', 'success', 'completed'].includes(logEntry.type)
+                     }">
+                  <i [class]="getLogIcon(logEntry.type)"></i>
+                </div>
+                
+                <!-- Log Content -->
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="text-xs font-medium uppercase tracking-wide"
+                          [ngClass]="{
+                            'text-blue-400': logEntry.type === 'info',
+                            'text-purple-400': logEntry.type === 'status',
+                            'text-cyan-400': logEntry.type === 'stdout',
+                            'text-yellow-400': logEntry.type === 'stderr',
+                            'text-red-400': logEntry.type === 'error',
+                            'text-green-400': logEntry.type === 'success' || logEntry.type === 'completed',
+                            'text-gray-400': !['info', 'status', 'stdout', 'stderr', 'error', 'success', 'completed'].includes(logEntry.type)
+                          }">
+                      {{ logEntry.type }}
+                    </span>
+                    <span class="text-xs text-gray-500">{{ formatLogTime(logEntry.timestamp) }}</span>
+                  </div>
+                  <div class="text-sm text-gray-300 whitespace-pre-wrap break-words font-mono leading-relaxed">
+                    {{ logEntry.message }}
+                  </div>
+                </div>
+              </div>
             </div>
             }
             }
