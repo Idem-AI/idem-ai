@@ -104,6 +104,15 @@
             Redeploy
           </button>
           }
+          <button
+            (click)="openExecutionModal()"
+            class="px-4 py-2 outer-button bg-green-500 flex items-center gap-2"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h1m4 0h1m-6-8h1m4 0h1M9 6h1m4 0h1M9 2h1m4 0h1"></path>
+            </svg>
+            Execute Deployment
+          </button>
         </div>
       </div>
 
@@ -660,4 +669,123 @@
     }
   </div>
   }
+
+  <!-- Deployment Execution Modal -->
+  <p-dialog
+    [visible]="showExecutionModal()"
+    [closable]="!isExecuting()"
+    header="Deployment Execution"
+    (onHide)="closeExecutionModal()"
+  
+  >
+    <!-- Modal Header with Cancel Button -->
+    <ng-template pTemplate="header">
+      <div class="flex justify-between items-center w-full">
+        <h3 class="text-lg font-semibold text-white">Deployment Execution</h3>
+        @if (isExecuting()) {
+        <button
+          (click)="stopExecution()"
+          class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md text-sm transition-colors duration-200"
+        >
+          Cancel
+        </button>
+        }
+      </div>
+    </ng-template>
+
+    <!-- Modal Content -->
+    <div class="h-full flex flex-col">
+      <!-- Execution Status -->
+      <div class="mb-4 p-3 rounded-lg" 
+           [class.bg-blue-500]="executionStatus() === 'executing'"
+           [class.bg-green-500]="executionStatus() === 'completed'"
+           [class.bg-red-500]="executionStatus() === 'error'"
+           [class.bg-gray-500]="executionStatus() === 'idle'">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            @if (executionStatus() === 'executing') {
+            <div class="w-4 h-4 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+            <span class="text-blue-400 font-medium">Executing...</span>
+            } @else if (executionStatus() === 'completed') {
+            <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span class="text-green-400 font-medium">Completed</span>
+            } @else if (executionStatus() === 'error') {
+            <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+            <span class="text-red-400 font-medium">Error/Cancelled</span>
+            } @else {
+            <span class="text-gray-400 font-medium">Ready</span>
+            }
+          </div>
+          @if (executionStartTime()) {
+          <span class="text-sm text-gray-400">
+            Started: {{ formatExecutionStartTime() }}
+          </span>
+          }
+        </div>
+      </div>
+
+      <!-- Logs Container -->
+      <div class="flex-1 bg-gray-900 rounded-lg border border-gray-700 overflow-hidden">
+        <div class="flex justify-between items-center p-3 bg-gray-800 border-b border-gray-700">
+          <h4 class="text-sm font-medium text-gray-300">Execution Logs</h4>
+          <button
+            (click)="clearExecutionLogs()"
+            [disabled]="isExecuting()"
+            class="px-2 py-1 text-xs bg-gray-600 hover:bg-gray-500 disabled:bg-gray-700 disabled:text-gray-500 text-white rounded transition-colors duration-200"
+          >
+            Clear
+          </button>
+        </div>
+        
+        <p-scrollPanel [style]="{width: '100%', height: 'calc(70vh - 200px)'}" styleClass="custom-scrollbar">
+          <div class="p-3 font-mono text-sm space-y-1">
+            @if (executionLogs().length === 0) {
+            <div class="text-gray-500 italic">No logs yet...</div>
+            } @else {
+            @for (log of executionLogs(); track $index) {
+            <div class="text-gray-300 whitespace-pre-wrap break-words"
+                 [class.text-blue-400]="log.includes('[INFO]')"
+                 [class.text-yellow-400]="log.includes('[STATUS]') || log.includes('[STDOUT]')"
+                 [class.text-red-400]="log.includes('[ERROR]') || log.includes('[STDERR]')"
+                 [class.text-green-400]="log.includes('[COMPLETE]')">
+              {{ log }}
+            </div>
+            }
+            }
+          </div>
+        </p-scrollPanel>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <ng-template pTemplate="footer">
+      <div class="flex justify-end gap-2">
+        @if (!isExecuting()) {
+        <button
+          (click)="clearExecutionLogs()"
+          class="px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-md transition-colors duration-200"
+        >
+          Clear Logs
+        </button>
+        <button
+          (click)="closeExecutionModal()"
+          class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-md transition-colors duration-200"
+        >
+          Close
+        </button>
+        } @else {
+        <button
+          (click)="stopExecution()"
+          class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-md transition-colors duration-200"
+        >
+          Stop Execution
+        </button>
+        }
+      </div>
+    </ng-template>
+  </p-dialog>
 </div>

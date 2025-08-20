@@ -34,10 +34,19 @@ export interface DeploymentExecutionEvent {
     | 'log'
     | 'error'
     | 'end'
-    | 'completed';
+    | 'completed'
+    | 'info'
+    | 'stdout'
+    | 'stderr'
+    | 'complete'
+    | 'success';
   level?: 'info' | 'warn' | 'error';
-  message?: string;
-  timestamp?: string;
+  message: string;
+  timestamp: string;
+  step?: string;
+  deploymentId: string;
+  status?: 'finished' | 'failed';
+  errorCode?: string;
   // Allow additional backend-provided fields
   [key: string]: unknown;
 }
@@ -182,7 +191,7 @@ export class DeploymentService {
     deploymentId: string,
     token?: string
   ): Observable<DeploymentExecutionEvent> {
-    let url = `${this.apiUrl}/deployments/execute-stream/${deploymentId}`;
+    let url = `${this.apiUrl}/deployments/execute/stream/${deploymentId}`;
     if (token) {
       const sep = url.includes('?') ? '&' : '?';
       url = `${url}${sep}token=${encodeURIComponent(token)}`;
@@ -201,19 +210,58 @@ export class DeploymentService {
               // Only MessageEvent carries data
               const anyEv = ev as MessageEvent<string>;
               if (anyEv && typeof anyEv.data === 'string') {
+                // Handle special termination messages
+                if (anyEv.data === '[DONE]') {
+                  observer.next({
+                    type: 'completed',
+                    message: 'Stream completed successfully',
+                    timestamp: new Date().toISOString(),
+                    deploymentId: deploymentId,
+                    status: 'finished'
+                  });
+                  observer.complete();
+                  return;
+                }
+                
+                if (anyEv.data === '[ERROR]') {
+                  observer.next({
+                    type: 'error',
+                    message: 'Stream terminated with error',
+                    timestamp: new Date().toISOString(),
+                    deploymentId: deploymentId,
+                    status: 'failed'
+                  });
+                  observer.complete();
+                  return;
+                }
+                
                 const parsed = JSON.parse(
                   anyEv.data
                 ) as DeploymentExecutionEvent;
-                observer.next(parsed);
+                
+                // Ensure required fields are present
+                if (parsed.type && parsed.message && parsed.timestamp && parsed.deploymentId) {
+                  observer.next(parsed);
+                } else {
+                  console.warn('Invalid SSE event format:', parsed);
+                }
               } else {
                 // Fallback minimal event
-                observer.next({ type: 'status', message: 'heartbeat' });
+                observer.next({ 
+                  type: 'status', 
+                  message: 'heartbeat',
+                  timestamp: new Date().toISOString(),
+                  deploymentId: deploymentId
+                });
               }
             } catch (e) {
+              console.error('SSE parsing error:', e);
               observer.next({
                 type: 'error',
                 level: 'error',
-                message: (e as Error).message,
+                message: `Parsing error: ${(e as Error).message}`,
+                timestamp: new Date().toISOString(),
+                deploymentId: deploymentId
               });
             }
           },

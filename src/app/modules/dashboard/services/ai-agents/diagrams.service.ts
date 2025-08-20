@@ -48,7 +48,7 @@ export class DiagramsService {
 
   /**
    * Cancel ongoing SSE connection
-   */
+   */    
   cancelGeneration(): void {
     this.sseService.cancelGeneration('diagram');
   }
