@@ -209,4 +209,48 @@ export class BrandingService {
       })
     );
   }
+
+  /**
+   * Download branding PDF from backend
+   * @param projectId Project ID
+   * @returns Observable with blob data for PDF download
+   */
+  downloadBrandingPdf(projectId: string): Observable<Blob> {
+    const pdfUrl = `${this.apiUrl}/pdf/${projectId}`;
+
+    return this.http
+      .get(pdfUrl, {
+        responseType: 'blob',
+        headers: {
+          Accept: 'application/pdf',
+        },
+      })
+      .pipe(
+        tap(() =>
+          console.log(`Downloading branding PDF for project: ${projectId}`)
+        ),
+        catchError((error) => {
+          console.error(
+            `Error downloading branding PDF for project ${projectId}:`,
+            error
+          );
+
+          // Handle specific error cases
+          if (error.status === 401) {
+            return throwError(() => new Error('User not authenticated'));
+          } else if (error.status === 400) {
+            return throwError(() => new Error('Project ID is required'));
+          } else if (error.status === 500) {
+            return throwError(
+              () =>
+                new Error(
+                  'Error generating branding PDF - project not found or no branding sections available'
+                )
+            );
+          }
+
+          return throwError(() => new Error('Failed to download branding PDF'));
+        })
+      );
+  }
 }

@@ -12,11 +12,12 @@ import { BrandingService } from '../../services/ai-agents/branding.service';
 import { BrandIdentityModel } from '../../models/brand-identity.model';
 import { BrandingDisplayComponent } from './components/branding-display/branding-display';
 import { Loader } from '../../../../components/loader/loader';
+import { PdfViewerModule } from 'ng2-pdf-viewer'; // <- import PdfViewerModule
 
 @Component({
   selector: 'app-show-branding',
   standalone: true,
-  imports: [CommonModule, BrandingDisplayComponent, Loader],
+  imports: [CommonModule, BrandingDisplayComponent, Loader, PdfViewerModule],
   templateUrl: './show-branding.html',
   styleUrl: './show-branding.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,7 +27,7 @@ export class ShowBrandingComponent implements OnInit {
   private readonly brandingService = inject(BrandingService);
   private readonly cookieService = inject(CookieService);
   private readonly router = inject(Router);
-
+  src = 'https://vadimdez.github.io/ng2-pdf-viewer/assets/pdf-test.pdf';
   // Signals for state management
   protected readonly isLoading = signal<boolean>(true);
   protected readonly existingBranding = signal<BrandIdentityModel | null>(null);

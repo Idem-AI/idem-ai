@@ -16,12 +16,8 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { BrandingService } from '../../../../services/ai-agents/branding.service';
 import { CookieService } from '../../../../../../shared/services/cookie.service';
 import { GenerationService } from '../../../../../../shared/services/generation.service';
-import {
-  SSEGenerationState,
-  SSEConnectionConfig,
-} from '../../../../../../shared/models/sse-step.model';
+import { SSEGenerationState } from '../../../../../../shared/models/sse-step.model';
 import { BrandIdentityModel } from '../../../../models/brand-identity.model';
-import { environment } from '../../../../../../../environments/environment';
 
 @Component({
   selector: 'app-branding-generation',
@@ -167,69 +163,6 @@ export class BrandingGenerationComponent implements OnInit, OnDestroy {
   private handleGenerationComplete(state: SSEGenerationState): void {
     console.log('Branding generation completed:', state);
     this.router.navigate(['/console/branding']);
-  }
-
-  /**
-   * Emit final branding data when generation is completed
-   */
-  private emitBrandingData(steps: any[]): void {
-    try {
-      // Create branding data from completed steps
-      const brandingData: BrandIdentityModel = {
-        id: this.projectId() || '',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        logo: {
-          id: '',
-          name: 'Generated Logo',
-          svg: '',
-          concept:
-            this.extractStepContent(steps, 'Logo') || 'Generated brand logo',
-          colors: ['#000000', '#ffffff'],
-          fonts: ['Arial'],
-        },
-        generatedLogos: [],
-        colors: {
-          id: '',
-          name: 'Generated Colors',
-          url: '',
-          colors: {
-            primary: '#000000',
-            secondary: '#ffffff',
-            accent: '#007bff',
-            background: '#f8f9fa',
-            text: '#212529',
-          },
-        },
-        generatedColors: [],
-        typography: {
-          id: '',
-          name: 'Generated Typography',
-          url: '',
-          primaryFont: 'Arial',
-          secondaryFont: 'Helvetica',
-        },
-        generatedTypography: [],
-        sections: steps.map((step, index) => ({
-          id: `section-${index}`,
-          name: step.stepName || `Step ${index + 1}`,
-          type: 'branding',
-          data: step.content || step.summary || '',
-          summary: step.summary || '',
-          order: index,
-        })),
-      };
-
-      console.log('Emitting branding data:', brandingData);
-      this.brandingGenerated.emit(brandingData);
-    } catch (error) {
-      console.error('Error creating branding data:', error);
-      this.generationState.update((state) => ({
-        ...state,
-        error: 'Failed to process branding data',
-        isGenerating: false,
-      }));
-    }
   }
 
   /**
