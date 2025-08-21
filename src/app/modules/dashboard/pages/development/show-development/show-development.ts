@@ -55,7 +55,7 @@ export class ShowDevelopment implements OnInit {
       .getDevelopmentConfigs(projectId)
       .pipe(
         tap((configs: DevelopmentConfigsModel | null) => {
-          if (configs) {
+          if (configs !== null) {
             this.developmentConfigs.set(configs);
           } else {
             this.error.set(

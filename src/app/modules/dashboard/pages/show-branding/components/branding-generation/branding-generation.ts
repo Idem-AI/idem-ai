@@ -164,14 +164,4 @@ export class BrandingGenerationComponent implements OnInit, OnDestroy {
     console.log('Branding generation completed:', state);
     this.router.navigate(['/console/branding']);
   }
-
-  /**
-   * Extract content from a specific step by name
-   */
-  private extractStepContent(steps: any[], stepName: string): string {
-    const step = steps.find((s) =>
-      s.stepName?.toLowerCase().includes(stepName.toLowerCase())
-    );
-    return step?.content || step?.summary || '';
-  }
 }
