@@ -1,20 +1,28 @@
-<div class="fixed left-0 z-50">
-  <app-sidebar-dashboard (sidebarCollapsedChange)="onSidebarCollapsedChange($event)" />
-</div>
-
-<!-- Mobile content: no left margin, no animation -->
-<div class="md:hidden mt-[80px] p-4 min-h-screen bg-opacity-95 relative">
-  <div class="glass-card relative p-4 rounded-xl shadow-xl shadow-primary/5 border border-gray-800/30">
-    <router-outlet></router-outlet>
+<!-- Flexbox layout container -->
+<div class="flex min-h-screen">
+  <!-- Sidebar container -->
+  <div class="flex-shrink-0">
+    <app-sidebar-dashboard (sidebarCollapsedChange)="onSidebarCollapsedChange($event)" />
   </div>
-</div>
-
-<!-- Desktop content: with sidebar spacing animation -->
-<div 
-  class="hidden md:block transition-all duration-300 mt-[80px] p-8 min-h-screen bg-opacity-95 relative"
-  [@contentExpand]="isSidebarCollapsed() ? 'collapsed' : 'expanded'"
->
-  <div class="glass-card relative p-6 rounded-xl shadow-xl shadow-primary/5 border border-gray-800/30">
-    <router-outlet></router-outlet>
+  
+  <!-- Main content area -->
+  <div class="flex-1 transition-all duration-300 mt-[80px] min-h-screen bg-opacity-95 relative">
+    <div 
+      class="h-full"
+      [ngClass]="{
+        'p-4': true,
+        'md:p-8': true
+      }"
+    >
+      <div 
+        class="glass-card relative rounded-xl shadow-xl shadow-primary/5 border border-gray-800/30 h-full"
+        [ngClass]="{
+          'p-4': true,
+          'md:p-6': true
+        }"
+      >
+        <router-outlet></router-outlet>
+      </div>
+    </div>
   </div>
 </div>

@@ -1,14 +1,10 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject, HostListener } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SidebarDashboard } from '../../modules/dashboard/components/sidebar-dashboard/sidebar-dashboard';
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -16,23 +12,6 @@ import {
   imports: [RouterOutlet, SidebarDashboard, CommonModule],
   templateUrl: './dashboard-layout.html',
   styleUrl: './dashboard-layout.css',
-  animations: [
-    trigger('contentExpand', [
-      state(
-        'expanded',
-        style({
-          marginLeft: '260px',
-        })
-      ),
-      state(
-        'collapsed',
-        style({
-          marginLeft: '80px',
-        })
-      ),
-      transition('expanded <=> collapsed', [animate('300ms ease-in-out')]),
-    ]),
-  ],
 })
 export class DashboardLayoutComponent {
   protected readonly isSidebarCollapsed = signal(false);
