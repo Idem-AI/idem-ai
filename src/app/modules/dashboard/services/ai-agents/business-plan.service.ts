@@ -5,7 +5,10 @@ import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
 import { BusinessPlanModel } from '../../models/businessPlan.model';
 import { SSEService } from '../../../../shared/services/sse.service';
-import { SSEStepEvent, SSEConnectionConfig } from '../../../../shared/models/sse-step.model';
+import {
+  SSEStepEvent,
+  SSEConnectionConfig,
+} from '../../../../shared/models/sse-step.model';
 
 @Injectable({
   providedIn: 'root',
@@ -22,35 +25,30 @@ export class BusinessPlanService {
    * No need for manual token management in each service
    */
 
- 
   closeSSEConnection(): void {
     this.sseService.closeConnection('business-plan');
   }
 
-
   createBusinessplanItem(projectId: string): Observable<SSEStepEvent> {
     console.log('Starting business plan generation with SSE...');
-    
+
     // Close any existing SSE connection
     this.closeSSEConnection();
 
     const config: SSEConnectionConfig = {
       url: `${this.apiUrl}/generate/${projectId}`,
       keepAlive: true,
-      reconnectionDelay: 1000
+      reconnectionDelay: 1000,
     };
 
     return this.sseService.createConnection(config, 'business-plan');
   }
 
-
-
   cancelGeneration(): void {
     this.sseService.cancelGeneration('business-plan');
   }
   getBusinessplanItems(projectId?: string): Observable<BusinessPlanModel> {
-    return this.http.get<BusinessPlanModel>(`${this.apiUrl}/${projectId}`)
-      .pipe(
+    return this.http.get<BusinessPlanModel>(`${this.apiUrl}/${projectId}`).pipe(
       tap((response) =>
         console.log('getBusinessplanItems response:', response)
       ),
@@ -77,17 +75,20 @@ export class BusinessPlanService {
     projectId: string,
     businessplanId: string
   ): Observable<BusinessPlanModel> {
-    return this.http.get<BusinessPlanModel>(
-      `${this.apiUrl}/${projectId}/${businessplanId}`
-    ).pipe(
-      tap((response) =>
-        console.log('getBusinessplanItem response:', response)
-      ),
-      catchError((error) => {
-        console.error(`Error in getBusinessplanItem for ID ${businessplanId}:`, error);
-        throw error;
-      })
-    );
+    return this.http
+      .get<BusinessPlanModel>(`${this.apiUrl}/${projectId}/${businessplanId}`)
+      .pipe(
+        tap((response) =>
+          console.log('getBusinessplanItem response:', response)
+        ),
+        catchError((error) => {
+          console.error(
+            `Error in getBusinessplanItem for ID ${businessplanId}:`,
+            error
+          );
+          throw error;
+        })
+      );
   }
 
   updateBusinessplanItem(
@@ -110,17 +111,23 @@ export class BusinessPlanService {
     projectId: string,
     businessplanId: string
   ): Observable<void> {
-    return this.http.delete<void>(
-      `${this.apiUrl}/${projectId}/${businessplanId}`
-    ).pipe(
-      tap((response) =>
-        console.log(`deleteBusinessplanItem response for ID ${businessplanId}:`, response)
-      ),
-      catchError((error) => {
-        console.error(`Error in deleteBusinessplanItem for ID ${businessplanId}:`, error);
-        throw error;
-      })
-    );
+    return this.http
+      .delete<void>(`${this.apiUrl}/${projectId}/${businessplanId}`)
+      .pipe(
+        tap((response) =>
+          console.log(
+            `deleteBusinessplanItem response for ID ${businessplanId}:`,
+            response
+          )
+        ),
+        catchError((error) => {
+          console.error(
+            `Error in deleteBusinessplanItem for ID ${businessplanId}:`,
+            error
+          );
+          throw error;
+        })
+      );
   }
 
   /**
@@ -162,7 +169,9 @@ export class BusinessPlanService {
             );
           }
 
-          return throwError(() => new Error('Failed to download business plan PDF'));
+          return throwError(
+            () => new Error('Failed to download business plan PDF')
+          );
         })
       );
   }

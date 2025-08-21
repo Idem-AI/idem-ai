@@ -10,12 +10,11 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { BusinessPlanModel } from '../../../../models/businessPlan.model';
 import { BusinessPlanService } from '../../../../services/ai-agents/business-plan.service';
 import { CookieService } from '../../../../../../shared/services/cookie.service';
-import { SafeHtmlPipe } from '../../../projects-list/safehtml.pipe';
 
 @Component({
   selector: 'app-business-plan-display',
   standalone: true,
-  imports: [PdfViewerModule, SafeHtmlPipe],
+  imports: [PdfViewerModule],
   templateUrl: './business-plan-display.html',
   styleUrl: './business-plan-display.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
