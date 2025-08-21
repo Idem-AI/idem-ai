@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
 import { BusinessPlanModel } from '../../models/businessPlan.model';
@@ -121,5 +121,49 @@ export class BusinessPlanService {
         throw error;
       })
     );
+  }
+
+  /**
+   * Download business plan PDF from backend
+   * @param projectId Project ID
+   * @returns Observable with blob data for PDF download
+   */
+  downloadBusinessPlanPdf(projectId: string): Observable<Blob> {
+    const pdfUrl = `${this.apiUrl}/pdf/${projectId}`;
+
+    return this.http
+      .get(pdfUrl, {
+        responseType: 'blob',
+        headers: {
+          Accept: 'application/pdf',
+        },
+      })
+      .pipe(
+        tap(() =>
+          console.log(`Downloading business plan PDF for project: ${projectId}`)
+        ),
+        catchError((error) => {
+          console.error(
+            `Error downloading business plan PDF for project ${projectId}:`,
+            error
+          );
+
+          // Handle specific error cases
+          if (error.status === 401) {
+            return throwError(() => new Error('User not authenticated'));
+          } else if (error.status === 400) {
+            return throwError(() => new Error('Project ID is required'));
+          } else if (error.status === 500) {
+            return throwError(
+              () =>
+                new Error(
+                  'Error generating business plan PDF - project not found or no business plan sections available'
+                )
+            );
+          }
+
+          return throwError(() => new Error('Failed to download business plan PDF'));
+        })
+      );
   }
 }

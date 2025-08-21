@@ -1,15 +1,63 @@
-<div class="p-14 bg-gray-50 rounded-2xl text-gray-900">
-  <div class="w-full flex justify-end p-4">
-    <button class="inner-button" (click)="makePdf()">
-      <i class="pi pi-file-export"></i>
-      Export
+<div class="p-6 bg-gray-50 rounded-2xl text-gray-900">
+  <div class="w-full flex justify-end gap-2 mb-4">
+    <button 
+      class="inner-button" 
+      (click)="regeneratePdf()"
+      [disabled]="isDownloadingPdf()"
+    >
+      <i class="pi pi-refresh" [class.pi-spin]="isDownloadingPdf()"></i>
+      Regenerate PDF
+    </button>
+    <button 
+      class="inner-button" 
+      (click)="downloadPdf()"
+      [disabled]="!pdfSrc() || isDownloadingPdf()"
+    >
+      <i class="pi pi-download"></i>
+      Download PDF
     </button>
   </div>
   
-  @if (businessPlan() && businessPlan().sections && businessPlan().sections.length > 0) {
-    @for (section of businessPlan().sections; track section) {
-      <div [innerHTML]="section.data | safeHtml"></div>
-    }
+  @if (isDownloadingPdf()) {
+    <div class="w-full h-96 flex flex-col items-center justify-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+      <p class="text-gray-600">Loading PDF from server...</p>
+      <p class="text-sm text-gray-500 mt-2">This may take a few moments</p>
+    </div>
+  } @else if (pdfError()) {
+    <div class="w-full h-96 flex flex-col items-center justify-center">
+      <div class="text-red-500 mb-4">
+        <i class="pi pi-exclamation-triangle text-4xl"></i>
+      </div>
+      <p class="text-red-600 mb-4">{{ pdfError() }}</p>
+      <button class="inner-button" (click)="regeneratePdf()">
+        <i class="pi pi-refresh"></i>
+        Try Again
+      </button>
+    </div>
+  } @else if (pdfSrc()) {
+    <div class="w-full bg-white rounded-lg shadow-lg overflow-hidden">
+      <pdf-viewer
+        [src]="pdfSrc()!"
+        [rotation]="0"
+        [original-size]="false"
+        [show-all]="true"
+        [fit-to-page]="false"
+        [zoom]="1"
+        [zoom-scale]="'page-width'"
+        [stick-to-page]="false"
+        [render-text]="true"
+        [external-link-target]="'blank'"
+        [autoresize]="true"
+        [show-borders]="false"
+        style="width: 100%; height: 100vh;"
+      ></pdf-viewer>
+    </div>
+  } @else if (businessPlan() && businessPlan()!.sections.length > 0) {
+    <div class="w-full h-96 flex flex-col items-center justify-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+      <p class="text-gray-600">Preparing business plan content...</p>
+    </div>
   } @else {
     <div class="w-full h-screen flex flex-col items-center justify-center">
       <p class="text-gray-600 mb-4">No business plan content available.</p>
