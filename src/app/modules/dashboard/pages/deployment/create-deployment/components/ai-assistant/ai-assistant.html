@@ -101,6 +101,31 @@
                   }
                 </div>
               </div>
+              
+              <!-- Action buttons for sensitive variables -->
+              <div class="flex gap-3 mt-4">
+                <button
+                  (click)="openSensitiveVariablesModal()"
+                  class="px-4 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 rounded-lg text-white font-medium flex items-center gap-2 shadow-lg shadow-yellow-500/20 transition-all text-sm"
+                >
+                  <i class="pi pi-shield"></i>
+                  <span>Enter Sensitive Variables</span>
+                </button>
+                
+                <button
+                  (click)="submitSensitiveVariables()"
+                  [disabled]="!sensitiveVariablesReady() || storingSensitiveVariables()"
+                  class="px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 rounded-lg text-white font-medium flex items-center gap-2 shadow-lg shadow-green-500/20 transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  @if (storingSensitiveVariables()) {
+                  <i class="pi pi-spinner animate-spin"></i>
+                  <span>Submitting...</span>
+                  } @else {
+                  <i class="pi pi-send"></i>
+                  <span>Submit Variables</span>
+                  }
+                </button>
+              </div>
             </div>
             }
 
@@ -580,17 +605,12 @@
         Cancel
       </button>
       <button
-        (click)="submitSensitiveVariables()"
-        class="px-6 py-2.5 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 rounded-lg text-white font-medium flex items-center gap-2 shadow-lg shadow-yellow-500/20 transition-all"
-        [disabled]="!sensitiveVariablesForm()?.valid || storingSensitiveVariables()"
+        (click)="validateSensitiveVariables()"
+        class="px-6 py-2.5 bg-gradient-to-r from-primary to-primary-glow hover:from-primary-glow hover:to-primary rounded-lg text-white font-medium flex items-center gap-2 shadow-lg shadow-primary/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        [disabled]="!sensitiveVariablesForm()"
       >
-        @if (storingSensitiveVariables()) {
-        <i class="pi pi-spinner animate-spin"></i>
-        <span>Storing Securely...</span>
-        } @else {
-        <i class="pi pi-shield"></i>
-        <span>Store Securely</span>
-        }
+        <i class="pi pi-check"></i>
+        <span>Validate Fields</span>
       </button>
     </div>
   </div>
