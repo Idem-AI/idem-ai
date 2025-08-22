@@ -19,7 +19,7 @@ export interface EnvironmentVariable {
 export interface SensitiveVariable {
   name: string;
   label: string;
-  type: "string" | "number" | "boolean";
+  type: 'string' | 'number' | 'boolean';
   required: boolean;
   sensitive: boolean;
   description?: string;
@@ -72,7 +72,13 @@ export interface CostEstimation {
 export interface FileContent {
   id: string;
   name: string;
-  type: 'terraform-tfvars' | 'terraform-main' | 'terraform-variables' | 'docker-compose' | 'kubernetes-yaml' | 'config-json';
+  type:
+    | 'terraform-tfvars'
+    | 'terraform-main'
+    | 'terraform-variables'
+    | 'docker-compose'
+    | 'kubernetes-yaml'
+    | 'config-json';
   content: string;
   language: 'hcl' | 'yaml' | 'json' | 'dockerfile' | 'bash';
   isEditable: boolean;

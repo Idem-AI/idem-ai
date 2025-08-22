@@ -138,6 +138,22 @@
                 <h4 class="font-medium">Proposed Architecture</h4>
               </div>
 
+              <!-- Mermaid Architecture Diagram -->
+              @if (message.asciiArchitecture) {
+              <div class="mb-4 p-4 bg-gray-800/50 rounded-lg border border-gray-700/30">
+                <div class="flex items-center gap-2 mb-3 text-gray-300">
+                  <i class="pi pi-share-alt"></i>
+                  <h5 class="text-sm font-medium">Architecture Diagram</h5>
+                </div>
+                <div class="bg-white rounded-lg p-4 overflow-x-auto">
+                  <markdown
+                    [data]="'```mermaid\n' + message.asciiArchitecture + '\n```'"
+                    class="mermaid-diagram"
+                  ></markdown>
+                </div>
+              </div>
+              }
+
               <!-- Architecture components grid -->
               <div
                 class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 mt-3"
