@@ -69,6 +69,41 @@
               [clipboard]="true"
             ></markdown>
 
+            <!-- Sensitive variables request section -->
+            @if (message.isRequestingSensitiveVariables && message.requestedSensitiveVariables
+            && message.requestedSensitiveVariables.length > 0) {
+            <div class="mt-4 animate-fade-in">
+              <div class="flex items-center gap-2 mb-3 text-yellow-400">
+                <i class="pi pi-shield"></i>
+                <h4 class="font-medium">Sensitive Variables Required</h4>
+              </div>
+              
+              <div class="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-4 mb-4">
+                <p class="text-sm text-yellow-200 mb-3">
+                  <i class="pi pi-info-circle mr-2"></i>
+                  The AI needs some sensitive information to complete your deployment configuration. These values will be stored securely and encrypted.
+                </p>
+                
+                <div class="space-y-2">
+                  @for (variable of message.requestedSensitiveVariables; track variable.name) {
+                  <div class="flex items-center justify-between bg-yellow-900/10 rounded p-2">
+                    <div>
+                      <span class="text-sm font-medium text-yellow-100">{{ variable.label }}</span>
+                      @if (variable.description) {
+                      <p class="text-xs text-yellow-300 mt-1">{{ variable.description }}</p>
+                      }
+                    </div>
+                    <span class="text-xs bg-yellow-500/20 text-yellow-200 px-2 py-1 rounded">
+                      {{ variable.type | titlecase }}
+                      @if (variable.required) { • Required }
+                    </span>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+            }
+
             <!-- Architecture proposal section -->
             @if (message.isProposingArchitecture && message.proposedComponents
             && message.proposedComponents.length > 0) {
@@ -422,6 +457,140 @@
       >
         <i class="pi pi-check"></i>
         <span>Save Configuration</span>
+      </button>
+    </div>
+  </div>
+</div>
+}
+
+<!-- Sensitive Variables Dialog -->
+@if (showSensitiveVariablesDialog() && currentSensitiveVariables().length > 0) {
+<div class="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/50 z-50">
+  <div class="bg-gray-900/95 backdrop-blur-xl border border-gray-700/50 rounded-xl p-6 max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col shadow-2xl animate-scale-in">
+    <div class="flex justify-between items-center border-b border-gray-700/50 pb-4 mb-4">
+      <h3 class="text-xl font-semibold text-white flex items-center gap-3">
+        <i class="pi pi-shield text-yellow-400"></i>
+        Secure Variables Configuration
+      </h3>
+      <button
+        (click)="cancelSensitiveVariables()"
+        class="text-gray-400 hover:text-white rounded-full p-2 hover:bg-gray-800/50"
+      >
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+
+    <div class="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-4 mb-6">
+      <div class="flex items-start gap-3">
+        <i class="pi pi-shield text-yellow-400 mt-1"></i>
+        <div>
+          <h4 class="text-sm font-medium text-yellow-200 mb-2">Security Notice</h4>
+          <p class="text-xs text-yellow-300">
+            These sensitive values will be encrypted and stored securely. They will only be used for your deployment configuration and will never be logged or exposed.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="overflow-y-auto flex-grow custom-scrollbar p-2">
+      @if (sensitiveVariablesForm()) {
+      <form [formGroup]="sensitiveVariablesForm()!" class="space-y-4">
+        @for (variable of currentSensitiveVariables(); track variable.name) {
+        <div class="space-y-2">
+          <label
+            [for]="variable.name"
+            class="text-sm font-medium text-gray-200 flex items-center gap-2"
+          >
+            <i class="pi pi-key text-yellow-400 text-xs"></i>
+            {{ variable.label }}
+            @if (variable.required) {
+            <span class="text-red-400">*</span>
+            }
+          </label>
+          
+          @if (variable.description) {
+          <p class="text-xs text-gray-400 mb-2">{{ variable.description }}</p>
+          }
+          
+          @switch (variable.type) {
+          @case ('string') {
+          <input
+            [id]="variable.name"
+            [type]="variable.sensitive ? 'password' : 'text'"
+            [formControlName]="variable.name"
+            [placeholder]="variable.placeholder || ''"
+            class="w-full backdrop-blur-md bg-gray-800/40 border border-gray-700/50 focus:border-yellow-400/50 text-gray-100 rounded-lg p-3 focus:ring-2 focus:ring-yellow-400/30 focus:outline-none transition-all placeholder-gray-500"
+            [class.border-red-500]="sensitiveVariablesForm()?.get(variable.name)?.invalid && sensitiveVariablesForm()?.get(variable.name)?.touched"
+          />
+          }
+          @case ('number') {
+          <input
+            [id]="variable.name"
+            type="number"
+            [formControlName]="variable.name"
+            class="w-full backdrop-blur-md bg-gray-800/40 border border-gray-700/50 focus:border-yellow-400/50 text-gray-100 rounded-lg p-3 focus:ring-2 focus:ring-yellow-400/30 focus:outline-none transition-all"
+            [class.border-red-500]="sensitiveVariablesForm()?.get(variable.name)?.invalid && sensitiveVariablesForm()?.get(variable.name)?.touched"
+          />
+          }
+          @case ('boolean') {
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              [formControlName]="variable.name"
+              class="sr-only peer"
+            />
+            <div class="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
+          </label>
+          }
+          }
+          
+          @if (sensitiveVariablesForm()?.get(variable.name)?.invalid && sensitiveVariablesForm()?.get(variable.name)?.touched) {
+          <p class="text-red-400 text-xs mt-1">
+            @if (sensitiveVariablesForm()?.get(variable.name)?.errors?.['required']) {
+            This field is required.
+            }
+            @if (sensitiveVariablesForm()?.get(variable.name)?.errors?.['minlength']) {
+            Password must be at least 8 characters long.
+            }
+          </p>
+          }
+        </div>
+        }
+      </form>
+      }
+    </div>
+
+    <!-- Error messages -->
+    @if (errorMessages().length > 0) {
+    <div class="p-3 bg-red-500/20 border border-red-500/30 rounded-lg mb-4">
+      <ul class="list-disc list-inside text-sm text-red-200">
+        @for (error of errorMessages(); track error) {
+        <li>{{ error }}</li>
+        }
+      </ul>
+    </div>
+    }
+
+    <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-700/50">
+      <button
+        (click)="cancelSensitiveVariables()"
+        class="px-6 py-2.5 bg-gray-800 hover:bg-gray-700 rounded-lg text-white font-medium transition-all"
+        [disabled]="storingSensitiveVariables()"
+      >
+        Cancel
+      </button>
+      <button
+        (click)="submitSensitiveVariables()"
+        class="px-6 py-2.5 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 rounded-lg text-white font-medium flex items-center gap-2 shadow-lg shadow-yellow-500/20 transition-all"
+        [disabled]="!sensitiveVariablesForm()?.valid || storingSensitiveVariables()"
+      >
+        @if (storingSensitiveVariables()) {
+        <i class="pi pi-spinner animate-spin"></i>
+        <span>Storing Securely...</span>
+        } @else {
+        <i class="pi pi-shield"></i>
+        <span>Store Securely</span>
+        }
       </button>
     </div>
   </div>

@@ -11,6 +11,8 @@ import {
   AiAssistantDeploymentModel,
   ExpertDeploymentModel,
   ChatMessage,
+  StoreSensitiveVariablesRequest,
+  StoreSensitiveVariablesResponse,
 } from '../models/deployment.model';
 
 // Interfaces nécessaires après la suppression de deployment.api.model.ts
@@ -217,41 +219,46 @@ export class DeploymentService {
                     message: 'Stream completed successfully',
                     timestamp: new Date().toISOString(),
                     deploymentId: deploymentId,
-                    status: 'finished'
+                    status: 'finished',
                   });
                   observer.complete();
                   return;
                 }
-                
+
                 if (anyEv.data === '[ERROR]') {
                   observer.next({
                     type: 'error',
                     message: 'Stream terminated with error',
                     timestamp: new Date().toISOString(),
                     deploymentId: deploymentId,
-                    status: 'failed'
+                    status: 'failed',
                   });
                   observer.complete();
                   return;
                 }
-                
+
                 const parsed = JSON.parse(
                   anyEv.data
                 ) as DeploymentExecutionEvent;
-                
+
                 // Ensure required fields are present
-                if (parsed.type && parsed.message && parsed.timestamp && parsed.deploymentId) {
+                if (
+                  parsed.type &&
+                  parsed.message &&
+                  parsed.timestamp &&
+                  parsed.deploymentId
+                ) {
                   observer.next(parsed);
                 } else {
                   console.warn('Invalid SSE event format:', parsed);
                 }
               } else {
                 // Fallback minimal event
-                observer.next({ 
-                  type: 'status', 
+                observer.next({
+                  type: 'status',
                   message: 'heartbeat',
                   timestamp: new Date().toISOString(),
-                  deploymentId: deploymentId
+                  deploymentId: deploymentId,
                 });
               }
             } catch (e) {
@@ -261,7 +268,7 @@ export class DeploymentService {
                 level: 'error',
                 message: `Parsing error: ${(e as Error).message}`,
                 timestamp: new Date().toISOString(),
-                deploymentId: deploymentId
+                deploymentId: deploymentId,
               });
             }
           },
@@ -433,36 +440,60 @@ export class DeploymentService {
         projectId,
       })
       .pipe(
-        // Process the response to ensure code blocks are properly formatted as markdown
+        // Process the response to parse JSON format and handle different response types
         map((response) => {
-          // If the response contains code blocks, ensure they're properly formatted
           if (response.sender === 'ai') {
-            console.log('Processing AI response for markdown formatting');
-
-            // Ensure code blocks are properly formatted with language identifiers
-            // This regex finds code blocks that might not have language specifiers
-            response.text = response.text.replace(
-              /```(\s*)(\w+)?\s*([\s\S]*?)```/g,
-              (match, space, lang, code) => {
-                // If language is not specified, try to detect it or default to text
-                const language = lang || 'text';
-                return `\`\`\`${language}\n${code}\`\`\``;
+            console.log('Processing AI response for JSON parsing and formatting');
+            
+            try {
+              // Try to parse the response text as JSON
+              const parsedResponse = JSON.parse(response.text);
+              
+              // Handle different response types based on the JSON structure
+              if (parsedResponse.isRequestingDetails) {
+                response.isRequestingDetails = true;
+                response.text = parsedResponse.message;
+              } else if (parsedResponse.isProposingArchitecture) {
+                response.isProposingArchitecture = true;
+                response.text = parsedResponse.message;
+                response.asciiArchitecture = parsedResponse.asciiArchitecture;
+                response.archetypeUrl = parsedResponse.archetypeUrl;
+                response.proposedComponents = parsedResponse.proposedComponents;
+              } else if (parsedResponse.isRequestingSensitiveVariables) {
+                response.isRequestingSensitiveVariables = true;
+                response.text = parsedResponse.message;
+                response.requestedSensitiveVariables = parsedResponse.requestedSensitiveVariables;
+              } else {
+                // Regular conversational response
+                response.text = parsedResponse.message;
               }
-            );
+            } catch (e) {
+              // If not JSON, treat as regular text and format markdown
+              console.log('Response is not JSON, treating as regular text');
+              
+              // Ensure code blocks are properly formatted with language identifiers
+              response.text = response.text.replace(
+                /```(\s*)(\w+)?\s*([\s\S]*?)```/g,
+                (match, space, lang, code) => {
+                  const language = lang || 'text';
+                  return `\`\`\`${language}\n${code}\`\`\``;
+                }
+              );
 
-            // Ensure inline code is properly formatted
-            response.text = response.text.replace(
-              /`([^`]+)`/g,
-              (match, code) => {
-                return `\`${code}\``;
-              }
-            );
+              // Ensure inline code is properly formatted
+              response.text = response.text.replace(
+                /`([^`]+)`/g,
+                (match, code) => {
+                  return `\`${code}\``;
+                }
+              );
+            }
           }
           return response;
         }),
-        tap((message) => console.log('Fetched message', message)),
+        tap((message) => console.log('Processed chat message', message)),
         catchError((error) => {
-          console.error('Error fetching message', error);
+          console.error('Error processing chat message', error);
           return throwError(() => error);
         })
       );
@@ -513,6 +544,33 @@ export class DeploymentService {
         ),
         catchError((error) => {
           console.error('Error generating Terraform files', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  /**
+   * Store sensitive variables for a deployment securely
+   * @param projectId The ID of the project
+   * @param deploymentId The ID of the deployment
+   * @param request The sensitive variables to store
+   */
+  storeSensitiveVariables(
+    projectId: string,
+    deploymentId: string,
+    request: StoreSensitiveVariablesRequest
+  ): Observable<StoreSensitiveVariablesResponse> {
+    return this.http
+      .post<StoreSensitiveVariablesResponse>(
+        `${this.apiUrl}/deployments/${projectId}/${deploymentId}/sensitive-variables`,
+        request
+      )
+      .pipe(
+        tap((response) =>
+          console.log('Stored sensitive variables:', response)
+        ),
+        catchError((error) => {
+          console.error('Error storing sensitive variables:', error);
           return throwError(() => error);
         })
       );

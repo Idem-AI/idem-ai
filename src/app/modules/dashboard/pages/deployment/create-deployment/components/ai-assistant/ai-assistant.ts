@@ -20,6 +20,9 @@ import {
   ChatMessage,
   ArchitectureComponent,
   FormOption,
+  SensitiveVariable,
+  SensitiveVariableValue,
+  StoreSensitiveVariablesRequest,
 } from '../../../../../models/deployment.model';
 import {
   DeploymentFormData,
@@ -65,6 +68,13 @@ export class AiAssistant implements OnInit, AfterViewInit {
 
   // Architecture component forms
   private readonly componentForms = new Map<string, FormGroup>();
+  
+  // Sensitive variables handling
+  protected readonly showSensitiveVariablesDialog = signal<boolean>(false);
+  protected readonly currentSensitiveVariables = signal<SensitiveVariable[]>([]);
+  protected readonly sensitiveVariablesForm = signal<FormGroup | null>(null);
+  protected readonly storingSensitiveVariables = signal<boolean>(false);
+  protected readonly currentDeploymentId = signal<string | null>(null);
 
   // Computed values
   protected readonly hasUnacceptedArchitecture = computed(() => {
@@ -339,6 +349,11 @@ export class AiAssistant implements OnInit, AfterViewInit {
           // Add AI response to chat
           this.chatMessages.update((messages) => [...messages, response]);
 
+          // Handle sensitive variables request
+          if (response.isRequestingSensitiveVariables && response.requestedSensitiveVariables) {
+            this.handleSensitiveVariablesRequest(response.requestedSensitiveVariables);
+          }
+
           // Set architecture as generated if this is the first user message
           if (!this.generatedArchitecture()) {
             this.generatedArchitecture.set(true);
@@ -426,6 +441,111 @@ export class AiAssistant implements OnInit, AfterViewInit {
     this.validationErrors.set(errors);
   }
 
+  // --- SENSITIVE VARIABLES HANDLING ---
+  
+  /**
+   * Handles sensitive variables request from AI
+   */
+  private handleSensitiveVariablesRequest(sensitiveVariables: SensitiveVariable[]): void {
+    console.log('AI requested sensitive variables:', sensitiveVariables);
+    
+    this.currentSensitiveVariables.set(sensitiveVariables);
+    this.createSensitiveVariablesForm(sensitiveVariables);
+    this.showSensitiveVariablesDialog.set(true);
+  }
+  
+  /**
+   * Creates a form for sensitive variables input
+   */
+  private createSensitiveVariablesForm(sensitiveVariables: SensitiveVariable[]): void {
+    const formGroup = this.formBuilder.group({});
+    
+    sensitiveVariables.forEach((variable) => {
+      const validators = variable.required ? [Validators.required] : [];
+      
+      // Add specific validators based on type
+      if (variable.type === 'string' && variable.name.includes('password')) {
+        validators.push(Validators.minLength(8));
+      }
+      
+      formGroup.addControl(
+        variable.name,
+        this.formBuilder.control('', validators)
+      );
+    });
+    
+    this.sensitiveVariablesForm.set(formGroup);
+  }
+  
+  /**
+   * Submits sensitive variables to backend
+   */
+  protected submitSensitiveVariables(): void {
+    const form = this.sensitiveVariablesForm();
+    const deploymentId = this.currentDeploymentId();
+    
+    if (!form || !form.valid || !deploymentId) {
+      this.errorMessages.set(['Please fill in all required sensitive variables.']);
+      return;
+    }
+    
+    this.storingSensitiveVariables.set(true);
+    this.clearErrors();
+    
+    // Convert form values to SensitiveVariableValue format
+    const sensitiveVariables: SensitiveVariableValue[] = this.currentSensitiveVariables().map(variable => ({
+      key: variable.name,
+      value: form.value[variable.name] || '',
+      isSecret: variable.sensitive
+    }));
+    
+    const request: StoreSensitiveVariablesRequest = {
+      sensitiveVariables
+    };
+    
+    console.log('Storing sensitive variables:', request);
+    
+    this.deploymentService
+      .storeSensitiveVariables(this.projectId()!, deploymentId, request)
+      .subscribe({
+        next: (response) => {
+          console.log('Sensitive variables stored successfully:', response);
+          
+          // Add success message to chat
+          this.chatMessages.update((messages) => [
+            ...messages,
+            {
+              sender: 'ai',
+              text: `✅ Successfully stored ${response.storedCount} sensitive variables securely. Your deployment configuration is now complete.`,
+              timestamp: new Date(),
+            },
+          ]);
+          
+          this.storingSensitiveVariables.set(false);
+          this.showSensitiveVariablesDialog.set(false);
+          
+          // Navigate to deployments page
+          this.router.navigate(['/console/deployments']);
+        },
+        error: (error) => {
+          console.error('Error storing sensitive variables:', error);
+          this.storingSensitiveVariables.set(false);
+          this.errorMessages.set([
+            error.message || 'Failed to store sensitive variables securely',
+          ]);
+        },
+      });
+  }
+  
+  /**
+   * Cancels sensitive variables input
+   */
+  protected cancelSensitiveVariables(): void {
+    this.showSensitiveVariablesDialog.set(false);
+    this.currentSensitiveVariables.set([]);
+    this.sensitiveVariablesForm.set(null);
+  }
+
   protected createDeployment(): void {
     // Validate project ID
     if (!this.projectId()) {
@@ -489,8 +609,30 @@ export class AiAssistant implements OnInit, AfterViewInit {
             'AI assistant deployment created successfully:',
             deployment
           );
+          
+          // Store deployment ID for sensitive variables
+          this.currentDeploymentId.set(deployment.id);
+          
           this.loadingDeployment.set(false);
-          this.router.navigate(['/console/deployments']);
+          
+          // Check if we need to collect sensitive variables
+          const hasSensitiveVariablesRequest = this.chatMessages().some(
+            msg => msg.isRequestingSensitiveVariables && msg.requestedSensitiveVariables
+          );
+          
+          if (hasSensitiveVariablesRequest) {
+            // Find the latest sensitive variables request
+            const sensitiveVarsMessage = this.chatMessages()
+              .reverse()
+              .find(msg => msg.isRequestingSensitiveVariables && msg.requestedSensitiveVariables);
+              
+            if (sensitiveVarsMessage?.requestedSensitiveVariables) {
+              this.handleSensitiveVariablesRequest(sensitiveVarsMessage.requestedSensitiveVariables);
+            }
+          } else {
+            // No sensitive variables needed, navigate directly
+            this.router.navigate(['/console/deployments']);
+          }
         },
         error: (error) => {
           console.error('Error creating AI assistant deployment:', error);

@@ -16,6 +16,32 @@ export interface EnvironmentVariable {
   // Secrets are encrypted at rest and in transit
 }
 
+export interface SensitiveVariable {
+  name: string;
+  label: string;
+  type: "string" | "number" | "boolean";
+  required: boolean;
+  sensitive: boolean;
+  description?: string;
+  placeholder?: string;
+}
+
+export interface SensitiveVariableValue {
+  key: string;
+  value: string;
+  isSecret: boolean;
+}
+
+export interface StoreSensitiveVariablesRequest {
+  sensitiveVariables: SensitiveVariableValue[];
+}
+
+export interface StoreSensitiveVariablesResponse {
+  success: boolean;
+  message: string;
+  storedCount: number;
+}
+
 export interface PipelineStep {
   name: string;
   status: 'pending' | 'in-progress' | 'succeeded' | 'failed' | 'skipped';
@@ -72,7 +98,11 @@ export interface ChatMessage {
   timestamp?: Date;
   isRequestingDetails?: boolean;
   isProposingArchitecture?: boolean;
+  isRequestingSensitiveVariables?: boolean;
   proposedComponents?: ArchitectureComponent[];
+  requestedSensitiveVariables?: SensitiveVariable[];
+  asciiArchitecture?: string;
+  archetypeUrl?: string;
 }
 
 export interface ArchitectureTemplate {
