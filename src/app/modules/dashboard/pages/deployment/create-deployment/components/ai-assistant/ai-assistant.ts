@@ -5,6 +5,9 @@ import {
   computed,
   OnInit,
   AfterViewInit,
+  ViewChild,
+  ElementRef,
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -15,6 +18,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DialogModule } from 'primeng/dialog';
 import {
   AiAssistantDeploymentModel,
   ChatMessage,
@@ -38,18 +42,25 @@ import 'prismjs';
 @Component({
   selector: 'app-ai-assistant',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, MarkdownModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MarkdownModule,
+    DialogModule,
+  ],
   templateUrl: './ai-assistant.html',
   styleUrl: './ai-assistant.css',
 })
 export class AiAssistant implements OnInit, AfterViewInit {
   // Angular properties (inputs, outputs, queries)
+  @ViewChild('chatContainer', { static: false }) chatContainer!: ElementRef;
 
   // AI Assistant state signals
   protected readonly chatMessages = signal<ChatMessage[]>([]);
   protected readonly aiPrompt = signal<string>('');
   protected readonly aiIsThinking = signal<boolean>(false);
-  protected readonly showDeploymentForm = signal<boolean>(true);
+  // Removed showDeploymentForm - chat now takes full container
   protected readonly loadingDeployment = signal<boolean>(false);
   protected readonly projectId = signal<string | null>(null);
   protected readonly errorMessages = signal<string[]>([]);
@@ -70,6 +81,10 @@ export class AiAssistant implements OnInit, AfterViewInit {
 
   // Architecture component forms
   private readonly componentForms = new Map<string, FormGroup>();
+
+  // Deployment configuration modal
+  protected readonly showDeploymentConfigDialog = signal<boolean>(false);
+  protected readonly creatingDeployment = signal<boolean>(false);
 
   // Sensitive variables handling
   protected readonly showSensitiveVariablesDialog = signal<boolean>(false);
@@ -128,6 +143,22 @@ export class AiAssistant implements OnInit, AfterViewInit {
       console.log('AI Assistant initialized with project ID:', projectId);
     }
 
+    // Try to restore deployment ID from cookie if it exists
+    const savedDeploymentId = this.cookieService.get(
+      `deploymentId_${projectId}`
+    );
+    if (savedDeploymentId) {
+      this.currentDeploymentId.set(savedDeploymentId);
+      console.log('Restored deployment ID from cookie:', savedDeploymentId);
+    }
+
+    // Auto-scroll effect when messages change
+    effect(() => {
+      this.chatMessages(); // Track changes
+      this.aiIsThinking(); // Track thinking state changes
+      setTimeout(() => this.scrollToBottom(), 100);
+    });
+
     // Initialize chat with welcome message
     this.chatMessages.set([
       {
@@ -157,11 +188,16 @@ export class AiAssistant implements OnInit, AfterViewInit {
     this.aiPrompt.set(prompt);
   }
 
+  // Removed toggleDeploymentForm method - no longer needed
+
   /**
-   * Toggles the visibility of the deployment form section
+   * Scrolls the chat container to the bottom
    */
-  protected toggleDeploymentForm(): void {
-    this.showDeploymentForm.update((value) => !value);
+  private scrollToBottom(): void {
+    if (this.chatContainer?.nativeElement) {
+      const element = this.chatContainer.nativeElement;
+      element.scrollTop = element.scrollHeight;
+    }
   }
 
   // --- ARCHITECTURE PROPOSAL METHODS ---
@@ -295,6 +331,9 @@ export class AiAssistant implements OnInit, AfterViewInit {
       return;
     }
 
+    // Set thinking state for better UX
+    this.aiIsThinking.set(true);
+
     // Set generated architecture flag
     this.generatedArchitecture.set(true);
 
@@ -304,21 +343,26 @@ export class AiAssistant implements OnInit, AfterViewInit {
     // Log the accepted architecture
     console.log('Architecture accepted:', this.generatedComponents());
 
-    // Add a confirmation message from AI
-    this.chatMessages.update((messages) => [
-      ...messages,
-      {
-        sender: 'ai',
-        text: 'Great! The architecture has been accepted. Now let me check if any sensitive variables are needed for this deployment...',
-        timestamp: new Date(),
-      },
-    ]);
+    // Add a confirmation message from AI after a brief delay
+    setTimeout(() => {
+      this.chatMessages.update((messages) => [
+        ...messages,
+        {
+          sender: 'ai',
+          text: 'Great! The architecture has been accepted. Now let me check if any sensitive variables are needed for this deployment...',
+          timestamp: new Date(),
+        },
+      ]);
 
-    // Clear error messages
-    this.errorMessages.set([]);
+      // Clear error messages
+      this.errorMessages.set([]);
 
-    // After architecture acceptance, request sensitive variables from AI if needed
-    this.requestSensitiveVariablesFromAI();
+      // Stop thinking state
+      this.aiIsThinking.set(false);
+
+      // After architecture acceptance, request sensitive variables from AI if needed
+      this.requestSensitiveVariablesFromAI();
+    }, 1500); // 1.5 second delay for realistic thinking time
   }
 
   ngAfterViewInit(): void {
@@ -523,7 +567,7 @@ export class AiAssistant implements OnInit, AfterViewInit {
   }
 
   /**
-   * Submits sensitive variables to backend
+   * Opens deployment configuration modal when submitting sensitive variables
    */
   protected submitSensitiveVariables(): void {
     const form = this.sensitiveVariablesForm();
@@ -532,17 +576,112 @@ export class AiAssistant implements OnInit, AfterViewInit {
       let errorMsg = 'Validation failed: ';
       if (!form) errorMsg += 'Form not initialized. ';
       if (form && !form.valid) errorMsg += 'Form has validation errors. ';
-      if (!this.sensitiveVariablesReady()) errorMsg += 'Variables not validated. ';
-      
+      if (!this.sensitiveVariablesReady())
+        errorMsg += 'Variables not validated. ';
+
       this.errorMessages.set([errorMsg]);
       return;
     }
 
-    // Check if deployment exists, if not create it first
-    const deploymentId = this.currentDeploymentId();
-    if (!deploymentId) {
-      console.log('No deployment ID found, creating deployment first...');
-      this.createDeploymentWithSensitiveVariables();
+    // Open deployment configuration modal
+    console.log('Opening deployment configuration modal...');
+    this.showDeploymentConfigDialog.set(true);
+  }
+
+  /**
+   * Cancels deployment configuration
+   */
+  protected cancelDeploymentConfig(): void {
+    this.showDeploymentConfigDialog.set(false);
+  }
+
+  /**
+   * Saves deployment configuration and creates deployment with sensitive variables
+   */
+  protected saveDeploymentConfig(): void {
+    // Validate form
+    if (!this.deploymentConfigForm.valid) {
+      this.errorMessages.set(['Please fill in all required fields.']);
+      return;
+    }
+
+    // Validate AI interaction
+    if (this.chatMessages().length <= 1) {
+      this.errorMessages.set([
+        'Please interact with the AI assistant before creating a deployment',
+      ]);
+      return;
+    }
+
+    this.creatingDeployment.set(true);
+    this.clearErrors();
+
+    // Get form data
+    const formData = this.getFormData();
+
+    // Use stored generatedComponents
+    const proposedComponents = this.generatedComponents() || [];
+
+    // Create deployment object
+    const deploymentData: AiAssistantDeploymentModel = {
+      mode: 'ai-assistant',
+      chatMessages: this.chatMessages(),
+      aiGeneratedArchitecture: this.generatedArchitecture(),
+      name: formData.name,
+      environment: formData.environment,
+      id: '',
+      projectId: this.projectId()!,
+      status: 'configuring',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      generatedComponents: proposedComponents,
+    };
+
+    console.log('Creating deployment with config:', deploymentData);
+
+    // Create deployment
+    this.deploymentService
+      .createAiAssistantDeployment(deploymentData)
+      .subscribe({
+        next: (deployment) => {
+          console.log('Deployment created successfully:', deployment);
+
+          // Store deployment ID
+          this.currentDeploymentId.set(deployment.id);
+          this.cookieService.set(
+            `deploymentId_${this.projectId()}`,
+            deployment.id,
+            1
+          );
+
+          // Close deployment config modal
+          this.showDeploymentConfigDialog.set(false);
+          this.creatingDeployment.set(false);
+
+          // Now store sensitive variables
+          this.storeSensitiveVariablesAfterDeployment(deployment.id);
+        },
+        error: (error) => {
+          console.error('Error creating deployment:', error);
+          this.creatingDeployment.set(false);
+          this.errorMessages.set([
+            error.message || 'Failed to create deployment',
+          ]);
+        },
+      });
+  }
+
+  /**
+   * Stores sensitive variables after deployment creation (updated version)
+   */
+  private storeSensitiveVariablesAfterDeployment(deploymentId: string): void {
+    const form = this.sensitiveVariablesForm();
+
+    if (!form || !deploymentId) {
+      this.storingSensitiveVariables.set(false);
+      this.errorMessages.set([
+        'Failed to store sensitive variables: missing form or deployment ID',
+      ]);
       return;
     }
 
@@ -582,8 +721,14 @@ export class AiAssistant implements OnInit, AfterViewInit {
           this.storingSensitiveVariables.set(false);
           this.sensitiveVariablesReady.set(false);
 
-          // Navigate to deployments page
-          this.router.navigate(['/console/deployments']);
+          // Navigate to deployment detail page
+          const deploymentId = this.currentDeploymentId();
+          if (deploymentId) {
+            this.router.navigate(['/console/deployments', deploymentId]);
+          } else {
+            // Fallback to deployments list if no deployment ID
+            this.router.navigate(['/console/deployments']);
+          }
         },
         error: (error) => {
           console.error('Error storing sensitive variables:', error);
@@ -599,10 +744,13 @@ export class AiAssistant implements OnInit, AfterViewInit {
    * Requests sensitive variables from AI after architecture acceptance
    */
   private requestSensitiveVariablesFromAI(): void {
-    console.log('Requesting sensitive variables from AI after architecture acceptance...');
-    
-    const messageText = 'The architecture has been accepted. Please analyze the components and let me know if any sensitive variables (API keys, passwords, database credentials, etc.) are needed for this deployment.';
-    
+    console.log(
+      'Requesting sensitive variables from AI after architecture acceptance...'
+    );
+
+    const messageText =
+      'The architecture has been accepted. Please analyze the components and let me know if any sensitive variables (API keys, passwords, database credentials, etc.) are needed for this deployment.';
+
     // Create ChatMessage object
     const chatMessage: ChatMessage = {
       sender: 'user',
@@ -648,7 +796,7 @@ export class AiAssistant implements OnInit, AfterViewInit {
    */
   private createDeploymentWithSensitiveVariables(): void {
     console.log('Creating deployment with sensitive variables flow...');
-    
+
     // Set loading state
     this.storingSensitiveVariables.set(true);
     this.clearErrors();
@@ -663,67 +811,8 @@ export class AiAssistant implements OnInit, AfterViewInit {
       },
     ]);
 
-    // Create deployment first
-    this.createDeployment(true); // Pass flag to indicate we need to store sensitive variables after
-  }
-
-  /**
-   * Stores sensitive variables after deployment has been created
-   */
-  private storeSensitiveVariablesAfterDeployment(): void {
-    const form = this.sensitiveVariablesForm();
-    const deploymentId = this.currentDeploymentId();
-
-    if (!form || !deploymentId) {
-      this.storingSensitiveVariables.set(false);
-      this.errorMessages.set(['Failed to store sensitive variables: missing form or deployment ID']);
-      return;
-    }
-
-    // Convert form values to SensitiveVariableValue format
-    const sensitiveVariables: SensitiveVariableValue[] =
-      this.currentSensitiveVariables().map((variable) => ({
-        key: variable.name,
-        value: form.value[variable.name] || '',
-        isSecret: variable.sensitive,
-      }));
-
-    const request: StoreSensitiveVariablesRequest = {
-      sensitiveVariables,
-    };
-
-    console.log('Storing sensitive variables after deployment creation:', request);
-
-    this.deploymentService
-      .storeSensitiveVariables(this.projectId()!, deploymentId, request)
-      .subscribe({
-        next: (response) => {
-          console.log('Sensitive variables stored successfully:', response);
-
-          // Add success message to chat
-          this.chatMessages.update((messages) => [
-            ...messages,
-            {
-              sender: 'ai',
-              text: `✅ Deployment created and sensitive variables stored securely! Redirecting to deployments page...`,
-              timestamp: new Date(),
-            },
-          ]);
-
-          this.storingSensitiveVariables.set(false);
-          this.sensitiveVariablesReady.set(false);
-
-          // Navigate to deployments page
-          this.router.navigate(['/console/deployments']);
-        },
-        error: (error) => {
-          console.error('Error storing sensitive variables:', error);
-          this.storingSensitiveVariables.set(false);
-          this.errorMessages.set([
-            error.message || 'Failed to store sensitive variables securely',
-          ]);
-        },
-      });
+    // Call the modal save method which will create deployment and store variables
+    this.saveDeploymentConfig();
   }
 
   /**
@@ -731,104 +820,5 @@ export class AiAssistant implements OnInit, AfterViewInit {
    */
   protected cancelSensitiveVariables(): void {
     this.showSensitiveVariablesDialog.set(false);
-  }
-
-  protected createDeployment(storeSensitiveVariablesAfter: boolean = false): void {
-    // Validate project ID
-    if (!this.projectId()) {
-      this.errorMessages.set([
-        'No project selected. Please select a project first.',
-      ]);
-      return;
-    }
-
-    // Validate form
-    if (!this.deploymentConfigForm.valid) {
-      this.errorMessages.set(['Please fill in all required fields.']);
-      return;
-    }
-
-    // Validate AI interaction
-    if (this.chatMessages().length <= 1) {
-      // Only the welcome message
-      this.errorMessages.set([
-        'Please interact with the AI assistant before creating a deployment',
-      ]);
-      return;
-    }
-
-    this.loadingDeployment.set(true);
-    this.clearErrors();
-
-    // Get form data
-    const formData = this.getFormData();
-
-    // Use stored generatedComponents
-    const proposedComponents = this.generatedComponents() || [];
-
-    // Use DeploymentMapper to create the deployment object
-    const deploymentData: AiAssistantDeploymentModel = {
-      mode: 'ai-assistant',
-      chatMessages: this.chatMessages(),
-      aiGeneratedArchitecture: this.generatedArchitecture(),
-      name: formData.name,
-      environment: formData.environment,
-      id: '',
-      projectId: this.projectId()!,
-      status: 'configuring',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      generatedComponents: proposedComponents,
-    };
-
-    // Log the payload for debugging
-    console.log(
-      'Creating AI assistant deployment with payload:',
-      deploymentData
-    );
-
-    // Submit to service
-    this.deploymentService
-      .createAiAssistantDeployment(deploymentData)
-      .subscribe({
-        next: (deployment) => {
-          console.log(
-            'AI assistant deployment created successfully:',
-            deployment
-          );
-
-          // Store deployment ID for sensitive variables
-          this.currentDeploymentId.set(deployment.id);
-
-          this.loadingDeployment.set(false);
-
-          // If this was called to store sensitive variables after deployment creation
-          if (storeSensitiveVariablesAfter) {
-            console.log('Deployment created, now storing sensitive variables...');
-            this.storeSensitiveVariablesAfterDeployment();
-            return;
-          }
-
-          // Check if we need to collect sensitive variables
-          const hasSensitiveVariablesRequest = this.chatMessages().some(
-            (msg) =>
-              msg.isRequestingSensitiveVariables &&
-              msg.requestedSensitiveVariables
-          );
-
-          if (!hasSensitiveVariablesRequest) {
-            // No sensitive variables needed, navigate directly
-            this.router.navigate(['/console/deployments']);
-          }
-          // If sensitive variables are needed, user will use the buttons in the chat
-        },
-        error: (error) => {
-          console.error('Error creating AI assistant deployment:', error);
-          this.loadingDeployment.set(false);
-          this.errorMessages.set([
-            error.message || 'Failed to create AI assistant deployment',
-          ]);
-        },
-      });
   }
 }
