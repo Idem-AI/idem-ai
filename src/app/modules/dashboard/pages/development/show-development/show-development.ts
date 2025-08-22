@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { DevelopmentService } from '../../../services/ai-agents/development.service';
@@ -29,6 +29,15 @@ export class ShowDevelopment implements OnInit {
   protected readonly router = inject(Router);
   protected readonly webgenUrl = environment.services.webgen.url;
 
+  // Computed signals to optimize template access
+  protected readonly configs = computed(() => this.developmentConfigs());
+  protected readonly hasConfigs = computed(() => this.developmentConfigs() !== null);
+  protected readonly frontend = computed(() => this.developmentConfigs()?.frontend);
+  protected readonly backend = computed(() => this.developmentConfigs()?.backend);
+  protected readonly database = computed(() => this.developmentConfigs()?.database);
+  protected readonly projectConfig = computed(() => this.developmentConfigs()?.projectConfig);
+  protected readonly constraints = computed(() => this.developmentConfigs()?.constraints);
+
   /**
    * Redirects to the web generator application with the project ID
    * @param projectId The ID of the project to generate
@@ -48,13 +57,22 @@ export class ShowDevelopment implements OnInit {
   }
 
   private fetchDevelopmentConfigs(projectId: string): void {
+    // Prevent multiple calls if already loading
+    if (this.loading()) {
+      console.log('Already loading development configs, skipping...');
+      return;
+    }
+
     this.loading.set(true);
     this.error.set(null);
+
+    console.log('Fetching development configs for project:', projectId);
 
     this.developmentService
       .getDevelopmentConfigs(projectId)
       .pipe(
         tap((configs: DevelopmentConfigsModel | null) => {
+          console.log('Development configs received:', configs);
           if (configs !== null) {
             this.developmentConfigs.set(configs);
           } else {
@@ -71,7 +89,10 @@ export class ShowDevelopment implements OnInit {
           );
           return of(null);
         }),
-        finalize(() => this.loading.set(false))
+        finalize(() => {
+          this.loading.set(false);
+          console.log('Development configs fetch completed');
+        })
       )
       .subscribe();
   }

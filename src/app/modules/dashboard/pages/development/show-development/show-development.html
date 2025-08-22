@@ -16,7 +16,7 @@
   }
 
   <!-- Development configs display -->
-  @if (!loading() && developmentConfigs() && !error()) {
+  @if (!loading() && hasConfigs() && !error()) {
   <div
     class="flex sm:justify-between items-center mb-6 w-full gap-4 flex-wrap justify-end"
   >
@@ -49,10 +49,10 @@
 
       <!-- Framework with icon -->
       <div class="flex items-center mb-6">
-        @if (developmentConfigs()?.frontend!.frameworkIconUrl) {
+        @if (frontend()?.frameworkIconUrl) {
         <img
-          src="{{ (developmentConfigs()?.frontend)!.frameworkIconUrl }}"
-          alt="{{ (developmentConfigs()?.frontend)!.framework }}"
+          src="{{ frontend()!.frameworkIconUrl }}"
+          alt="{{ frontend()!.framework }}"
           class="h-12 w-12 rounded-lg mr-3 object-contain bg-gray-800/50 p-1"
         />
         } @else {
@@ -64,11 +64,11 @@
         }
         <div>
           <h3 class="text-white font-medium text-lg">
-            {{ (developmentConfigs()?.frontend)!.framework }}
+            {{ frontend()!.framework }}
           </h3>
-          @if (developmentConfigs()?.frontend!.frameworkVersion) {
+          @if (frontend()?.frameworkVersion) {
           <span class="text-blue-300 text-sm"
-            >v{{ (developmentConfigs()?.frontend)!.frameworkVersion }}</span
+            >v{{ frontend()!.frameworkVersion }}</span
           >
           }
         </div>
@@ -83,21 +83,21 @@
             <h4 class="text-gray-300 text-sm">Styling</h4>
           </div>
           <p class="text-white text-sm">
-            {{ typeof (developmentConfigs()?.frontend)!.styling === 'string' ?
-            (developmentConfigs()?.frontend)!.styling :
-            getFeaturesList((developmentConfigs()?.frontend)!.styling) }}
+            {{ typeof frontend()!.styling === 'string' ?
+            frontend()!.styling :
+            getFeaturesList(frontend()!.styling) }}
           </p>
         </div>
 
         <!-- State Management -->
-        @if (developmentConfigs()?.frontend!.stateManagement) {
+        @if (frontend()?.stateManagement) {
         <div class="glass p-3 rounded-lg">
           <div class="flex items-center mb-2">
             <i class="pi pi-sync text-purple-400 mr-2"></i>
             <h4 class="text-gray-300 text-sm">State Management</h4>
           </div>
           <p class="text-white text-sm">
-            {{ (developmentConfigs()?.frontend)!.stateManagement }}
+            {{ frontend()!.stateManagement }}
           </p>
         </div>
         }
@@ -110,22 +110,22 @@
           <h4 class="text-gray-300">Features</h4>
         </div>
         <div class="flex flex-wrap gap-2">
-          @if ((developmentConfigs()?.frontend)!.features) { @if
-          ((developmentConfigs()?.frontend)!.features && typeof
-          (developmentConfigs()?.frontend)!.features === 'object') { @for
-          (feature of getObjectKeys((developmentConfigs()?.frontend)!.features);
+          @if (frontend()?.features) { @if
+          (frontend()!.features && typeof
+          frontend()!.features === 'object') { @for
+          (feature of getObjectKeys(frontend()!.features);
           track feature) { @if
-          (isFeatureEnabled((developmentConfigs()?.frontend)!.features,
+          (isFeatureEnabled(frontend()!.features,
           feature)) {
           <span
             class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-xs"
           >
             {{ feature }}
           </span>
-          } } } @else if ((developmentConfigs()?.frontend)!.features &&
-          isFeatureArray((developmentConfigs()?.frontend)!.features)) { @for
+          } } } @else if (frontend()!.features &&
+          isFeatureArray(frontend()!.features)) { @for
           (feature of
-          getFeatureArray((developmentConfigs()?.frontend)!.features); track
+          getFeatureArray(frontend()!.features); track
           feature) {
           <span
             class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-xs"
@@ -155,12 +155,12 @@
       <!-- Tech Stack Icons -->
       <div class="flex items-center gap-4 mb-6 flex-wrap">
         <!-- Language with icon -->
-        @if (developmentConfigs()?.backend!.language) {
+        @if (backend()?.language) {
         <div class="flex flex-col items-center">
-          @if (developmentConfigs()?.backend!.languageIconUrl) {
+          @if (backend()?.languageIconUrl) {
           <img
-            src="{{ (developmentConfigs()?.backend)!.languageIconUrl }}"
-            alt="{{ (developmentConfigs()?.backend)!.language }}"
+            src="{{ backend()!.languageIconUrl }}"
+            alt="{{ backend()!.language }}"
             class="h-10 w-10 rounded-lg mb-2 object-contain bg-gray-800/50 p-1"
           />
           } @else {
@@ -171,11 +171,11 @@
           </div>
           }
           <span class="text-xs text-gray-300"
-            >{{ (developmentConfigs()?.backend)!.language }}</span
+            >{{ backend()!.language }}</span
           >
-          @if (developmentConfigs()?.backend!.languageVersion) {
+          @if (backend()?.languageVersion) {
           <span class="text-xs text-green-300"
-            >v{{ (developmentConfigs()?.backend)!.languageVersion }}</span
+            >v{{ backend()!.languageVersion }}</span
           >
           }
         </div>
@@ -183,10 +183,10 @@
 
         <!-- Framework with icon -->
         <div class="flex flex-col items-center">
-          @if (developmentConfigs()?.backend!.frameworkIconUrl) {
+          @if (backend()?.frameworkIconUrl) {
           <img
-            src="{{ (developmentConfigs()?.backend)!.frameworkIconUrl }}"
-            alt="{{ (developmentConfigs()?.backend)!.framework }}"
+            src="{{ backend()!.frameworkIconUrl }}"
+            alt="{{ backend()!.framework }}"
             class="h-10 w-10 rounded-lg mb-2 object-contain bg-gray-800/50 p-1"
           />
           } @else {
@@ -197,22 +197,22 @@
           </div>
           }
           <span class="text-xs text-gray-300"
-            >{{ (developmentConfigs()?.backend)!.framework }}</span
+            >{{ backend()!.framework }}</span
           >
-          @if (developmentConfigs()?.backend!.frameworkVersion) {
+          @if (backend()?.frameworkVersion) {
           <span class="text-xs text-green-300"
-            >v{{ (developmentConfigs()?.backend)!.frameworkVersion }}</span
+            >v{{ backend()!.frameworkVersion }}</span
           >
           }
         </div>
 
         <!-- API Type with icon -->
-        @if (developmentConfigs()?.backend!.apiType) {
+        @if (backend()?.apiType) {
         <div class="flex flex-col items-center">
-          @if (developmentConfigs()?.backend!.apiIconUrl) {
+          @if (backend()?.apiIconUrl) {
           <img
-            src="{{ (developmentConfigs()?.backend)!.apiIconUrl }}"
-            alt="{{ (developmentConfigs()?.backend)!.apiType }}"
+            src="{{ backend()!.apiIconUrl }}"
+            alt="{{ backend()!.apiType }}"
             class="h-10 w-10 rounded-lg mb-2 object-contain bg-gray-800/50 p-1"
           />
           } @else {
@@ -223,23 +223,23 @@
           </div>
           }
           <span class="text-xs text-gray-300"
-            >{{ (developmentConfigs()?.backend)!.apiType }}</span
+            >{{ backend()!.apiType }}</span
           >
-          @if (developmentConfigs()?.backend!.apiVersion) {
+          @if (backend()?.apiVersion) {
           <span class="text-xs text-green-300"
-            >v{{ (developmentConfigs()?.backend)!.apiVersion }}</span
+            >v{{ backend()!.apiVersion }}</span
           >
           }
         </div>
         }
 
         <!-- ORM with icon -->
-        @if (developmentConfigs()?.backend!.orm) {
+        @if (backend()?.orm) {
         <div class="flex flex-col items-center">
-          @if (developmentConfigs()?.backend!.ormIconUrl) {
+          @if (backend()?.ormIconUrl) {
           <img
-            src="{{ (developmentConfigs()?.backend)!.ormIconUrl }}"
-            alt="{{ (developmentConfigs()?.backend)!.orm }}"
+            src="{{ backend()!.ormIconUrl }}"
+            alt="{{ backend()!.orm }}"
             class="h-10 w-10 rounded-lg mb-2 object-contain bg-gray-800/50 p-1"
           />
           } @else {
@@ -250,11 +250,11 @@
           </div>
           }
           <span class="text-xs text-gray-300"
-            >{{ (developmentConfigs()?.backend)!.orm }}</span
+            >{{ backend()!.orm }}</span
           >
-          @if (developmentConfigs()?.backend!.ormVersion) {
+          @if (backend()?.ormVersion) {
           <span class="text-xs text-green-300"
-            >v{{ (developmentConfigs()?.backend)!.ormVersion }}</span
+            >v{{ backend()!.ormVersion }}</span
           >
           }
         </div>
@@ -262,27 +262,27 @@
       </div>
 
       <!-- Features section -->
-      @if (developmentConfigs()?.backend!.features) {
+      @if (backend()?.features) {
       <div class="mt-4">
         <div class="flex items-center mb-3">
           <i class="pi pi-list text-green-400 mr-2"></i>
           <h4 class="text-gray-300">Features</h4>
         </div>
         <div class="flex flex-wrap gap-2">
-          @if ((developmentConfigs()?.backend)!.features && typeof
-          (developmentConfigs()?.backend)!.features === 'object') { @for
-          (feature of getObjectKeys((developmentConfigs()?.backend)!.features);
+          @if (backend()!.features && typeof
+          backend()!.features === 'object') { @for
+          (feature of getObjectKeys(backend()!.features);
           track feature) { @if
-          (isFeatureEnabled(developmentConfigs()?.backend!.features, feature)) {
+          (isFeatureEnabled(backend()!.features, feature)) {
           <span
             class="bg-green-500/20 text-green-300 px-3 py-1 rounded-full text-xs"
           >
             {{ feature }}
           </span>
-          } } } @else if ((developmentConfigs()?.backend)!.features &&
-          isFeatureArray((developmentConfigs()?.backend)!.features)) { @for
+          } } } @else if (backend()!.features &&
+          isFeatureArray(backend()!.features)) { @for
           (feature of
-          getFeatureArray((developmentConfigs()?.backend)!.features); track
+          getFeatureArray(backend()!.features); track
           feature) {
           <span
             class="bg-green-500/20 text-green-300 px-3 py-1 rounded-full text-xs"
@@ -310,10 +310,10 @@
 
       <!-- Database with icon -->
       <div class="flex items-center mb-6">
-        @if (developmentConfigs()?.database!.providerIconUrl) {
+        @if (database()?.providerIconUrl) {
         <img
-          src="{{ (developmentConfigs()?.database)!.providerIconUrl }}"
-          alt="{{ (developmentConfigs()?.database)!.provider }}"
+          src="{{ database()!.providerIconUrl }}"
+          alt="{{ database()!.provider }}"
           class="h-12 w-12 rounded-lg mr-3 object-contain bg-gray-800/50 p-1"
         />
         } @else {
@@ -325,32 +325,32 @@
         }
         <div>
           <h3 class="text-white font-medium text-lg">
-            {{ (developmentConfigs()?.database)!.provider }}
+            {{ database()!.provider }}
           </h3>
-          @if (developmentConfigs()?.database!.providerVersion) {
+          @if (database()?.providerVersion) {
           <span class="text-purple-300 text-sm"
-            >v{{ (developmentConfigs()?.database)!.providerVersion }}</span
+            >v{{ database()!.providerVersion }}</span
           >
-          } @if (developmentConfigs()?.database!.type) {
+          } @if (database()?.type) {
           <span class="text-gray-400 text-xs"
-            >{{ (developmentConfigs()?.database)!.type }}</span
+            >{{ database()!.type }}</span
           >
           }
         </div>
       </div>
 
       <!-- ORM if present -->
-      @if (developmentConfigs()?.database!.orm) {
+      @if (database()?.orm) {
       <div class="glass p-4 rounded-lg mb-6">
         <div class="flex items-center mb-2">
           <i class="pi pi-server text-purple-400 mr-2"></i>
           <h4 class="text-gray-300">ORM</h4>
         </div>
         <div class="flex items-center">
-          @if (developmentConfigs()?.database!.ormIconUrl) {
+          @if (database()?.ormIconUrl) {
           <img
-            src="{{ (developmentConfigs()?.database)!.ormIconUrl }}"
-            alt="{{ (developmentConfigs()?.database)!.orm }}"
+            src="{{ database()!.ormIconUrl }}"
+            alt="{{ database()!.orm }}"
             class="h-8 w-8 rounded-lg mr-3 object-contain bg-gray-800/50 p-1"
           />
           } @else {
@@ -362,11 +362,11 @@
           }
           <div>
             <span class="text-white"
-              >{{ (developmentConfigs()?.database)!.orm }}</span
+              >{{ database()!.orm }}</span
             >
-            @if (developmentConfigs()?.database!.ormVersion) {
+            @if (database()?.ormVersion) {
             <span class="text-purple-300 text-xs ml-2"
-              >v{{ (developmentConfigs()?.database)!.ormVersion }}</span
+              >v{{ database()!.ormVersion }}</span
             >
             }
           </div>
@@ -381,22 +381,22 @@
           <h4 class="text-gray-300">Features</h4>
         </div>
         <div class="flex flex-wrap gap-2">
-          @if ((developmentConfigs()?.database)!.features) { @if
-          ((developmentConfigs()?.database)!.features && typeof
-          (developmentConfigs()?.database)!.features === 'object') { @for
-          (feature of getObjectKeys((developmentConfigs()?.database)!.features);
+          @if (database()?.features) { @if
+          (database()!.features && typeof
+          database()!.features === 'object') { @for
+          (feature of getObjectKeys(database()!.features);
           track feature) { @if
-          (isFeatureEnabled(developmentConfigs()?.database!.features, feature))
+          (isFeatureEnabled(database()!.features, feature))
           {
           <span
             class="bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-xs"
           >
             {{ feature }}
           </span>
-          } } } @else if ((developmentConfigs()?.database)!.features &&
-          isFeatureArray((developmentConfigs()?.database)!.features)) { @for
+          } } } @else if (database()!.features &&
+          isFeatureArray(database()!.features)) { @for
           (feature of
-          getFeatureArray((developmentConfigs()?.database)!.features); track
+          getFeatureArray(database()!.features); track
           feature) {
           <span
             class="bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-xs"
@@ -428,15 +428,15 @@
           ></div>
           <div class="flex flex-col items-center justify-center h-24">
             <i
-              class="pi pi-search text-2xl mb-2 {{ developmentConfigs()?.projectConfig!.seoEnabled ? 'text-yellow-400' : 'text-gray-500' }}"
+              class="pi pi-search text-2xl mb-2 {{ projectConfig()?.seoEnabled ? 'text-yellow-400' : 'text-gray-500' }}"
             ></i>
             <h4
-              class="text-sm font-medium {{ developmentConfigs()?.projectConfig!.seoEnabled ? 'text-white' : 'text-gray-500' }}"
+              class="text-sm font-medium {{ projectConfig()?.seoEnabled ? 'text-white' : 'text-gray-500' }}"
             >
               SEO
             </h4>
             <div class="mt-2">
-              @if (developmentConfigs()?.projectConfig!.seoEnabled) {
+              @if (projectConfig()?.seoEnabled) {
               <span
                 class="bg-yellow-500/20 text-yellow-300 text-xs px-2 py-0.5 rounded-full"
                 >Enabled</span
@@ -458,15 +458,15 @@
           ></div>
           <div class="flex flex-col items-center justify-center h-24">
             <i
-              class="pi pi-envelope text-2xl mb-2 {{ developmentConfigs()?.projectConfig!.contactFormEnabled ? 'text-yellow-400' : 'text-gray-500' }}"
+              class="pi pi-envelope text-2xl mb-2 {{ projectConfig()?.contactFormEnabled ? 'text-yellow-400' : 'text-gray-500' }}"
             ></i>
             <h4
-              class="text-sm font-medium {{ developmentConfigs()?.projectConfig!.contactFormEnabled ? 'text-white' : 'text-gray-500' }}"
+              class="text-sm font-medium {{ projectConfig()?.contactFormEnabled ? 'text-white' : 'text-gray-500' }}"
             >
               Contact Form
             </h4>
             <div class="mt-2">
-              @if (developmentConfigs()?.projectConfig!.contactFormEnabled) {
+              @if (projectConfig()?.contactFormEnabled) {
               <span
                 class="bg-yellow-500/20 text-yellow-300 text-xs px-2 py-0.5 rounded-full"
                 >Enabled</span
@@ -488,15 +488,15 @@
           ></div>
           <div class="flex flex-col items-center justify-center h-24">
             <i
-              class="pi pi-chart-line text-2xl mb-2 {{ developmentConfigs()?.projectConfig!.analyticsEnabled ? 'text-yellow-400' : 'text-gray-500' }}"
+              class="pi pi-chart-line text-2xl mb-2 {{ projectConfig()?.analyticsEnabled ? 'text-yellow-400' : 'text-gray-500' }}"
             ></i>
             <h4
-              class="text-sm font-medium {{ developmentConfigs()?.projectConfig!.analyticsEnabled ? 'text-white' : 'text-gray-500' }}"
+              class="text-sm font-medium {{ projectConfig()?.analyticsEnabled ? 'text-white' : 'text-gray-500' }}"
             >
               Analytics
             </h4>
             <div class="mt-2">
-              @if (developmentConfigs()?.projectConfig!.analyticsEnabled) {
+              @if (projectConfig()?.analyticsEnabled) {
               <span
                 class="bg-yellow-500/20 text-yellow-300 text-xs px-2 py-0.5 rounded-full"
                 >Enabled</span
@@ -518,15 +518,15 @@
           ></div>
           <div class="flex flex-col items-center justify-center h-24">
             <i
-              class="pi pi-globe text-2xl mb-2 {{ developmentConfigs()?.projectConfig!.i18nEnabled ? 'text-yellow-400' : 'text-gray-500' }}"
+              class="pi pi-globe text-2xl mb-2 {{ projectConfig()?.i18nEnabled ? 'text-yellow-400' : 'text-gray-500' }}"
             ></i>
             <h4
-              class="text-sm font-medium {{ developmentConfigs()?.projectConfig!.i18nEnabled ? 'text-white' : 'text-gray-500' }}"
+              class="text-sm font-medium {{ projectConfig()?.i18nEnabled ? 'text-white' : 'text-gray-500' }}"
             >
               i18n
             </h4>
             <div class="mt-2">
-              @if (developmentConfigs()?.projectConfig!.i18nEnabled) {
+              @if (projectConfig()?.i18nEnabled) {
               <span
                 class="bg-yellow-500/20 text-yellow-300 text-xs px-2 py-0.5 rounded-full"
                 >Enabled</span
@@ -548,15 +548,15 @@
           ></div>
           <div class="flex flex-col items-center justify-center h-24">
             <i
-              class="pi pi-bolt text-2xl mb-2 {{ developmentConfigs()?.projectConfig!.performanceOptimized ? 'text-yellow-400' : 'text-gray-500' }}"
+              class="pi pi-bolt text-2xl mb-2 {{ projectConfig()?.performanceOptimized ? 'text-yellow-400' : 'text-gray-500' }}"
             ></i>
             <h4
-              class="text-sm font-medium {{ developmentConfigs()?.projectConfig!.performanceOptimized ? 'text-white' : 'text-gray-500' }}"
+              class="text-sm font-medium {{ projectConfig()?.performanceOptimized ? 'text-white' : 'text-gray-500' }}"
             >
               Performance
             </h4>
             <div class="mt-2">
-              @if (developmentConfigs()?.projectConfig!.performanceOptimized) {
+              @if (projectConfig()?.performanceOptimized) {
               <span
                 class="bg-yellow-500/20 text-yellow-300 text-xs px-2 py-0.5 rounded-full"
                 >Optimized</span
@@ -578,15 +578,15 @@
           ></div>
           <div class="flex flex-col items-center justify-center h-24">
             <i
-              class="pi pi-lock text-2xl mb-2 {{ developmentConfigs()?.projectConfig!.authentication ? 'text-yellow-400' : 'text-gray-500' }}"
+              class="pi pi-lock text-2xl mb-2 {{ projectConfig()?.authentication ? 'text-yellow-400' : 'text-gray-500' }}"
             ></i>
             <h4
-              class="text-sm font-medium {{ developmentConfigs()?.projectConfig!.authentication ? 'text-white' : 'text-gray-500' }}"
+              class="text-sm font-medium {{ projectConfig()?.authentication ? 'text-white' : 'text-gray-500' }}"
             >
               Authentication
             </h4>
             <div class="mt-2">
-              @if (developmentConfigs()?.projectConfig!.authentication) {
+              @if (projectConfig()?.authentication) {
               <span
                 class="bg-yellow-500/20 text-yellow-300 text-xs px-2 py-0.5 rounded-full"
                 >Enabled</span
@@ -608,15 +608,15 @@
           ></div>
           <div class="flex flex-col items-center justify-center h-24">
             <i
-              class="pi pi-shield text-2xl mb-2 {{ developmentConfigs()?.projectConfig!.authorization ? 'text-yellow-400' : 'text-gray-500' }}"
+              class="pi pi-shield text-2xl mb-2 {{ projectConfig()?.authorization ? 'text-yellow-400' : 'text-gray-500' }}"
             ></i>
             <h4
-              class="text-sm font-medium {{ developmentConfigs()?.projectConfig!.authorization ? 'text-white' : 'text-gray-500' }}"
+              class="text-sm font-medium {{ projectConfig()?.authorization ? 'text-white' : 'text-gray-500' }}"
             >
               Authorization
             </h4>
             <div class="mt-2">
-              @if (developmentConfigs()?.projectConfig!.authorization) {
+              @if (projectConfig()?.authorization) {
               <span
                 class="bg-yellow-500/20 text-yellow-300 text-xs px-2 py-0.5 rounded-full"
                 >Enabled</span
@@ -650,7 +650,7 @@
         </div>
 
         <!-- Payment Integration (if applicable) -->
-        @if (developmentConfigs()?.projectConfig!.paymentIntegration !==
+        @if (projectConfig()?.paymentIntegration !==
         undefined) {
         <div class="glass-dark p-3 rounded-lg relative overflow-hidden group">
           <div
@@ -658,15 +658,15 @@
           ></div>
           <div class="flex flex-col items-center justify-center h-24">
             <i
-              class="pi pi-credit-card text-2xl mb-2 {{ developmentConfigs()?.projectConfig!.paymentIntegration ? 'text-yellow-400' : 'text-gray-500' }}"
+              class="pi pi-credit-card text-2xl mb-2 {{ projectConfig()?.paymentIntegration ? 'text-yellow-400' : 'text-gray-500' }}"
             ></i>
             <h4
-              class="text-sm font-medium {{ developmentConfigs()?.projectConfig!.paymentIntegration ? 'text-white' : 'text-gray-500' }}"
+              class="text-sm font-medium {{ projectConfig()?.paymentIntegration ? 'text-white' : 'text-gray-500' }}"
             >
               Payment
             </h4>
             <div class="mt-2">
-              @if (developmentConfigs()?.projectConfig!.paymentIntegration) {
+              @if (projectConfig()?.paymentIntegration) {
               <span
                 class="bg-yellow-500/20 text-yellow-300 text-xs px-2 py-0.5 rounded-full"
                 >Integrated</span
@@ -684,7 +684,7 @@
       </div>
 
       <!-- Custom Options Section -->
-      @if ((developmentConfigs()?.projectConfig)!.customOptions) {
+      @if (projectConfig()?.customOptions) {
       <div class="mt-6">
         <div class="flex items-center mb-3">
           <i class="pi pi-code text-yellow-400 mr-2"></i>
@@ -692,7 +692,7 @@
         </div>
         <div class="glass-dark p-3 rounded-lg">
           <pre class="text-yellow-300 text-xs overflow-x-auto">
-{{ formatCustomOptions((developmentConfigs()?.projectConfig)!.customOptions) }}</pre
+{{ formatCustomOptions(projectConfig()!.customOptions) }}</pre
           >
         </div>
       </div>
@@ -701,14 +701,14 @@
   </div>
 
   <!-- Constraints Section -->
-  @if (developmentConfigs()?.constraints &&
-  developmentConfigs()?.constraints!.length > 0) {
+  @if (constraints() &&
+  constraints()!.length > 0) {
   <div class="mt-8 glass-card p-6">
     <h2 class="text-xl font-semibold text-white mb-4 text-glow-primary">
       Constraints
     </h2>
     <ul class="list-disc list-inside space-y-1 pl-2">
-      @for (constraint of developmentConfigs()?.constraints; track constraint) {
+      @for (constraint of constraints(); track constraint) {
       <li class="mb-2 text-gray-300">{{ constraint }}</li>
       }
     </ul>

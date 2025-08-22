@@ -18,7 +18,6 @@ import { DatabaseConfigComponent } from './components/database-config/database-c
 import { environment } from '../../../../../../environments/environment';
 import { initEmptyObject } from '../../../../../utils/init-empty-object';
 import { AuthService } from '../../../../auth/services/auth.service';
-import { AnalysisResultModel } from '../../../models/analysisResult.model';
 import { ProjectModel } from '../../../models/project.model';
 import { ProjectService } from '../../../services/project.service';
 import { Loader } from '../../../../../components/loader/loader';

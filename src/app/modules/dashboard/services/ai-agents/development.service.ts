@@ -1,14 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
-import { 
-  DevelopmentConfigsModel, 
-  QuickGenerationPreset, 
+import {
+  DevelopmentConfigsModel,
+  QuickGenerationPreset,
   GenerationType,
-  DevelopmentMode,
-  LandingPageConfig 
+  LandingPageConfig,
 } from '../../models/development.model';
 import { ProjectModel } from '../../models/project.model';
 
@@ -37,24 +36,25 @@ export class DevelopmentService {
     return [
       {
         name: 'React + Express + Supabase',
-        description: 'Modern full-stack setup with React frontend, Express.js backend, and Supabase database',
+        description:
+          'Modern full-stack setup with React frontend, Express.js backend, and Supabase database',
         frontend: {
           framework: 'React',
           styling: ['Tailwind CSS', 'CSS Modules'],
-          features: ['Routing', 'State Management', 'Component Library']
+          features: ['Routing', 'State Management', 'Component Library'],
         },
         backend: {
           language: 'JavaScript',
           framework: 'Express.js',
           apiType: 'REST API',
-          features: ['Authentication', 'Authorization', 'Documentation']
+          features: ['Authentication', 'Authorization', 'Documentation'],
         },
         database: {
           type: 'PostgreSQL',
           provider: 'Supabase',
-          features: ['Real-time subscriptions', 'Authentication', 'Storage']
-        }
-      }
+          features: ['Real-time subscriptions', 'Authentication', 'Storage'],
+        },
+      },
     ];
   }
 
@@ -63,7 +63,7 @@ export class DevelopmentService {
    */
   generateQuickConfig(generationType: GenerationType): DevelopmentConfigsModel {
     const preset = this.getQuickGenerationPresets()[0]; // React + Express + Supabase
-    
+
     // Set landing page configuration based on generation type
     let landingPageConfig: LandingPageConfig;
     switch (generationType) {
@@ -83,16 +83,22 @@ export class DevelopmentService {
     }
 
     const hasLandingPage = landingPageConfig !== LandingPageConfig.NONE;
-    
+
     return {
       mode: 'quick',
       generationType,
       preset: preset.name,
       constraints: [
-        `Generate a ${generationType === 'landing' ? 'landing page' : generationType === 'app' ? 'web application' : 'landing page with web application'}`,
+        `Generate a ${
+          generationType === 'landing'
+            ? 'landing page'
+            : generationType === 'app'
+            ? 'web application'
+            : 'landing page with web application'
+        }`,
         'Use modern development practices',
         'Implement responsive design',
-        'Include proper error handling'
+        'Include proper error handling',
       ],
       frontend: {
         framework: preset.frontend.framework,
@@ -105,8 +111,8 @@ export class DevelopmentService {
           componentLibrary: true,
           testing: true,
           pwa: generationType !== 'landing',
-          seo: true
-        }
+          seo: true,
+        },
       },
       backend: {
         language: preset.backend.language,
@@ -126,8 +132,8 @@ export class DevelopmentService {
           authorization: true,
           documentation: true,
           testing: true,
-          logging: true
-        }
+          logging: true,
+        },
       },
       database: {
         type: preset.database.type,
@@ -141,14 +147,16 @@ export class DevelopmentService {
           authentication: true,
           storage: true,
           edgeFunctions: true,
-          vectorSearch: false
-        }
+          vectorSearch: false,
+        },
       },
       landingPageConfig,
-      landingPage: hasLandingPage ? {
-        url: '',
-        codeUrl: ''
-      } : undefined,
+      landingPage: hasLandingPage
+        ? {
+            url: '',
+            codeUrl: '',
+          }
+        : undefined,
       projectConfig: {
         seoEnabled: true,
         contactFormEnabled: generationType !== 'app',
@@ -160,9 +168,9 @@ export class DevelopmentService {
         paymentIntegration: generationType === 'app',
         customOptions: {
           generationType,
-          preset: preset.name
-        }
-      }
+          preset: preset.name,
+        },
+      },
     };
   }
 
@@ -180,9 +188,9 @@ export class DevelopmentService {
     const payload = {
       developmentConfigs,
       projectId,
-      ...(generationType && { generation: generationType })
+      ...(generationType && { generation: generationType }),
     };
-    
+
     return this.http.post<ProjectModel>(`${this.apiUrl}/configs`, payload);
   }
 
@@ -207,29 +215,10 @@ export class DevelopmentService {
       .get<DevelopmentConfigsModel>(`${this.apiUrl}/configs/${projectId}`)
       .pipe(
         catchError((error: HttpErrorResponse) => {
-          if (error.status === 404) {
-            return of(null);
-          }
           console.error('Error in getDevelopmentConfigs:', error);
           throw error;
         })
       );
-  }
-
-  // Get all development items
-  getAllDevelopmentItems(projectId: string): Observable<DevelopmentItem[]> {
-    return this.http.get<DevelopmentItem[]>(`${this.apiUrl}/${projectId}`).pipe(
-      tap((response) =>
-        console.log('getAllDevelopmentItems response:', response)
-      ),
-      catchError((error) => {
-        console.error(
-          `Error in getAllDevelopmentItems for project ${projectId}:`,
-          error
-        );
-        throw error;
-      })
-    );
   }
 
   // Get a specific development item by ID
