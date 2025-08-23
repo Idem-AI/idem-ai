@@ -34,7 +34,7 @@ import {
 } from '../../../../../models/api/deployments/deployments.api.model';
 import { CookieService } from '../../../../../../../shared/services/cookie.service';
 import { DeploymentService } from '../../../../../services/deployment.service';
-import { MarkdownModule, MarkdownService } from 'ngx-markdown';
+import { MarkdownModule } from 'ngx-markdown';
 
 // Import Prism core only - specific languages are already imported in app.config.ts
 import 'prismjs';
@@ -761,11 +761,17 @@ export class AiAssistant implements OnInit, AfterViewInit {
     // Add user message to chat
     this.chatMessages.update((messages) => [...messages, chatMessage]);
 
+    // Set thinking state
+    this.aiIsThinking.set(true);
+
     // Send message to backend using DeploymentService
     this.deploymentService
       .sendChatMessage(chatMessage, this.projectId()!)
       .subscribe({
         next: (response) => {
+          // Stop thinking state
+          this.aiIsThinking.set(false);
+          
           // Add AI response to chat
           this.chatMessages.update((messages) => [...messages, response]);
 
@@ -783,6 +789,9 @@ export class AiAssistant implements OnInit, AfterViewInit {
           }
         },
         error: (error) => {
+          // Stop thinking state on error
+          this.aiIsThinking.set(false);
+          
           console.error('Error sending message to AI:', error);
           this.errorMessages.set([
             error.message || 'Failed to communicate with AI assistant',
