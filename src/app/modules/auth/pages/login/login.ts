@@ -21,7 +21,7 @@ export class Login implements OnInit {
   private readonly router = inject(Router);
   // Get waitlist form URL from environment
   protected readonly waitlistFormUrl = signal(environment.waitlistUrl);
-
+  protected isLoading = signal<boolean>(true);
   ngOnInit(): void {
     this.setupSeo();
   }
@@ -77,15 +77,27 @@ export class Login implements OnInit {
     window.open(this.waitlistFormUrl(), '_blank');
   }
 
-  protected loginWithGoogle(): void {
-    this.authService
-      .loginWithGoogle()
-      .then(() => this.router.navigate(['/console/dashboard']));
+  protected async loginWithGoogle(): Promise<void> {
+    try {
+      this.isLoading.set(true);
+      await this.authService.loginWithGoogle();
+      await this.router.navigate(['/console/projects']);
+    } catch (error) {
+      console.error('Error logging in with Google:', error);
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
-  protected loginWithGithub(): void {
-    this.authService
-      .loginWithGithub()
-      .then(() => this.router.navigate(['/console/dashboard']));
+  protected async loginWithGithub(): Promise<void> {
+    try {
+      this.isLoading.set(true);
+      await this.authService.loginWithGithub();
+      await this.router.navigate(['/console/projects']);
+    } catch (error) {
+      console.error('Error logging in with GitHub:', error);
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 }

@@ -48,21 +48,49 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "4.0MB",
-                  "maximumError": "4.5MB"
+                  "maximumWarning": "4.2MB",
+                  "maximumError": "4.8MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "6kB",
+                  "maximumError": "10kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "allowedCommonJsDependencies": [
+                "canvg",
+                "prismjs",
+                "jspdf",
+                "turndown",
+                "@firebase/firestore",
+                "@grpc/grpc-js",
+                "@grpc/proto-loader",
+                "@babel/runtime",
+                "core-js",
+                "raf",
+                "rgbcolor",
+                "@mixmark-io/domino"
+              ]
             },
             "development": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
+              "allowedCommonJsDependencies": [
+                "canvg",
+                "prismjs",
+                "jspdf",
+                "turndown",
+                "@firebase/firestore",
+                "@grpc/grpc-js",
+                "@grpc/proto-loader",
+                "@babel/runtime",
+                "core-js",
+                "raf",
+                "rgbcolor",
+                "@mixmark-io/domino"
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",

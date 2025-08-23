@@ -29,50 +29,6 @@
       </p>
     </div>
 
-    <!-- Business Plan Sections Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-      @for (section of getVisibleSections(); track section.id) {
-        <div class="glass-card rounded-2xl p-6 group hover:scale-[1.02] transition-all duration-500">
-          <!-- Section Header -->
-          <div class="flex items-start gap-4 mb-4">
-            <div class="w-12 h-12 glass-dark rounded-xl flex items-center justify-center flex-shrink-0">
-              <i class="pi {{ section.icon }} text-xl text-primary"></i>
-            </div>
-            <div>
-              <h3 class="text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors duration-200">
-                {{ section.title }}
-              </h3>
-            </div>
-          </div>
-
-          <p class="text-white/70 text-sm mb-4 leading-relaxed">
-            {{ section.description }}
-          </p>
-
-          <!-- Key Points -->
-          <div class="space-y-2">
-            @for (point of section.keyPoints; track $index) {
-              <div class="flex items-center gap-2 text-sm text-white/60">
-                <div class="w-1.5 h-1.5 bg-primary rounded-full"></div>
-                <span>{{ point }}</span>
-              </div>
-            }
-          </div>
-        </div>
-      }
-    </div>
-    
-    <!-- Show More/Less Button for Sections -->
-    <div class="text-center mb-16">
-      <button
-        (click)="toggleShowAllSections()"
-        class="inline-flex items-center gap-3 px-6 py-3 bg-white/10 hover:bg-white/20 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 border border-white/20 hover:border-white/30"
-      >
-        <i [class]="showAllSections() ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" class="text-sm"></i>
-        <span>{{ showAllSections() ? 'Show Less' : 'Show More' }}</span>
-      </button>
-    </div>
-
     <!-- Business Plan Examples -->
     <div class="glass-card rounded-3xl p-8 md:p-12 mb-16">
       <div class="text-center mb-12">

@@ -1,4 +1,4 @@
-/* Simple Splash Screen - Following UI Specs */
+/* Essential splash screen styles */
 .splash-container {
   position: fixed;
   top: 0;
@@ -9,33 +9,11 @@
   justify-content: center;
   align-items: center;
   background-color: var(--color-bg-dark);
-  color: var(--color-light-text);
   z-index: 9999;
   transition: opacity 0.8s ease-out;
 }
 
-.splash-container.fade-out {
-  opacity: 0;
-}
-
-.splash-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-/* Simple Logo Styling */
-.logo-simple {
-  margin-bottom: 3rem;
-}
-
-.logo-text {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
+.splash-container.fade-out { opacity: 0; }
 
 .logo-letter {
   font-size: 3rem;
@@ -50,41 +28,20 @@
   color: var(--color-primary);
 }
 
-.logo-letter.d {
-  animation-delay: 0.2s;
-}
-
-.logo-letter.e {
-  animation-delay: 0.3s;
-}
-
-.logo-letter.m {
-  animation-delay: 0.4s;
-}
+.logo-letter.d { animation-delay: 0.2s; }
+.logo-letter.e { animation-delay: 0.3s; }
+.logo-letter.m { animation-delay: 0.4s; }
 
 .logo-tagline {
   font-size: 0.875rem;
   color: var(--color-light-text);
-  opacity: 0.7;
+  opacity: 0;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   animation: fadeInUp 0.8s ease-out 0.6s forwards;
-  opacity: 0;
 }
 
-/* Simple Progress Styling */
-.progress-simple {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-}
-
-.progress-dots {
-  display: flex;
-  gap: 0.75rem;
-}
-
+/* Progress elements */
 .dot {
   width: 8px;
   height: 8px;
@@ -95,7 +52,6 @@
 
 .dot.active {
   background-color: var(--color-primary);
-  box-shadow: 0 0 8px var(--color-primary-glow);
   transform: scale(1.2);
 }
 
@@ -106,115 +62,19 @@
   animation: pulse 2s ease-in-out infinite;
 }
 
-/* Progress bar */
-.progress-container {
-  position: fixed;
-  width: 240px;
-  text-align: center;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.progress-track {
-  height: 4px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
-  overflow: hidden;
-  margin-bottom: 10px;
-}
-
 .progress-fill {
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    var(--color-primary) 0%,
-    var(--color-secondary) 100%
-  );
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%);
   border-radius: 2px;
   transition: width 0.3s ease;
 }
 
-.progress-percentage {
-  font-size: 0.9rem;
-  color: white;
-  letter-spacing: 2px;
-}
-
-/* Particles */
-.particles {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
+/* Particle animations */
 .particle {
   position: absolute;
-  background: white;
   border-radius: 50%;
   opacity: 0.7;
-}
-
-.p1 {
-  width: 6px;
-  height: 6px;
-  left: 40%;
-  top: 30%;
-  background: var(--color-primary);
   animation: float 8s ease-in-out infinite;
-}
-
-.p2 {
-  width: 10px;
-  height: 10px;
-  left: 60%;
-  top: 40%;
-  background: var(--color-secondary);
-  animation: float 12s ease-in-out infinite reverse;
-}
-
-.p3 {
-  width: 4px;
-  height: 4px;
-  left: 35%;
-  top: 60%;
-  background: var(--color-accent);
-  animation: float 9s ease-in-out infinite 1s;
-}
-
-.p4 {
-  width: 8px;
-  height: 8px;
-  left: 65%;
-  top: 55%;
-  background: var(--color-primary);
-  animation: float 11s ease-in-out infinite 0.5s;
-}
-
-.p5 {
-  width: 5px;
-  height: 5px;
-  left: 45%;
-  top: 70%;
-  background: var(--color-secondary);
-  animation: float 10s ease-in-out infinite 1.5s;
-}
-
-.p6 {
-  width: 7px;
-  height: 7px;
-  left: 55%;
-  top: 35%;
-  background: var(--color-accent);
-  animation: float 13s ease-in-out infinite 2s;
-}
-
-/* Pulsating rings */
-.rings-container {
-  position: absolute;
-  width: 300px;
-  height: 300px;
 }
 
 .ring {
@@ -224,148 +84,40 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-}
-
-.ring1 {
-  width: 150px;
-  height: 150px;
-  border-color: rgba(20, 71, 230, 0.3);
   animation: expandRing 3s ease-in-out infinite;
 }
 
-.ring2 {
-  width: 200px;
-  height: 200px;
-  border-color: rgba(209, 30, 192, 0.2);
-  animation: expandRing 3s ease-in-out infinite 1s;
-}
-
-.ring3 {
-  width: 250px;
-  height: 250px;
-  border-color: rgba(34, 211, 238, 0.1);
-  animation: expandRing 3s ease-in-out infinite 2s;
-}
-
-/* Animations */
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
+/* Essential animations */
 @keyframes pulse {
-  0% {
-    transform: scale(0.95);
-    opacity: 0.7;
-  }
-  100% {
-    transform: scale(1.05);
-    opacity: 1;
-  }
-}
-
-@keyframes glow {
-  0% {
-    opacity: 0.4;
-  }
-  100% {
-    opacity: 0.8;
-  }
+  0% { transform: scale(0.95); opacity: 0.7; }
+  100% { transform: scale(1.05); opacity: 1; }
 }
 
 @keyframes float {
-  0% {
-    transform: translateY(0px) translateX(0px);
-  }
-  25% {
-    transform: translateY(-10px) translateX(5px);
-  }
-  50% {
-    transform: translateY(0px) translateX(10px);
-  }
-  75% {
-    transform: translateY(10px) translateX(5px);
-  }
-  100% {
-    transform: translateY(0px) translateX(0px);
-  }
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  25% { transform: translateY(-10px) translateX(5px); }
+  50% { transform: translateY(0px) translateX(10px); }
+  75% { transform: translateY(10px) translateX(5px); }
 }
 
 @keyframes expandRing {
-  0% {
-    transform: translate(-50%, -50%) scale(0.7);
-    opacity: 0.8;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1.2);
-    opacity: 0;
-  }
+  0% { transform: translate(-50%, -50%) scale(0.7); opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0; }
 }
 
 @keyframes letterFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 0.7;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 0.7; transform: translateY(0); }
 }
 
 /* Accessibility */
 @media (prefers-reduced-motion: reduce) {
-  .logo-letter,
-  .logo-tagline,
-  .progress-text {
-    animation: none;
-    opacity: 1;
-  }
-  
-  .logo-tagline {
-    opacity: 0.7;
-  }
-  
-  .progress-text {
-    opacity: 0.6;
-  }
-  
-  .dot {
-    transition: none;
-  }
-}
-
-/* High contrast mode */
-@media (prefers-contrast: high) {
-  .logo-letter {
-    color: white;
-  }
-  
-  .logo-letter.i {
-    color: #4a90ff;
-  }
-  
-  .dot {
-    background-color: white;
-  }
-  
-  .dot.active {
-    background-color: #4a90ff;
-    box-shadow: none;
-  }
+  .logo-letter, .logo-tagline, .progress-text { animation: none; opacity: 1; }
+  .logo-tagline { opacity: 0.7; }
+  .progress-text { opacity: 0.6; }
 }

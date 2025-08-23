@@ -75,7 +75,7 @@
 
 /* Custom field form styling */
 .tfvars-form-editor .custom-field-form {
-  border-left: 4px solid theme("colors.blue.500");
+  border-left: 4px solid #3b82f6;
 }
 
 /* Section header hover effects */

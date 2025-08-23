@@ -1,69 +1,22 @@
-/* AI Assistant Component Styles - Markdown-specific styles only */
-/* All other styling is handled by Tailwind CSS classes in the HTML template */
-
-/* Custom scrollbar */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(31, 41, 55, 0.5);
-  border-radius: 8px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: var(--color-accent-glow);
-  border-radius: 8px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: var(--color-accent);
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.3s ease-in-out;
-}
-
+/* Essential animations and markdown styles only */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-slide-in {
-  animation: fadeSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeSlideIn {
-  0% {
-    opacity: 0;
-    transform: translateX(20px) scale(0.98);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
-}
-
-.animate-scale-in {
-  animation: scaleIn 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+  0% { opacity: 0; transform: translateX(20px) scale(0.98); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
 }
 
 @keyframes scaleIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
+  0% { opacity: 0; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
 }
+
+.animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
+.animate-fade-slide-in { animation: fadeSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.animate-scale-in { animation: scaleIn 0.4s cubic-bezier(0.33, 1, 0.68, 1); }
 
 /* Markdown Content Styles */
 .markdown-content {
@@ -72,53 +25,23 @@
   color: var(--color-light-text);
 }
 
-/* Headings */
-.markdown-content h1,
-.markdown-content h2,
-.markdown-content h3,
-.markdown-content h4,
-.markdown-content h5,
-.markdown-content h6 {
+.markdown-content h1, .markdown-content h2, .markdown-content h3, 
+.markdown-content h4, .markdown-content h5, .markdown-content h6 {
   margin-top: 1.5em;
   margin-bottom: 0.75em;
   font-weight: 600;
   color: var(--color-accent);
 }
 
-.markdown-content h1 {
-  font-size: 1.5rem;
-}
-.markdown-content h2 {
-  font-size: 1.35rem;
-}
-.markdown-content h3 {
-  font-size: 1.25rem;
-}
-.markdown-content h4 {
-  font-size: 1.15rem;
-}
-.markdown-content h5 {
-  font-size: 1.05rem;
-}
-.markdown-content h6 {
-  font-size: 1rem;
-}
+.markdown-content h1 { font-size: 1.5rem; }
+.markdown-content h2 { font-size: 1.35rem; }
+.markdown-content h3 { font-size: 1.25rem; }
 
-/* Lists */
-.markdown-content ul,
-.markdown-content ol {
+.markdown-content ul, .markdown-content ol {
   margin: 1em 0;
   padding-left: 2em;
 }
 
-.markdown-content ul {
-  list-style-type: disc;
-}
-.markdown-content ol {
-  list-style-type: decimal;
-}
-
-/* Links */
 .markdown-content a {
   color: var(--color-primary);
   text-decoration: none;
@@ -131,103 +54,22 @@
   border-bottom: 1px solid var(--color-accent-glow);
 }
 
-/* Blockquotes */
-.markdown-content blockquote {
-  /* border-left: 4px solid var(--color-accent-glow); */
-  padding: 0.5em 1em;
-  margin: 1em 0;
-  background: var(--glass-bg);
-  border-radius: 0.25rem;
-  font-style: italic;
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-}
-
-/* Tables */
-.markdown-content table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  margin: 1em 0;
-  overflow: hidden;
-  border-radius: 0.5rem;
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
-}
-
-.markdown-content th {
-  background: var(--glass-bg-darker);
-  color: var(--color-light-text);
-  font-weight: 600;
-  text-align: left;
-  padding: 0.75em 1em;
-}
-
-.markdown-content td {
-  padding: 0.75em 1em;
-  border-top: 1px solid var(--glass-border);
-}
-
-/* Code blocks with ultra modern glass effect */
+/* Code blocks */
 .markdown-content pre {
   margin: 1em 0;
   padding: 1em;
   border-radius: 0.5rem;
   overflow: auto;
-  position: relative;
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
   background: var(--glass-bg-darker);
   border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  transition: all 0.3s ease;
 }
 
-.markdown-content pre:hover {
-  box-shadow: 0 0 15px var(--color-accent-glow);
-  border-color: var(--color-accent-glow);
-}
-
-/* Add decorative elements to code blocks */
-.markdown-content pre::before {
-  content: "";
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(20, 184, 166, 0.1); /* teal-500 with opacity */
-  z-index: -1;
-  filter: blur(15px);
-}
-
-.markdown-content pre::after {
-  content: "";
-  position: absolute;
-  bottom: -10px;
-  left: -10px;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: rgba(56, 189, 248, 0.1); /* sky-400 with opacity */
-  z-index: -1;
-  filter: blur(15px);
-}
-
-/* Code inside pre */
 .markdown-content pre code {
   font-family: "Fira Code", "Roboto Mono", monospace;
   font-size: 0.9em;
-  line-height: 1.5;
-  color: rgba(229, 231, 235, 0.9); /* gray-200 with opacity */
-  display: block;
+  color: rgba(229, 231, 235, 0.9);
 }
 
-/* Inline code with ultra modern glass effect */
 .markdown-content :not(pre) > code {
   font-family: "Fira Code", "Roboto Mono", monospace;
   font-size: 0.9em;
@@ -235,102 +77,5 @@
   color: var(--color-accent);
   padding: 0.2em 0.4em;
   border-radius: 0.25rem;
-  white-space: nowrap;
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
   border: 1px solid var(--glass-border);
-  transition: all 0.2s ease;
-}
-
-.markdown-content :not(pre) > code:hover {
-  box-shadow: 0 0 8px var(--color-accent-glow);
-  border-color: var(--color-accent);
-}
-
-/* Line numbers */
-.markdown-content .line-numbers {
-  color: rgba(156, 163, 175, 0.6); /* gray-400 with opacity */
-  padding-right: 1em;
-  border-right: 1px solid rgba(75, 85, 99, 0.3); /* gray-600 with opacity */
-  user-select: none;
-}
-
-/* Horizontal rule */
-.markdown-content hr {
-  border: 0;
-  height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(20, 184, 166, 0.5),
-    transparent
-  );
-  margin: 2em 0;
-}
-
-/* Images */
-.markdown-content img {
-  max-width: 100%;
-  border-radius: 0.5rem;
-  margin: 1em 0;
-}
-
-/* Syntax highlighting for code blocks */
-.markdown-content .token.comment,
-.markdown-content .token.prolog,
-.markdown-content .token.doctype,
-.markdown-content .token.cdata {
-  color: rgba(156, 163, 175, 0.8); /* gray-400 with opacity */
-}
-
-.markdown-content .token.punctuation {
-  color: rgba(209, 213, 219, 0.8); /* gray-300 with opacity */
-}
-
-.markdown-content .token.property,
-.markdown-content .token.tag,
-.markdown-content .token.boolean,
-.markdown-content .token.number,
-.markdown-content .token.constant,
-.markdown-content .token.symbol {
-  color: rgba(236, 72, 153, 0.9); /* pink-500 with opacity */
-}
-
-.markdown-content .token.selector,
-.markdown-content .token.attr-name,
-.markdown-content .token.string,
-.markdown-content .token.char,
-.markdown-content .token.builtin {
-  color: rgba(16, 185, 129, 0.9); /* emerald-500 with opacity */
-}
-
-.markdown-content .token.operator,
-.markdown-content .token.entity,
-.markdown-content .token.url,
-.markdown-content .token.variable {
-  color: rgba(124, 58, 237, 0.9); /* violet-600 with opacity */
-}
-
-.markdown-content .token.atrule,
-.markdown-content .token.attr-value,
-.markdown-content .token.keyword {
-  color: rgba(59, 130, 246, 0.9); /* blue-500 with opacity */
-}
-
-.markdown-content .token.function {
-  color: rgba(245, 158, 11, 0.9); /* amber-500 with opacity */
-}
-
-.markdown-content .token.regex,
-.markdown-content .token.important {
-  color: rgba(249, 115, 22, 0.9); /* orange-500 with opacity */
-}
-
-.markdown-content .token.important,
-.markdown-content .token.bold {
-  font-weight: bold;
-}
-
-.markdown-content .token.italic {
-  font-style: italic;
 }

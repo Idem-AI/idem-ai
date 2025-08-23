@@ -14,9 +14,6 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { MenuItem } from 'primeng/api';
-import { PanelMenu } from 'primeng/panelmenu';
-import { DrawerModule } from 'primeng/drawer';
 import { AuthService } from '../../../auth/services/auth.service';
 import { CommonModule } from '@angular/common';
 import {
@@ -26,12 +23,11 @@ import {
   animate,
   state,
 } from '@angular/animations';
-import { Select, SelectChangeEvent } from 'primeng/select';
 import { ProjectService } from '../../services/project.service';
 import { ProjectModel } from '../../models/project.model';
 import { SelectElement } from '../../pages/create-project/datas';
 import { FormsModule } from '@angular/forms';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { first, switchMap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 import { CookieService } from '../../../../shared/services/cookie.service';
@@ -45,7 +41,6 @@ import {
   BetaRestrictions,
   QuotaStatus,
 } from '../../../../shared/models/quota.model';
-// import { BetaBadgeComponent } from '../../../../shared/components/beta-badge/beta-badge';
 
 @Component({
   selector: 'app-sidebar-dashboard',
@@ -53,13 +48,11 @@ import {
   styleUrls: ['./sidebar-dashboard.css'],
   standalone: true,
   imports: [
-    PanelMenu,
-    Select,
     CommonModule,
     FormsModule,
+    RouterModule,
     BetaBadgeComponent,
     QuotaDisplayComponent,
-    DrawerModule,
   ],
   animations: [
     trigger('slideInOut', [
@@ -103,13 +96,53 @@ export class SidebarDashboard implements OnInit {
   private readonly quotaService = inject(QuotaService);
   private readonly destroyRef = inject(DestroyRef);
 
+  // Navigation items
+  protected readonly navigationItems = signal([
+    {
+      label: 'Dashboard',
+      icon: 'pi pi-home',
+      route: 'console/dashboard',
+      isActive: false
+    },
+    {
+      label: 'Branding',
+      icon: 'pi pi-palette',
+      route: 'console/branding',
+      isActive: false
+    },
+    {
+      label: 'Business Plan',
+      icon: 'pi pi-calendar',
+      route: 'console/business-plan',
+      isActive: false
+    },
+    {
+      label: 'Diagrams',
+      icon: 'pi pi-chart-line',
+      route: 'console/diagrams',
+      isActive: false
+    },
+    {
+      label: 'Development',
+      icon: 'pi pi-code',
+      route: 'console/development',
+      isActive: false
+    },
+    {
+      label: 'Deployment',
+      icon: 'pi pi-globe',
+      route: 'console/deployments',
+      isActive: false
+    }
+  ]);
+
   // Signals for UI State
-  items = signal<MenuItem[]>([]);
   isLoading = signal(true);
   isMenuOpen = signal(false);
   isDropdownOpen = signal(false);
   protected readonly isSidebarCollapsed = signal(false);
   protected readonly isMobileDrawerOpen = signal(false);
+  protected readonly isProjectSelectorOpen = signal(false);
 
   // Quota Signals (managed locally)
   protected readonly quotaInfo = signal<QuotaInfoResponse | null>(null);
@@ -317,44 +350,8 @@ export class SidebarDashboard implements OnInit {
    * Initializes the menu items
    */
   private initializeMenu(): void {
-    // Initialize menu items
-    this.items.set([
-      {
-        label: 'Dashboard',
-        icon: 'pi pi-fw pi-home',
-        command: () => this.navigateTo('console/dashboard'),
-      },
-      {
-        label: 'Branding',
-        icon: 'pi pi-fw pi-palette',
-        command: () => this.navigateTo('console/branding'),
-      },
-      {
-        label: 'Business Plan',
-        icon: 'pi pi-fw pi-calendar',
-        command: () => this.navigateTo('console/business-plan'),
-      },
-      {
-        label: 'Diagrams',
-        icon: 'pi pi-fw pi-chart-line',
-        command: () => this.navigateTo('console/diagrams'),
-      },
-      {
-        label: 'Developement',
-        icon: 'pi pi-fw pi-code',
-        command: () => this.navigateTo('console/development'),
-      },
-      {
-        label: 'Tests',
-        icon: 'pi pi-fw pi-check-square',
-        command: () => this.navigateTo('console/tests'),
-      },
-      {
-        label: 'Deployment',
-        icon: 'pi pi-fw pi-globe',
-        command: () => this.navigateTo('console/deployments'),
-      },
-    ]);
+    // Menu items are now handled by navigationItems signal
+    this.updateActiveStates();
   }
 
   /**
@@ -425,21 +422,23 @@ export class SidebarDashboard implements OnInit {
       });
   }
 
-  onProjectChange(event: SelectChangeEvent) {
-    const projectId = event.value?.code;
+  onProjectChange(project: SelectElement) {
+    const projectId = project.code;
     if (projectId) {
       // Check if "View All Projects" option was selected
       if (projectId === 'all-projects') {
         // Navigate to projects list view
         this.router.navigate(['/console/projects']);
+        this.isProjectSelectorOpen.set(false);
         return;
       }
 
       // Regular project selection - save to cookie
       // Also set selectedProject signal so UI updates immediately
-      this.selectedProject.set(event.value);
+      this.selectedProject.set(project);
       this.cookieService.set('projectId', projectId);
       this.projectIdFromCookie.set(projectId);
+      this.isProjectSelectorOpen.set(false);
 
       // Navigate to the project dashboard
       this.router.navigate([`/console/dashboard`]);
@@ -447,30 +446,29 @@ export class SidebarDashboard implements OnInit {
   }
 
   updateSidebarRoutes() {
-    const selectedProjectId = this.selectedProject()?.code;
-    if (!selectedProjectId) return;
+    this.updateActiveStates();
+  }
 
+  /**
+   * Updates active states for navigation items
+   */
+  private updateActiveStates(): void {
     const currentPath = this.currentRoute();
+    const items = this.navigationItems();
+    
+    const updatedItems = items.map(item => ({
+      ...item,
+      isActive: currentPath.includes(`/${item.route}`)
+    }));
+    
+    this.navigationItems.set(updatedItems);
+  }
 
-    // Helper function to determine if a route is active
-    const isRouteActive = (path: string): boolean => {
-      // Handle special case for dashboard which might be just /console/dashboard
-      if (path === 'console/dashboard') {
-        return currentPath.includes(`/console/dashboard`);
-      }
-      return currentPath.includes(`/${path}`);
-    };
-
-    // Create style class based on collapsed state and active route
-    const getStyleClass = (path: string): string => {
-      const isCollapsed = this.isSidebarCollapsed()
-        ? 'sidebar-item-collapsed'
-        : '';
-      const isActive = isRouteActive(path) ? 'sidebar-item-active' : '';
-      return `${isCollapsed} ${isActive}`.trim();
-    };
-
-  
+  /**
+   * Toggles project selector dropdown
+   */
+  toggleProjectSelector(): void {
+    this.isProjectSelectorOpen.update(open => !open);
   }
 
   toggleMenu() {
@@ -514,9 +512,14 @@ export class SidebarDashboard implements OnInit {
   onClickOutsideDropdown(targetElement: HTMLElement) {
     const dropdownButton = targetElement.closest('button.flex.items-center');
     const dropdownMenu = targetElement.closest('.fixed.right-0.mt-2');
+    const projectSelector = targetElement.closest('.project-selector');
 
     if (this.isDropdownOpen() && !dropdownButton && !dropdownMenu) {
       this.isDropdownOpen.set(false);
+    }
+    
+    if (this.isProjectSelectorOpen() && !projectSelector) {
+      this.isProjectSelectorOpen.set(false);
     }
   }
 
