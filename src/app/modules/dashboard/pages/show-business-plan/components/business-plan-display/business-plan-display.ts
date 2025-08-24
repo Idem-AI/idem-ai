@@ -28,6 +28,8 @@ export class BusinessPlanDisplayComponent implements OnInit {
   protected readonly pdfSrc = signal<string | null>(null);
   protected readonly isDownloadingPdf = signal<boolean>(false);
   protected readonly pdfError = signal<string | null>(null);
+  protected readonly totalPages = signal<number>(0);
+  protected readonly currentPage = signal<number>(1);
 
   async ngOnInit(): Promise<void> {
     if (this.businessPlan()?.sections) {
@@ -76,5 +78,13 @@ export class BusinessPlanDisplayComponent implements OnInit {
       link.download = 'business-plan.pdf';
       link.click();
     }
+  }
+
+  protected onPdfLoadComplete(pdf: any): void {
+    this.totalPages.set(pdf.numPages);
+  }
+
+  protected onPageRendered(event: any): void {
+    this.currentPage.set(event.pageNumber);
   }
 }
