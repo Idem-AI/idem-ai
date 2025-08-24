@@ -6,25 +6,25 @@ import {
   signal,
   OnInit,
 } from '@angular/core';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { BrandIdentityModel } from '../../../../models/brand-identity.model';
 import { BrandingService } from '../../../../services/ai-agents/branding.service';
 import { CookieService } from '../../../../../../shared/services/cookie.service';
+import { PdfViewer } from '../../../../../../shared/components/pdf-viewer/pdf-viewer';
 
 @Component({
   selector: 'app-branding-display',
   standalone: true,
-  imports: [PdfViewerModule],
+  imports: [PdfViewer],
   templateUrl: './branding-display.html',
   styleUrl: './branding-display.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BrandingDisplayComponent implements OnInit {
   readonly branding = input.required<BrandIdentityModel | null>();
-  
+
   private readonly brandingService = inject(BrandingService);
   private readonly cookieService = inject(CookieService);
-  
+
   protected readonly pdfSrc = signal<string | null>(null);
   protected readonly isDownloadingPdf = signal<boolean>(false);
   protected readonly pdfError = signal<string | null>(null);
@@ -49,17 +49,20 @@ export class BrandingDisplayComponent implements OnInit {
       }
 
       // Download PDF blob from backend
-      const pdfBlob = await this.brandingService.downloadBrandingPdf(projectId).toPromise();
-      
+      const pdfBlob = await this.brandingService
+        .downloadBrandingPdf(projectId)
+        .toPromise();
+
       if (pdfBlob) {
         // Create object URL for PDF viewer
         const pdfUrl = URL.createObjectURL(pdfBlob);
         this.pdfSrc.set(pdfUrl);
       }
-      
     } catch (error: any) {
       console.error('Error loading PDF from backend:', error);
-      this.pdfError.set(error.message || 'Failed to load PDF. Please try again.');
+      this.pdfError.set(
+        error.message || 'Failed to load PDF. Please try again.'
+      );
     } finally {
       this.isDownloadingPdf.set(false);
     }

@@ -6,30 +6,28 @@ import {
   signal,
   OnInit,
 } from '@angular/core';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { BusinessPlanModel } from '../../../../models/businessPlan.model';
 import { BusinessPlanService } from '../../../../services/ai-agents/business-plan.service';
 import { CookieService } from '../../../../../../shared/services/cookie.service';
+import { PdfViewer } from '../../../../../../shared/components/pdf-viewer/pdf-viewer';
 
 @Component({
   selector: 'app-business-plan-display',
   standalone: true,
-  imports: [PdfViewerModule],
+  imports: [PdfViewer],
   templateUrl: './business-plan-display.html',
   styleUrl: './business-plan-display.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BusinessPlanDisplayComponent implements OnInit {
   readonly businessPlan = input.required<BusinessPlanModel | null>();
-  
+
   private readonly businessPlanService = inject(BusinessPlanService);
   private readonly cookieService = inject(CookieService);
-  
+
   protected readonly pdfSrc = signal<string | null>(null);
   protected readonly isDownloadingPdf = signal<boolean>(false);
   protected readonly pdfError = signal<string | null>(null);
-  protected readonly totalPages = signal<number>(0);
-  protected readonly currentPage = signal<number>(1);
 
   async ngOnInit(): Promise<void> {
     if (this.businessPlan()?.sections) {
@@ -51,17 +49,20 @@ export class BusinessPlanDisplayComponent implements OnInit {
       }
 
       // Download PDF blob from backend
-      const pdfBlob = await this.businessPlanService.downloadBusinessPlanPdf(projectId).toPromise();
-      
+      const pdfBlob = await this.businessPlanService
+        .downloadBusinessPlanPdf(projectId)
+        .toPromise();
+
       if (pdfBlob) {
         // Create object URL for PDF viewer
         const pdfUrl = URL.createObjectURL(pdfBlob);
         this.pdfSrc.set(pdfUrl);
       }
-      
     } catch (error: any) {
       console.error('Error loading PDF from backend:', error);
-      this.pdfError.set(error.message || 'Failed to load PDF. Please try again.');
+      this.pdfError.set(
+        error.message || 'Failed to load PDF. Please try again.'
+      );
     } finally {
       this.isDownloadingPdf.set(false);
     }
@@ -78,13 +79,5 @@ export class BusinessPlanDisplayComponent implements OnInit {
       link.download = 'business-plan.pdf';
       link.click();
     }
-  }
-
-  protected onPdfLoadComplete(pdf: any): void {
-    this.totalPages.set(pdf.numPages);
-  }
-
-  protected onPageRendered(event: any): void {
-    this.currentPage.set(event.pageNumber);
   }
 }
