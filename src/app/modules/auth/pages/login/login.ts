@@ -4,11 +4,12 @@ import { environment } from '../../../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
 import { SeoService } from '../../../../shared/services/seo.service';
 import { Router } from '@angular/router';
+import { Loader } from "../../../../components/loader/loader";
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, Loader],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -21,7 +22,7 @@ export class Login implements OnInit {
   private readonly router = inject(Router);
   // Get waitlist form URL from environment
   protected readonly waitlistFormUrl = signal(environment.waitlistUrl);
-  protected isLoading = signal<boolean>(true);
+  protected isLoading = signal<boolean>(false);
   ngOnInit(): void {
     this.setupSeo();
   }

@@ -19,10 +19,40 @@
     >
       Login
     </h2>
+    <!-- Loading State -->
+    @if (isLoading()) {
+    <div class="flex flex-col items-center justify-center w-full py-2">
+      <!-- Animated Loader -->
+      <app-loader />
+
+      <!-- Loading Text -->
+      <div class="text-center">
+        <p class="text-lg font-semibold text-primary mb-2">Signing you in...</p>
+        <p class="text-sm text-gray-400">
+          Please wait while we authenticate your account
+        </p>
+      </div>
+
+      <!-- Animated dots -->
+      <div class="flex gap-1">
+        <div class="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+        <div
+          class="w-2 h-2 bg-primary rounded-full animate-bounce"
+          style="animation-delay: 0.1s"
+        ></div>
+        <div
+          class="w-2 h-2 bg-primary rounded-full animate-bounce"
+          style="animation-delay: 0.2s"
+        ></div>
+      </div>
+    </div>
+    } @else {
+    <!-- Login Buttons -->
     <div class="gap-4 sm:gap-5 md:gap-6 flex flex-col w-full">
       <button
-        class="outer-button flex text-base sm:text-lg items-center justify-center gap-2 sm:gap-3 md:gap-4 w-full transition-all duration-300 hover:scale-105"
+        class="outer-button flex text-base sm:text-lg items-center justify-center gap-2 sm:gap-3 md:gap-4 w-full transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
         (click)="loginWithGoogle()"
+        [disabled]="isLoading()"
       >
         <svg
           class="w-5 h-5 sm:w-6 sm:h-6"
@@ -43,20 +73,22 @@
             fill="#FBBC05"
           />
           <path
-            d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"
+            d="M130.55 50.479c24.514 0 41.50 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"
             fill="#EB4335"
           />
         </svg>
         Continue with Google
       </button>
       <button
-        class="outer-button flex text-base sm:text-lg items-center justify-center gap-2 sm:gap-3 md:gap-4 w-full transition-all duration-300 hover:scale-105"
+        class="outer-button flex text-base sm:text-lg items-center justify-center gap-2 sm:gap-3 md:gap-4 w-full transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
         (click)="loginWithGithub()"
+        [disabled]="isLoading()"
       >
         <i class="pi pi-github text-base sm:text-lg md:text-xl"></i>
         Continue with Github
       </button>
     </div>
+    }
   </div>
   @if (isBeta()) {
   <!-- Premium Beta Tester Card - New Design -->
