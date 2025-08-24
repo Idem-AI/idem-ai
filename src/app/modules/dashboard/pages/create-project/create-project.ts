@@ -288,7 +288,7 @@ export class CreateProjectComponent implements OnInit {
             error: (err) => {
               console.error('Error generating colors and typography:', err);
               this.brandingError.set(
-                'Failed to generate colors and typography. Please check the console for details or try again.'
+                'Failed to generate colors and typography. If the problem persists, please try again later.'
               );
               this.isLoaded.set(false);
               // Do not navigate to the next step on error
@@ -333,7 +333,7 @@ export class CreateProjectComponent implements OnInit {
             error: (err) => {
               console.error('Error generating logos:', err);
               this.brandingError.set(
-                'Failed to generate logos. Please check the console for details or try again.'
+                'Failed to generate logos. If the problem persists, please try again later.'
               );
               this.isLoaded.set(false);
               // Do not navigate to the next step on error

@@ -1,4 +1,6 @@
-<app-splash-screen></app-splash-screen>
+@if (isInitialLoading()) {
+  <app-splash-screen></app-splash-screen>
+}
 
 @if (currentLayout$ | async; as layout) { @if (layout === 'public') {
 <app-public-layout>

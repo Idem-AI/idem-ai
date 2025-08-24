@@ -22,7 +22,6 @@ export class SplashScreenComponent implements OnInit {
   protected readonly animationComplete = signal(false);
 
   private progressInterval?: number;
-  private loadingTimeout?: number;
 
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) {
@@ -31,66 +30,31 @@ export class SplashScreenComponent implements OnInit {
       return;
     }
 
-    this.startSimpleLoadingSequence();
+    this.startProgressAnimation();
   }
 
-  private startSimpleLoadingSequence(): void {
+  private startProgressAnimation(): void {
     this.progress.set(0);
     
-    // Simple progressive loading without complex event listeners
+    // Animation de progression simple
     this.progressInterval = window.setInterval(() => {
       const currentProgress = this.progress();
-      if (currentProgress < 90) {
-        this.progress.set(currentProgress + 10);
+      if (currentProgress < 100) {
+        this.progress.set(currentProgress + 5);
+      } else {
+        this.clearProgressInterval();
       }
-    }, 200);
-
-    // Complete loading after a reasonable time
-    this.loadingTimeout = window.setTimeout(() => {
-      this.completeLoading();
-    }, 2000);
-
-    // Also listen for window load as a fallback
-    if (document.readyState === 'complete') {
-      // Page already loaded
-      setTimeout(() => this.completeLoading(), 500);
-    } else {
-      window.addEventListener('load', () => {
-        setTimeout(() => this.completeLoading(), 500);
-      }, { once: true });
-    }
+    }, 50);
   }
 
-  private completeLoading(): void {
-    // Clear any running intervals
+  private clearProgressInterval(): void {
     if (this.progressInterval) {
       clearInterval(this.progressInterval);
       this.progressInterval = undefined;
     }
-    if (this.loadingTimeout) {
-      clearTimeout(this.loadingTimeout);
-      this.loadingTimeout = undefined;
-    }
-
-    // Complete the loading sequence
-    this.progress.set(100);
-    
-    setTimeout(() => {
-      this.animationComplete.set(true);
-      
-      setTimeout(() => {
-        this.loading.set(false);
-      }, 300);
-    }, 500);
   }
 
   ngOnDestroy(): void {
-    // Clean up intervals and timeouts
-    if (this.progressInterval) {
-      clearInterval(this.progressInterval);
-    }
-    if (this.loadingTimeout) {
-      clearTimeout(this.loadingTimeout);
-    }
+    this.clearProgressInterval();
   }
 }

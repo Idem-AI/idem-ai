@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   RouterOutlet,
@@ -36,6 +36,9 @@ export class App implements OnInit, OnDestroy {
   protected readonly router = inject(Router);
   protected readonly activatedRoute = inject(ActivatedRoute);
   private readonly destroy$ = new Subject<void>();
+  
+  // Signal pour contrôler l'affichage du splash screen
+  protected readonly isInitialLoading = signal(true);
 
   /** Layout courant selon la route active */
   protected readonly currentLayout$: Observable<
@@ -59,6 +62,9 @@ export class App implements OnInit, OnDestroy {
   );
 
   ngOnInit(): void {
+    // Masquer le splash screen après le chargement initial
+    this.hideInitialSplashScreen();
+    
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
@@ -70,6 +76,23 @@ export class App implements OnInit, OnDestroy {
           window.scrollTo({ top: 0, behavior: 'auto' });
         }, 0);
       });
+  }
+  
+  private hideInitialSplashScreen(): void {
+    // Attendre que les composants soient initialisés
+    if (document.readyState === 'complete') {
+      // Page déjà chargée, masquer immédiatement
+      setTimeout(() => {
+        this.isInitialLoading.set(false);
+      }, 100);
+    } else {
+      // Attendre le chargement complet
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          this.isInitialLoading.set(false);
+        }, 500);
+      }, { once: true });
+    }
   }
 
   ngOnDestroy(): void {
