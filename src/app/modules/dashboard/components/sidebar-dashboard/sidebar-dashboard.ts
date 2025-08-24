@@ -9,7 +9,6 @@ import {
   signal,
   computed,
   DestroyRef,
-  effect,
   Output,
   EventEmitter,
 } from '@angular/core';
@@ -206,82 +205,60 @@ export class SidebarDashboard implements OnInit {
     }
 
     // Track current route for active menu highlighting
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.currentRoute.set(event.urlAfterRedirects);
-        // Update menu items to reflect active state
-        this.updateSidebarRoutes();
-      }
-    });
-
-    // Effect to update sidebar menu when selectedProject changes
-    effect(() => {
-      if (this.selectedProject()) {
-        this.updateSidebarRoutes();
-      }
-    });
-
-    // Effect to react to projectIdFromCookie changes and user's projects list
-    effect(
-      () => {
-        const projects = this._userProjects();
-        const cookieId = this.projectIdFromCookie();
-        const isLoadingProjects = this.isLoading();
-
-        if (isLoadingProjects) {
-          return; // Wait for projects to load
+    this.router.events
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((event) => {
+        if (event instanceof NavigationEnd) {
+          this.currentRoute.set(event.urlAfterRedirects);
+          // Update menu items to reflect active state
+          this.updateSidebarRoutes();
         }
+      });
 
-        if (cookieId) {
-          const projectFromCookie = projects.find((p) => p.id === cookieId);
-          if (projectFromCookie) {
-            // Valid project from cookie - set it as selected
-            this.selectedProject.set({
-              name: projectFromCookie.name,
-              code: cookieId,
-            });
-          } else {
-            // Invalid project ID in cookie
-            if (projects.length > 0) {
-              console.warn(
-                `Project ID '${cookieId}' from cookie not found. Using first project instead.`
-              );
-              const firstProject = projects[0];
-              // Set first project as selected and save to cookie
-              this.selectedProject.set({
-                name: firstProject.name,
-                code: firstProject.id!,
-              });
-              this.cookieService.set('projectId', firstProject.id!);
-            } else {
-              // No projects available, and cookie ID is invalid
-              this.selectedProject.set(undefined);
-              this.cookieService.remove('projectId');
-            }
-          }
-        } else {
-          // No project ID in cookie
-          if (projects.length > 0) {
-            // Select the first project by default if no specific project in cookie
-            const firstProject = projects[0];
-            this.selectedProject.set({
-              name: firstProject.name,
-              code: firstProject.id!,
-            });
-            this.cookieService.set('projectId', firstProject.id!);
-          } else {
-            // No projects and no cookie ID
-            this.selectedProject.set(undefined);
-          }
-        }
-      },
-      { allowSignalWrites: true }
-    );
+    // Effect to update sidebar menu when selectedProject changes - REMOVED to prevent loops
+    // The updateSidebarRoutes is now only called from router events
+
+    // Initialize project selection after projects load - moved to loadProjects method
+    // This prevents the effect from running multiple times and causing loops
   }
 
   ngOnInit() {
     this.initializeMenu();
     this.loadProjects();
+  }
+
+  /**
+   * Initializes project selection after projects are loaded
+   */
+  private initializeProjectSelection(projects: ProjectModel[]): void {
+    if (projects.length === 0) {
+      this.selectedProject.set(undefined);
+      return;
+    }
+
+    const cookieId = this.cookieService.get('projectId');
+    
+    if (cookieId) {
+      const projectFromCookie = projects.find((p) => p.id === cookieId);
+      if (projectFromCookie) {
+        // Valid project from cookie
+        this.selectedProject.set({
+          name: projectFromCookie.name,
+          code: cookieId,
+        });
+        return;
+      } else {
+        console.warn(`Project ID '${cookieId}' from cookie not found. Using first project instead.`);
+      }
+    }
+    
+    // Fallback to first project
+    const firstProject = projects[0];
+    this.selectedProject.set({
+      name: firstProject.name,
+      code: firstProject.id!,
+    });
+    this.cookieService.set('projectId', firstProject.id!);
   }
 
   /**
@@ -300,7 +277,12 @@ export class SidebarDashboard implements OnInit {
           this.processQuotaDisplayData(info);
           this.isQuotaLoading.set(false);
         },
-        error: () => {
+        error: (error) => {
+          console.warn('Failed to load quota info:', error);
+          // Set default values instead of failing
+          this.quotaInfo.set(null);
+          this.isBeta.set(false);
+          this.quotaDisplay.set(null);
           this.isQuotaLoading.set(false);
         },
       });
@@ -375,11 +357,15 @@ export class SidebarDashboard implements OnInit {
       .subscribe({
         next: (projects) => {
           this._userProjects.set(projects);
-          const initialCookieId = this.cookieService.get('projectId'); // Get ID from cookie
           this.loadQuotaInfo();
+          
           if (projects.length > 0) {
+            // Initialize project selection immediately
+            this.initializeProjectSelection(projects);
+            
+            const initialCookieId = this.cookieService.get('projectId');
             if (!initialCookieId) {
-              this.router.navigate([`console/projects`], {
+              this.router.navigate([`/console/projects`], {
                 replaceUrl: true,
               });
             } else {
@@ -387,21 +373,17 @@ export class SidebarDashboard implements OnInit {
                 (p) => p.id === initialCookieId
               );
               if (!projectExists) {
-                // Initial project ID from URL is invalid (not in user's list)
                 console.warn(
-                  `Initial project ID '${initialCookieId}' not found. Navigating to first project.`
+                  `Initial project ID '${initialCookieId}' not found. Navigating to dashboard.`
                 );
-                const firstProject = projects[0];
-                this.cookieService.set('projectId', firstProject.id!);
                 this.router.navigate(
-                  [`console/dashboard/${firstProject.id!}`],
+                  [`/console/dashboard`],
                   { replaceUrl: true }
                 );
               }
-              // If initialCookieId is valid, the effect will handle setting selectedProject.
             }
           } else {
-            this.router.navigate([`project/create`], {
+            this.router.navigate([`/project/create`], {
               replaceUrl: true,
             });
           }
@@ -411,6 +393,8 @@ export class SidebarDashboard implements OnInit {
           console.error('Error fetching projects in ngOnInit:', err);
           this._userProjects.set([]);
           this.isLoading.set(false);
+          // Navigate to create project page on error
+          this.router.navigate(['/project/create'], { replaceUrl: true });
         },
       });
   }

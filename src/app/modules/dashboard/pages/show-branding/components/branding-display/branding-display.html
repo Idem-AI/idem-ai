@@ -1,73 +1,77 @@
-<div class="p-3 min-h-[85vh] sm:p-6 bg-gray-50 rounded-2xl text-gray-900">
-  <div class="w-full flex flex-col sm:flex-row justify-end gap-2 mb-4">
-    <button
-      class="inner-button w-full sm:w-auto"
-      (click)="regeneratePdf()"
-      [disabled]="isDownloadingPdf()"
-    >
-      <i class="pi pi-refresh" [class.pi-spin]="isDownloadingPdf()"></i>
-      <span class="hidden sm:inline">Regenerate PDF</span>
-      <span class="sm:hidden">Regenerate</span>
-    </button>
-    <button
-      class="inner-button w-full sm:w-auto"
-      (click)="downloadPdf()"
-      [disabled]="!pdfSrc() || isDownloadingPdf()"
-    >
-      <i class="pi pi-download"></i>
-      <span class="hidden sm:inline">Download PDF</span>
-      <span class="sm:hidden">Download</span>
-    </button>
-  </div>
-
-  @if (isDownloadingPdf()) {
-  <div class="w-full h-64 sm:h-96 flex flex-col items-center justify-center">
-    <div
-      class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"
-    ></div>
-    <p class="text-gray-600">Loading PDF from server...</p>
-    <p class="text-sm text-gray-500 mt-2">This may take a few moments</p>
-  </div>
-  } @else if (pdfError()) {
-  <div class="w-full h-64 sm:h-96 flex flex-col items-center justify-center">
-    <div class="text-red-500 mb-4">
-      <i class="pi pi-exclamation-triangle text-4xl"></i>
+<div class="flex items-center justify-center w-full">
+  <div
+    class="md:p-3 min-h-[95vh] md:min-h-[85vh] md:max-w-[1000px] w-full mx-auto sm:p-6 sm:glass rounded-2xl text-gray-900"
+  >
+    <div class="w-full flex flex-col sm:flex-row justify-end gap-2 mb-4">
+      <button
+        class="inner-button w-full sm:w-auto"
+        (click)="regeneratePdf()"
+        [disabled]="isDownloadingPdf()"
+      >
+        <i class="pi pi-refresh" [class.pi-spin]="isDownloadingPdf()"></i>
+        <span class="hidden sm:inline">Regenerate PDF</span>
+        <span class="sm:hidden">Regenerate</span>
+      </button>
+      <button
+        class="inner-button w-full sm:w-auto"
+        (click)="downloadPdf()"
+        [disabled]="!pdfSrc() || isDownloadingPdf()"
+      >
+        <i class="pi pi-download"></i>
+        <span class="hidden sm:inline">Download PDF</span>
+        <span class="sm:hidden">Download</span>
+      </button>
     </div>
-    <p class="text-red-600 mb-4 text-center px-4">{{ pdfError() }}</p>
-    <button class="inner-button w-full sm:w-auto" (click)="regeneratePdf()">
-      <i class="pi pi-refresh"></i>
-      Try Again
-    </button>
+
+    @if (isDownloadingPdf()) {
+    <div class="w-full h-64 sm:h-96 flex flex-col items-center justify-center">
+      <div
+        class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"
+      ></div>
+      <p class="text-gray-600">Loading PDF from server...</p>
+      <p class="text-sm text-gray-500 mt-2">This may take a few moments</p>
+    </div>
+    } @else if (pdfError()) {
+    <div class="w-full h-64 sm:h-96 flex flex-col items-center justify-center">
+      <div class="text-red-500 mb-4">
+        <i class="pi pi-exclamation-triangle text-4xl"></i>
+      </div>
+      <p class="text-red-600 mb-4 text-center px-4">{{ pdfError() }}</p>
+      <button class="inner-button w-full sm:w-auto" (click)="regeneratePdf()">
+        <i class="pi pi-refresh"></i>
+        Try Again
+      </button>
+    </div>
+    } @else if (pdfSrc()) {
+    <div class="w-full bg-white rounded-lg shadow-lg overflow-hidden">
+      <pdf-viewer
+        [src]="pdfSrc()!"
+        [rotation]="0"
+        [original-size]="false"
+        [show-all]="true"
+        [fit-to-page]="false"
+        [zoom]="1"
+        [stick-to-page]="false"
+        [render-text]="true"
+        [external-link-target]="'blank'"
+        [autoresize]="true"
+        [show-borders]="false"
+        class="w-full h-[80vh] md:h-[60vh] sm:h-[70vh] lg:h-[80vh]"
+      ></pdf-viewer>
+    </div>
+    } @else if (branding() && branding()!.sections.length > 0) {
+    <div class="w-full h-64 sm:h-96 flex flex-col items-center justify-center">
+      <div
+        class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"
+      ></div>
+      <p class="text-gray-600">Preparing branding content...</p>
+    </div>
+    } @else {
+    <div class="w-full h-64 sm:h-96 flex flex-col items-center justify-center">
+      <p class="text-gray-600 mb-4 text-center px-4">
+        No branding content available.
+      </p>
+    </div>
+    }
   </div>
-  } @else if (pdfSrc()) {
-  <div class="w-full bg-white rounded-lg shadow-lg overflow-hidden">
-    <pdf-viewer
-      [src]="pdfSrc()!"
-      [rotation]="0"
-      [original-size]="false"
-      [show-all]="true"
-      [fit-to-page]="false"
-      [zoom]="1"
-      [stick-to-page]="false"
-      [render-text]="true"
-      [external-link-target]="'blank'"
-      [autoresize]="true"
-      [show-borders]="false"
-      class="w-full h-[60vh] sm:h-[70vh] lg:h-[80vh]"
-    ></pdf-viewer>
-  </div>
-  } @else if (branding() && branding()!.sections.length > 0) {
-  <div class="w-full h-64 sm:h-96 flex flex-col items-center justify-center">
-    <div
-      class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"
-    ></div>
-    <p class="text-gray-600">Preparing branding content...</p>
-  </div>
-  } @else {
-  <div class="w-full h-64 sm:h-96 flex flex-col items-center justify-center">
-    <p class="text-gray-600 mb-4 text-center px-4">
-      No branding content available.
-    </p>
-  </div>
-  }
 </div>
