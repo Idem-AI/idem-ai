@@ -1,26 +1,33 @@
 <section
-  class="flex flex-col items-start justify-start w-full max-w-4xl mx-auto px-8 py-12"
+  class="flex flex-col items-start justify-start w-full max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-12"
 >
   <!-- Gradient Title -->
-  <h1 class="text-5xl font-bold bg-white bg-clip-text text-transparent mb-4">
+  <h1
+    class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-white bg-clip-text text-transparent mb-3 sm:mb-4 leading-tight"
+  >
     Hello,
-    <span class="bg-primary text-white p-2 text-center">{{ userName() }}</span>
+    <span
+      class="bg-primary text-white px-2 py-1 sm:px-3 sm:py-2 text-center inline-block mt-1 sm:mt-0"
+      >{{ userName() }}</span
+    >
   </h1>
 
   <!-- Subtitle -->
-  <h2 class="text-xl text-gray-400 mb-8">What do you want to build?</h2>
+  <h2 class="text-lg sm:text-xl text-gray-400 mb-6 sm:mb-8">
+    What do you want to build ?
+  </h2>
 
   <!-- Prototype Label -->
-  <p class="text-gray-400 text-sm mb-4">Prototype an app with AI</p>
+  <p class="text-gray-400 text-sm mb-3 sm:mb-4">Tell us more about your project idea</p>
 
   <!-- Input Field -->
-  <div class="w-full mb-6">
+  <div class="w-full mb-4 sm:mb-6">
     <div class="relative">
       <textarea
         id="projectDescription"
         [(ngModel)]="project()!.description"
         rows="3"
-        class="w-full glass p-4 text-[var(--color-light-text)] placeholder-gray-400 text-base resize-none outline-none transition-all duration-200 focus:border-primary border-2"
+        class="w-full glass p-3 sm:p-4 text-[var(--color-light-text)] placeholder-gray-400 text-sm sm:text-base resize-none outline-none transition-all duration-200 focus:border-primary border-2 min-h-[120px] sm:min-h-[140px]"
         [class.rounded-lg]="!hasContent()"
         [class.rounded-2xl]="hasContent()"
         [class.border]="!hasContent()"
@@ -34,7 +41,7 @@
 
       <!-- TAB indicator - only show when no content -->
       @if (!hasContent()) {
-      <div class="absolute top-4 right-4">
+      <div class="absolute top-3 sm:top-4 right-3 sm:right-4">
         <span class="text-xs text-gray-400 glass-dark px-2 py-1 rounded">
           TAB
         </span>
@@ -44,20 +51,20 @@
       <!-- Typing state buttons -->
       @if (hasContent()) {
       <div
-        class="absolute bottom-4 left-4 right-4 flex items-center justify-between"
+        class="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 right-3 sm:right-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 sm:gap-0"
       >
         <button
-          class="flex items-center gap-2 text-[var(--color-accent)] hover:text-[var(--color-accent)]/80 transition-colors"
+          class="flex items-center justify-center sm:justify-start gap-2 text-[var(--color-accent)] hover:text-[var(--color-accent)]/80 transition-colors py-2 sm:py-0"
         >
           <i class="pi pi-sparkles text-sm"></i>
           <span class="text-sm">Improve prompt</span>
         </button>
 
         <button
-          class="inner-button flex items-center gap-2"
+          class="inner-button flex items-center justify-center gap-2 py-2 px-4 sm:py-2 sm:px-4"
           (click)="goToNextStep()"
         >
-          <span>Continue</span>
+          <span class="text-sm sm:text-base">Continue</span>
           <i class="pi pi-arrow-right text-sm"></i>
         </button>
       </div>
@@ -65,53 +72,64 @@
     </div>
   </div>
 
-  <div class="flex flex-wrap gap-3 items-center">
-    <button
-      class="flex items-center gap-2 px-4 py-2 glass hover:glass-dark rounded-full text-sm text-[var(--color-light-text)] transition-all duration-200"
-      (click)="selectExample('A tipping calculator app with split bill functionality')"
+  <!-- Ideas Section -->
+  <div class="w-full mt-6 sm:mt-8">
+    <!-- Section Title -->
+    <h3 class="text-base sm:text-lg font-medium text-gray-300 mb-4 sm:mb-6 text-center sm:text-left">
+      Not Inspiration ?
+    </h3>
+    
+    <!-- Suggestion Pills - Mobile-Optimized Grid -->
+    <div
+      class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 w-full"
     >
-      <i class="pi pi-calculator text-xs"></i>
-      <span>Tipping Calculator</span>
-    </button>
+      <button
+        class="flex items-center justify-center sm:justify-start gap-1 sm:gap-2 px-2 sm:px-4 py-2.5 sm:py-2 glass hover:glass-dark rounded-lg sm:rounded-full text-xs sm:text-sm text-[var(--color-light-text)] transition-all duration-200 min-h-[44px] sm:min-h-auto"
+        (click)="selectExample('A tipping calculator app with split bill functionality')"
+      >
+        <i class="pi pi-calculator text-xs flex-shrink-0"></i>
+        <span class="truncate text-center sm:text-left">Tipping Calculator</span>
+      </button>
 
-    <button
-      class="flex items-center gap-2 px-4 py-2 glass hover:glass-dark rounded-full text-sm text-[var(--color-light-text)] transition-all duration-200"
-      (click)="selectExample('A recipe generator app with ingredient suggestions')"
-    >
-      <i class="pi pi-book text-xs"></i>
-      <span>Recipe Generator</span>
-    </button>
+      <button
+        class="flex items-center justify-center sm:justify-start gap-1 sm:gap-2 px-2 sm:px-4 py-2.5 sm:py-2 glass hover:glass-dark rounded-lg sm:rounded-full text-xs sm:text-sm text-[var(--color-light-text)] transition-all duration-200 min-h-[44px] sm:min-h-auto"
+        (click)="selectExample('A recipe generator app with ingredient suggestions')"
+      >
+        <i class="pi pi-book text-xs flex-shrink-0"></i>
+        <span class="truncate text-center sm:text-left">Recipe Generator</span>
+      </button>
 
-    <button
-      class="flex items-center gap-2 px-4 py-2 glass hover:glass-dark rounded-full text-sm text-[var(--color-light-text)] transition-all duration-200"
-      (click)="selectExample('An ERP dashboard for business management')"
-    >
-      <i class="pi pi-chart-bar text-xs"></i>
-      <span>ERP Dashboard</span>
-    </button>
+      <button
+        class="flex items-center justify-center sm:justify-start gap-1 sm:gap-2 px-2 sm:px-4 py-2.5 sm:py-2 glass hover:glass-dark rounded-lg sm:rounded-full text-xs sm:text-sm text-[var(--color-light-text)] transition-all duration-200 min-h-[44px] sm:min-h-auto"
+        (click)="selectExample('An ERP dashboard for business management')"
+      >
+        <i class="pi pi-chart-bar text-xs flex-shrink-0"></i>
+        <span class="truncate text-center sm:text-left">ERP Dashboard</span>
+      </button>
 
-    <button
-      class="flex items-center gap-2 px-4 py-2 glass hover:glass-dark rounded-full text-sm text-[var(--color-light-text)] transition-all duration-200"
-      (click)="selectExample('An expense tracker app with budget management')"
-    >
-      <i class="pi pi-wallet text-xs"></i>
-      <span>Expense Tracker</span>
-    </button>
+      <button
+        class="flex items-center justify-center sm:justify-start gap-1 sm:gap-2 px-2 sm:px-4 py-2.5 sm:py-2 glass hover:glass-dark rounded-lg sm:rounded-full text-xs sm:text-sm text-[var(--color-light-text)] transition-all duration-200 min-h-[44px] sm:min-h-auto"
+        (click)="selectExample('An expense tracker app with budget management')"
+      >
+        <i class="pi pi-wallet text-xs flex-shrink-0"></i>
+        <span class="truncate text-center sm:text-left">Expense Tracker</span>
+      </button>
 
-    <button
-      class="flex items-center gap-2 px-4 py-2 glass hover:glass-dark rounded-full text-sm text-[var(--color-light-text)] transition-all duration-200"
-      (click)="selectExample('A landing page builder with drag and drop functionality')"
-    >
-      <i class="pi pi-desktop text-xs"></i>
-      <span>Landing Page</span>
-    </button>
+      <button
+        class="flex items-center justify-center sm:justify-start gap-1 sm:gap-2 px-2 sm:px-4 py-2.5 sm:py-2 glass hover:glass-dark rounded-lg sm:rounded-full text-xs sm:text-sm text-[var(--color-light-text)] transition-all duration-200 min-h-[44px] sm:min-h-auto"
+        (click)="selectExample('A landing page builder with drag and drop functionality')"
+      >
+        <i class="pi pi-desktop text-xs flex-shrink-0"></i>
+        <span class="truncate text-center sm:text-left">Landing Page</span>
+      </button>
 
-    <button
-      class="flex items-center gap-2 px-4 py-2 glass hover:glass-dark rounded-full text-sm text-[var(--color-light-text)] transition-all duration-200"
-      (click)="selectExample('I am feeling lucky - surprise me with a random project idea')"
-    >
-      <i class="pi pi-sparkles text-xs"></i>
-      <span>I'm Feeling Lucky</span>
-    </button>
+      <button
+        class="flex items-center justify-center sm:justify-start gap-1 sm:gap-2 px-2 sm:px-4 py-2.5 sm:py-2 glass hover:glass-dark rounded-lg sm:rounded-full text-xs sm:text-sm text-[var(--color-light-text)] transition-all duration-200 min-h-[44px] sm:min-h-auto"
+        (click)="selectExample('I am feeling lucky - surprise me with a random project idea')"
+      >
+        <i class="pi pi-sparkles text-xs flex-shrink-0"></i>
+        <span class="truncate text-center sm:text-left">I'm Feeling Lucky</span>
+      </button>
+    </div>
   </div>
 </section>

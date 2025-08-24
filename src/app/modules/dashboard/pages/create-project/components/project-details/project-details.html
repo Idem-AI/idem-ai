@@ -1,78 +1,114 @@
 <section
-  class="flex flex-col items-center justify-center text-gray-100 w-full"
+  class="flex flex-col items-center justify-center text-gray-100 w-full  px-4 sm:px-6 lg:px-8"
 >
-  <h1
-    class="text-2xl md:text-5xl text-center font-bold text-gray-100 mb-4 pb-2 w-[60%]"
+  <!-- Main Title - Responsive Typography and Width -->
+  <div class="text-center mb-8 sm:mb-12 max-w-4xl">
+    <h1
+      class="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-100 leading-tight px-4"
+    >
+      Before continuing, we need more information about your project
+    </h1>
+  </div>
+
+  <!-- Form Container - Responsive Width and Padding -->
+  <div
+    class="w-full max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-5xl mx-auto"
   >
-    Before continuing, we need more information about your project
-  </h1>
-  <div class="max-w-3xl mx-auto p-6 w-full">
-    <h2 class="text-xl font-semibold text-gray-100 mb-4">Project Details</h2>
+    <div
+      class="bg-white/5 backdrop-blur-sm rounded-xl p-4 sm:p-6 lg:p-8 border border-white/10"
+    >
+      <!-- Project Details Section -->
+      <div class="mb-6 sm:mb-8">
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-100 mb-4 sm:mb-6">
+          Project Details
+        </h2>
 
-    <div class="mb-4 w-full">
-      <p-floatlabel variant="in">
-        <input
-          pInputText
-          id="in_label"
-          [(ngModel)]="project()!.name"
-          autocomplete="off"
-          class="w-full"
-        />
-        <label for="in_label">Project Name</label>
-      </p-floatlabel>
-    </div>
-
-    <div class="mb-4">
-      <label for="projectType" class="block text-sm font-medium">
-        Project Type
-      </label>
-      <div class="card flex justify-start w-full">
-        <p-select
-          [options]="groupedProjectTypes()"
-          [(ngModel)]="project()!.type"
-          placeholder="Select a type"
-          [editable]="false"
-          optionLabel="name"l
-          styleClass="w-full "
-        />
-      </div>
-    </div>
-
-    <h2 class="text-xl font-semibold text-gray-100 mb-4">Business Options</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="mb-4">
-        <label for="projectScope" class="block text-sm font-medium mb-1">
-          Project Scope
-        </label>
-        <div class="card flex justify-start w-full">
-          <p-select
-            [options]="groupedScopes()"
-            [(ngModel)]="project()!.scope"
-            placeholder="Select a scope"
-            [editable]="true"
-            optionLabel="name"
-            styleClass="w-full "
-          />
+        <!-- Project Name Input -->
+        <div class="mb-4 sm:mb-6 w-full">
+          <p-floatlabel variant="in">
+            <input
+              pInputText
+              id="in_label"
+              [(ngModel)]="project()!.name"
+              autocomplete="off"
+              class="w-full text-sm sm:text-base"
+            />
+            <label for="in_label" class="text-sm sm:text-base"
+              >Project Name</label
+            >
+          </p-floatlabel>
         </div>
-      </div>
-      <div class="mb-4">
-        <label for="projectTargets" class="block text-sm font-medium">
-          Main Project Target
-        </label>
-        <div class="relative mt-1 rounded-md shadow-sm">
+
+        <!-- Project Type Select -->
+        <div class="mb-6 sm:mb-8">
+          <label
+            for="projectType"
+            class="block text-sm sm:text-base font-medium mb-2"
+          >
+            Project Type
+          </label>
           <div class="card flex justify-start w-full">
             <p-select
-              [options]="groupedTargets()"
-              [(ngModel)]="project()!.targets"
-              placeholder="Select a target"
-              [editable]="true"
+              [options]="groupedProjectTypes()"
+              [(ngModel)]="project()!.type"
+              placeholder="Select a type"
+              [editable]="false"
               optionLabel="name"
-              styleClass="w-full "
+              styleClass="w-full text-sm sm:text-base"
             />
           </div>
         </div>
       </div>
-    </div>
 
+      <!-- Business Options Section -->
+      <div>
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-100 mb-4 sm:mb-6">
+          Business Options
+        </h2>
+
+        <!-- Responsive Grid Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
+          <!-- Project Scope -->
+          <div class="space-y-2">
+            <label
+              for="projectScope"
+              class="block text-sm sm:text-base font-medium"
+            >
+              Project Scope
+            </label>
+            <div class="card flex justify-start w-full">
+              <p-select
+                [options]="groupedScopes()"
+                [(ngModel)]="project()!.scope"
+                placeholder="Select a scope"
+                [editable]="true"
+                optionLabel="name"
+                styleClass="w-full text-sm sm:text-base"
+              />
+            </div>
+          </div>
+
+          <!-- Main Project Target -->
+          <div class="space-y-2">
+            <label
+              for="projectTargets"
+              class="block text-sm sm:text-base font-medium"
+            >
+              Main Project Target
+            </label>
+            <div class="card flex justify-start w-full">
+              <p-select
+                [options]="groupedTargets()"
+                [(ngModel)]="project()!.targets"
+                placeholder="Select a target"
+                [editable]="true"
+                optionLabel="name"
+                styleClass="w-full text-sm sm:text-base"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>

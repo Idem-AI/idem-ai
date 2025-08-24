@@ -1,7 +1,7 @@
-<div class="w-full relative mt-[170px]">
+<div class="w-full relative pt-[140px]">
   <!-- Centralized Loading State -->
   @if (isLoaded()) {
-  <div class="h-[80vh] w-full flex items-center justify-center ">
+  <div class="h-[80vh] w-full flex items-center justify-center">
     <div class="max-w-4xl mx-auto p-8">
       <!-- Header Section -->
       <div class="text-center mb-12">
@@ -100,7 +100,7 @@
     </div>
 
     <!-- Next Button -->
-    @if (currentStepIndex() < steps.length - 1) {
+    @if ((currentStepIndex() < steps.length - 1 ) && currentStepIndex() > 0) {
     <button
       (click)="goToNextStep()"
       class="group flex items-center inner-button"

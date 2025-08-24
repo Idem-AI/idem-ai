@@ -97,8 +97,18 @@ export class ProjectDescriptionComponent implements OnInit {
       }
     }
 
+    // Auto-resize with mobile-optimized height limits
     textarea.style.height = 'auto';
-    const newHeight = Math.min(textarea.scrollHeight, 400);
+
+    // Different max heights for mobile vs desktop
+    const isMobile = window.innerWidth < 640; // sm breakpoint
+    const maxHeight = isMobile ? 200 : 400; // Smaller max height on mobile
+    const minHeight = isMobile ? 120 : 140; // Match CSS min-height
+
+    const newHeight = Math.max(
+      Math.min(textarea.scrollHeight, maxHeight),
+      minHeight
+    );
     textarea.style.height = newHeight + 'px';
   }
 
@@ -131,8 +141,7 @@ export class ProjectDescriptionComponent implements OnInit {
       if (displayName) {
         const nameWords = displayName.trim().split(' ');
         const firstName = nameWords[0] || '';
-        const secondName = nameWords[1] || '';
-        const shortName = secondName ? `${firstName} ${secondName}` : firstName;
+        const shortName = firstName.split(' ')[0];
         this.userName.set(shortName);
       } else if (email) {
         const emailName = email.split('@')[0];
