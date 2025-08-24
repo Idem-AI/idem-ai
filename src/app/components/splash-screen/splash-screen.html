@@ -2,11 +2,11 @@
   class="splash-container"
   [class.fade-out]="animationComplete()"
   *ngIf="loading()"
-  style="background-color: var(--color-bg-dark); color: var(--color-light-text);"
+  style="background-color: var(--color-bg-dark); color: var(--color-light-text)"
 >
-  <div class="splash-content">
+  <div class="splash-content flex flex-col items-center gap-2">
     <!-- Simple Logo -->
-    <div class="logo-simple">
+    <div class="logo-simple flex flex-col items-center">
       <div class="logo-text">
         <span class="logo-letter i">I</span>
         <span class="logo-letter d">D</span>
@@ -17,8 +17,8 @@
     </div>
 
     <!-- Simple Progress -->
-    <div class="progress-simple">
-      <div class="progress-dots">
+    <div class="progress-simple flex flex-col items-center gap-2">
+      <div class="progress-dots flex gap-2">
         <div class="dot" [class.active]="progress() > 0"></div>
         <div class="dot" [class.active]="progress() > 25"></div>
         <div class="dot" [class.active]="progress() > 50"></div>
