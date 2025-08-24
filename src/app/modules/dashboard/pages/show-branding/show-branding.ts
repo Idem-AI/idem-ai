@@ -45,26 +45,45 @@ export class ShowBrandingComponent implements OnInit {
   }
 
   /**
-   * Load existing branding for the project
+   * Load existing branding PDF for the project
+   * If PDF exists, show display component, otherwise show generation component
    */
   private loadExistingBranding(projectId: string): void {
-    this.brandingService.getBrandIdentityModelById(projectId).subscribe({
-      next: (branding: BrandIdentityModel) => {
-        if (branding && branding.sections && branding.sections.length > 0) {
-          // Existing branding found - show it
-          this.existingBranding.set(branding);
+    this.brandingService.downloadBrandingPdf(projectId).subscribe({
+      next: (pdfBlob: Blob) => {
+        if (pdfBlob && pdfBlob.size > 0) {
+          // PDF exists - create a mock BrandIdentityModel to pass to display component
+          const brandingWithPdf: BrandIdentityModel = {
+            id: `branding-${projectId}`,
+            logo: { id: '', name: '', svg: '', concept: '', colors: [], fonts: [] },
+            generatedLogos: [],
+            colors: { id: '', name: '', url: '', colors: { primary: '', secondary: '', accent: '', background: '', text: '' } },
+            generatedColors: [],
+            typography: { id: '', name: '', url: '', primaryFont: '', secondaryFont: '' },
+            generatedTypography: [],
+            sections: [{ 
+              name: 'Branding Guide', 
+              type: 'pdf',
+              data: 'PDF Available',
+              summary: 'Branding guide PDF document'
+            }],
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            pdfBlob: pdfBlob // Add the PDF blob to the model
+          };
+          this.existingBranding.set(brandingWithPdf);
+          console.log('Branding PDF found, showing display component');
         } else {
-          // No existing branding - show generate button (no redirect)
-          console.log('No existing branding found, showing generate button');
+          // Empty PDF - show generate button
+          console.log('Empty PDF found, showing generate button');
           this.existingBranding.set(null);
         }
-
         this.isLoading.set(false);
       },
       error: (err: any) => {
-        console.error('Error loading branding:', err);
-        // Error loading - show generate button (no redirect)
-        console.log('Error loading branding, showing generate button');
+        console.error('Error loading branding PDF:', err);
+        // No PDF found or error - show generate button
+        console.log('No branding PDF found, showing generate button');
         this.existingBranding.set(null);
         this.isLoading.set(false);
       },

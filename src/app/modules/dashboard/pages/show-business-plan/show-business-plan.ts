@@ -47,32 +47,40 @@ export class ShowBusinessPlan implements OnInit {
   }
 
   /**
-   * Load existing business plan for the project
+   * Load existing business plan PDF for the project
+   * If PDF exists, show display component, otherwise show generation component
    */
   private loadExistingBusinessPlan(projectId: string): void {
-    this.businessPlanService.getBusinessplanItems(projectId).subscribe({
-      next: (businessPlan: BusinessPlanModel) => {
-        if (
-          businessPlan &&
-          businessPlan.sections &&
-          businessPlan.sections.length > 0
-        ) {
-          // Existing business plan found - show it
-          this.existingBusinessPlan.set(businessPlan);
+    this.businessPlanService.downloadBusinessPlanPdf(projectId).subscribe({
+      next: (pdfBlob: Blob) => {
+        if (pdfBlob && pdfBlob.size > 0) {
+          // PDF exists - create a mock BusinessPlanModel to pass to display component
+          const businessPlanWithPdf: BusinessPlanModel = {
+            id: `business-plan-${projectId}`,
+            projectId: projectId,
+            sections: [{ 
+              name: 'Business Plan', 
+              type: 'pdf',
+              data: 'PDF Available',
+              summary: 'Business plan PDF document'
+            }],
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            pdfBlob: pdfBlob // Add the PDF blob to the model
+          };
+          this.existingBusinessPlan.set(businessPlanWithPdf);
+          console.log('Business plan PDF found, showing display component');
         } else {
-          // No existing business plan - show generate button (no redirect)
-          console.log(
-            'No existing business plan found, showing generate button'
-          );
+          // Empty PDF - show generate button
+          console.log('Empty PDF found, showing generate button');
           this.existingBusinessPlan.set(null);
         }
-
         this.isLoading.set(false);
       },
       error: (err: any) => {
-        console.error('Error loading business plan:', err);
-        // Error loading - show generate button (no redirect)
-        console.log('Error loading business plan, showing generate button');
+        console.error('Error loading business plan PDF:', err);
+        // No PDF found or error - show generate button
+        console.log('No business plan PDF found, showing generate button');
         this.existingBusinessPlan.set(null);
         this.isLoading.set(false);
       },

@@ -30,13 +30,37 @@ export class BrandingDisplayComponent implements OnInit {
   protected readonly pdfError = signal<string | null>(null);
 
   async ngOnInit(): Promise<void> {
-    if (this.branding()?.sections) {
+    if (this.branding()?.pdfBlob) {
+      // Use the PDF blob that was already loaded in the parent component
+      this.loadPdfFromBlob(this.branding()!.pdfBlob!);
+    } else if (this.branding()?.sections) {
+      // Fallback: load PDF from backend if no blob provided
       await this.loadPdfFromBackend();
     }
   }
 
   /**
-   * Load PDF from backend endpoint
+   * Load PDF from provided blob (optimized path)
+   */
+  private loadPdfFromBlob(pdfBlob: Blob): void {
+    try {
+      this.isDownloadingPdf.set(true);
+      this.pdfError.set(null);
+
+      // Create object URL for PDF viewer
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      this.pdfSrc.set(pdfUrl);
+      console.log('PDF loaded from provided blob (optimized)');
+    } catch (error: any) {
+      console.error('Error loading PDF from blob:', error);
+      this.pdfError.set('Failed to load PDF. Please try again.');
+    } finally {
+      this.isDownloadingPdf.set(false);
+    }
+  }
+
+  /**
+   * Load PDF from backend endpoint (fallback)
    */
   private async loadPdfFromBackend(): Promise<void> {
     try {
@@ -57,6 +81,7 @@ export class BrandingDisplayComponent implements OnInit {
         // Create object URL for PDF viewer
         const pdfUrl = URL.createObjectURL(pdfBlob);
         this.pdfSrc.set(pdfUrl);
+        console.log('PDF loaded from backend (fallback)');
       }
     } catch (error: any) {
       console.error('Error loading PDF from backend:', error);

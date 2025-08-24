@@ -12,6 +12,7 @@ export interface BrandIdentityModel {
   typography: TypographyModel;
   generatedTypography: TypographyModel[];
   sections: SectionModel[];
+  pdfBlob?: Blob; // Optional PDF blob for optimized loading
 }
 
 export interface TypographyModel {
