@@ -6,7 +6,6 @@ import { SeoService } from '../../../../shared/services/seo.service';
 
 // Import components
 import { Hero } from '../../components/hero/hero';
-import { Features } from '../../components/features/features';
 import { WebsiteShowcase } from '../../components/website-showcase/website-showcase';
 import { VideoTrailer } from '../../components/video-trailer/video-trailer';
 import { LogosShowcase } from '../../components/logos-showcase/logos-showcase';
@@ -24,7 +23,6 @@ import { Pricing } from '../../components/pricing/pricing';
   imports: [
     CommonModule,
     Hero,
-    Features,
     WebsiteShowcase,
     VideoTrailer,
     LogosShowcase,

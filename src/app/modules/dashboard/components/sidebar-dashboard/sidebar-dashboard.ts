@@ -102,38 +102,38 @@ export class SidebarDashboard implements OnInit {
       label: 'Dashboard',
       icon: 'pi pi-home',
       route: 'console/dashboard',
-      isActive: false
+      isActive: false,
     },
     {
       label: 'Branding',
       icon: 'pi pi-palette',
       route: 'console/branding',
-      isActive: false
+      isActive: false,
     },
     {
       label: 'Business Plan',
       icon: 'pi pi-calendar',
       route: 'console/business-plan',
-      isActive: false
+      isActive: false,
     },
     {
       label: 'Diagrams',
       icon: 'pi pi-chart-line',
       route: 'console/diagrams',
-      isActive: false
+      isActive: false,
     },
     {
       label: 'Development',
       icon: 'pi pi-code',
       route: 'console/development',
-      isActive: false
+      isActive: false,
     },
     {
       label: 'Deployment',
       icon: 'pi pi-globe',
       route: 'console/deployments',
-      isActive: false
-    }
+      isActive: false,
+    },
   ]);
 
   // Signals for UI State
@@ -379,13 +379,7 @@ export class SidebarDashboard implements OnInit {
           this.loadQuotaInfo();
           if (projects.length > 0) {
             if (!initialCookieId) {
-              // No project ID in cookie on initial load, save to cookie and navigate to the first project
-              console.log(
-                'No initial project ID in cookie, navigating to first project.'
-              );
-              const firstProject = projects[0];
-              this.cookieService.set('projectId', firstProject.id!);
-              this.router.navigate([`console/dashboard/${firstProject.id!}`], {
+              this.router.navigate([`console/projects`], {
                 replaceUrl: true,
               });
             } else {
@@ -407,10 +401,9 @@ export class SidebarDashboard implements OnInit {
               // If initialCookieId is valid, the effect will handle setting selectedProject.
             }
           } else {
-            // No projects for the user
-            console.log('User has no projects.');
-            // If there was an initialCookieId, it's effectively invalid now.
-            // The effect will set selectedProject to undefined.
+            this.router.navigate([`project/create`], {
+              replaceUrl: true,
+            });
           }
           this.isLoading.set(false);
         },
@@ -455,12 +448,12 @@ export class SidebarDashboard implements OnInit {
   private updateActiveStates(): void {
     const currentPath = this.currentRoute();
     const items = this.navigationItems();
-    
-    const updatedItems = items.map(item => ({
+
+    const updatedItems = items.map((item) => ({
       ...item,
-      isActive: currentPath.includes(`/${item.route}`)
+      isActive: currentPath.includes(`/${item.route}`),
     }));
-    
+
     this.navigationItems.set(updatedItems);
   }
 
@@ -468,7 +461,7 @@ export class SidebarDashboard implements OnInit {
    * Toggles project selector dropdown
    */
   toggleProjectSelector(): void {
-    this.isProjectSelectorOpen.update(open => !open);
+    this.isProjectSelectorOpen.update((open) => !open);
   }
 
   toggleMenu() {
@@ -517,7 +510,7 @@ export class SidebarDashboard implements OnInit {
     if (this.isDropdownOpen() && !dropdownButton && !dropdownMenu) {
       this.isDropdownOpen.set(false);
     }
-    
+
     if (this.isProjectSelectorOpen() && !projectSelector) {
       this.isProjectSelectorOpen.set(false);
     }
