@@ -1,48 +1,117 @@
-<section class="flex flex-col items-center justify-center w-full px-4 sm:px-6 lg:px-8">
-  <h1
-    class="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-center font-bold text-gray-100 mb-6 lg:mb-8 max-w-4xl"
-  >
-    DESCRIBE YOUR PROJECT
+<section
+  class="flex flex-col items-start justify-start w-full max-w-4xl mx-auto px-8 py-12"
+>
+  <!-- Gradient Title -->
+  <h1 class="text-5xl font-bold bg-white bg-clip-text text-transparent mb-4">
+    Hello,
+    <span class="bg-primary text-white p-2 text-center">{{ userName() }}</span>
   </h1>
-  <div
-    class="bg-gray-700 rounded-2xl px-4 sm:px-6 py-3 sm:py-4 w-full max-w-2xl lg:max-w-3xl"
-  >
-    <!-- Input area -->
-    <textarea
-      id="projectDescription"
-      [(ngModel)]="project()!.description"
-      rows="4"
-      class="bg-transparent text-gray-300 w-full outline-none placeholder-gray-500 text-base sm:text-lg resize-none overflow-y-auto max-h-[300px] sm:max-h-[400px]"
-      placeholder="Message Idem"
-      (input)="autoResize($event)"
-    ></textarea>
 
-    <!-- Bottom buttons -->
-    <div class="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0 mt-3 sm:mt-2">
-      <!-- Left buttons -->
-      <div class="flex flex-wrap gap-2 justify-center sm:justify-start">
-        <button
-          class="flex items-center bg-gray-600 text-gray-300 px-3 py-1.5 sm:py-1 rounded-full hover:bg-gray-500 transition-colors text-sm sm:text-base"
-        >
-          <i class="pi pi-brain mr-1 sm:mr-2 text-sm"></i> Reformuler
-        </button>
-        <button
-          class="flex items-center bg-blue-600 text-white px-3 py-1.5 sm:py-1 rounded-full hover:bg-blue-500 transition-colors text-sm sm:text-base"
-        >
-          <i class="pi pi-globe mr-1 sm:mr-2 text-sm"></i> Corriger
-        </button>
+  <!-- Subtitle -->
+  <h2 class="text-xl text-gray-400 mb-8">What do you want to build?</h2>
+
+  <!-- Prototype Label -->
+  <p class="text-gray-400 text-sm mb-4">Prototype an app with AI</p>
+
+  <!-- Input Field -->
+  <div class="w-full mb-6">
+    <div class="relative">
+      <textarea
+        id="projectDescription"
+        [(ngModel)]="project()!.description"
+        rows="3"
+        class="w-full glass p-4 text-[var(--color-light-text)] placeholder-gray-400 text-base resize-none outline-none transition-all duration-200 focus:border-primary border-2"
+        [class.rounded-lg]="!hasContent()"
+        [class.rounded-2xl]="hasContent()"
+        [class.border]="!hasContent()"
+        [class.border-[var(--glass-border)]]="!hasContent()"
+        [class.border-primary]="hasContent()"
+        placeholder="An app that generates poems from photos"
+        (input)="autoResize($event)"
+        (focus)="onTextareaFocus()"
+        (blur)="onTextareaBlur()"
+      ></textarea>
+
+      <!-- TAB indicator - only show when no content -->
+      @if (!hasContent()) {
+      <div class="absolute top-4 right-4">
+        <span class="text-xs text-gray-400 glass-dark px-2 py-1 rounded">
+          TAB
+        </span>
       </div>
+      }
 
-      <!-- Right icons -->
-      <div class="flex items-center space-x-3">
-        <i class="pi pi-paperclip text-gray-400 text-lg sm:text-xl cursor-pointer hover:text-gray-300 transition-colors"></i>
+      <!-- Typing state buttons -->
+      @if (hasContent()) {
+      <div
+        class="absolute bottom-4 left-4 right-4 flex items-center justify-between"
+      >
         <button
-          class="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-gray-500 text-gray-300 rounded-full hover:bg-gray-400 transition-colors"
+          class="flex items-center gap-2 text-[var(--color-accent)] hover:text-[var(--color-accent)]/80 transition-colors"
+        >
+          <i class="pi pi-sparkles text-sm"></i>
+          <span class="text-sm">Improve prompt</span>
+        </button>
+
+        <button
+          class="inner-button flex items-center gap-2"
           (click)="goToNextStep()"
         >
-          <i class="pi pi-arrow-up text-sm sm:text-base"></i>
+          <span>Continue</span>
+          <i class="pi pi-arrow-right text-sm"></i>
         </button>
       </div>
+      }
     </div>
+  </div>
+
+  <div class="flex flex-wrap gap-3 items-center">
+    <button
+      class="flex items-center gap-2 px-4 py-2 glass hover:glass-dark rounded-full text-sm text-[var(--color-light-text)] transition-all duration-200"
+      (click)="selectExample('A tipping calculator app with split bill functionality')"
+    >
+      <i class="pi pi-calculator text-xs"></i>
+      <span>Tipping Calculator</span>
+    </button>
+
+    <button
+      class="flex items-center gap-2 px-4 py-2 glass hover:glass-dark rounded-full text-sm text-[var(--color-light-text)] transition-all duration-200"
+      (click)="selectExample('A recipe generator app with ingredient suggestions')"
+    >
+      <i class="pi pi-book text-xs"></i>
+      <span>Recipe Generator</span>
+    </button>
+
+    <button
+      class="flex items-center gap-2 px-4 py-2 glass hover:glass-dark rounded-full text-sm text-[var(--color-light-text)] transition-all duration-200"
+      (click)="selectExample('An ERP dashboard for business management')"
+    >
+      <i class="pi pi-chart-bar text-xs"></i>
+      <span>ERP Dashboard</span>
+    </button>
+
+    <button
+      class="flex items-center gap-2 px-4 py-2 glass hover:glass-dark rounded-full text-sm text-[var(--color-light-text)] transition-all duration-200"
+      (click)="selectExample('An expense tracker app with budget management')"
+    >
+      <i class="pi pi-wallet text-xs"></i>
+      <span>Expense Tracker</span>
+    </button>
+
+    <button
+      class="flex items-center gap-2 px-4 py-2 glass hover:glass-dark rounded-full text-sm text-[var(--color-light-text)] transition-all duration-200"
+      (click)="selectExample('A landing page builder with drag and drop functionality')"
+    >
+      <i class="pi pi-desktop text-xs"></i>
+      <span>Landing Page</span>
+    </button>
+
+    <button
+      class="flex items-center gap-2 px-4 py-2 glass hover:glass-dark rounded-full text-sm text-[var(--color-light-text)] transition-all duration-200"
+      (click)="selectExample('I am feeling lucky - surprise me with a random project idea')"
+    >
+      <i class="pi pi-sparkles text-xs"></i>
+      <span>I'm Feeling Lucky</span>
+    </button>
   </div>
 </section>
