@@ -1,6 +1,6 @@
-<section class="container p-6 mb-8">
+<section class="container sm:p-4 md:p-6 mb-6 md:mb-8">
   <h2
-    class="text-2xl font-semibold text-white mb-6 border-b border-gray-700/50 pb-3"
+    class="text-xl md:text-2xl font-semibold text-white mb-4 md:mb-6 border-b border-gray-700/50 pb-2 md:pb-3"
   >
     Database Configuration
   </h2>
@@ -8,8 +8,8 @@
   <form [formGroup]="databaseForm()!" class="space-y-8">
     <!-- Database Selection -->
     <div>
-      <h3 class="text-xl font-medium text-white mb-4">Choose Database</h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <h3 class="text-lg md:text-xl font-medium text-white mb-3 md:mb-4">Choose Database</h3>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
         @for (db of databases; track db.id) {
         <app-tech-card
           [tech]="db"
@@ -41,18 +41,18 @@
     <!-- La section ORM a été déplacée vers backend-config -->
 
     <!-- Database Features -->
-    <div formGroupName="features" class="mt-8">
-      <h3 class="text-xl font-medium text-white mb-4">Database Features</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div formGroupName="features" class="mt-6 md:mt-8">
+      <h3 class="text-lg md:text-xl font-medium text-white mb-3 md:mb-4">Database Features</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
         <!-- Migrations -->
         <div
-          class="glass p-4 rounded-lg cursor-pointer transition-all flex items-center justify-between border border-gray-800/50"
+          class="glass p-3 md:p-4 rounded-lg cursor-pointer transition-all flex items-center justify-between border border-gray-800/50"
           [class.border-primary]="databaseForm()!.get('features.migrations')?.value"
           (click)="databaseForm()!.get('features.migrations')?.setValue(!databaseForm()!.get('features.migrations')?.value)"
         >
           <div>
-            <div class="text-white text-lg">Migrations</div>
-            <p class="text-gray-400 text-sm">Schema version control</p>
+            <div class="text-white text-sm md:text-lg font-medium">Migrations</div>
+            <p class="text-gray-400 text-xs md:text-sm hidden md:block">Schema version control</p>
           </div>
           <div
             class="relative w-10 h-5 rounded-full p-1"
@@ -69,13 +69,13 @@
 
         <!-- Seeding -->
         <div
-          class="glass p-4 rounded-lg cursor-pointer transition-all flex items-center justify-between border border-gray-800/50"
+          class="glass p-3 md:p-4 rounded-lg cursor-pointer transition-all flex items-center justify-between border border-gray-800/50"
           [class.border-primary]="databaseForm()!.get('features.seeding')?.value"
           (click)="databaseForm()!.get('features.seeding')?.setValue(!databaseForm()!.get('features.seeding')?.value)"
         >
           <div>
-            <div class="text-white text-lg">Seeding</div>
-            <p class="text-gray-400 text-sm">Initial data population</p>
+            <div class="text-white text-sm md:text-lg font-medium">Seeding</div>
+            <p class="text-gray-400 text-xs md:text-sm hidden md:block">Initial data population</p>
           </div>
           <div
             class="relative w-10 h-5 rounded-full p-1"
@@ -92,13 +92,13 @@
 
         <!-- Caching -->
         <div
-          class="glass p-4 rounded-lg cursor-pointer transition-all flex items-center justify-between border border-gray-800/50"
+          class="glass p-3 md:p-4 rounded-lg cursor-pointer transition-all flex items-center justify-between border border-gray-800/50"
           [class.border-primary]="databaseForm()!.get('features.caching')?.value"
           (click)="databaseForm()!.get('features.caching')?.setValue(!databaseForm()!.get('features.caching')?.value)"
         >
           <div>
-            <div class="text-white text-lg">Caching</div>
-            <p class="text-gray-400 text-sm">Performance optimization</p>
+            <div class="text-white text-sm md:text-lg font-medium">Caching</div>
+            <p class="text-gray-400 text-xs md:text-sm hidden md:block">Performance optimization</p>
           </div>
           <div
             class="relative w-10 h-5 rounded-full p-1"
@@ -115,13 +115,13 @@
 
         <!-- Replication -->
         <div
-          class="glass p-4 rounded-lg cursor-pointer transition-all flex items-center justify-between border border-gray-800/50"
+          class="glass p-3 md:p-4 rounded-lg cursor-pointer transition-all flex items-center justify-between border border-gray-800/50"
           [class.border-primary]="databaseForm()!.get('features.replication')?.value"
           (click)="databaseForm()!.get('features.replication')?.setValue(!databaseForm()!.get('features.replication')?.value)"
         >
           <div>
-            <div class="text-white text-lg">Replication</div>
-            <p class="text-gray-400 text-sm">Data redundancy</p>
+            <div class="text-white text-sm md:text-lg font-medium">Replication</div>
+            <p class="text-gray-400 text-xs md:text-sm hidden md:block">Data redundancy</p>
           </div>
           <div
             class="relative w-10 h-5 rounded-full p-1"

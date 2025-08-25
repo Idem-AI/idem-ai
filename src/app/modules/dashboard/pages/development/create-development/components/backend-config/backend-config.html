@@ -1,10 +1,10 @@
 <section
-  class="container p-6 mb-8 backdrop-blur-sm"
+  class="container sm:p-4 md:p-6 mb-6 md:mb-8 backdrop-blur-sm"
   aria-labelledby="backend-config-title"
 >
   <h2
     id="backend-config-title"
-    class="text-2xl font-semibold text-white mb-6 border-b border-gray-700/50 pb-3"
+    class="text-xl md:text-2xl font-semibold text-white mb-4 md:mb-6 border-b border-gray-700/50 pb-2 md:pb-3"
   >
     Backend Configuration
   </h2>
@@ -12,11 +12,14 @@
   <form [formGroup]="backendForm()" class="space-y-8">
     <!-- Programming Language Selection -->
     <div aria-labelledby="language-section">
-      <h3 id="language-section" class="text-xl font-medium text-white mb-4">
+      <h3
+        id="language-section"
+        class="text-lg md:text-xl font-medium text-white mb-3 md:mb-4"
+      >
         Choose Programming Language
       </h3>
       <div
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6"
         role="group"
         aria-label="Programming language options"
       >
@@ -35,13 +38,16 @@
 
     <!-- Framework Selection -->
     @if (availableFrameworks().length > 0) {
-    <div class="mt-8" aria-labelledby="framework-section">
-      <h3 id="framework-section" class="text-xl font-medium text-white mb-4">
+    <div class="mt-6 md:mt-8" aria-labelledby="framework-section">
+      <h3
+        id="framework-section"
+        class="text-lg md:text-xl font-medium text-white mb-3 md:mb-4"
+      >
         Choose Framework
       </h3>
       @if (availableFrameworks().length > 0) {
       <div
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6"
         role="group"
         aria-label="Framework options"
       >
@@ -68,13 +74,16 @@
 
     <!-- API Type Selection -->
     @if (availableFrameworks().length > 0) {
-    <div class="mt-8" aria-labelledby="api-type-section">
-      <h3 id="api-type-section" class="text-xl font-medium text-white mb-4">
+    <div class="mt-6 md:mt-8" aria-labelledby="api-type-section">
+      <h3
+        id="api-type-section"
+        class="text-lg md:text-xl font-medium text-white mb-3 md:mb-4"
+      >
         API Type
       </h3>
       @if (availableApiTypes().length > 0) {
       <div
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6"
         role="group"
         aria-label="API type options"
       >
@@ -101,13 +110,16 @@
 
     <!-- ORM Selection -->
     @if (availableOrms().length > 0) {
-    <div class="mt-8" aria-labelledby="orm-section">
-      <h3 id="orm-section" class="text-xl font-medium text-white mb-4">
+    <div class="mt-6 md:mt-8" aria-labelledby="orm-section">
+      <h3
+        id="orm-section"
+        class="text-lg md:text-xl font-medium text-white mb-3 md:mb-4"
+      >
         ORM/ODM Selection
       </h3>
       @if (availableOrms().length > 0) {
       <div
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6"
         role="group"
         aria-label="ORM options"
       >
@@ -135,16 +147,21 @@
     <!-- Backend Features -->
     <div
       formGroupName="features"
-      class="mt-8"
+      class="mt-6 md:mt-8"
       aria-labelledby="features-section"
     >
-      <h3 id="features-section" class="text-xl font-medium text-white mb-4">
+      <h3
+        id="features-section"
+        class="text-lg md:text-xl font-medium text-white mb-3 md:mb-4"
+      >
         Backend Features
       </h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4"
+      >
         <!-- Authentication -->
         <div
-          class="template-card backdrop-blur-md bg-gray-900/40 rounded-xl border border-gray-800/50 p-4 hover:border-primary/50 hover:-translate-y-1 transition-all cursor-pointer shadow-lg flex items-center justify-between"
+          class="template-card backdrop-blur-md bg-gray-900/40 rounded-xl border border-gray-800/50 p-3 md:p-4 hover:border-primary/50 hover:-translate-y-1 transition-all cursor-pointer shadow-lg flex items-center justify-between"
           [class.border-primary]="backendForm().get('features.authentication')?.value"
           [class.shadow-glow]="backendForm().get('features.authentication')?.value"
           (click)="backendForm().get('features.authentication')?.setValue(!backendForm().get('features.authentication')?.value)"
@@ -154,16 +171,22 @@
         >
           <div class="flex items-center">
             <div
-              class="w-10 h-10 rounded-lg flex items-center justify-center text-lg mr-3 bg-gradient-to-br from-teal-400/20 to-teal-600/20"
+              class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-sm md:text-lg mr-2 md:mr-3 bg-gradient-to-br from-teal-400/20 to-teal-600/20"
               aria-hidden="true"
             >
               <span class="pi pi-user"></span>
             </div>
             <div>
-              <div id="auth-title" class="text-white font-medium">
+              <div
+                id="auth-title"
+                class="text-white font-medium text-sm md:text-base"
+              >
                 Authentication
               </div>
-              <p id="auth-desc" class="text-gray-400 text-sm">
+              <p
+                id="auth-desc"
+                class="text-gray-400 text-xs md:text-sm hidden md:block"
+              >
                 User login/registration
               </p>
             </div>
@@ -184,7 +207,7 @@
 
         <!-- Authorization -->
         <div
-          class="template-card backdrop-blur-md bg-gray-900/40 rounded-xl border border-gray-800/50 p-4 hover:border-primary/50 hover:-translate-y-1 transition-all cursor-pointer shadow-lg flex items-center justify-between"
+          class="template-card backdrop-blur-md bg-gray-900/40 rounded-xl border border-gray-800/50 p-3 md:p-4 hover:border-primary/50 hover:-translate-y-1 transition-all cursor-pointer shadow-lg flex items-center justify-between"
           [class.border-primary]="backendForm().get('features.authorization')?.value"
           [class.shadow-glow]="backendForm().get('features.authorization')?.value"
           (click)="backendForm().get('features.authorization')?.setValue(!backendForm().get('features.authorization')?.value)"
@@ -194,16 +217,22 @@
         >
           <div class="flex items-center">
             <div
-              class="w-10 h-10 rounded-lg flex items-center justify-center text-lg mr-3 bg-gradient-to-br from-teal-400/20 to-teal-600/20"
+              class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-sm md:text-lg mr-2 md:mr-3 bg-gradient-to-br from-teal-400/20 to-teal-600/20"
               aria-hidden="true"
             >
               <span class="pi pi-lock"></span>
             </div>
             <div>
-              <div id="authz-title" class="text-white font-medium">
+              <div
+                id="authz-title"
+                class="text-white font-medium text-sm md:text-base"
+              >
                 Authorization
               </div>
-              <p id="authz-desc" class="text-gray-400 text-sm">
+              <p
+                id="authz-desc"
+                class="text-gray-400 text-xs md:text-sm hidden md:block"
+              >
                 Role-based permissions
               </p>
             </div>
@@ -224,7 +253,7 @@
 
         <!-- Logging -->
         <div
-          class="template-card backdrop-blur-md bg-gray-900/40 rounded-xl border border-gray-800/50 p-4 hover:border-primary/50 hover:-translate-y-1 transition-all cursor-pointer shadow-lg flex items-center justify-between"
+          class="template-card backdrop-blur-md bg-gray-900/40 rounded-xl border border-gray-800/50 p-3 md:p-4 hover:border-primary/50 hover:-translate-y-1 transition-all cursor-pointer shadow-lg flex items-center justify-between"
           [class.border-primary]="backendForm().get('features.logging')?.value"
           [class.shadow-glow]="backendForm().get('features.logging')?.value"
           (click)="backendForm().get('features.logging')?.setValue(!backendForm().get('features.logging')?.value)"
@@ -234,16 +263,22 @@
         >
           <div class="flex items-center">
             <div
-              class="w-10 h-10 rounded-lg flex items-center justify-center text-lg mr-3 bg-gradient-to-br from-teal-400/20 to-teal-600/20"
+              class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-sm md:text-lg mr-2 md:mr-3 bg-gradient-to-br from-teal-400/20 to-teal-600/20"
               aria-hidden="true"
             >
               <span class="pi pi-list"></span>
             </div>
             <div>
-              <div id="logging-title" class="text-white font-medium">
+              <div
+                id="logging-title"
+                class="text-white font-medium text-sm md:text-base"
+              >
                 Logging
               </div>
-              <p id="logging-desc" class="text-gray-400 text-sm">
+              <p
+                id="logging-desc"
+                class="text-gray-400 text-xs md:text-sm hidden md:block"
+              >
                 Comprehensive system logs
               </p>
             </div>
@@ -264,7 +299,7 @@
 
         <!-- Testing -->
         <div
-          class="template-card backdrop-blur-md bg-gray-900/40 rounded-xl border border-gray-800/50 p-4 hover:border-primary/50 hover:-translate-y-1 transition-all cursor-pointer shadow-lg flex items-center justify-between"
+          class="template-card backdrop-blur-md bg-gray-900/40 rounded-xl border border-gray-800/50 p-3 md:p-4 hover:border-primary/50 hover:-translate-y-1 transition-all cursor-pointer shadow-lg flex items-center justify-between"
           [class.border-primary]="backendForm().get('features.testing')?.value"
           [class.shadow-glow]="backendForm().get('features.testing')?.value"
           (click)="backendForm().get('features.testing')?.setValue(!backendForm().get('features.testing')?.value)"
@@ -274,16 +309,22 @@
         >
           <div class="flex items-center">
             <div
-              class="w-10 h-10 rounded-lg flex items-center justify-center text-lg mr-3 bg-gradient-to-br from-teal-400/20 to-teal-600/20"
+              class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-sm md:text-lg mr-2 md:mr-3 bg-gradient-to-br from-teal-400/20 to-teal-600/20"
               aria-hidden="true"
             >
               <span class="pi pi-check-square"></span>
             </div>
             <div>
-              <div id="testing-title" class="text-white font-medium">
+              <div
+                id="testing-title"
+                class="text-white font-medium text-sm md:text-base"
+              >
                 Testing
               </div>
-              <p id="testing-desc" class="text-gray-400 text-sm">
+              <p
+                id="testing-desc"
+                class="text-gray-400 text-xs md:text-sm hidden md:block"
+              >
                 Unit and integration tests
               </p>
             </div>

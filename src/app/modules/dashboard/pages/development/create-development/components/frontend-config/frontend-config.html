@@ -1,6 +1,6 @@
-<section class="container rounded-2xl p-6 mb-8 backdrop-blur-sm">
+<section class="container rounded-2xl sm:p-4 md:p-6 mb-6 md:mb-8 backdrop-blur-sm">
   <h2
-    class="text-2xl font-semibold text-white mb-6 border-b border-gray-700/50 pb-3"
+    class="text-xl md:text-2xl font-semibold text-white mb-4 md:mb-6 border-b border-gray-700/50 pb-2 md:pb-3"
   >
     Frontend Framework
   </h2>
@@ -8,8 +8,8 @@
   <form [formGroup]="frontendForm()" class="space-y-8">
     <!-- Framework Selection -->
     <div>
-      <h3 class="text-xl font-medium text-white mb-4">Choose Framework</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <h3 class="text-lg md:text-xl font-medium text-white mb-3 md:mb-4">Choose Framework</h3>
+      <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
         @for (framework of frontendFrameworks; track framework.id) {
         <app-tech-card
           [tech]="framework"
@@ -24,15 +24,15 @@
     </div>
 
     <!-- Styling Preferences -->
-    <div class="mt-8">
-      <h3 class="text-xl font-medium text-white mb-4">Styling Preferences</h3>
-      <p class="text-sm text-gray-300 mb-4">
+    <div class="mt-6 md:mt-8">
+      <h3 class="text-lg md:text-xl font-medium text-white mb-3 md:mb-4">Styling Preferences</h3>
+      <p class="text-xs md:text-sm text-gray-300 mb-3 md:mb-4 hidden sm:block">
         Select multiple options as needed
       </p>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
         @for (style of stylingOptions; track style.id) {
         <div
-          class="glass-card p-5 rounded-xl cursor-pointer transition-all border border-gray-800/30 backdrop-blur-sm hover:border-gray-600/50"
+          class="glass-card p-3 md:p-5 rounded-xl cursor-pointer transition-all border border-gray-800/30 backdrop-blur-sm hover:border-gray-600/50"
           [class.border-primary]="isStylingSelected(style.id)"
           [class.shadow-glow]="isStylingSelected(style.id)"
           (click)="toggleStylingPreference(style.id)"
@@ -42,11 +42,11 @@
               <img
                 src="{{ style.icon }}"
                 alt="{{ style.name }}"
-                class="w-10 h-10 rounded-lg mr-3"
+                class="w-8 h-8 md:w-10 md:h-10 rounded-lg mr-2 md:mr-3"
               />
               <div>
-                <div class="text-white font-medium">{{ style.name }}</div>
-                <p class="text-gray-400 text-sm">{{ style.description }}</p>
+                <div class="text-white font-medium text-sm md:text-base">{{ style.name }}</div>
+                <p class="text-gray-400 text-xs md:text-sm hidden md:block">{{ style.description }}</p>
               </div>
             </div>
             <div
@@ -67,25 +67,25 @@
     </div>
 
     <!-- Frontend Features -->
-    <div formGroupName="features" class="mt-8">
-      <h3 class="text-xl font-medium text-white mb-4">Frontend Features</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div formGroupName="features" class="mt-6 md:mt-8">
+      <h3 class="text-lg md:text-xl font-medium text-white mb-3 md:mb-4">Frontend Features</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
         <!-- Routing -->
         <div
-          class="glass-card p-4 rounded-xl cursor-pointer transition-all flex items-center justify-between border border-gray-800/30 backdrop-blur-sm hover:border-gray-600/50"
+          class="glass-card p-3 md:p-4 rounded-xl cursor-pointer transition-all flex items-center justify-between border border-gray-800/30 backdrop-blur-sm hover:border-gray-600/50"
           [class.border-primary]="frontendForm()!.get('features.routing')?.value"
           [class.shadow-glow]="frontendForm()!.get('features.routing')?.value"
           (click)="frontendForm()!.get('features.routing')?.setValue(!frontendForm()!.get('features.routing')?.value)"
         >
           <div class="flex items-center">
             <div
-              class="w-10 h-10 rounded-lg flex items-center justify-center text-lg mr-3 bg-gray-800/50"
+              class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-sm md:text-lg mr-2 md:mr-3 bg-gray-800/50"
             >
               <span class="pi pi-compass"></span>
             </div>
             <div>
-              <div class="text-white font-medium">Routing</div>
-              <p class="text-gray-400 text-sm">Navigation management</p>
+              <div class="text-white font-medium text-sm md:text-base">Routing</div>
+              <p class="text-gray-400 text-xs md:text-sm hidden md:block">Navigation management</p>
             </div>
           </div>
           <div
@@ -103,20 +103,20 @@
 
         <!-- Component Library -->
         <div
-          class="glass-card p-4 rounded-xl cursor-pointer transition-all flex items-center justify-between border border-gray-800/30 backdrop-blur-sm hover:border-gray-600/50"
+          class="glass-card p-3 md:p-4 rounded-xl cursor-pointer transition-all flex items-center justify-between border border-gray-800/30 backdrop-blur-sm hover:border-gray-600/50"
           [class.border-primary]="frontendForm()!.get('features.componentLibrary')?.value"
           [class.shadow-glow]="frontendForm()!.get('features.componentLibrary')?.value"
           (click)="frontendForm()!.get('features.componentLibrary')?.setValue(!frontendForm()!.get('features.componentLibrary')?.value)"
         >
           <div class="flex items-center">
             <div
-              class="w-10 h-10 rounded-lg flex items-center justify-center text-lg mr-3 bg-gray-800/50"
+              class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-sm md:text-lg mr-2 md:mr-3 bg-gray-800/50"
             >
               <span class="pi pi-box"></span>
             </div>
             <div>
-              <div class="text-white font-medium">Component Library</div>
-              <p class="text-gray-400 text-sm">Pre-built UI components</p>
+              <div class="text-white font-medium text-sm md:text-base">Component Library</div>
+              <p class="text-gray-400 text-xs md:text-sm hidden md:block">Pre-built UI components</p>
             </div>
           </div>
           <div
@@ -134,20 +134,20 @@
 
         <!-- Testing -->
         <div
-          class="glass-card p-4 rounded-xl cursor-pointer transition-all flex items-center justify-between border border-gray-800/30 backdrop-blur-sm hover:border-gray-600/50"
+          class="glass-card p-3 md:p-4 rounded-xl cursor-pointer transition-all flex items-center justify-between border border-gray-800/30 backdrop-blur-sm hover:border-gray-600/50"
           [class.border-primary]="frontendForm()!.get('features.testing')?.value"
           [class.shadow-glow]="frontendForm()!.get('features.testing')?.value"
           (click)="frontendForm()!.get('features.testing')?.setValue(!frontendForm()!.get('features.testing')?.value)"
         >
           <div class="flex items-center">
             <div
-              class="w-10 h-10 rounded-lg flex items-center justify-center text-lg mr-3 bg-gray-800/50"
+              class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-sm md:text-lg mr-2 md:mr-3 bg-gray-800/50"
             >
               <span class="pi pi-check-square"></span>
             </div>
             <div>
-              <div class="text-white font-medium">Testing</div>
-              <p class="text-gray-400 text-sm">Unit & component tests</p>
+              <div class="text-white font-medium text-sm md:text-base">Testing</div>
+              <p class="text-gray-400 text-xs md:text-sm hidden md:block">Unit & component tests</p>
             </div>
           </div>
           <div
@@ -165,20 +165,20 @@
 
         <!-- PWA -->
         <div
-          class="glass-card p-4 rounded-xl cursor-pointer transition-all flex items-center justify-between border border-gray-800/30 backdrop-blur-sm hover:border-gray-600/50"
+          class="glass-card p-3 md:p-4 rounded-xl cursor-pointer transition-all flex items-center justify-between border border-gray-800/30 backdrop-blur-sm hover:border-gray-600/50"
           [class.border-primary]="frontendForm()!.get('features.pwa')?.value"
           [class.shadow-glow]="frontendForm()!.get('features.pwa')?.value"
           (click)="frontendForm()!.get('features.pwa')?.setValue(!frontendForm()!.get('features.pwa')?.value)"
         >
           <div class="flex items-center">
             <div
-              class="w-10 h-10 rounded-lg flex items-center justify-center text-lg mr-3 bg-gray-800/50"
+              class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-sm md:text-lg mr-2 md:mr-3 bg-gray-800/50"
             >
               <span class="pi pi-mobile"></span>
             </div>
             <div>
-              <div class="text-white font-medium">PWA</div>
-              <p class="text-gray-400 text-sm">Progressive Web App</p>
+              <div class="text-white font-medium text-sm md:text-base">PWA</div>
+              <p class="text-gray-400 text-xs md:text-sm hidden md:block">Progressive Web App</p>
             </div>
           </div>
           <div
@@ -196,20 +196,20 @@
 
         <!-- SEO -->
         <div
-          class="glass-card p-4 rounded-xl cursor-pointer transition-all flex items-center justify-between border border-gray-800/30 backdrop-blur-sm hover:border-gray-600/50"
+          class="glass-card p-3 md:p-4 rounded-xl cursor-pointer transition-all flex items-center justify-between border border-gray-800/30 backdrop-blur-sm hover:border-gray-600/50"
           [class.border-primary]="frontendForm()!.get('features.seo')?.value"
           [class.shadow-glow]="frontendForm()!.get('features.seo')?.value"
           (click)="frontendForm()!.get('features.seo')?.setValue(!frontendForm()!.get('features.seo')?.value)"
         >
           <div class="flex items-center">
             <div
-              class="w-10 h-10 rounded-lg flex items-center justify-center text-lg mr-3 bg-gray-800/50"
+              class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-sm md:text-lg mr-2 md:mr-3 bg-gray-800/50"
             >
               <span class="pi pi-search"></span>
             </div>
             <div>
-              <div class="text-white font-medium">SEO</div>
-              <p class="text-gray-400 text-sm">Search engine optimization</p>
+              <div class="text-white font-medium text-sm md:text-base">SEO</div>
+              <p class="text-gray-400 text-xs md:text-sm hidden md:block">Search engine optimization</p>
             </div>
           </div>
           <div

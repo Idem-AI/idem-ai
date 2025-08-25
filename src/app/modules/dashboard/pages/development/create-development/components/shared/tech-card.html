@@ -1,24 +1,27 @@
 <div
-  class="template-card backdrop-blur-md bg-gray-900/40 rounded-xl border border-gray-800/50 p-6 flex flex-col hover:border-primary/50 hover:-translate-y-1 transition-all cursor-pointer shadow-lg relative"
+  class="template-card backdrop-blur-md bg-gray-900/40 rounded-xl border border-gray-800/50 p-3 md:p-6 flex flex-col hover:border-primary/50 hover:-translate-y-1 transition-all cursor-pointer shadow-lg relative glass"
 >
   <!-- Card Header -->
-  <div class="flex items-start justify-between mb-4">
+  <div class="flex items-start justify-between mb-2 md:mb-4">
     <div class="flex items-center cursor-pointer" (click)="selectTech()">
+      <!-- Icon - smaller on mobile -->
       <div
-        class="w-12 h-12 rounded-xl flex items-center justify-center mr-4 text-2xl"
+        class="w-6 h-6 md:w-12 md:h-12 rounded-xl flex items-center justify-center mr-2 md:mr-4 text-lg md:text-2xl"
         [style.background-color]="tech()!.color + '20'"
         [style.color]="tech()!.color"
       >
         <img
           src="{{ tech()!.icon }}"
           alt="{{ tech()!.name }}"
-          class="w-12 h-12 rounded-lg mr-3"
+          class="w-6 h-6 md:w-12 md:h-12 rounded-lg mr-1 md:mr-3"
         />
       </div>
-      <h4 class="text-xl font-semibold text-white">{{ tech()!.name }}</h4>
+      <h4 class="text-sm md:text-xl font-semibold text-white leading-tight">
+        {{ tech()!.name }}
+      </h4>
     </div>
     <div
-      class="w-6 h-6 rounded-full border-2 flex items-center justify-center cursor-pointer"
+      class="w-5 h-5 md:w-6 md:h-6 rounded-full border-2 flex items-center justify-center cursor-pointer flex-shrink-0"
       [class.bg-primary]="selected()"
       [class.border-primary]="selected()"
       [class.border-gray-500]="!selected()"
@@ -30,17 +33,17 @@
     </div>
   </div>
 
-  <!-- Description -->
+  <!-- Description - hidden on mobile -->
   <p
-    class="text-gray-300 text-sm mb-4 cursor-pointer flex-grow"
+    class="text-gray-300 text-sm mb-4 cursor-pointer flex-grow hidden md:block"
     (click)="selectTech()"
   >
     {{ tech()!.description }}
   </p>
 
-  <!-- Badges -->
+  <!-- Badges - hidden on mobile -->
   <div
-    class="flex flex-wrap gap-2 mt-auto mb-4 cursor-pointer"
+    class="hidden md:flex flex-wrap gap-2 mt-auto mb-4 cursor-pointer"
     (click)="selectTech()"
   >
     @for (badge of tech()!.badges; track badge) {
@@ -53,13 +56,15 @@
   <!-- Advanced Options Button -->
   @if (showAdvancedOptions() && tech()!.versions && tech()!.versions!.length >
   0) {
-  <div class="mt-4 pt-3 border-t border-gray-800/30">
+  <div class="mt-2 md:mt-4 pt-2 md:pt-3 border-t border-gray-800/30">
     @if (isAdvancedOptionsVisible()) {
-    <div class="mb-3 animate-fade-in">
-      <p class="text-sm font-medium text-gray-300 mb-2">Select Version:</p>
+    <div class="mb-2 md:mb-3 animate-fade-in">
+      <p class="text-xs md:text-sm font-medium text-gray-300 mb-1 md:mb-2">
+        Version:
+      </p>
       <p-select
         [options]="tech()!.versions"
-        placeholder="Select a version"
+        placeholder="Select version"
         [(ngModel)]="selectedVersion"
         (onChange)="selectVersion($event.value)"
         class="w-full"
@@ -69,14 +74,17 @@
 
     <button
       type="button"
-      class="outer-button w-full text-sm flex items-center justify-center gap-2"
+      class="sm:outer-button w-full text-xs md:text-sm flex items-center justify-center gap-1 md:gap-2 py-1 md:py-2 px-2 md:px-3"
       (click)="toggleAdvancedOptions()"
     >
-      <span
-        >{{ isAdvancedOptionsVisible() ? 'Hide' : 'Advanced Options' }}</span
+      <span class="hidden md:inline"
+        >{{ isAdvancedOptionsVisible() ? 'Hide' : 'Advanced' }}</span
+      >
+      <span class="md:hidden"
+        >{{ isAdvancedOptionsVisible() ? 'Hide' : 'Opt' }}</span
       >
       <span
-        class="pi"
+        class="pi text-xs md:text-sm"
         [class.pi-angle-up]="isAdvancedOptionsVisible()"
         [class.pi-angle-down]="!isAdvancedOptionsVisible()"
       ></span>
