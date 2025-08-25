@@ -82,7 +82,7 @@ export class Login implements OnInit {
     try {
       this.isLoading.set(true);
       await this.authService.loginWithGoogle();
-      await this.router.navigate(['/console/projects']);
+      await this.router.navigate(['/console']);
     } catch (error) {
       console.error('Error logging in with Google:', error);
     } finally {
