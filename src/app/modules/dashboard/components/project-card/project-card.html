@@ -1,43 +1,50 @@
 <div
-  class="glass-card hover:cursor-pointer min-w-[400px] max-w-[400px] p-5 relative group"
+  class="glass-card hover:cursor-pointer w-full aspect-[4/3] p-3 sm:p-4 lg:p-5 relative group flex flex-col justify-between"
   (click)="cardClick(project()?.id!)"
 >
-  <div class="flex mb-2">
+  <div class="flex items-start mb-2 sm:mb-3 min-h-0">
     @if (project()?.analysisResultModel?.branding?.logo) {
     <img
       [src]="project()?.analysisResultModel?.branding?.logo?.svg"
       alt="Logo"
-      class="w-[200px] h-auto rounded-full"
+      class="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 object-contain rounded-lg flex-shrink-0"
     />
     }@else {
-    <h3 class="text-lg font-bold truncate pr-6">{{ project()?.name }}</h3>
+    <h3 class="text-sm sm:text-base lg:text-lg font-bold line-clamp-2 leading-tight">{{ project()?.name }}</h3>
     }
   </div>
 
-  <p class="text-sm text-gray-400 mb-4 line-clamp-3">
-    {{ project()?.description }}
-  </p>
+  <div class="flex-1 min-h-0">
+    <p class="text-xs sm:text-sm text-gray-400 mb-3 sm:mb-4 line-clamp-2 sm:line-clamp-3 leading-relaxed">
+      {{ project()?.description }}
+    </p>
+  </div>
 
-  <div class="flex flex-wrap gap-2 text-xs mb-3">
+  <div class="flex flex-wrap gap-1 sm:gap-2 text-xs mb-2 sm:mb-3">
     <span
-      class="bg-secondary-500/20 text-secondary-500 px-2 py-1 rounded font-medium"
+      class="bg-secondary-500/20 text-secondary-500 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-xs font-medium truncate max-w-full"
     >
       {{ project()?.type?.name }}
     </span>
-    <span class="bg-gray-700 px-2 py-1 rounded text-gray-300"
+    @if (project()?.targets?.name) {
+    <span class="bg-gray-700 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-gray-300 text-xs truncate max-w-full"
       >🎯 {{ project()?.targets?.name }}</span
     >
-    <span class="bg-gray-700 px-2 py-1 rounded text-gray-300"
+    }
+    @if (project()?.scope?.name) {
+    <span class="bg-gray-700 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-gray-300 text-xs truncate max-w-full"
       >💼 {{ project()?.scope?.name }}</span
     >
+    }
   </div>
 
-  <div class="flex justify-between items-center mt-4 text-xs text-gray-500">
-    <span>{{ project()?.createdAt | date : "shortDate" }}</span>
+  <div class="flex justify-between items-center mt-auto pt-2 text-xs text-gray-500">
+    <span class="truncate">{{ project()?.createdAt | date : "shortDate" }}</span>
     <button
-      class="opacity-0 group-hover:opacity-100 transition text-primary-500 hover:text-primary-400"
+      class="opacity-0 group-hover:opacity-100 transition text-primary-500 hover:text-primary-400 flex items-center gap-1 flex-shrink-0 ml-2"
     >
-      Open <i class="lucide lucide-arrow-right ml-1"></i>
+      <span class="hidden sm:inline">Open</span>
+      <i class="lucide lucide-arrow-right text-xs"></i>
     </button>
   </div>
 </div>
