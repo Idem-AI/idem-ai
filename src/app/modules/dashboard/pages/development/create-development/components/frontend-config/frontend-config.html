@@ -29,36 +29,32 @@
       <p class="text-xs md:text-sm text-gray-300 mb-3 md:mb-4 hidden sm:block">
         Select multiple options as needed
       </p>
-      <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
         @for (style of stylingOptions; track style.id) {
         <div
-          class="glass-card p-3 md:p-5 rounded-xl cursor-pointer transition-all border border-gray-800/30 backdrop-blur-sm hover:border-gray-600/50"
+          class="glass-card p-3 md:p-4 rounded-xl transition-all border border-gray-800/30 backdrop-blur-sm hover:border-gray-600/50"
           [class.border-primary]="isStylingSelected(style.id)"
           [class.shadow-glow]="isStylingSelected(style.id)"
-          (click)="toggleStylingPreference(style.id)"
         >
-          <div class="flex items-center justify-between">
-            <div class="flex items-center">
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center min-w-0 flex-1">
               <img
                 src="{{ style.icon }}"
                 alt="{{ style.name }}"
-                class="w-8 h-8 md:w-10 md:h-10 rounded-lg mr-2 md:mr-3"
+                class="w-8 h-8 md:w-10 md:h-10 rounded-lg mr-2 md:mr-3 flex-shrink-0"
               />
-              <div>
-                <div class="text-white font-medium text-sm md:text-base">{{ style.name }}</div>
-                <p class="text-gray-400 text-xs md:text-sm hidden md:block">{{ style.description }}</p>
+              <div class="min-w-0 flex-1">
+                <div class="text-white font-medium text-sm md:text-base truncate">{{ style.name }}</div>
+                <p class="text-gray-400 text-xs md:text-sm hidden lg:block truncate">{{ style.description }}</p>
               </div>
             </div>
-            <div
-              class="relative w-10 h-5 rounded-full p-1"
-              [class.bg-primary]="isStylingSelected(style.id)"
-              [class.bg-gray-700]="!isStylingSelected(style.id)"
-            >
-              <div
-                class="absolute top-1 w-3 h-3 rounded-full bg-white transition-transform"
-                [class.left-1]="!isStylingSelected(style.id)"
-                [class.left-6]="isStylingSelected(style.id)"
-              ></div>
+            <div class="flex-shrink-0">
+              <p-toggleSwitch
+                [ngModel]="isStylingSelected(style.id)"
+                (ngModelChange)="toggleStylingWithSwitch(style.id, {checked: $event})"
+                [ngModelOptions]="{standalone: true}"
+                styleClass="custom-toggle"
+              ></p-toggleSwitch>
             </div>
           </div>
         </div>
@@ -69,161 +65,36 @@
     <!-- Frontend Features -->
     <div formGroupName="features" class="mt-6 md:mt-8">
       <h3 class="text-lg md:text-xl font-medium text-white mb-3 md:mb-4">Frontend Features</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-        <!-- Routing -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
+        @for (feature of frontendFeatures; track feature.id) {
         <div
-          class="glass-card p-3 md:p-4 rounded-xl cursor-pointer transition-all flex items-center justify-between border border-gray-800/30 backdrop-blur-sm hover:border-gray-600/50"
-          [class.border-primary]="frontendForm()!.get('features.routing')?.value"
-          [class.shadow-glow]="frontendForm()!.get('features.routing')?.value"
-          (click)="frontendForm()!.get('features.routing')?.setValue(!frontendForm()!.get('features.routing')?.value)"
+          class="glass-card p-3 md:p-4 rounded-xl transition-all border border-gray-800/30 backdrop-blur-sm hover:border-gray-600/50"
+          [class.border-primary]="getFeatureValue(feature.formControlName)"
+          [class.shadow-glow]="getFeatureValue(feature.formControlName)"
         >
-          <div class="flex items-center">
-            <div
-              class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-sm md:text-lg mr-2 md:mr-3 bg-gray-800/50"
-            >
-              <span class="pi pi-compass"></span>
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center min-w-0 flex-1">
+              <div
+                class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-sm md:text-lg mr-2 md:mr-3 bg-gray-800/50 flex-shrink-0"
+              >
+                <span class="{{ feature.icon }}"></span>
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="text-white font-medium text-sm md:text-base truncate">{{ feature.name }}</div>
+                <p class="text-gray-400 text-xs md:text-sm hidden lg:block truncate">{{ feature.description }}</p>
+              </div>
             </div>
-            <div>
-              <div class="text-white font-medium text-sm md:text-base">Routing</div>
-              <p class="text-gray-400 text-xs md:text-sm hidden md:block">Navigation management</p>
+            <div class="flex-shrink-0">
+              <p-toggleSwitch
+                [ngModel]="getFeatureValue(feature.formControlName)"
+                (ngModelChange)="toggleFeature(feature.formControlName)"
+                [ngModelOptions]="{standalone: true}"
+                styleClass="custom-toggle"
+              ></p-toggleSwitch>
             </div>
-          </div>
-          <div
-            class="relative w-10 h-5 rounded-full p-1"
-            [class.bg-primary]="frontendForm()!.get('features.routing')?.value"
-            [class.bg-gray-700]="!frontendForm()!.get('features.routing')?.value"
-          >
-            <div
-              class="absolute top-1 w-3 h-3 rounded-full bg-white transition-transform"
-              [class.left-1]="!frontendForm()!.get('features.routing')?.value"
-              [class.left-6]="frontendForm()!.get('features.routing')?.value"
-            ></div>
           </div>
         </div>
-
-        <!-- Component Library -->
-        <div
-          class="glass-card p-3 md:p-4 rounded-xl cursor-pointer transition-all flex items-center justify-between border border-gray-800/30 backdrop-blur-sm hover:border-gray-600/50"
-          [class.border-primary]="frontendForm()!.get('features.componentLibrary')?.value"
-          [class.shadow-glow]="frontendForm()!.get('features.componentLibrary')?.value"
-          (click)="frontendForm()!.get('features.componentLibrary')?.setValue(!frontendForm()!.get('features.componentLibrary')?.value)"
-        >
-          <div class="flex items-center">
-            <div
-              class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-sm md:text-lg mr-2 md:mr-3 bg-gray-800/50"
-            >
-              <span class="pi pi-box"></span>
-            </div>
-            <div>
-              <div class="text-white font-medium text-sm md:text-base">Component Library</div>
-              <p class="text-gray-400 text-xs md:text-sm hidden md:block">Pre-built UI components</p>
-            </div>
-          </div>
-          <div
-            class="relative w-10 h-5 rounded-full p-1"
-            [class.bg-primary]="frontendForm()!.get('features.componentLibrary')?.value"
-            [class.bg-gray-700]="!frontendForm()!.get('features.componentLibrary')?.value"
-          >
-            <div
-              class="absolute top-1 w-3 h-3 rounded-full bg-white transition-transform"
-              [class.left-1]="!frontendForm()!.get('features.componentLibrary')?.value"
-              [class.left-6]="frontendForm()!.get('features.componentLibrary')?.value"
-            ></div>
-          </div>
-        </div>
-
-        <!-- Testing -->
-        <div
-          class="glass-card p-3 md:p-4 rounded-xl cursor-pointer transition-all flex items-center justify-between border border-gray-800/30 backdrop-blur-sm hover:border-gray-600/50"
-          [class.border-primary]="frontendForm()!.get('features.testing')?.value"
-          [class.shadow-glow]="frontendForm()!.get('features.testing')?.value"
-          (click)="frontendForm()!.get('features.testing')?.setValue(!frontendForm()!.get('features.testing')?.value)"
-        >
-          <div class="flex items-center">
-            <div
-              class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-sm md:text-lg mr-2 md:mr-3 bg-gray-800/50"
-            >
-              <span class="pi pi-check-square"></span>
-            </div>
-            <div>
-              <div class="text-white font-medium text-sm md:text-base">Testing</div>
-              <p class="text-gray-400 text-xs md:text-sm hidden md:block">Unit & component tests</p>
-            </div>
-          </div>
-          <div
-            class="relative w-10 h-5 rounded-full p-1"
-            [class.bg-primary]="frontendForm()!.get('features.testing')?.value"
-            [class.bg-gray-700]="!frontendForm()!.get('features.testing')?.value"
-          >
-            <div
-              class="absolute top-1 w-3 h-3 rounded-full bg-white transition-transform"
-              [class.left-1]="!frontendForm()!.get('features.testing')?.value"
-              [class.left-6]="frontendForm()!.get('features.testing')?.value"
-            ></div>
-          </div>
-        </div>
-
-        <!-- PWA -->
-        <div
-          class="glass-card p-3 md:p-4 rounded-xl cursor-pointer transition-all flex items-center justify-between border border-gray-800/30 backdrop-blur-sm hover:border-gray-600/50"
-          [class.border-primary]="frontendForm()!.get('features.pwa')?.value"
-          [class.shadow-glow]="frontendForm()!.get('features.pwa')?.value"
-          (click)="frontendForm()!.get('features.pwa')?.setValue(!frontendForm()!.get('features.pwa')?.value)"
-        >
-          <div class="flex items-center">
-            <div
-              class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-sm md:text-lg mr-2 md:mr-3 bg-gray-800/50"
-            >
-              <span class="pi pi-mobile"></span>
-            </div>
-            <div>
-              <div class="text-white font-medium text-sm md:text-base">PWA</div>
-              <p class="text-gray-400 text-xs md:text-sm hidden md:block">Progressive Web App</p>
-            </div>
-          </div>
-          <div
-            class="relative w-10 h-5 rounded-full p-1"
-            [class.bg-primary]="frontendForm()!.get('features.pwa')?.value"
-            [class.bg-gray-700]="!frontendForm()!.get('features.pwa')?.value"
-          >
-            <div
-              class="absolute top-1 w-3 h-3 rounded-full bg-white transition-transform"
-              [class.left-1]="!frontendForm()!.get('features.pwa')?.value"
-              [class.left-6]="frontendForm()!.get('features.pwa')?.value"
-            ></div>
-          </div>
-        </div>
-
-        <!-- SEO -->
-        <div
-          class="glass-card p-3 md:p-4 rounded-xl cursor-pointer transition-all flex items-center justify-between border border-gray-800/30 backdrop-blur-sm hover:border-gray-600/50"
-          [class.border-primary]="frontendForm()!.get('features.seo')?.value"
-          [class.shadow-glow]="frontendForm()!.get('features.seo')?.value"
-          (click)="frontendForm()!.get('features.seo')?.setValue(!frontendForm()!.get('features.seo')?.value)"
-        >
-          <div class="flex items-center">
-            <div
-              class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-sm md:text-lg mr-2 md:mr-3 bg-gray-800/50"
-            >
-              <span class="pi pi-search"></span>
-            </div>
-            <div>
-              <div class="text-white font-medium text-sm md:text-base">SEO</div>
-              <p class="text-gray-400 text-xs md:text-sm hidden md:block">Search engine optimization</p>
-            </div>
-          </div>
-          <div
-            class="relative w-10 h-5 rounded-full p-1"
-            [class.bg-primary]="frontendForm()!.get('features.seo')?.value"
-            [class.bg-gray-700]="!frontendForm()!.get('features.seo')?.value"
-          >
-            <div
-              class="absolute top-1 w-3 h-3 rounded-full bg-white transition-transform"
-              [class.left-1]="!frontendForm()!.get('features.seo')?.value"
-              [class.left-6]="frontendForm()!.get('features.seo')?.value"
-            ></div>
-          </div>
-        </div>
+        }
       </div>
     </div>
   </form>

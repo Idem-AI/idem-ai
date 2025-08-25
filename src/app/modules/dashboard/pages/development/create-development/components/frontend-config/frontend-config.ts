@@ -7,14 +7,15 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { TechCardComponent, TechCardModel } from '../shared/tech-card';
 
 @Component({
   selector: 'app-frontend-config',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ButtonModule, TechCardComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, ButtonModule, ToggleSwitchModule, TechCardComponent],
   templateUrl: './frontend-config.html',
   styleUrls: ['./frontend-config.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -299,6 +300,88 @@ export class FrontendConfigComponent {
    */
   protected isStylingSelected(style: string): boolean {
     return this.selectedStylingPreferences().includes(style);
+  }
+
+  /**
+   * Frontend Features configuration list
+   */
+  protected readonly frontendFeatures = [
+    {
+      id: 'routing',
+      name: 'Routing',
+      description: 'Navigation management',
+      icon: 'pi pi-compass',
+      formControlName: 'features.routing'
+    },
+    {
+      id: 'componentLibrary',
+      name: 'Component Library',
+      description: 'Pre-built UI components',
+      icon: 'pi pi-box',
+      formControlName: 'features.componentLibrary'
+    },
+    {
+      id: 'testing',
+      name: 'Testing',
+      description: 'Unit & component tests',
+      icon: 'pi pi-check-square',
+      formControlName: 'features.testing'
+    },
+    {
+      id: 'pwa',
+      name: 'PWA',
+      description: 'Progressive Web App',
+      icon: 'pi pi-mobile',
+      formControlName: 'features.pwa'
+    },
+    {
+      id: 'seo',
+      name: 'SEO',
+      description: 'Search engine optimization',
+      icon: 'pi pi-search',
+      formControlName: 'features.seo'
+    },
+    {
+      id: 'i18n',
+      name: 'Internationalization',
+      description: 'Multi-language support',
+      icon: 'pi pi-globe',
+      formControlName: 'features.i18n'
+    }
+  ];
+
+  /**
+   * Toggle a frontend feature
+   */
+  protected toggleFeature(formControlName: string): void {
+    const control = this.frontendForm().get(formControlName);
+    if (control) {
+      control.setValue(!control.value);
+    }
+  }
+
+  /**
+   * Get feature value from form
+   */
+  protected getFeatureValue(formControlName: string): boolean {
+    return this.frontendForm().get(formControlName)?.value || false;
+  }
+
+  /**
+   * Toggle styling preference with ToggleSwitch
+   */
+  protected toggleStylingWithSwitch(styleName: string, event: any): void {
+    const currentStyles = [...this.selectedStylingPreferences()];
+    const index = currentStyles.indexOf(styleName);
+    
+    if (event.checked && index === -1) {
+      currentStyles.push(styleName);
+    } else if (!event.checked && index !== -1) {
+      currentStyles.splice(index, 1);
+    }
+    
+    this.stylingPreferencesChange.emit(currentStyles);
+    this.frontendForm().get('styling')?.setValue(currentStyles);
   }
 
   /**

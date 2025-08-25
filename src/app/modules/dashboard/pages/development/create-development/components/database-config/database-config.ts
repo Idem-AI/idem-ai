@@ -5,13 +5,14 @@ import {
   computed,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { TechCardComponent, TechCardModel } from '../shared/tech-card';
 
 @Component({
   selector: 'app-database-config',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TechCardComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, ToggleSwitchModule, TechCardComponent],
   templateUrl: './database-config.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -121,5 +122,68 @@ export class DatabaseConfigComponent {
     return ['latest'];
   }
 
-  // La méthode getOrmVersions() a été déplacée vers backend-config.ts
+  /**
+   * Database Features configuration list
+   */
+  protected readonly databaseFeatures = [
+    {
+      id: 'migrations',
+      name: 'Migrations',
+      description: 'Schema version control',
+      icon: 'pi pi-history',
+      formControlName: 'features.migrations'
+    },
+    {
+      id: 'seeding',
+      name: 'Seeding',
+      description: 'Initial data population',
+      icon: 'pi pi-plus-circle',
+      formControlName: 'features.seeding'
+    },
+    {
+      id: 'caching',
+      name: 'Caching',
+      description: 'Performance optimization',
+      icon: 'pi pi-bolt',
+      formControlName: 'features.caching'
+    },
+    {
+      id: 'replication',
+      name: 'Replication',
+      description: 'Data redundancy',
+      icon: 'pi pi-copy',
+      formControlName: 'features.replication'
+    },
+    {
+      id: 'backup',
+      name: 'Backup',
+      description: 'Automated data backup',
+      icon: 'pi pi-save',
+      formControlName: 'features.backup'
+    },
+    {
+      id: 'monitoring',
+      name: 'Monitoring',
+      description: 'Database performance monitoring',
+      icon: 'pi pi-chart-line',
+      formControlName: 'features.monitoring'
+    }
+  ];
+
+  /**
+   * Toggle a database feature
+   */
+  protected toggleFeature(formControlName: string): void {
+    const control = this.databaseForm()?.get(formControlName);
+    if (control) {
+      control.setValue(!control.value);
+    }
+  }
+
+  /**
+   * Get feature value from form
+   */
+  protected getFeatureValue(formControlName: string): boolean {
+    return this.databaseForm()?.get(formControlName)?.value || false;
+  }
 }

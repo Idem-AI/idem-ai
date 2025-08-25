@@ -43,98 +43,36 @@
     <!-- Database Features -->
     <div formGroupName="features" class="mt-6 md:mt-8">
       <h3 class="text-lg md:text-xl font-medium text-white mb-3 md:mb-4">Database Features</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-        <!-- Migrations -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
+        @for (feature of databaseFeatures; track feature.id) {
         <div
-          class="glass p-3 md:p-4 rounded-lg cursor-pointer transition-all flex items-center justify-between border border-gray-800/50"
-          [class.border-primary]="databaseForm()!.get('features.migrations')?.value"
-          (click)="databaseForm()!.get('features.migrations')?.setValue(!databaseForm()!.get('features.migrations')?.value)"
+          class="glass-card p-3 md:p-4 rounded-xl transition-all border border-gray-800/30 backdrop-blur-sm hover:border-gray-600/50"
+          [class.border-primary]="getFeatureValue(feature.formControlName)"
+          [class.shadow-glow]="getFeatureValue(feature.formControlName)"
         >
-          <div>
-            <div class="text-white text-sm md:text-lg font-medium">Migrations</div>
-            <p class="text-gray-400 text-xs md:text-sm hidden md:block">Schema version control</p>
-          </div>
-          <div
-            class="relative w-10 h-5 rounded-full p-1"
-            [class.bg-primary]="databaseForm()!.get('features.migrations')?.value"
-            [class.bg-gray-700]="!databaseForm()!.get('features.migrations')?.value"
-          >
-            <div
-              class="absolute top-1 w-3 h-3 rounded-full bg-white transition-transform"
-              [class.left-1]="!databaseForm()!.get('features.migrations')?.value"
-              [class.left-6]="databaseForm()!.get('features.migrations')?.value"
-            ></div>
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center min-w-0 flex-1">
+              <div
+                class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-sm md:text-lg mr-2 md:mr-3 bg-gray-800/50 flex-shrink-0"
+              >
+                <span class="{{ feature.icon }}"></span>
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="text-white font-medium text-sm md:text-base truncate">{{ feature.name }}</div>
+                <p class="text-gray-400 text-xs md:text-sm hidden lg:block truncate">{{ feature.description }}</p>
+              </div>
+            </div>
+            <div class="flex-shrink-0">
+              <p-toggleSwitch
+                [ngModel]="getFeatureValue(feature.formControlName)"
+                (ngModelChange)="toggleFeature(feature.formControlName)"
+                [ngModelOptions]="{standalone: true}"
+                styleClass="custom-toggle"
+              ></p-toggleSwitch>
+            </div>
           </div>
         </div>
-
-        <!-- Seeding -->
-        <div
-          class="glass p-3 md:p-4 rounded-lg cursor-pointer transition-all flex items-center justify-between border border-gray-800/50"
-          [class.border-primary]="databaseForm()!.get('features.seeding')?.value"
-          (click)="databaseForm()!.get('features.seeding')?.setValue(!databaseForm()!.get('features.seeding')?.value)"
-        >
-          <div>
-            <div class="text-white text-sm md:text-lg font-medium">Seeding</div>
-            <p class="text-gray-400 text-xs md:text-sm hidden md:block">Initial data population</p>
-          </div>
-          <div
-            class="relative w-10 h-5 rounded-full p-1"
-            [class.bg-primary]="databaseForm()!.get('features.seeding')?.value"
-            [class.bg-gray-700]="!databaseForm()!.get('features.seeding')?.value"
-          >
-            <div
-              class="absolute top-1 w-3 h-3 rounded-full bg-white transition-transform"
-              [class.left-1]="!databaseForm()!.get('features.seeding')?.value"
-              [class.left-6]="databaseForm()!.get('features.seeding')?.value"
-            ></div>
-          </div>
-        </div>
-
-        <!-- Caching -->
-        <div
-          class="glass p-3 md:p-4 rounded-lg cursor-pointer transition-all flex items-center justify-between border border-gray-800/50"
-          [class.border-primary]="databaseForm()!.get('features.caching')?.value"
-          (click)="databaseForm()!.get('features.caching')?.setValue(!databaseForm()!.get('features.caching')?.value)"
-        >
-          <div>
-            <div class="text-white text-sm md:text-lg font-medium">Caching</div>
-            <p class="text-gray-400 text-xs md:text-sm hidden md:block">Performance optimization</p>
-          </div>
-          <div
-            class="relative w-10 h-5 rounded-full p-1"
-            [class.bg-primary]="databaseForm()!.get('features.caching')?.value"
-            [class.bg-gray-700]="!databaseForm()!.get('features.caching')?.value"
-          >
-            <div
-              class="absolute top-1 w-3 h-3 rounded-full bg-white transition-transform"
-              [class.left-1]="!databaseForm()!.get('features.caching')?.value"
-              [class.left-6]="databaseForm()!.get('features.caching')?.value"
-            ></div>
-          </div>
-        </div>
-
-        <!-- Replication -->
-        <div
-          class="glass p-3 md:p-4 rounded-lg cursor-pointer transition-all flex items-center justify-between border border-gray-800/50"
-          [class.border-primary]="databaseForm()!.get('features.replication')?.value"
-          (click)="databaseForm()!.get('features.replication')?.setValue(!databaseForm()!.get('features.replication')?.value)"
-        >
-          <div>
-            <div class="text-white text-sm md:text-lg font-medium">Replication</div>
-            <p class="text-gray-400 text-xs md:text-sm hidden md:block">Data redundancy</p>
-          </div>
-          <div
-            class="relative w-10 h-5 rounded-full p-1"
-            [class.bg-primary]="databaseForm()!.get('features.replication')?.value"
-            [class.bg-gray-700]="!databaseForm()!.get('features.replication')?.value"
-          >
-            <div
-              class="absolute top-1 w-3 h-3 rounded-full bg-white transition-transform"
-              [class.left-1]="!databaseForm()!.get('features.replication')?.value"
-              [class.left-6]="databaseForm()!.get('features.replication')?.value"
-            ></div>
-          </div>
-        </div>
+        }
       </div>
     </div>
   </form>

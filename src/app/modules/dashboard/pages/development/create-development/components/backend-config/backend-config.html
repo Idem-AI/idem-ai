@@ -156,192 +156,36 @@
       >
         Backend Features
       </h3>
-      <div
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4"
-      >
-        <!-- Authentication -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
+        @for (feature of backendFeatures; track feature.id) {
         <div
-          class="template-card backdrop-blur-md bg-gray-900/40 rounded-xl border border-gray-800/50 p-3 md:p-4 hover:border-primary/50 hover:-translate-y-1 transition-all cursor-pointer shadow-lg flex items-center justify-between"
-          [class.border-primary]="backendForm().get('features.authentication')?.value"
-          [class.shadow-glow]="backendForm().get('features.authentication')?.value"
-          (click)="backendForm().get('features.authentication')?.setValue(!backendForm().get('features.authentication')?.value)"
-          role="switch"
-          [attr.aria-checked]="backendForm().get('features.authentication')?.value"
-          aria-labelledby="auth-title auth-desc"
+          class="glass-card p-3 md:p-4 rounded-xl transition-all border border-gray-800/30 backdrop-blur-sm hover:border-gray-600/50"
+          [class.border-primary]="getFeatureValue(feature.formControlName)"
+          [class.shadow-glow]="getFeatureValue(feature.formControlName)"
         >
-          <div class="flex items-center">
-            <div
-              class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-sm md:text-lg mr-2 md:mr-3 bg-gradient-to-br from-teal-400/20 to-teal-600/20"
-              aria-hidden="true"
-            >
-              <span class="pi pi-user"></span>
-            </div>
-            <div>
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center min-w-0 flex-1">
               <div
-                id="auth-title"
-                class="text-white font-medium text-sm md:text-base"
+                class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-sm md:text-lg mr-2 md:mr-3 bg-gray-800/50 flex-shrink-0"
               >
-                Authentication
+                <span class="{{ feature.icon }}"></span>
               </div>
-              <p
-                id="auth-desc"
-                class="text-gray-400 text-xs md:text-sm hidden md:block"
-              >
-                User login/registration
-              </p>
+              <div class="min-w-0 flex-1">
+                <div class="text-white font-medium text-sm md:text-base truncate">{{ feature.name }}</div>
+                <p class="text-gray-400 text-xs md:text-sm hidden lg:block truncate">{{ feature.description }}</p>
+              </div>
             </div>
-          </div>
-          <div
-            class="relative w-10 h-5 rounded-full p-1"
-            [class.bg-primary]="backendForm().get('features.authentication')?.value"
-            [class.bg-gray-700]="!backendForm().get('features.authentication')?.value"
-            aria-hidden="true"
-          >
-            <div
-              class="absolute top-1 w-3 h-3 rounded-full bg-white transition-transform duration-300"
-              [class.left-1]="!backendForm().get('features.authentication')?.value"
-              [class.left-6]="backendForm().get('features.authentication')?.value"
-            ></div>
+            <div class="flex-shrink-0">
+              <p-toggleSwitch
+                [ngModel]="getFeatureValue(feature.formControlName)"
+                (ngModelChange)="toggleFeature(feature.formControlName)"
+                [ngModelOptions]="{standalone: true}"
+                styleClass="custom-toggle"
+              ></p-toggleSwitch>
+            </div>
           </div>
         </div>
-
-        <!-- Authorization -->
-        <div
-          class="template-card backdrop-blur-md bg-gray-900/40 rounded-xl border border-gray-800/50 p-3 md:p-4 hover:border-primary/50 hover:-translate-y-1 transition-all cursor-pointer shadow-lg flex items-center justify-between"
-          [class.border-primary]="backendForm().get('features.authorization')?.value"
-          [class.shadow-glow]="backendForm().get('features.authorization')?.value"
-          (click)="backendForm().get('features.authorization')?.setValue(!backendForm().get('features.authorization')?.value)"
-          role="switch"
-          [attr.aria-checked]="backendForm().get('features.authorization')?.value"
-          aria-labelledby="authz-title authz-desc"
-        >
-          <div class="flex items-center">
-            <div
-              class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-sm md:text-lg mr-2 md:mr-3 bg-gradient-to-br from-teal-400/20 to-teal-600/20"
-              aria-hidden="true"
-            >
-              <span class="pi pi-lock"></span>
-            </div>
-            <div>
-              <div
-                id="authz-title"
-                class="text-white font-medium text-sm md:text-base"
-              >
-                Authorization
-              </div>
-              <p
-                id="authz-desc"
-                class="text-gray-400 text-xs md:text-sm hidden md:block"
-              >
-                Role-based permissions
-              </p>
-            </div>
-          </div>
-          <div
-            class="relative w-10 h-5 rounded-full p-1"
-            [class.bg-primary]="backendForm().get('features.authorization')?.value"
-            [class.bg-gray-700]="!backendForm().get('features.authorization')?.value"
-            aria-hidden="true"
-          >
-            <div
-              class="absolute top-1 w-3 h-3 rounded-full bg-white transition-transform duration-300"
-              [class.left-1]="!backendForm().get('features.authorization')?.value"
-              [class.left-6]="backendForm().get('features.authorization')?.value"
-            ></div>
-          </div>
-        </div>
-
-        <!-- Logging -->
-        <div
-          class="template-card backdrop-blur-md bg-gray-900/40 rounded-xl border border-gray-800/50 p-3 md:p-4 hover:border-primary/50 hover:-translate-y-1 transition-all cursor-pointer shadow-lg flex items-center justify-between"
-          [class.border-primary]="backendForm().get('features.logging')?.value"
-          [class.shadow-glow]="backendForm().get('features.logging')?.value"
-          (click)="backendForm().get('features.logging')?.setValue(!backendForm().get('features.logging')?.value)"
-          role="switch"
-          [attr.aria-checked]="backendForm().get('features.logging')?.value"
-          aria-labelledby="logging-title logging-desc"
-        >
-          <div class="flex items-center">
-            <div
-              class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-sm md:text-lg mr-2 md:mr-3 bg-gradient-to-br from-teal-400/20 to-teal-600/20"
-              aria-hidden="true"
-            >
-              <span class="pi pi-list"></span>
-            </div>
-            <div>
-              <div
-                id="logging-title"
-                class="text-white font-medium text-sm md:text-base"
-              >
-                Logging
-              </div>
-              <p
-                id="logging-desc"
-                class="text-gray-400 text-xs md:text-sm hidden md:block"
-              >
-                Comprehensive system logs
-              </p>
-            </div>
-          </div>
-          <div
-            class="relative w-10 h-5 rounded-full p-1"
-            [class.bg-primary]="backendForm().get('features.logging')?.value"
-            [class.bg-gray-700]="!backendForm().get('features.logging')?.value"
-            aria-hidden="true"
-          >
-            <div
-              class="absolute top-1 w-3 h-3 rounded-full bg-white transition-transform duration-300"
-              [class.left-1]="!backendForm().get('features.logging')?.value"
-              [class.left-6]="backendForm().get('features.logging')?.value"
-            ></div>
-          </div>
-        </div>
-
-        <!-- Testing -->
-        <div
-          class="template-card backdrop-blur-md bg-gray-900/40 rounded-xl border border-gray-800/50 p-3 md:p-4 hover:border-primary/50 hover:-translate-y-1 transition-all cursor-pointer shadow-lg flex items-center justify-between"
-          [class.border-primary]="backendForm().get('features.testing')?.value"
-          [class.shadow-glow]="backendForm().get('features.testing')?.value"
-          (click)="backendForm().get('features.testing')?.setValue(!backendForm().get('features.testing')?.value)"
-          role="switch"
-          [attr.aria-checked]="backendForm().get('features.testing')?.value"
-          aria-labelledby="testing-title testing-desc"
-        >
-          <div class="flex items-center">
-            <div
-              class="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-sm md:text-lg mr-2 md:mr-3 bg-gradient-to-br from-teal-400/20 to-teal-600/20"
-              aria-hidden="true"
-            >
-              <span class="pi pi-check-square"></span>
-            </div>
-            <div>
-              <div
-                id="testing-title"
-                class="text-white font-medium text-sm md:text-base"
-              >
-                Testing
-              </div>
-              <p
-                id="testing-desc"
-                class="text-gray-400 text-xs md:text-sm hidden md:block"
-              >
-                Unit and integration tests
-              </p>
-            </div>
-          </div>
-          <div
-            class="relative w-10 h-5 rounded-full p-1"
-            [class.bg-primary]="backendForm().get('features.testing')?.value"
-            [class.bg-gray-700]="!backendForm().get('features.testing')?.value"
-            aria-hidden="true"
-          >
-            <div
-              class="absolute top-1 w-3 h-3 rounded-full bg-white transition-transform duration-300"
-              [class.left-1]="!backendForm().get('features.testing')?.value"
-              [class.left-6]="backendForm().get('features.testing')?.value"
-            ></div>
-          </div>
-        </div>
+        }
       </div>
     </div>
   </form>

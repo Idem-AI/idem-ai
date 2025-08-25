@@ -7,7 +7,8 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { TechCardComponent, TechCardModel } from '../shared/tech-card';
 import {
   FRAMEWORK_API_TYPES,
@@ -19,7 +20,7 @@ import {
 @Component({
   selector: 'app-backend-config',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TechCardComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, ToggleSwitchModule, TechCardComponent],
   templateUrl: './backend-config.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -154,5 +155,70 @@ export class BackendConfigComponent implements OnInit {
       return orm?.versions || ['latest'];
     }
     return ['latest'];
+  }
+
+  /**
+   * Backend Features configuration list
+   */
+  protected readonly backendFeatures = [
+    {
+      id: 'authentication',
+      name: 'Authentication',
+      description: 'User login/registration',
+      icon: 'pi pi-user',
+      formControlName: 'features.authentication'
+    },
+    {
+      id: 'authorization',
+      name: 'Authorization',
+      description: 'Role-based permissions',
+      icon: 'pi pi-lock',
+      formControlName: 'features.authorization'
+    },
+    {
+      id: 'logging',
+      name: 'Logging',
+      description: 'Comprehensive system logs',
+      icon: 'pi pi-list',
+      formControlName: 'features.logging'
+    },
+    {
+      id: 'testing',
+      name: 'Testing',
+      description: 'Unit and integration tests',
+      icon: 'pi pi-check-square',
+      formControlName: 'features.testing'
+    },
+    {
+      id: 'monitoring',
+      name: 'Monitoring',
+      description: 'Performance and health monitoring',
+      icon: 'pi pi-chart-line',
+      formControlName: 'features.monitoring'
+    },
+    {
+      id: 'caching',
+      name: 'Caching',
+      description: 'Response and data caching',
+      icon: 'pi pi-database',
+      formControlName: 'features.caching'
+    }
+  ];
+
+  /**
+   * Toggle a backend feature
+   */
+  protected toggleFeature(formControlName: string): void {
+    const control = this.backendForm()?.get(formControlName);
+    if (control) {
+      control.setValue(!control.value);
+    }
+  }
+
+  /**
+   * Get feature value from form
+   */
+  protected getFeatureValue(formControlName: string): boolean {
+    return this.backendForm()?.get(formControlName)?.value || false;
   }
 }
