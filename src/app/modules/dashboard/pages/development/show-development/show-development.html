@@ -33,10 +33,10 @@
       <i class="pi pi-external-link ml-2 text-xl"></i>
     </button>
   </div>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 sm:gap-6">
     <!-- Frontend Section -->
     <div
-      class="glass-card p-6 transition-shadow hover:shadow-lg backdrop-blur-sm overflow-hidden relative"
+      class="glass-card md:p-6 transition-shadow hover:shadow-lg backdrop-blur-sm overflow-hidden relative"
     >
       <div
         class="flex items-center justify-between mb-6 border-b border-gray-700/30 pb-3"
@@ -83,8 +83,7 @@
             <h4 class="text-gray-300 text-sm">Styling</h4>
           </div>
           <p class="text-white text-sm">
-            {{ typeof frontend()!.styling === 'string' ?
-            frontend()!.styling :
+            {{ typeof frontend()!.styling === 'string' ? frontend()!.styling :
             getFeaturesList(frontend()!.styling) }}
           </p>
         </div>
@@ -96,9 +95,7 @@
             <i class="pi pi-sync text-purple-400 mr-2"></i>
             <h4 class="text-gray-300 text-sm">State Management</h4>
           </div>
-          <p class="text-white text-sm">
-            {{ frontend()!.stateManagement }}
-          </p>
+          <p class="text-white text-sm">{{ frontend()!.stateManagement }}</p>
         </div>
         }
       </div>
@@ -110,23 +107,18 @@
           <h4 class="text-gray-300">Features</h4>
         </div>
         <div class="flex flex-wrap gap-2">
-          @if (frontend()?.features) { @if
-          (frontend()!.features && typeof
-          frontend()!.features === 'object') { @for
-          (feature of getObjectKeys(frontend()!.features);
-          track feature) { @if
-          (isFeatureEnabled(frontend()!.features,
-          feature)) {
+          @if (frontend()?.features) { @if (frontend()!.features && typeof
+          frontend()!.features === 'object') { @for (feature of
+          getObjectKeys(frontend()!.features); track feature) { @if
+          (isFeatureEnabled(frontend()!.features, feature)) {
           <span
             class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-xs"
           >
             {{ feature }}
           </span>
           } } } @else if (frontend()!.features &&
-          isFeatureArray(frontend()!.features)) { @for
-          (feature of
-          getFeatureArray(frontend()!.features); track
-          feature) {
+          isFeatureArray(frontend()!.features)) { @for (feature of
+          getFeatureArray(frontend()!.features); track feature) {
           <span
             class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-xs"
           >
@@ -170,9 +162,7 @@
             <i class="pi pi-code text-green-400 text-lg"></i>
           </div>
           }
-          <span class="text-xs text-gray-300"
-            >{{ backend()!.language }}</span
-          >
+          <span class="text-xs text-gray-300">{{ backend()!.language }}</span>
           @if (backend()?.languageVersion) {
           <span class="text-xs text-green-300"
             >v{{ backend()!.languageVersion }}</span
@@ -196,9 +186,7 @@
             <i class="pi pi-box text-green-400 text-lg"></i>
           </div>
           }
-          <span class="text-xs text-gray-300"
-            >{{ backend()!.framework }}</span
-          >
+          <span class="text-xs text-gray-300">{{ backend()!.framework }}</span>
           @if (backend()?.frameworkVersion) {
           <span class="text-xs text-green-300"
             >v{{ backend()!.frameworkVersion }}</span
@@ -222,9 +210,7 @@
             <i class="pi pi-globe text-green-400 text-lg"></i>
           </div>
           }
-          <span class="text-xs text-gray-300"
-            >{{ backend()!.apiType }}</span
-          >
+          <span class="text-xs text-gray-300">{{ backend()!.apiType }}</span>
           @if (backend()?.apiVersion) {
           <span class="text-xs text-green-300"
             >v{{ backend()!.apiVersion }}</span
@@ -249,9 +235,7 @@
             <i class="pi pi-database text-green-400 text-lg"></i>
           </div>
           }
-          <span class="text-xs text-gray-300"
-            >{{ backend()!.orm }}</span
-          >
+          <span class="text-xs text-gray-300">{{ backend()!.orm }}</span>
           @if (backend()?.ormVersion) {
           <span class="text-xs text-green-300"
             >v{{ backend()!.ormVersion }}</span
@@ -269,21 +253,17 @@
           <h4 class="text-gray-300">Features</h4>
         </div>
         <div class="flex flex-wrap gap-2">
-          @if (backend()!.features && typeof
-          backend()!.features === 'object') { @for
-          (feature of getObjectKeys(backend()!.features);
-          track feature) { @if
-          (isFeatureEnabled(backend()!.features, feature)) {
+          @if (backend()!.features && typeof backend()!.features === 'object') {
+          @for (feature of getObjectKeys(backend()!.features); track feature) {
+          @if (isFeatureEnabled(backend()!.features, feature)) {
           <span
             class="bg-green-500/20 text-green-300 px-3 py-1 rounded-full text-xs"
           >
             {{ feature }}
           </span>
           } } } @else if (backend()!.features &&
-          isFeatureArray(backend()!.features)) { @for
-          (feature of
-          getFeatureArray(backend()!.features); track
-          feature) {
+          isFeatureArray(backend()!.features)) { @for (feature of
+          getFeatureArray(backend()!.features); track feature) {
           <span
             class="bg-green-500/20 text-green-300 px-3 py-1 rounded-full text-xs"
           >
@@ -332,9 +312,7 @@
             >v{{ database()!.providerVersion }}</span
           >
           } @if (database()?.type) {
-          <span class="text-gray-400 text-xs"
-            >{{ database()!.type }}</span
-          >
+          <span class="text-gray-400 text-xs">{{ database()!.type }}</span>
           }
         </div>
       </div>
@@ -361,9 +339,7 @@
           </div>
           }
           <div>
-            <span class="text-white"
-              >{{ database()!.orm }}</span
-            >
+            <span class="text-white">{{ database()!.orm }}</span>
             @if (database()?.ormVersion) {
             <span class="text-purple-300 text-xs ml-2"
               >v{{ database()!.ormVersion }}</span
@@ -381,23 +357,18 @@
           <h4 class="text-gray-300">Features</h4>
         </div>
         <div class="flex flex-wrap gap-2">
-          @if (database()?.features) { @if
-          (database()!.features && typeof
-          database()!.features === 'object') { @for
-          (feature of getObjectKeys(database()!.features);
-          track feature) { @if
-          (isFeatureEnabled(database()!.features, feature))
-          {
+          @if (database()?.features) { @if (database()!.features && typeof
+          database()!.features === 'object') { @for (feature of
+          getObjectKeys(database()!.features); track feature) { @if
+          (isFeatureEnabled(database()!.features, feature)) {
           <span
             class="bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-xs"
           >
             {{ feature }}
           </span>
           } } } @else if (database()!.features &&
-          isFeatureArray(database()!.features)) { @for
-          (feature of
-          getFeatureArray(database()!.features); track
-          feature) {
+          isFeatureArray(database()!.features)) { @for (feature of
+          getFeatureArray(database()!.features); track feature) {
           <span
             class="bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-xs"
           >
@@ -650,8 +621,7 @@
         </div>
 
         <!-- Payment Integration (if applicable) -->
-        @if (projectConfig()?.paymentIntegration !==
-        undefined) {
+        @if (projectConfig()?.paymentIntegration !== undefined) {
         <div class="glass-dark p-3 rounded-lg relative overflow-hidden group">
           <div
             class="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity bg-gradient-to-br from-yellow-400 to-yellow-600"
@@ -701,8 +671,7 @@
   </div>
 
   <!-- Constraints Section -->
-  @if (constraints() &&
-  constraints()!.length > 0) {
+  @if (constraints() && constraints()!.length > 0) {
   <div class="mt-8 glass-card p-6">
     <h2 class="text-xl font-semibold text-white mb-4 text-glow-primary">
       Constraints

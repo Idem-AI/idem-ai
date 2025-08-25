@@ -1,6 +1,6 @@
 <!-- Navbar -->
 <nav
-  class="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10 px-3 py-3 lg:px-6"
+  class="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10 px-3 py-3 lg:px-6 transition-all duration-300"
 >
   <div class="flex items-center justify-between">
     <div class="flex items-center">
@@ -168,7 +168,7 @@
 <!-- Desktop Sidebar -->
 <aside
   [@sidebarExpand]="sidebarState()"
-  class="hidden md:flex flex-col fixed left-0 top-0 h-screen glass border-r border-white/10 pt-20 transition-all duration-300 z-40"
+  class="hidden md:flex flex-col fixed left-0 top-20 h-[calc(100vh-5rem)] glass border-r border-white/10 transition-all duration-300 z-40"
   [class.w-64]="!isSidebarCollapsed()"
   [class.w-20]="isSidebarCollapsed()"
 >
@@ -260,13 +260,15 @@
 <div class="fixed inset-0 z-50 md:hidden">
   <!-- Backdrop -->
   <div
-    class="fixed inset-0 bg-black/50 backdrop-blur-sm"
+    [@backdropFade]
+    class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-all duration-300"
     (click)="toggleMobileDrawer()"
   ></div>
 
   <!-- Drawer -->
   <div
-    class="fixed left-0 top-0 bottom-0 w-80 glass border-r border-white/10 flex flex-col"
+    [@mobileDrawerSlide]
+    class="fixed left-0 top-0 bottom-0 w-80 glass border-r border-white/10 flex flex-col shadow-2xl"
   >
     <!-- Header -->
     <div class="flex items-center justify-between p-4 border-b border-white/10">
@@ -314,7 +316,7 @@
             (click)="onProjectChange(project)"
             class="w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-left"
             [class.bg-primary]="selectedProject()?.code === project.code"
-            [class.text-primary]="selectedProject()?.code === project.code"
+            [class.text-white]="selectedProject()?.code === project.code"
             [class.text-white]="selectedProject()?.code !== project.code"
             [class.hover:bg-white]="selectedProject()?.code !== project.code"
           >
@@ -339,7 +341,7 @@
             (click)="toggleMobileDrawer()"
             class="flex items-center gap-3 p-3 rounded-xl transition-all duration-200"
             [class.bg-primary]="item.isActive"
-            [class.text-primary]="item.isActive"
+            [class.text-white]="item.isActive"
             [class.text-white]="!item.isActive"
             [class.hover:bg-white]="!item.isActive"
           >

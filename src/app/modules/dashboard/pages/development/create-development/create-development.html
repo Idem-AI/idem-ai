@@ -38,7 +38,7 @@
     }
 
     <!-- Header Section -->
-    <section class="mb-12">
+    <section class="sm:mb-12">
       <div
         class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8"
       >
@@ -53,9 +53,9 @@
 
         <!-- Back Button (only show when not on mode selection) -->
         @if (currentStep() !== 'mode-selection') {
-        <button class="outer-button flex items-center gap-2" (click)="goBack()">
+        <button class="outer-button w-[55px] sm:w-auto flex items-center gap-2" (click)="goBack()">
           <span class="pi pi-arrow-left"></span>
-          <span>Back</span>
+          <span class="hidden sm:block">Back</span>
         </button>
         }
       </div>
@@ -63,7 +63,7 @@
 
     <!-- Step 1: Mode Selection -->
     @if (currentStep() === 'mode-selection') {
-    <section class="glass-card p-8 mb-8 backdrop-blur-sm">
+    <section class="md:glass-card md:p-8 sm:p-4 mb-8 backdrop-blur-sm">
       <div class="text-center mb-8">
         <h2 class="text-2xl font-bold text-white mb-4">
           Choose Your Development Mode
@@ -73,34 +73,36 @@
         </p>
       </div>
 
-      <div class="grid md:grid-cols-2 gap-6">
+      <div class="grid grid-cols-2 gap-3 md:gap-6">
         <!-- Quick Generation Mode -->
         <div
-          class="glass-card p-6 cursor-pointer transition-all duration-300 hover:glow-primary"
+          class="glass-card p-3 md:p-4 cursor-pointer transition-all duration-300 hover:glow-primary"
           (click)="selectMode('quick')"
         >
           <div class="text-center">
             <div
-              class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-primary to-primary/60 flex items-center justify-center"
+              class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-2 md:mb-4 rounded-full bg-gradient-to-r from-primary to-primary/60 flex items-center justify-center"
             >
-              <i class="pi pi-bolt text-2xl text-white"></i>
+              <i class="pi pi-bolt text-lg md:text-2xl text-white"></i>
             </div>
-            <h3 class="text-xl font-bold text-white mb-3">Quick Generation</h3>
-            <p class="text-gray-400 mb-4">
+            <h3 class="text-sm md:text-xl font-bold text-white mb-2 md:mb-3">
+              Quick
+            </h3>
+            <p
+              class="text-xs md:text-sm text-gray-400 mb-2 md:mb-4 hidden md:block"
+            >
               Pre-configured setup with React, Express.js, and Supabase
             </p>
-            <div class="text-sm text-gray-500">
-              <div class="flex items-center justify-center gap-2 mb-2">
-                <i class="pi pi-check text-green-400"></i>
-                <span>React Frontend</span>
+            <div class="text-xs md:text-sm text-gray-500 space-y-1">
+              <div class="flex items-center justify-center gap-1 md:gap-2">
+                <i class="pi pi-check text-green-400 text-xs"></i>
+                <span>React</span>
               </div>
-              <div class="flex items-center justify-center gap-2 mb-2">
-                <i class="pi pi-check text-green-400"></i>
-                <span>Express.js Backend</span>
-              </div>
-              <div class="flex items-center justify-center gap-2">
-                <i class="pi pi-check text-green-400"></i>
-                <span>Supabase Database</span>
+              <div
+                class="hidden md:flex items-center justify-center gap-1 md:gap-2"
+              >
+                <i class="pi pi-check text-green-400 text-xs"></i>
+                <span>Express.js</span>
               </div>
             </div>
           </div>
@@ -108,33 +110,33 @@
 
         <!-- Advanced Mode -->
         <div
-          class="glass-card p-6 cursor-pointer transition-all duration-300 hover:glow-secondary"
+          class="glass-card p-3 md:p-6 cursor-pointer transition-all duration-300 hover:glow-secondary"
           (click)="selectMode('advanced')"
         >
           <div class="text-center">
             <div
-              class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-secondary to-secondary-glow/60 flex items-center justify-center"
+              class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-2 md:mb-4 rounded-full bg-gradient-to-r from-secondary to-secondary-glow/60 flex items-center justify-center"
             >
-              <i class="pi pi-cog text-2xl text-white"></i>
+              <i class="pi pi-cog text-lg md:text-2xl text-white"></i>
             </div>
-            <h3 class="text-xl font-bold text-white mb-3">
-              Advanced Configuration
+            <h3 class="text-sm md:text-xl font-bold text-white mb-2 md:mb-3">
+              Advanced
             </h3>
-            <p class="text-gray-400 mb-4">
+            <p
+              class="text-xs md:text-sm text-gray-400 mb-2 md:mb-4 hidden md:block"
+            >
               Full control over all technology choices and settings
             </p>
-            <div class="text-sm text-gray-500">
-              <div class="flex items-center justify-center gap-2 mb-2">
-                <i class="pi pi-check text-blue-400"></i>
-                <span>Custom Frontend</span>
+            <div class="text-xs md:text-sm text-gray-500 space-y-1">
+              <div class="flex items-center justify-center gap-1 md:gap-2">
+                <i class="pi pi-check text-blue-400 text-xs"></i>
+                <span>Custom</span>
               </div>
-              <div class="flex items-center justify-center gap-2 mb-2">
-                <i class="pi pi-check text-blue-400"></i>
-                <span>Custom Backend</span>
-              </div>
-              <div class="flex items-center justify-center gap-2">
-                <i class="pi pi-check text-blue-400"></i>
-                <span>Custom Database</span>
+              <div
+                class="hidden md:flex items-center justify-center gap-1 md:gap-2"
+              >
+                <i class="pi pi-check text-blue-400 text-xs"></i>
+                <span>Full Control</span>
               </div>
             </div>
           </div>
@@ -146,8 +148,8 @@
     <!-- Step 2: Generation Type Selection (only for quick mode) -->
     @if (currentStep() === 'generation-type') {
     <section class="glass-card p-8 mb-8 backdrop-blur-sm">
-      <div class="text-center mb-8">
-        <h2 class="text-2xl font-bold text-white mb-4">
+      <div class="text-center mb-8 ">
+        <h2 class="text-2xl font-bold text-white mb-4  hidden sm:block">
           What do you want to generate?
         </h2>
         <p class="text-gray-400">
@@ -155,25 +157,32 @@
         </p>
       </div>
 
-      <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+      <div class="grid grid-cols-2 gap-3 md:gap-6 max-w-4xl mx-auto">
         <!-- Landing Page Only -->
         <div
-          class="glass-card p-6 cursor-pointer transition-all duration-300 hover:glow-primary"
+          class="glass-card p-3 md:p-6 cursor-pointer transition-all duration-300 hover:glow-primary"
           (click)="selectGenerationType('landing')"
         >
           <div class="text-center">
             <div
-              class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-primary to-primary-glow/70 flex items-center justify-center"
+              class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-2 md:mb-4 rounded-full bg-gradient-to-r from-primary to-primary-glow/70 flex items-center justify-center"
             >
-              <i class="pi pi-desktop text-2xl text-white"></i>
+              <i class="pi pi-desktop text-lg md:text-2xl text-white"></i>
             </div>
-            <h3 class="text-xl font-bold text-white mb-3">Landing Page Only</h3>
-            <p class="text-gray-400 text-sm">
-              A beautiful standalone marketing website to showcase your product or service
+            <h3 class="text-sm md:text-xl font-bold text-white mb-2 md:mb-3">
+              Landing
+            </h3>
+            <p
+              class="text-xs md:text-sm text-gray-400 mb-2 md:mb-4 hidden md:block"
+            >
+              A beautiful standalone marketing website to showcase your product
+              or service
             </p>
-            <div class="mt-4 flex items-center justify-center">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/20 text-primary">
-                Marketing Focus
+            <div class="flex items-center justify-center">
+              <span
+                class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary/20 text-primary"
+              >
+                Marketing
               </span>
             </div>
           </div>
@@ -181,22 +190,29 @@
 
         <!-- Web Application Only -->
         <div
-          class="glass-card p-6 cursor-pointer transition-all duration-300 hover:glow-secondary"
+          class="glass-card p-3 md:p-6 cursor-pointer transition-all duration-300 hover:glow-secondary"
           (click)="selectGenerationType('app')"
         >
           <div class="text-center">
             <div
-              class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-secondary to-secondary-glow/70 flex items-center justify-center"
+              class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-2 md:mb-4 rounded-full bg-gradient-to-r from-secondary to-secondary-glow/70 flex items-center justify-center"
             >
-              <i class="pi pi-mobile text-2xl text-white"></i>
+              <i class="pi pi-mobile text-lg md:text-2xl text-white"></i>
             </div>
-            <h3 class="text-xl font-bold text-white mb-3">Web Application Only</h3>
-            <p class="text-gray-400 text-sm">
-              A full-featured web application with user authentication and database
+            <h3 class="text-sm md:text-xl font-bold text-white mb-2 md:mb-3">
+              Web App
+            </h3>
+            <p
+              class="text-xs md:text-sm text-gray-400 mb-2 md:mb-4 hidden md:block"
+            >
+              A full-featured web application with user authentication and
+              database
             </p>
-            <div class="mt-4 flex items-center justify-center">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary/20 text-secondary">
-                App Focus
+            <div class="flex items-center justify-center">
+              <span
+                class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-secondary/20 text-secondary"
+              >
+                App
               </span>
             </div>
           </div>
@@ -204,22 +220,29 @@
 
         <!-- Landing Page + Web App (Integrated) -->
         <div
-          class="glass-card p-6 cursor-pointer transition-all duration-300 hover:glow-accent"
+          class="glass-card p-3 md:p-6 cursor-pointer transition-all duration-300 hover:glow-accent"
           (click)="selectGenerationType('integrated')"
         >
           <div class="text-center">
             <div
-              class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-accent to-accent-glow/70 flex items-center justify-center"
+              class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-2 md:mb-4 rounded-full bg-gradient-to-r from-accent to-accent-glow/70 flex items-center justify-center"
             >
-              <i class="pi pi-link text-2xl text-white"></i>
+              <i class="pi pi-link text-lg md:text-2xl text-white"></i>
             </div>
-            <h3 class="text-xl font-bold text-white mb-3">Integrated Solution</h3>
-            <p class="text-gray-400 text-sm">
-              Landing page integrated within the web application for seamless user experience
+            <h3 class="text-sm md:text-xl font-bold text-white mb-2 md:mb-3">
+              Integrated
+            </h3>
+            <p
+              class="text-xs md:text-sm text-gray-400 mb-2 md:mb-4 hidden md:block"
+            >
+              Landing page integrated within the web application for seamless
+              user experience
             </p>
-            <div class="mt-4 flex items-center justify-center">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-accent/20 text-accent">
-                Unified Experience
+            <div class="flex items-center justify-center">
+              <span
+                class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-accent/20 text-accent"
+              >
+                Unified
               </span>
             </div>
           </div>
@@ -227,21 +250,28 @@
 
         <!-- Landing Page + Web App (Separate) -->
         <div
-          class="glass-card p-6 cursor-pointer transition-all duration-300 hover:glow-primary"
+          class="glass-card p-3 md:p-6 cursor-pointer transition-all duration-300 hover:glow-primary"
           (click)="selectGenerationType('both')"
         >
           <div class="text-center">
             <div
-              class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center"
+              class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-2 md:mb-4 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center"
             >
-              <i class="pi pi-th-large text-2xl text-white"></i>
+              <i class="pi pi-th-large text-lg md:text-2xl text-white"></i>
             </div>
-            <h3 class="text-xl font-bold text-white mb-3">Complete Solution</h3>
-            <p class="text-gray-400 text-sm">
-              Separate landing page + web application for maximum flexibility and scalability
+            <h3 class="text-sm md:text-xl font-bold text-white mb-2 md:mb-3">
+              Complete
+            </h3>
+            <p
+              class="text-xs md:text-sm text-gray-400 mb-2 md:mb-4 hidden md:block"
+            >
+              Separate landing page + web application for maximum flexibility
+              and scalability
             </p>
-            <div class="mt-4 flex items-center justify-center">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-primary/20 to-secondary/20 text-white">
+            <div class="flex items-center justify-center">
+              <span
+                class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-primary/20 to-secondary/20 text-white"
+              >
                 Full Stack
               </span>
             </div>

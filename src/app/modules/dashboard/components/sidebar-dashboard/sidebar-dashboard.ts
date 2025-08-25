@@ -63,6 +63,27 @@ import {
         animate('300ms ease-out', style({ transform: 'translateY(-100%)' })),
       ]),
     ]),
+    trigger('mobileDrawerSlide', [
+      transition(':enter', [
+        style({ transform: 'translateX(-100%)', opacity: 0 }),
+        animate('350ms cubic-bezier(0.25, 0.8, 0.25, 1)', 
+          style({ transform: 'translateX(0%)', opacity: 1 })),
+      ]),
+      transition(':leave', [
+        style({ transform: 'translateX(0%)', opacity: 1 }),
+        animate('300ms cubic-bezier(0.4, 0.0, 0.2, 1)', 
+          style({ transform: 'translateX(-100%)', opacity: 0 })),
+      ]),
+    ]),
+    trigger('backdropFade', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('250ms ease-out', style({ opacity: 1 })),
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({ opacity: 0 })),
+      ]),
+    ]),
     trigger('sidebarExpand', [
       state(
         'expanded',
@@ -454,6 +475,12 @@ export class SidebarDashboard implements OnInit {
 
   toggleMobileDrawer() {
     this.isMobileDrawerOpen.update((open) => !open);
+    // Prevent body scroll when drawer is open
+    if (this.isMobileDrawerOpen()) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
   }
 
   toggleDropdown() {

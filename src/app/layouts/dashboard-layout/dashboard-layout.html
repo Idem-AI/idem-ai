@@ -1,12 +1,12 @@
-<!-- Flexbox layout container -->
-<div class="flex min-h-screen">
-  <!-- Sidebar container -->
-  <div class="flex-shrink-0">
-    <app-sidebar-dashboard (sidebarCollapsedChange)="onSidebarCollapsedChange($event)" />
-  </div>
+<!-- Layout container -->
+<div class="min-h-screen">
+  <!-- Sidebar -->
+  <app-sidebar-dashboard (sidebarCollapsedChange)="onSidebarCollapsedChange($event)" />
   
   <!-- Main content area -->
-  <div class="flex-1 transition-all duration-300 mt-[80px] min-h-screen bg-opacity-95 relative">
+  <div class="transition-all duration-300 pt-[80px] min-h-screen bg-opacity-95 relative ml-0"
+       [class.md:ml-64]="!isSidebarCollapsed()"
+       [class.md:ml-20]="isSidebarCollapsed()">
     <div 
       class="h-full"
       [ngClass]="{
