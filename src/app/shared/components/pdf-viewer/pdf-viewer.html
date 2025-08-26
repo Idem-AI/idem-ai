@@ -1,46 +1,79 @@
-<div class="flex flex-col items-center justify-center w-full">
+<div
+  class="flex flex-col items-center justify-center w-full px-2 sm:px-4 lg:px-6"
+>
   <div
-    class="min-h-[85vh] max-w-[1000px] w-full sm:p-6 glass rounded-2xl text-gray-900"
+    class="min-h-[85vh] w-full glass rounded-2xl text-gray-900 p-3 sm:p-4 lg:p-6"
+    [style.max-width]="containerMaxWidth()"
   >
-    <div class="w-full flex flex-col sm:flex-row justify-end gap-2 mb-4">
-      <button
-        class="inner-button w-full sm:w-auto"
-        (click)="onRegenerateClick()"
-        [disabled]="isLoading()"
-      >
-        <i class="pi pi-refresh" [class.pi-spin]="isLoading()"></i>
-        <span>Regenerate</span>
-      </button>
-      <button
-        class="inner-button w-full sm:w-auto"
-        (click)="onDownloadClick()"
-        [disabled]="!pdfSrc() || isLoading()"
-      >
-        <i class="pi pi-download"></i>
-        <span>Download</span>
-      </button>
+    <div
+      class="w-full flex flex-row justify-between p-4"
+    >
+      <!-- PDF Title - Hidden on mobile to save space -->
+      <div class="">
+        <h3 class="text-lg font-semibold text-gray-200 truncate">
+          {{ title() }}
+        </h3>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col xs:flex-row gap-2 w-full sm:w-auto">
+        <button
+          class="inner-button w-full xs:w-auto flex-1 xs:flex-none"
+          (click)="onDownloadClick()"
+          [disabled]="!pdfSrc() || isLoading()"
+        >
+          <i class="pi pi-download"></i>
+          <span>Download</span>
+        </button>
+      </div>
     </div>
 
     @if (isLoading()) {
-    <div class="w-full h-64 sm:h-96 flex flex-col items-center justify-center">
+    <div
+      class="w-full flex flex-col items-center justify-center"
+      [style.height.px]="pdfHeight()"
+    >
       <div
-        class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"
+        class="animate-spin rounded-full border-b-2 border-blue-600 mb-4"
+        [class]="isMobile() ? 'h-8 w-8' : 'h-12 w-12'"
       ></div>
-      <p class="text-gray-600">Loading PDF from server...</p>
-      <p class="text-sm text-gray-500 mt-2">This may take a few moments</p>
+      <p
+        class="text-gray-600 text-center px-4"
+        [class]="isMobile() ? 'text-sm' : 'text-base'"
+      >
+        Loading PDF from server...
+      </p>
+      <p
+        class="text-gray-500 mt-2 text-center px-4"
+        [class]="isMobile() ? 'text-xs' : 'text-sm'"
+      >
+        This may take a few moments
+      </p>
     </div>
     } @else if (error()) {
-    <div class="w-full h-64 sm:h-96 flex flex-col items-center justify-center">
+    <div
+      class="w-full flex flex-col items-center justify-center"
+      [style.height.px]="pdfHeight()"
+    >
       <div class="text-red-500 mb-4">
-        <i class="pi pi-exclamation-triangle text-4xl"></i>
+        <i
+          class="pi pi-exclamation-triangle"
+          [class]="isMobile() ? 'text-2xl' : 'text-4xl'"
+        ></i>
       </div>
-      <p class="text-red-600 mb-4 text-center px-4">{{ error() }}</p>
+      <p
+        class="text-red-600 mb-4 text-center px-4"
+        [class]="isMobile() ? 'text-sm' : 'text-base'"
+      >
+        {{ error() }}
+      </p>
       <button
         class="inner-button w-full sm:w-auto"
         (click)="onRegenerateClick()"
       >
         <i class="pi pi-refresh"></i>
-        Try Again
+        <span class="hidden xs:inline">Try Again</span>
+        <span class="xs:hidden">Retry</span>
       </button>
     </div>
     } @else if (pdfSrc()) {
@@ -48,21 +81,44 @@
       <!-- Pagination Info -->
       @if (showPagination() && totalPages() > 0) {
       <div
-        class="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-200"
+        class="flex items-center justify-between bg-gray-50 border-b border-gray-200"
+        [class]="isMobile() ? 'px-2 py-2' : 'px-4 py-3'"
       >
         <div class="flex items-center space-x-2">
-          <i class="pi pi-file-pdf text-red-500"></i>
+          <i
+            class="pi pi-file-pdf text-red-500"
+            [class]="isMobile() ? 'text-sm' : 'text-base'"
+          ></i>
+          <!-- Show title on mobile in pagination bar -->
+          @if (isMobile()) {
+          <span class="text-xs text-gray-600 truncate max-w-[120px]"
+            >{{ title() }}</span
+          >
+          }
         </div>
-        <div class="flex items-center space-x-2">
-          <span class="text-sm text-gray-600">Page</span>
+        <div
+          class="flex items-center"
+          [class]="isMobile() ? 'space-x-1' : 'space-x-2'"
+        >
           <span
-            class="px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-sm font-medium"
+            class="text-gray-600"
+            [class]="isMobile() ? 'text-xs' : 'text-sm'"
+            >Page</span
+          >
+          <span
+            class="px-2 py-1 bg-blue-100 text-blue-800 rounded-md font-medium"
+            [class]="isMobile() ? 'text-xs' : 'text-sm'"
           >
             {{ currentPage() }}
           </span>
-          <span class="text-sm text-gray-600">of</span>
           <span
-            class="px-2 py-1 bg-gray-100 text-gray-700 rounded-md text-sm font-medium"
+            class="text-gray-600"
+            [class]="isMobile() ? 'text-xs' : 'text-sm'"
+            >of</span
+          >
+          <span
+            class="px-2 py-1 bg-gray-100 text-gray-700 rounded-md font-medium"
+            [class]="isMobile() ? 'text-xs' : 'text-sm'"
           >
             {{ totalPages() }}
           </span>
@@ -71,10 +127,13 @@
       }
 
       <!-- PDF Viewer with ngx-extended-pdf-viewer -->
-      <div class="pdf-container">
+      <div
+        class="pdf-container"
+        [class]="isMobile() ? 'mobile-pdf' : isTablet() ? 'tablet-pdf' : 'desktop-pdf'"
+      >
         <ngx-extended-pdf-viewer
           [src]="pdfSrc()!"
-          [height]="'90vh'"
+          [height]="pdfHeight() + 'px'"
           [showToolbar]="false"
           [showSidebarButton]="false"
           [showFindButton]="false"
@@ -91,15 +150,29 @@
           [showPropertiesButton]="false"
           [textLayer]="true"
           [showBorders]="false"
+          [zoom]="isMobile() ? 'page-fit' : 'auto'"
+          [mobileFriendlyZoom]="isMobile() ? 'page-width' : 'auto'"
           (pdfLoaded)="onPdfLoadComplete($event)"
           (pageChange)="onPageChange($event)"
-          class="w-full"
+          class="w-full responsive-pdf-viewer"
         ></ngx-extended-pdf-viewer>
       </div>
     </div>
     } @else {
-    <div class="w-full h-64 sm:h-96 flex flex-col items-center justify-center">
-      <p class="text-gray-600 mb-4 text-center px-4">
+    <div
+      class="w-full flex flex-col items-center justify-center"
+      [style.height.px]="pdfHeight()"
+    >
+      <div class="text-gray-400 mb-4">
+        <i
+          class="pi pi-file-pdf"
+          [class]="isMobile() ? 'text-3xl' : 'text-5xl'"
+        ></i>
+      </div>
+      <p
+        class="text-gray-600 mb-4 text-center px-4"
+        [class]="isMobile() ? 'text-sm' : 'text-base'"
+      >
         No PDF content available.
       </p>
     </div>
