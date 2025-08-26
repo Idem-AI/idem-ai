@@ -5,12 +5,12 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 
 @Component({
   selector: 'app-pdf-viewer',
   standalone: true,
-  imports: [PdfViewerModule],
+  imports: [NgxExtendedPdfViewerModule],
   templateUrl: './pdf-viewer.html',
   styleUrl: './pdf-viewer.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,12 +31,14 @@ export class PdfViewer {
   protected readonly totalPages = signal<number>(0);
   protected readonly currentPage = signal<number>(1);
 
-  protected onPdfLoadComplete(pdf: any): void {
-    this.totalPages.set(pdf.numPages);
+  protected onPdfLoadComplete(event: any): void {
+    if (event && event.pagesCount) {
+      this.totalPages.set(event.pagesCount);
+    }
   }
 
-  protected onPageRendered(event: any): void {
-    this.currentPage.set(event.pageNumber);
+  protected onPageChange(page: number): void {
+    this.currentPage.set(page);
   }
 
   protected onRegenerateClick(): void {

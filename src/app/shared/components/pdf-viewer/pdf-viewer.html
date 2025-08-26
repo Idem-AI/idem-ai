@@ -70,25 +70,31 @@
       </div>
       }
 
-      <!-- PDF Viewer with improved styling -->
+      <!-- PDF Viewer with ngx-extended-pdf-viewer -->
       <div class="pdf-container">
-        <pdf-viewer
+        <ngx-extended-pdf-viewer
           [src]="pdfSrc()!"
-          [rotation]="0"
-          [original-size]="false"
-          [show-all]="true"
-          [fit-to-page]="false"
-          [zoom]="1"
-          [zoom-scale]="'page-width'"
-          [stick-to-page]="false"
-          [render-text]="true"
-          [external-link-target]="'blank'"
-          [autoresize]="true"
-          [show-borders]="true"
-          (after-load-complete)="onPdfLoadComplete($event)"
-          (page-rendered)="onPageRendered($event)"
-          class="w-full h-[60vh] sm:h-[70vh] lg:h-[80vh] pdf-viewer-custom"
-        ></pdf-viewer>
+          [height]="'60vh'"
+          [showToolbar]="false"
+          [showSidebarButton]="false"
+          [showFindButton]="false"
+          [showPagingButtons]="false"
+          [showZoomButtons]="false"
+          [showPresentationModeButton]="false"
+          [showOpenFileButton]="false"
+          [showPrintButton]="false"
+          [showDownloadButton]="false"
+          [showSecondaryToolbarButton]="false"
+          [showRotateButton]="false"
+          [showHandToolButton]="false"
+          [showSpreadButton]="false"
+          [showPropertiesButton]="false"
+          [textLayer]="true"
+          [showBorders]="true"
+          (pdfLoaded)="onPdfLoadComplete($event)"
+          (pageChange)="onPageChange($event)"
+          class="w-full pdf-viewer-extended"
+        ></ngx-extended-pdf-viewer>
       </div>
     </div>
     } @else {

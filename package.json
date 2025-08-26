@@ -36,6 +36,7 @@
     "marked": "^15.0.7",
     "mermaid": "^11.6.0",
     "ng2-pdf-viewer": "^10.4.0",
+    "ngx-extended-pdf-viewer": "^25.0.0",
     "ngx-markdown": "^20.0.0",
     "ngx-sse-client": "^20.0.0",
     "openai": "^4.89.0",

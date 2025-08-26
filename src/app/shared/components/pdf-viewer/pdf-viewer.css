@@ -1,4 +1,4 @@
-/* PDF Viewer Component Styles */
+/* PDF Viewer Component Styles - Updated for ngx-extended-pdf-viewer */
 
 /* PDF Container styling - minimal styling */
 .pdf-container {
@@ -6,16 +6,25 @@
   padding: 10px;
 }
 
-/* Custom PDF Viewer styling with clean page margins */
-.pdf-viewer-custom ::ng-deep .ng2-pdf-viewer-container {
+/* Custom styling for ngx-extended-pdf-viewer */
+.pdf-viewer-extended ::ng-deep ngx-extended-pdf-viewer {
+  background-color: #ffffff !important;
+}
+
+/* Hide the toolbar completely */
+.pdf-viewer-extended ::ng-deep .toolbar {
+  display: none !important;
+}
+
+/* Clean styling for the viewer container */
+.pdf-viewer-extended ::ng-deep .viewerContainer {
   background-color: #ffffff !important;
   padding: 0 !important;
 }
 
-/* Add clean margins between PDF pages without visual effects */
-.pdf-viewer-custom ::ng-deep .page {
+/* Style the PDF pages */
+.pdf-viewer-extended ::ng-deep .page {
   margin-bottom: 15px !important;
-  /* Remove all visual effects that modify PDF appearance */
   box-shadow: none !important;
   border-radius: 0 !important;
   overflow: visible !important;
@@ -23,36 +32,36 @@
 }
 
 /* Keep PDF pages in their original format */
-.pdf-viewer-custom ::ng-deep .page canvas {
+.pdf-viewer-extended ::ng-deep .page canvas {
   border: none !important;
   border-radius: 0 !important;
 }
 
 /* Keep text layer clean */
-.pdf-viewer-custom ::ng-deep .textLayer {
+.pdf-viewer-extended ::ng-deep .textLayer {
   border-radius: 0 !important;
 }
 
 /* Ensure proper spacing for the last page */
-.pdf-viewer-custom ::ng-deep .page:last-child {
+.pdf-viewer-extended ::ng-deep .page:last-child {
   margin-bottom: 0 !important;
 }
 
 /* Improve scrollbar appearance */
-.pdf-viewer-custom::-webkit-scrollbar {
+.pdf-viewer-extended::-webkit-scrollbar {
   width: 8px;
 }
 
-.pdf-viewer-custom::-webkit-scrollbar-track {
+.pdf-viewer-extended::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 4px;
 }
 
-.pdf-viewer-custom::-webkit-scrollbar-thumb {
+.pdf-viewer-extended::-webkit-scrollbar-thumb {
   background: #c1c1c1;
   border-radius: 4px;
 }
 
-.pdf-viewer-custom::-webkit-scrollbar-thumb:hover {
+.pdf-viewer-extended::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
