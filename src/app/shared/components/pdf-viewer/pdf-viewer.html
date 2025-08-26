@@ -9,8 +9,7 @@
         [disabled]="isLoading()"
       >
         <i class="pi pi-refresh" [class.pi-spin]="isLoading()"></i>
-        <span class="hidden sm:inline">Regenerate PDF</span>
-        <span class="sm:hidden">Regenerate</span>
+        <span>Regenerate</span>
       </button>
       <button
         class="inner-button w-full sm:w-auto"
@@ -18,8 +17,7 @@
         [disabled]="!pdfSrc() || isLoading()"
       >
         <i class="pi pi-download"></i>
-        <span class="hidden sm:inline">Download PDF</span>
-        <span class="sm:hidden">Download</span>
+        <span>Download</span>
       </button>
     </div>
 
@@ -37,7 +35,10 @@
         <i class="pi pi-exclamation-triangle text-4xl"></i>
       </div>
       <p class="text-red-600 mb-4 text-center px-4">{{ error() }}</p>
-      <button class="inner-button w-full sm:w-auto" (click)="onRegenerateClick()">
+      <button
+        class="inner-button w-full sm:w-auto"
+        (click)="onRegenerateClick()"
+      >
         <i class="pi pi-refresh"></i>
         Try Again
       </button>
@@ -51,7 +52,6 @@
       >
         <div class="flex items-center space-x-2">
           <i class="pi pi-file-pdf text-red-500"></i>
-          <span class="text-sm font-medium text-gray-700">{{ title() }}</span>
         </div>
         <div class="flex items-center space-x-2">
           <span class="text-sm text-gray-600">Page</span>
@@ -74,7 +74,7 @@
       <div class="pdf-container">
         <ngx-extended-pdf-viewer
           [src]="pdfSrc()!"
-          [height]="'60vh'"
+          [height]="'90vh'"
           [showToolbar]="false"
           [showSidebarButton]="false"
           [showFindButton]="false"
@@ -90,10 +90,10 @@
           [showSpreadButton]="false"
           [showPropertiesButton]="false"
           [textLayer]="true"
-          [showBorders]="true"
+          [showBorders]="false"
           (pdfLoaded)="onPdfLoadComplete($event)"
           (pageChange)="onPageChange($event)"
-          class="w-full pdf-viewer-extended"
+          class="w-full"
         ></ngx-extended-pdf-viewer>
       </div>
     </div>

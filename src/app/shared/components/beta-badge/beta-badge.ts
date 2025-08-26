@@ -1,6 +1,5 @@
 import {
   Component,
-  inject,
   ChangeDetectionStrategy,
   OnInit,
 } from '@angular/core';
@@ -15,7 +14,7 @@ import { environment } from '../../../../environments/environment';
   template: `
     @if (isBeta==true) {
     <div
-      class="inline-flex items-center py-1 px-2 rounded-full text-sm font-medium bg-gradient-to-r glass "
+      class="inline-flex items-center py-1 px-2 rounded-full text-xs font-medium bg-gradient-to-r glass"
     >
       <div class="flex items-center">
         <!-- Icône pulse -->
@@ -29,7 +28,7 @@ import { environment } from '../../../../environments/environment';
         </span>
 
         <!-- Texte BETA -->
-        <span class="font-bold tracking-wider">Beta</span>
+        <span class="font-bold tracking-wider text-white">Beta</span>
       </div>
     </div>
     }

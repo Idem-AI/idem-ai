@@ -35,8 +35,8 @@ import {
             [style.width.%]="quotaDisplay.dailyPercentage"
           ></div>
         </div>
-        <span class="text-xs whitespace-nowrap">Credits</span>
-        <span class="text-xs whitespace-nowrap" [class]="getDailyStatusClass()">
+        <span class="sm:text-lg text-xs whitespace-nowrap text-white">Credits</span>
+        <span class="sm:text-lg text-xs whitespace-nowrap" [class]="getDailyStatusClass()">
           {{ quotaInfo?.remainingDaily || 0 }}/{{ quotaInfo?.dailyLimit || 0 }}
         </span>
       </div>
