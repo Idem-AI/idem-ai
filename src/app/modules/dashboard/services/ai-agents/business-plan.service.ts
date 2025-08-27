@@ -29,19 +29,53 @@ export class BusinessPlanService {
     this.sseService.closeConnection('business-plan');
   }
 
-  createBusinessplanItem(projectId: string): Observable<SSEStepEvent> {
-    console.log('Starting business plan generation with SSE...');
+  createBusinessplanItem(projectId: string, additionalInfos?: any): Observable<SSEStepEvent> {
+    console.log('Starting business plan generation with SSE...', { 
+      projectId, 
+      hasAdditionalInfos: !!additionalInfos 
+    });
 
     // Close any existing SSE connection
     this.closeSSEConnection();
 
-    const config: SSEConnectionConfig = {
-      url: `${this.apiUrl}/generate/${projectId}`,
-      keepAlive: true,
-      reconnectionDelay: 1000,
-    };
+    // If additional infos are provided, send them first then start SSE
+    if (additionalInfos) {
+      return new Observable<SSEStepEvent>((observer) => {
+        // Send additional info to backend first
+        this.http.post(`${this.apiUrl}/set-additional-info/${projectId}`, { additionalInfos })
+          .subscribe({
+            next: () => {
+              console.log('Additional info sent successfully, starting SSE generation...');
+              
+              // Now start the SSE generation with additional info flag
+              const config: SSEConnectionConfig = {
+                url: `${this.apiUrl}/generate/${projectId}?withAdditionalInfo=true`,
+                keepAlive: true,
+                reconnectionDelay: 1000,
+              };
 
-    return this.sseService.createConnection(config, 'business-plan');
+              this.sseService.createConnection(config, 'business-plan').subscribe({
+                next: (event) => observer.next(event),
+                error: (error) => observer.error(error),
+                complete: () => observer.complete()
+              });
+            },
+            error: (error) => {
+              console.error('Error sending additional info:', error);
+              observer.error(error);
+            }
+          });
+      });
+    } else {
+      // Standard generation without additional info
+      const config: SSEConnectionConfig = {
+        url: `${this.apiUrl}/generate/${projectId}`,
+        keepAlive: true,
+        reconnectionDelay: 1000,
+      };
+
+      return this.sseService.createConnection(config, 'business-plan');
+    }
   }
 
   cancelGeneration(): void {

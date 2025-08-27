@@ -24,4 +24,26 @@ export interface ProjectModel {
   userId: string;
   selectedPhases: string[];
   analysisResultModel: AnalysisResultModel;
+  additionalInfos: {
+    email: string;
+    phone: string;
+    address: string;
+    city: string;
+    country: string;
+    zipCode: string;
+    teamMembers: TeamMember[];
+  };
+}
+
+export interface TeamMember {
+  name: string;
+  role: string;
+  email: string;
+  bio: string;
+  pictureUrl?: string;
+  socialLinks?: {
+    linkedin?: string;
+    github?: string;
+    twitter?: string;
+  };
 }

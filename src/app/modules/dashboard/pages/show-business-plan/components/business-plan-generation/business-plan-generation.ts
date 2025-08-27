@@ -18,12 +18,14 @@ import { CookieService } from '../../../../../../shared/services/cookie.service'
 import { GenerationService } from '../../../../../../shared/services/generation.service';
 import { SSEGenerationState, SSEConnectionConfig } from '../../../../../../shared/models/sse-step.model';
 import { BusinessPlanModel } from '../../../../models/businessPlan.model';
+import { ProjectModel } from '../../../../models/project.model';
+import { AdditionalInfoFormComponent } from '../additional-info-form/additional-info-form';
 import { environment } from '../../../../../../../environments/environment';
 
 @Component({
   selector: 'app-business-plan-generation',
   standalone: true,
-  imports: [DatePipe, SkeletonModule],
+  imports: [DatePipe, SkeletonModule, AdditionalInfoFormComponent],
   templateUrl: './business-plan-generation.html',
   styleUrl: './business-plan-generation.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,6 +42,8 @@ export class BusinessPlanGenerationComponent implements OnInit, OnDestroy {
 
   // Signals for reactive state management
   protected readonly projectId = signal<string | null>(null);
+  protected readonly showAdditionalInfoForm = signal<boolean>(true);
+  protected readonly additionalInfos = signal<any>(null);
   protected readonly generationState = signal<SSEGenerationState>({
     steps: [],
     stepsInProgress: [],
@@ -75,9 +79,26 @@ export class BusinessPlanGenerationComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Generate new business plan using SSE for real-time updates
+   * Handle additional info form submission
    */
-  protected generateBusinessPlan(): void {
+  protected onAdditionalInfoSubmitted(additionalInfos: ProjectModel['additionalInfos']): void {
+    this.additionalInfos.set(additionalInfos);
+    this.showAdditionalInfoForm.set(false);
+    this.generateBusinessPlanWithAdditionalInfo(additionalInfos);
+  }
+
+  /**
+   * Handle additional info form cancellation
+   */
+  protected onAdditionalInfoCancelled(): void {
+    this.showAdditionalInfoForm.set(false);
+    this.generateBusinessPlanWithoutAdditionalInfo();
+  }
+
+  /**
+   * Generate new business plan using SSE for real-time updates (without additional info)
+   */
+  protected generateBusinessPlanWithoutAdditionalInfo(): void {
     if (!this.projectId()) {
       console.error('Project ID not found');
       return;
@@ -85,11 +106,40 @@ export class BusinessPlanGenerationComponent implements OnInit, OnDestroy {
 
     // Reset state for new generation
     this.resetGenerationState();
-    console.log('Starting business plan generation with SSE...');
+    console.log('Starting business plan generation with SSE (no additional info)...');
 
     // Create SSE connection for business plan generation
     const sseConnection = this.businessPlanService.createBusinessplanItem(this.projectId()!);
 
+    this.startGenerationProcess(sseConnection);
+  }
+
+  /**
+   * Generate new business plan with additional information
+   */
+  protected generateBusinessPlanWithAdditionalInfo(additionalInfos: ProjectModel['additionalInfos']): void {
+    if (!this.projectId()) {
+      console.error('Project ID not found');
+      return;
+    }
+
+    // Reset state for new generation
+    this.resetGenerationState();
+    console.log('Starting business plan generation with SSE (with additional info)...');
+
+    // Create SSE connection for business plan generation with additional info
+    const sseConnection = this.businessPlanService.createBusinessplanItem(
+      this.projectId()!,
+      additionalInfos
+    );
+
+    this.startGenerationProcess(sseConnection);
+  }
+
+  /**
+   * Start the generation process with SSE connection
+   */
+  private startGenerationProcess(sseConnection: any): void {
     this.generationService
       .startGeneration('business-plan', sseConnection)
       .pipe(takeUntil(this.destroy$))
@@ -119,6 +169,13 @@ export class BusinessPlanGenerationComponent implements OnInit, OnDestroy {
           console.log('Business plan generation completed');
         },
       });
+  }
+
+  /**
+   * Legacy method for backward compatibility
+   */
+  protected generateBusinessPlan(): void {
+    this.generateBusinessPlanWithoutAdditionalInfo();
   }
 
   /**
