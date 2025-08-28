@@ -60,25 +60,6 @@ export class BrandingService {
   }
 
   /**
-   * Map generic SSE event to BrandingStepEvent
-   * @param sseEvent Generic SSE event
-   * @returns BrandingStepEvent
-   */
-  private mapToBrandingStepEvent(sseEvent: SSEStepEvent): BrandingStepEvent {
-    return {
-      type: sseEvent.type as 'started' | 'completed',
-      stepName: sseEvent.stepName || '',
-      data: sseEvent.data || '',
-      summary: sseEvent.summary || '',
-      timestamp: sseEvent.timestamp || new Date().toISOString(),
-      parsedData: {
-        status: sseEvent.parsedData?.status || sseEvent.type,
-        stepName: sseEvent.parsedData?.stepName || sseEvent.stepName || '',
-      },
-    };
-  }
-
-  /**
    * Cancel ongoing SSE connection
    */
   cancelGeneration(): void {
@@ -240,6 +221,12 @@ export class BrandingService {
             return throwError(() => new Error('User not authenticated'));
           } else if (error.status === 400) {
             return throwError(() => new Error('Project ID is required'));
+          } else if (error.status === 404) {
+            return throwError(() => {
+              const notFoundError = new Error('PDF_NOT_FOUND');
+              (notFoundError as any).isRetryable = false;
+              return notFoundError;
+            });
           } else if (error.status === 500) {
             return throwError(
               () =>
@@ -249,7 +236,12 @@ export class BrandingService {
             );
           }
 
-          return throwError(() => new Error('Failed to download branding PDF'));
+          // Generic error - also retryable
+          return throwError(() => {
+            const genericError = new Error('DOWNLOAD_ERROR');
+            (genericError as any).isRetryable = true;
+            return genericError;
+          });
         })
       );
   }

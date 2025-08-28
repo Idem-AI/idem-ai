@@ -23,17 +23,16 @@ import { PdfViewerModule } from 'ng2-pdf-viewer'; // <- import PdfViewerModule
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShowBrandingComponent implements OnInit {
-  // Injected services
   private readonly brandingService = inject(BrandingService);
   private readonly cookieService = inject(CookieService);
   private readonly router = inject(Router);
-  src = 'https://vadimdez.github.io/ng2-pdf-viewer/assets/pdf-test.pdf';
-  // Signals for state management
   protected readonly isLoading = signal<boolean>(true);
   protected readonly existingBranding = signal<BrandIdentityModel | null>(null);
   protected readonly projectIdFromCookie = signal<string | null>(null);
+  protected readonly hasError = signal<boolean>(false);
+  protected readonly errorMessage = signal<string>('');
+  protected readonly isRetryable = signal<boolean>(false);
   ngOnInit(): void {
-    // Get project ID from cookies
     const projectId = this.cookieService.get('projectId');
     this.projectIdFromCookie.set(projectId);
 
@@ -82,8 +81,19 @@ export class ShowBrandingComponent implements OnInit {
       },
       error: (err: any) => {
         console.error('Error loading branding PDF:', err);
-        // No PDF found or error - show generate button
-        console.log('No branding PDF found, showing generate button');
+        
+        // Check if this is a retryable error (other errors except 404)
+        if (err.message === 'DOWNLOAD_ERROR' || (err.isRetryable === true)) {
+          this.hasError.set(true);
+          this.isRetryable.set(true);
+          this.errorMessage.set('Une erreur est survenue lors du téléchargement.');
+          console.log('Retryable error occurred, showing error message with retry button');
+        } else {
+          // 404 or other non-retryable errors - show generate button
+          console.log('PDF not found (404) or non-retryable error, showing generate button');
+          this.hasError.set(false);
+        }
+        
         this.existingBranding.set(null);
         this.isLoading.set(false);
       },
@@ -96,6 +106,19 @@ export class ShowBrandingComponent implements OnInit {
   protected generateBranding(): void {
     console.log('Navigating to branding generation page');
     this.router.navigate(['/console/branding/generate']);
+  }
+
+  /**
+   * Retry loading the branding PDF
+   */
+  protected retryLoadBranding(): void {
+    console.log('Retrying branding PDF load');
+    const projectId = this.projectIdFromCookie();
+    if (projectId) {
+      this.hasError.set(false);
+      this.isLoading.set(true);
+      this.loadExistingBranding(projectId);
+    }
   }
 
   /**

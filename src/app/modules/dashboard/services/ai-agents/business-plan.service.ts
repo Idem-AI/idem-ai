@@ -233,6 +233,12 @@ export class BusinessPlanService {
             return throwError(() => new Error('User not authenticated'));
           } else if (error.status === 400) {
             return throwError(() => new Error('Project ID is required'));
+          } else if (error.status === 404) {
+            return throwError(() => {
+              const notFoundError = new Error('PDF_NOT_FOUND');
+              (notFoundError as any).isRetryable = false;
+              return notFoundError;
+            });
           } else if (error.status === 500) {
             return throwError(
               () =>
@@ -242,9 +248,12 @@ export class BusinessPlanService {
             );
           }
 
-          return throwError(
-            () => new Error('Failed to download business plan PDF')
-          );
+          // Generic error - also retryable
+          return throwError(() => {
+            const genericError = new Error('DOWNLOAD_ERROR');
+            (genericError as any).isRetryable = true;
+            return genericError;
+          });
         })
       );
   }

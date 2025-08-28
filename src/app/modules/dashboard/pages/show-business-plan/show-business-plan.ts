@@ -33,6 +33,9 @@ export class ShowBusinessPlan implements OnInit {
     null
   );
   protected readonly projectIdFromCookie = signal<string | null>(null);
+  protected readonly hasError = signal<boolean>(false);
+  protected readonly errorMessage = signal<string>('');
+  protected readonly isRetryable = signal<boolean>(false);
 
   ngOnInit(): void {
     // Get project ID from cookies
@@ -79,8 +82,19 @@ export class ShowBusinessPlan implements OnInit {
       },
       error: (err: any) => {
         console.error('Error loading business plan PDF:', err);
-        // No PDF found or error - show generate button
-        console.log('No business plan PDF found, showing generate button');
+        
+        // Check if this is a retryable error (other errors except 404)
+        if (err.message === 'DOWNLOAD_ERROR' || (err.isRetryable === true)) {
+          this.hasError.set(true);
+          this.isRetryable.set(true);
+          this.errorMessage.set('Une erreur est survenue lors du téléchargement.');
+          console.log('Retryable error occurred, showing error message with retry button');
+        } else {
+          // 404 or other non-retryable errors - show generate button
+          console.log('PDF not found (404) or non-retryable error, showing generate button');
+          this.hasError.set(false);
+        }
+        
         this.existingBusinessPlan.set(null);
         this.isLoading.set(false);
       },
@@ -93,6 +107,19 @@ export class ShowBusinessPlan implements OnInit {
   protected generateBusinessPlan(): void {
     console.log('Navigating to business plan generation page');
     this.router.navigate(['/console/business-plan/generate']);
+  }
+
+  /**
+   * Retry loading the business plan PDF
+   */
+  protected retryLoadBusinessPlan(): void {
+    console.log('Retrying business plan PDF load');
+    const projectId = this.projectIdFromCookie();
+    if (projectId) {
+      this.hasError.set(false);
+      this.isLoading.set(true);
+      this.loadExistingBusinessPlan(projectId);
+    }
   }
 
   /**

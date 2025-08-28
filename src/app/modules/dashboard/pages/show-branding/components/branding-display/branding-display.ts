@@ -36,11 +36,16 @@ export class BrandingDisplayComponent implements OnInit {
       // Use the PDF blob that was already loaded in the parent component
       this.loadPdfFromBlob(this.branding()!.pdfBlob!);
     } else if (this.branding()?.sections) {
-      // Wait for auth to be ready before making API calls
-      await this.tokenService.waitForAuthReady();
-      
-      // Fallback: load PDF from backend if no blob provided
-      await this.loadPdfFromBackend();
+      try {
+        // Wait for auth to be ready before making API calls
+        await this.tokenService.waitForAuthReady();
+        
+        // Fallback: load PDF from backend if no blob provided
+        await this.loadPdfFromBackend();
+      } catch (error: any) {
+        console.error('Authentication error in ngOnInit:', error);
+        this.pdfError.set('Authentication failed. Please refresh the page and try again.');
+      }
     }
   }
 
@@ -77,6 +82,12 @@ export class BrandingDisplayComponent implements OnInit {
         throw new Error('Project ID not found');
       }
 
+      // Verify authentication before making request
+      const token = this.tokenService.getToken();
+      if (!token) {
+        throw new Error('Authentication required. Please login again.');
+      }
+
       // Download PDF blob from backend
       const pdfBlob = await this.brandingService
         .downloadBrandingPdf(projectId)
@@ -90,16 +101,35 @@ export class BrandingDisplayComponent implements OnInit {
       }
     } catch (error: any) {
       console.error('Error loading PDF from backend:', error);
-      this.pdfError.set(
-        error.message || 'Failed to load PDF. Please try again.'
-      );
+      
+      // Handle specific error types
+      let errorMessage = 'Failed to load PDF. Please try again.';
+      
+      if (error.status === 401 || error.message.includes('Authentication') || error.message.includes('not authenticated')) {
+        errorMessage = 'Authentication failed. Please refresh the page and login again.';
+      } else if (error.status === 404) {
+        errorMessage = 'PDF not found. The branding document may not have been generated yet.';
+      } else if (error.status === 500) {
+        errorMessage = 'Server error generating PDF. Please try regenerating the branding.';
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      this.pdfError.set(errorMessage);
     } finally {
       this.isDownloadingPdf.set(false);
     }
   }
 
   protected async regeneratePdf(): Promise<void> {
-    await this.loadPdfFromBackend();
+    try {
+      // Ensure auth is ready before attempting regeneration
+      await this.tokenService.waitForAuthReady();
+      await this.loadPdfFromBackend();
+    } catch (error: any) {
+      console.error('Error in regeneratePdf:', error);
+      this.pdfError.set('Failed to regenerate PDF. Please check your authentication and try again.');
+    }
   }
 
   protected downloadPdf(): void {
