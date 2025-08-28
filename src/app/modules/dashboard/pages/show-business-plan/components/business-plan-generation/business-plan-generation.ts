@@ -49,6 +49,8 @@ export class BusinessPlanGenerationComponent implements OnInit, OnDestroy {
   protected readonly additionalInfos = signal<any>(null);
   protected readonly isSavingAdditionalInfo = signal<boolean>(false);
   protected readonly additionalInfoError = signal<string | null>(null);
+  protected readonly isPostProcessing = signal<boolean>(false);
+  protected readonly postProcessingMessage = signal<string>('Finalizing business plan generation...');
   protected readonly generationState = signal<SSEGenerationState>({
     steps: [],
     stepsInProgress: [],
@@ -314,10 +316,20 @@ export class BusinessPlanGenerationComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Handle generation completion - redirect to business plan display page
+   * Handle generation completion - add 4 second delay before redirect
    */
   private handleGenerationComplete(state: SSEGenerationState): void {
     console.log('Business plan generation completed:', state);
-    this.router.navigate(['/console/business-plan']);
+    
+    // Start post-processing phase with loading
+    this.isPostProcessing.set(true);
+    this.postProcessingMessage.set('Saving business plan data...');
+    
+    // Wait 4 seconds to allow backend to complete saving
+    setTimeout(() => {
+      console.log('Post-processing complete, redirecting to business plan display');
+      this.isPostProcessing.set(false);
+      this.router.navigate(['/console/business-plan']);
+    }, 4000);
   }
 }

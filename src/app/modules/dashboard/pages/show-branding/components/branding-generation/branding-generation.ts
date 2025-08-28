@@ -39,6 +39,8 @@ export class BrandingGenerationComponent implements OnInit, OnDestroy {
 
   // Signals for reactive state management
   protected readonly projectId = signal<string | null>(null);
+  protected readonly isPostProcessing = signal<boolean>(false);
+  protected readonly postProcessingMessage = signal<string>('Finalizing branding generation...');
   protected readonly generationState = signal<SSEGenerationState>({
     steps: [],
     stepsInProgress: [],
@@ -158,10 +160,20 @@ export class BrandingGenerationComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Handle generation completion - redirect to branding display page
+   * Handle generation completion - add 4 second delay before redirect
    */
   private handleGenerationComplete(state: SSEGenerationState): void {
     console.log('Branding generation completed:', state);
-    this.router.navigate(['/console/branding']);
+    
+    // Start post-processing phase with loading
+    this.isPostProcessing.set(true);
+    this.postProcessingMessage.set('Saving branding data...');
+    
+    // Wait 4 seconds to allow backend to complete saving
+    setTimeout(() => {
+      console.log('Post-processing complete, redirecting to branding display');
+      this.isPostProcessing.set(false);
+      this.router.navigate(['/console/branding']);
+    }, 4000);
   }
 }

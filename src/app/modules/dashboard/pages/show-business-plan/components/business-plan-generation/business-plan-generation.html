@@ -33,7 +33,7 @@
       </div>
     </div>
   </div>
-} @else if(isGenerating()) {
+} @else if(isGenerating() || isPostProcessing()) {
 <!-- Sticky Progress Header - Always Visible -->
 <div
   class="fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-md border-b border-gray-700/50"
@@ -47,9 +47,19 @@
           <i class="pi pi-cog animate-spin text-xl text-white"></i>
         </div>
         <div>
-          <h2 class="text-xl font-bold text-white">Generating Business Plan</h2>
+          <h2 class="text-xl font-bold text-white">
+            @if(isPostProcessing()) {
+              Finalizing Business Plan
+            } @else {
+              Generating Business Plan
+            }
+          </h2>
           <p class="text-gray-300 text-sm">
-            Creating your comprehensive business plan...
+            @if(isPostProcessing()) {
+              {{ postProcessingMessage() }}
+            } @else {
+              Creating your comprehensive business plan...
+            }
           </p>
           @if (generationState().stepsInProgress.length > 0) {
           <p class="text-xs text-blue-400 mt-1">
@@ -87,13 +97,15 @@
           </div>
         </div>
 
-        <!-- Cancel Button -->
+        <!-- Cancel Button - Only show during generation, not post-processing -->
+        @if(!isPostProcessing()) {
         <button
           (click)="cancelGeneration()"
           class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors duration-200"
         >
           Cancel
         </button>
+        }
       </div>
     </div>
   </div>
@@ -102,8 +114,50 @@
 <!-- Main Content with Top Padding -->
 <div class="pt-32 min-h-screen">
   <div class="max-w-7xl mx-auto px-6 space-y-8">
-    <!-- Steps In Progress Section - Multiple Loaders -->
-    @if(generationState().stepsInProgress.length > 0) {
+    <!-- Post Processing Section -->
+    @if(isPostProcessing()) {
+    <div class="space-y-4">
+      <div class="glass-card rounded-xl shadow-lg border border-gray-800/30">
+        <div class="bg-gradient-to-r px-6 py-4 border-b">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div
+                class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center animate-pulse"
+              >
+                <i class="pi pi-save animate-pulse text-white"></i>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold text-white">Saving Data</h3>
+                <p class="text-gray-300 text-sm">{{ postProcessingMessage() }}</p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <div
+                class="w-2 h-2 bg-green-500 rounded-full animate-pulse"
+              ></div>
+              <div
+                class="w-2 h-2 bg-green-500 rounded-full animate-pulse"
+                style="animation-delay: 0.2s"
+              ></div>
+              <div
+                class="w-2 h-2 bg-green-500 rounded-full animate-pulse"
+                style="animation-delay: 0.4s"
+              ></div>
+            </div>
+          </div>
+        </div>
+        <div class="p-6 space-y-4">
+          <p class="text-gray-300">Please wait while we finalize your business plan data...</p>
+          <div class="w-full bg-gray-700 rounded-full h-2">
+            <div
+              class="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full animate-pulse"
+              style="width: 100%"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    } @else if(generationState().stepsInProgress.length > 0) {
     <div class="space-y-4">
       @for (stepName of generationState().stepsInProgress; track stepName) {
       <div class="glass-card rounded-xl shadow-lg border border-gray-800/30">
