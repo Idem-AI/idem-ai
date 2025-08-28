@@ -4,6 +4,35 @@
     (formSubmitted)="onAdditionalInfoSubmitted($event)"
     (formCancelled)="onAdditionalInfoCancelled()"
   ></app-additional-info-form>
+} @else if(isSavingAdditionalInfo()) {
+  <!-- Saving Additional Info Loading State -->
+  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-bg-dark via-bg-light to-bg-dark">
+    <div class="max-w-md mx-auto text-center">
+      <div class="glass-card rounded-xl shadow-lg p-8">
+        <div class="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+          <i class="pi pi-spin pi-spinner text-3xl text-blue-500"></i>
+        </div>
+        <h3 class="text-xl font-bold text-white mb-2">Saving Additional Information</h3>
+        <p class="text-gray-400 mb-4">
+          We're securely saving your company details and team information...
+        </p>
+        
+        @if(additionalInfoError()) {
+        <div class="bg-red-500/10 border border-red-500/30 rounded-lg p-4 mb-4">
+          <p class="text-red-400 text-sm">{{ additionalInfoError() }}</p>
+        </div>
+        }
+        
+        <div class="flex justify-center">
+          <div class="flex space-x-1">
+            <div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+            <div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+            <div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 } @else if(isGenerating()) {
 <!-- Sticky Progress Header - Always Visible -->
 <div

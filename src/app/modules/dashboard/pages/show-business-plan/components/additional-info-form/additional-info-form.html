@@ -375,22 +375,15 @@
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <button
           type="button"
-          pButton
-          pRipple
-          class="p-button-outlined p-button-secondary"
-          label="Cancel"
+          class="p-button-outlined p-button-secondary outer-button"
           icon="pi pi-times"
           (click)="cancel()"
           [disabled]="isSubmitting()"
-        ></button>
-
-        <button
-          type="submit"
-          pButton
-          pRipple
-          class="p-button  outer-button"
-          [disabled]="!isFormValid() || isSubmitting()"
         >
+          Cancel
+        </button>
+
+        <button type="submit" pRipple class="inner-button">
           @if (isSubmitting()) {
           <i class="pi pi-spin pi-spinner mr-2"></i>
           Saving... } @else {

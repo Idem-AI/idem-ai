@@ -16,7 +16,10 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { BusinessPlanService } from '../../../../services/ai-agents/business-plan.service';
 import { CookieService } from '../../../../../../shared/services/cookie.service';
 import { GenerationService } from '../../../../../../shared/services/generation.service';
-import { SSEGenerationState, SSEConnectionConfig } from '../../../../../../shared/models/sse-step.model';
+import {
+  SSEGenerationState,
+  SSEConnectionConfig,
+} from '../../../../../../shared/models/sse-step.model';
 import { BusinessPlanModel } from '../../../../models/businessPlan.model';
 import { ProjectModel } from '../../../../models/project.model';
 import { AdditionalInfoFormComponent } from '../additional-info-form/additional-info-form';
@@ -44,6 +47,8 @@ export class BusinessPlanGenerationComponent implements OnInit, OnDestroy {
   protected readonly projectId = signal<string | null>(null);
   protected readonly showAdditionalInfoForm = signal<boolean>(true);
   protected readonly additionalInfos = signal<any>(null);
+  protected readonly isSavingAdditionalInfo = signal<boolean>(false);
+  protected readonly additionalInfoError = signal<string | null>(null);
   protected readonly generationState = signal<SSEGenerationState>({
     steps: [],
     stepsInProgress: [],
@@ -51,21 +56,29 @@ export class BusinessPlanGenerationComponent implements OnInit, OnDestroy {
     totalSteps: 0,
     completed: false,
     error: null,
-    isGenerating: false
+    isGenerating: false,
   });
 
   // Computed properties using the new generation state
-  protected readonly isGenerating = computed(() => this.generationState().isGenerating);
-  protected readonly generationError = computed(() => this.generationState().error);
-  protected readonly completedSteps = computed(() => 
-    this.generationState().steps.filter(step => step.status === 'completed')
+  protected readonly isGenerating = computed(
+    () => this.generationState().isGenerating
   );
-  protected readonly hasCompletedSteps = computed(() => 
+  protected readonly generationError = computed(
+    () => this.generationState().error
+  );
+  protected readonly completedSteps = computed(() =>
+    this.generationState().steps.filter((step) => step.status === 'completed')
+  );
+  protected readonly hasCompletedSteps = computed(() =>
     this.generationService.hasCompletedSteps(this.generationState())
   );
-  protected readonly totalSteps = computed(() => this.generationState().totalSteps);
-  protected readonly completedCount = computed(() => this.generationState().completedSteps);
-  protected readonly progressPercentage = computed(() => 
+  protected readonly totalSteps = computed(
+    () => this.generationState().totalSteps
+  );
+  protected readonly completedCount = computed(
+    () => this.generationState().completedSteps
+  );
+  protected readonly progressPercentage = computed(() =>
     this.generationService.calculateProgress(this.generationState())
   );
 
@@ -81,10 +94,19 @@ export class BusinessPlanGenerationComponent implements OnInit, OnDestroy {
   /**
    * Handle additional info form submission
    */
-  protected onAdditionalInfoSubmitted(additionalInfos: ProjectModel['additionalInfos']): void {
+  protected onAdditionalInfoSubmitted(
+    additionalInfos: ProjectModel['additionalInfos']
+  ): void {
+    console.log('Additional info form submitted:', additionalInfos);
     this.additionalInfos.set(additionalInfos);
+    this.isSavingAdditionalInfo.set(true);
+    this.additionalInfoError.set(null);
     this.showAdditionalInfoForm.set(false);
-    this.generateBusinessPlanWithAdditionalInfo(additionalInfos);
+
+    // Add a small delay to ensure the loader is visible before starting the request
+    setTimeout(() => {
+      this.generateBusinessPlanWithAdditionalInfo(additionalInfos);
+    }, 100);
   }
 
   /**
@@ -106,10 +128,14 @@ export class BusinessPlanGenerationComponent implements OnInit, OnDestroy {
 
     // Reset state for new generation
     this.resetGenerationState();
-    console.log('Starting business plan generation with SSE (no additional info)...');
+    console.log(
+      'Starting business plan generation with SSE (no additional info)...'
+    );
 
     // Create SSE connection for business plan generation
-    const sseConnection = this.businessPlanService.createBusinessplanItem(this.projectId()!);
+    const sseConnection = this.businessPlanService.createBusinessplanItem(
+      this.projectId()!
+    );
 
     this.startGenerationProcess(sseConnection);
   }
@@ -117,15 +143,21 @@ export class BusinessPlanGenerationComponent implements OnInit, OnDestroy {
   /**
    * Generate new business plan with additional information
    */
-  protected generateBusinessPlanWithAdditionalInfo(additionalInfos: ProjectModel['additionalInfos']): void {
+  protected generateBusinessPlanWithAdditionalInfo(
+    additionalInfos: ProjectModel['additionalInfos']
+  ): void {
     if (!this.projectId()) {
       console.error('Project ID not found');
+      this.isSavingAdditionalInfo.set(false);
+      this.additionalInfoError.set('Project ID not found');
       return;
     }
 
     // Reset state for new generation
     this.resetGenerationState();
-    console.log('Starting business plan generation with SSE (with additional info)...');
+    console.log(
+      'Starting business plan generation with SSE (with additional info)...'
+    );
 
     // Create SSE connection for business plan generation with additional info
     const sseConnection = this.businessPlanService.createBusinessplanItem(
@@ -133,7 +165,54 @@ export class BusinessPlanGenerationComponent implements OnInit, OnDestroy {
       additionalInfos
     );
 
-    this.startGenerationProcess(sseConnection);
+    // Use the generation service to handle the SSE connection properly
+    this.generationService
+      .startGeneration('business-plan', sseConnection)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (state: SSEGenerationState) => {
+          console.log('Business plan generation state updated:', state);
+
+          // On first event, mark additional info as saved with minimum display time
+          if (this.isSavingAdditionalInfo()) {
+            console.log(
+              'First SSE event received, additional info saved successfully'
+            );
+            // Ensure loader is visible for at least 1.5 seconds for better UX
+            setTimeout(() => {
+              this.isSavingAdditionalInfo.set(false);
+              this.additionalInfoError.set(null);
+            }, 1500);
+          }
+
+          this.generationState.set(state);
+
+          // Check if generation is completed
+          if (state.completed && state.steps.length > 0) {
+            this.emitBusinessPlanData(state.steps);
+            this.handleGenerationComplete(state);
+          }
+        },
+        error: (err) => {
+          console.error(
+            `Error generating business plan for project ID: ${this.projectId()}:`,
+            err
+          );
+          this.isSavingAdditionalInfo.set(false);
+          this.additionalInfoError.set(
+            'Error saving additional information. Please try again.'
+          );
+          this.showAdditionalInfoForm.set(true); // Show form again on error
+          this.generationState.update((state) => ({
+            ...state,
+            error: 'Failed to generate business plan',
+            isGenerating: false,
+          }));
+        },
+        complete: () => {
+          console.log('Business plan generation completed');
+        },
+      });
   }
 
   /**
@@ -147,7 +226,7 @@ export class BusinessPlanGenerationComponent implements OnInit, OnDestroy {
         next: (state: SSEGenerationState) => {
           console.log('Business plan generation state updated:', state);
           this.generationState.set(state);
-          
+
           // Check if generation is completed
           if (state.completed && state.steps.length > 0) {
             this.emitBusinessPlanData(state.steps);
@@ -189,7 +268,7 @@ export class BusinessPlanGenerationComponent implements OnInit, OnDestroy {
       totalSteps: 0,
       completed: false,
       error: null,
-      isGenerating: false
+      isGenerating: false,
     });
   }
 
@@ -198,17 +277,17 @@ export class BusinessPlanGenerationComponent implements OnInit, OnDestroy {
    */
   private emitBusinessPlanData(steps: any[]): void {
     const combinedContent = this.combineStepsContent(steps);
-    
+
     const businessPlan: BusinessPlanModel = {
-      sections: steps.map(step => ({
+      sections: steps.map((step) => ({
         id: `section-${step.stepName}`,
         name: step.stepName,
         type: 'generated',
         data: step.content || step.summary || '',
-        summary: step.summary || ''
-      }))
+        summary: step.summary || '',
+      })),
     };
-    
+
     this.businessPlanGenerated.emit(businessPlan);
   }
 

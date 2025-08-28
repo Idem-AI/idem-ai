@@ -29,10 +29,13 @@ export class BusinessPlanService {
     this.sseService.closeConnection('business-plan');
   }
 
-  createBusinessplanItem(projectId: string, additionalInfos?: any): Observable<SSEStepEvent> {
-    console.log('Starting business plan generation with SSE...', { 
-      projectId, 
-      hasAdditionalInfos: !!additionalInfos 
+  createBusinessplanItem(
+    projectId: string,
+    additionalInfos?: any
+  ): Observable<SSEStepEvent> {
+    console.log('Starting business plan generation with SSE...', {
+      projectId,
+      hasAdditionalInfos: !!additionalInfos,
     });
 
     // Close any existing SSE connection
@@ -41,12 +44,46 @@ export class BusinessPlanService {
     // If additional infos are provided, send them first then start SSE
     if (additionalInfos) {
       return new Observable<SSEStepEvent>((observer) => {
-        // Send additional info to backend first
-        this.http.post(`${this.apiUrl}/set-additional-info/${projectId}`, { additionalInfos })
+        // Create FormData for multipart/form-data request
+        const formData = new FormData();
+        
+        // Create a copy of additionalInfos without file references for JSON
+        const cleanAdditionalInfos = {
+          ...additionalInfos,
+          teamMembers: additionalInfos.teamMembers?.map((member: any) => ({
+            name: member.name,
+            position: member.position,
+            bio: member.bio,
+            // Don't include pictureFile and pictureUrl in JSON
+          })) || []
+        };
+        
+        // Add the JSON data as a string
+        formData.append('additionalInfos', JSON.stringify(cleanAdditionalInfos));
+        
+        // Add team member images
+        if (additionalInfos.teamMembers) {
+          additionalInfos.teamMembers.forEach((member: any, index: number) => {
+            if (member.pictureFile && member.pictureFile instanceof File) {
+              formData.append(`teamMemberImage_${index}`, member.pictureFile, member.pictureFile.name);
+            }
+          });
+        }
+        
+        console.log('Sending multipart data:', {
+          additionalInfosJson: cleanAdditionalInfos,
+          imageCount: additionalInfos.teamMembers?.filter((m: any) => m.pictureFile).length || 0
+        });
+
+        // Send multipart data to backend
+        this.http
+          .post(`${this.apiUrl}/set-additional-info/${projectId}`, formData)
           .subscribe({
             next: () => {
-              console.log('Additional info sent successfully, starting SSE generation...');
-              
+              console.log(
+                'Additional info sent successfully, starting SSE generation...'
+              );
+
               // Now start the SSE generation with additional info flag
               const config: SSEConnectionConfig = {
                 url: `${this.apiUrl}/generate/${projectId}?withAdditionalInfo=true`,
@@ -54,16 +91,18 @@ export class BusinessPlanService {
                 reconnectionDelay: 1000,
               };
 
-              this.sseService.createConnection(config, 'business-plan').subscribe({
-                next: (event) => observer.next(event),
-                error: (error) => observer.error(error),
-                complete: () => observer.complete()
-              });
+              this.sseService
+                .createConnection(config, 'business-plan')
+                .subscribe({
+                  next: (event) => observer.next(event),
+                  error: (error) => observer.error(error),
+                  complete: () => observer.complete(),
+                });
             },
             error: (error) => {
               console.error('Error sending additional info:', error);
               observer.error(error);
-            }
+            },
           });
       });
     } else {

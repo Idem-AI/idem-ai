@@ -7,7 +7,13 @@ import {
   signal,
   computed,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+  FormArray,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -59,9 +65,11 @@ export class AdditionalInfoFormComponent implements OnInit {
   protected readonly additionalInfoForm: FormGroup;
 
   // Computed properties
-  protected readonly isFormValid = computed(() => this.additionalInfoForm?.valid || false);
-  protected readonly teamMembersArray = computed(() => 
-    this.additionalInfoForm?.get('teamMembers') as FormArray
+  protected readonly isFormValid = computed(
+    () => this.additionalInfoForm?.valid || false
+  );
+  protected readonly teamMembersArray = computed(
+    () => this.additionalInfoForm?.get('teamMembers') as FormArray
   );
 
   constructor() {
@@ -107,8 +115,10 @@ export class AdditionalInfoFormComponent implements OnInit {
 
     try {
       this.isLoading.set(true);
-      const project = await this.projectService.getProjectById(projectId).toPromise();
-      
+      const project = await this.projectService
+        .getProjectById(projectId)
+        .toPromise();
+
       if (project?.additionalInfos) {
         this.populateForm(project.additionalInfos);
       }
@@ -184,14 +194,14 @@ export class AdditionalInfoFormComponent implements OnInit {
     }
 
     try {
-      this.uploadingMembers.update(set => new Set(set.add(memberIndex)));
+      this.uploadingMembers.update((set) => new Set(set.add(memberIndex)));
       const pictureUrl = await this.convertFileToDataUrl(file);
-      
+
       // Update form with the image data URL and file
       const memberForm = this.teamMembersArray().at(memberIndex);
-      memberForm.patchValue({ 
+      memberForm.patchValue({
         pictureUrl,
-        pictureFile: file 
+        pictureFile: file,
       });
 
       this.error.set(null);
@@ -199,7 +209,7 @@ export class AdditionalInfoFormComponent implements OnInit {
       console.error('Error processing image:', error);
       this.error.set('Error processing image');
     } finally {
-      this.uploadingMembers.update(set => {
+      this.uploadingMembers.update((set) => {
         const newSet = new Set(set);
         newSet.delete(memberIndex);
         return newSet;
@@ -228,7 +238,7 @@ export class AdditionalInfoFormComponent implements OnInit {
       this.error.set(null);
 
       const formValue = this.additionalInfoForm.value;
-      
+
       // Clean up team members data
       const cleanedTeamMembers = formValue.teamMembers.map((member: any) => ({
         name: member.name,
@@ -253,15 +263,8 @@ export class AdditionalInfoFormComponent implements OnInit {
         teamMembers: cleanedTeamMembers,
       };
 
-      // Save to project first
-      const projectId = this.projectId();
-      if (projectId) {
-        await this.projectService.updateProject(projectId, { additionalInfos }).toPromise();
-      }
-
       // Emit the data for business plan generation
       this.formSubmitted.emit(additionalInfos);
-      
     } catch (error) {
       console.error('Error submitting additional info:', error);
       this.error.set('Error saving information');
@@ -283,7 +286,10 @@ export class AdditionalInfoFormComponent implements OnInit {
     return 'Invalid field';
   }
 
-  protected getTeamMemberFieldError(memberIndex: number, fieldName: string): string | null {
+  protected getTeamMemberFieldError(
+    memberIndex: number,
+    fieldName: string
+  ): string | null {
     const field = this.teamMembersArray().at(memberIndex)?.get(fieldName);
     if (!field || !field.errors || !field.touched) return null;
 

@@ -9,6 +9,7 @@ import {
 import { BrandIdentityModel } from '../../../../models/brand-identity.model';
 import { BrandingService } from '../../../../services/ai-agents/branding.service';
 import { CookieService } from '../../../../../../shared/services/cookie.service';
+import { TokenService } from '../../../../../../shared/services/token.service';
 import { PdfViewer } from '../../../../../../shared/components/pdf-viewer/pdf-viewer';
 
 @Component({
@@ -24,6 +25,7 @@ export class BrandingDisplayComponent implements OnInit {
 
   private readonly brandingService = inject(BrandingService);
   private readonly cookieService = inject(CookieService);
+  private readonly tokenService = inject(TokenService);
 
   protected readonly pdfSrc = signal<string | null>(null);
   protected readonly isDownloadingPdf = signal<boolean>(false);
@@ -34,6 +36,9 @@ export class BrandingDisplayComponent implements OnInit {
       // Use the PDF blob that was already loaded in the parent component
       this.loadPdfFromBlob(this.branding()!.pdfBlob!);
     } else if (this.branding()?.sections) {
+      // Wait for auth to be ready before making API calls
+      await this.tokenService.waitForAuthReady();
+      
       // Fallback: load PDF from backend if no blob provided
       await this.loadPdfFromBackend();
     }
