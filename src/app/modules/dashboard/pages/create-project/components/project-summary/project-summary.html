@@ -146,7 +146,10 @@
             />
             <label for="privacyPolicy" class="text-sm text-gray-300">
               <span class="text-red-400">*</span> I agree to the
-              <a routerLink="/privacy-policy" class="text-blue-400 hover:underline" target="_blank"
+              <a
+                routerLink="/privacy-policy"
+                class="text-blue-400 hover:underline"
+                target="_blank"
                 >Privacy Policy</a
               >
             </label>
@@ -164,7 +167,10 @@
             />
             <label for="termsOfService" class="text-sm text-gray-300">
               <span class="text-red-400">*</span> I agree to the
-              <a routerLink="/terms-of-service" class="text-blue-400 hover:underline" target="_blank"
+              <a
+                routerLink="/terms-of-service"
+                class="text-blue-400 hover:underline"
+                target="_blank"
                 >Terms of Service</a
               >
             </label>
@@ -183,10 +189,15 @@
             />
             <label for="betaPolicy" class="text-sm text-gray-300">
               <span class="text-red-400">*</span> I agree to the
-              <a routerLink="/beta-policy" class="text-yellow-400 hover:underline" target="_blank"
+              <a
+                routerLink="/beta-policy"
+                class="text-yellow-400 hover:underline"
+                target="_blank"
                 >Beta Program Terms</a
               >
-              <span class="inline-flex items-center px-2 py-1 ml-2 text-xs font-medium bg-yellow-900/30 text-yellow-300 rounded-full">
+              <span
+                class="inline-flex items-center px-2 py-1 ml-2 text-xs font-medium bg-yellow-900/30 text-yellow-300 rounded-full"
+              >
                 BETA
               </span>
             </label>
@@ -204,14 +215,18 @@
             />
             <label for="marketingConsent" class="text-sm text-gray-300">
               I agree to receive marketing communications about products,
-              services, and promotions <span class="text-gray-500">(optional)</span>
+              services, and promotions
+              <span class="text-gray-500">(optional)</span>
             </label>
           </div>
 
           <!-- Required fields notice -->
-          <div class="mt-4 p-3 bg-blue-900/20 border border-blue-600/30 rounded-lg">
+          <div
+            class="mt-4 p-3 bg-blue-900/20 border border-blue-600/30 rounded-lg"
+          >
             <p class="text-sm text-blue-200">
-              <span class="text-red-400">*</span> Required fields must be accepted to continue
+              <span class="text-red-400">*</span> Required fields must be
+              accepted to continue
             </p>
           </div>
         </div>
@@ -221,15 +236,10 @@
         <button
           (click)="submitProject()"
           [disabled]="!canSubmit()"
-          [class]="canSubmit() 
-            ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white' 
-            : 'bg-gray-600 text-gray-400 cursor-not-allowed'"
+          [class]="canSubmit() ? 'inner-button text-white' : 'inner-button text-gray-400 cursor-not-allowed'"
           class="px-8 py-3 rounded-lg font-semibold transition-all duration-200 min-w-[200px]"
         >
-          @if (canSubmit()) {
-            Create Project
-          } @else {
-            Accept Required Policies
+          @if (canSubmit()) { Create Project } @else { Accept Required Policies
           }
         </button>
       </div>

@@ -24,8 +24,8 @@
           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
         >
           <!-- Créer un projet -->
-          <a
-            routerLink="/project/create"
+          <button
+            (click)="openCreateProject()"
             class="h-[200px] sm:h-[220px] lg:h-[240px] flex flex-col justify-center items-center text-center border-2 border-dashed border-secondary-500/50 rounded-xl bg-gray-800/50 hover:bg-gray-800 hover:shadow-[0_0_20px_-5px_var(--color-primary)] hover:scale-[1.01] transition-all duration-300 p-4 hover:cursor-pointer group"
           >
             <div
@@ -41,7 +41,7 @@
             >
               Start a new project
             </div>
-          </a>
+          </button>
 
           <!-- Cartes projets récents -->
           @for (project of recentProjects(); track $index) {
@@ -77,10 +77,10 @@
             <div class="text-gray-400 text-sm sm:text-base mb-2">
               No project available
             </div>
-            <a
-              routerLink="/project/create"
-              class="text-primary-500 hover:underline text-sm sm:text-base inline-block transition-colors"
-              >Create a project</a
+            <button
+              (click)="openCreateProject()"
+              class="text-primary-500  text-sm sm:text-base inline-block transition-colors outer-button"
+              >Create a project</button
             >
           </div>
           }

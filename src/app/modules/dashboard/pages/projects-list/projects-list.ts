@@ -12,14 +12,14 @@ import { ProjectService } from '../../services/project.service';
 import { AsyncPipe } from '@angular/common';
 import { Loader } from '../../../../components/loader/loader';
 import { AuthService } from '../../../auth/services/auth.service';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { first, Observable } from 'rxjs';
 import { ProjectCard } from '../../components/project-card/project-card';
 import { CookieService } from '../../../../shared/services/cookie.service';
 
 @Component({
   selector: 'app-projects-list',
-  imports: [Loader, AsyncPipe, ProjectCard, RouterLink],
+  imports: [Loader, AsyncPipe, ProjectCard],
   templateUrl: './projects-list.html',
   styleUrl: './projects-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -94,5 +94,9 @@ export class ProjectsList implements OnInit {
     this.isDropdownOpen.set(false);
     this.cookieService.set('projectId', projectId);
     this.router.navigate([`console/dashboard/${projectId}`]);
+  }
+
+  openCreateProject() {
+    this.router.navigate([`console/create-project`]);
   }
 }
