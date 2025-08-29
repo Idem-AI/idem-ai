@@ -134,39 +134,104 @@
           Legal & Privacy
         </h2>
         <div class="space-y-4">
+          <!-- Privacy Policy (Required) -->
           <div class="flex items-start space-x-3">
             <input
               type="checkbox"
               id="privacyPolicy"
               [checked]="privacyPolicyAccepted()"
               (change)="onPrivacyPolicyChange($event)"
-              class="mt-1"
+              class="mt-1 accent-blue-500"
+              required
             />
             <label for="privacyPolicy" class="text-sm text-gray-300">
-              I agree to the
-              <a href="#" class="text-blue-400 hover:underline"
+              <span class="text-red-400">*</span> I agree to the
+              <a routerLink="/privacy-policy" class="text-blue-400 hover:underline" target="_blank"
                 >Privacy Policy</a
               >
-              and
-              <a href="#" class="text-blue-400 hover:underline"
+            </label>
+          </div>
+
+          <!-- Terms of Service (Required) -->
+          <div class="flex items-start space-x-3">
+            <input
+              type="checkbox"
+              id="termsOfService"
+              [checked]="termsOfServiceAccepted()"
+              (change)="onTermsOfServiceChange($event)"
+              class="mt-1 accent-blue-500"
+              required
+            />
+            <label for="termsOfService" class="text-sm text-gray-300">
+              <span class="text-red-400">*</span> I agree to the
+              <a routerLink="/terms-of-service" class="text-blue-400 hover:underline" target="_blank"
                 >Terms of Service</a
               >
             </label>
           </div>
+
+          <!-- Beta Policy (Required only in beta) -->
+          @if (isBeta()) {
+          <div class="flex items-start space-x-3">
+            <input
+              type="checkbox"
+              id="betaPolicy"
+              [checked]="betaPolicyAccepted()"
+              (change)="onBetaPolicyChange($event)"
+              class="mt-1 accent-yellow-500"
+              required
+            />
+            <label for="betaPolicy" class="text-sm text-gray-300">
+              <span class="text-red-400">*</span> I agree to the
+              <a routerLink="/beta-policy" class="text-yellow-400 hover:underline" target="_blank"
+                >Beta Program Terms</a
+              >
+              <span class="inline-flex items-center px-2 py-1 ml-2 text-xs font-medium bg-yellow-900/30 text-yellow-300 rounded-full">
+                BETA
+              </span>
+            </label>
+          </div>
+          }
+
+          <!-- Marketing Consent (Optional) -->
           <div class="flex items-start space-x-3">
             <input
               type="checkbox"
               id="marketingConsent"
               [checked]="marketingConsentAccepted()"
               (change)="onMarketingConsentChange($event)"
-              class="mt-1"
+              class="mt-1 accent-green-500"
             />
             <label for="marketingConsent" class="text-sm text-gray-300">
               I agree to receive marketing communications about products,
-              services, and promotions
+              services, and promotions <span class="text-gray-500">(optional)</span>
             </label>
           </div>
+
+          <!-- Required fields notice -->
+          <div class="mt-4 p-3 bg-blue-900/20 border border-blue-600/30 rounded-lg">
+            <p class="text-sm text-blue-200">
+              <span class="text-red-400">*</span> Required fields must be accepted to continue
+            </p>
+          </div>
         </div>
+      </div>
+      <!-- Submit Button -->
+      <div class="flex justify-center mt-8">
+        <button
+          (click)="submitProject()"
+          [disabled]="!canSubmit()"
+          [class]="canSubmit() 
+            ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white' 
+            : 'bg-gray-600 text-gray-400 cursor-not-allowed'"
+          class="px-8 py-3 rounded-lg font-semibold transition-all duration-200 min-w-[200px]"
+        >
+          @if (canSubmit()) {
+            Create Project
+          } @else {
+            Accept Required Policies
+          }
+        </button>
       </div>
     </div>
   </div>

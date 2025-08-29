@@ -5,9 +5,12 @@ import {
   Input,
   output,
   Output,
+  computed,
+  signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { ProjectModel } from '../../../../models/project.model';
 import { SafeHtmlPipe } from '../../../projects-list/safehtml.pipe';
 import {
@@ -15,30 +18,44 @@ import {
   TypographyModel,
 } from '../../../../models/brand-identity.model';
 import { LogoModel } from '../../../../models/logo.model';
+import { environment } from '../../../../../../../environments/environment';
 
 @Component({
   selector: 'app-project-summary',
   standalone: true,
-  imports: [CommonModule, FormsModule, SafeHtmlPipe],
+  imports: [CommonModule, FormsModule, SafeHtmlPipe, RouterModule],
   templateUrl: './project-summary.html',
   styleUrl: './project-summary.css',
 })
 export class ProjectSummaryComponent {
   // Angular inputs
-  project = input.required<ProjectModel>();
-  selectedLogo = input.required<string>();
-  selectedColor = input.required<string>();
-  selectedTypography = input.required<string>();
-  logos = input.required<LogoModel[]>();
-  colorPalettes = input.required<ColorModel[]>();
-  typographyOptions = input.required<TypographyModel[]>();
-  privacyPolicyAccepted = input.required<boolean>();
-  marketingConsentAccepted = input.required<boolean>();
+  readonly project = input.required<ProjectModel>();
+  readonly selectedLogo = input.required<string>();
+  readonly selectedColor = input.required<string>();
+  readonly selectedTypography = input.required<string>();
+  readonly logos = input.required<LogoModel[]>();
+  readonly colorPalettes = input.required<ColorModel[]>();
+  readonly typographyOptions = input.required<TypographyModel[]>();
+  readonly privacyPolicyAccepted = input.required<boolean>();
+  readonly termsOfServiceAccepted = input.required<boolean>();
+  readonly betaPolicyAccepted = input.required<boolean>();
+  readonly marketingConsentAccepted = input.required<boolean>();
 
   // Angular outputs
-  privacyPolicyChange = output<boolean>();
-  marketingConsentChange = output<boolean>();
-  finalizeProject = output<void>();
+  readonly privacyPolicyChange = output<boolean>();
+  readonly termsOfServiceChange = output<boolean>();
+  readonly betaPolicyChange = output<boolean>();
+  readonly marketingConsentChange = output<boolean>();
+  readonly finalizeProject = output<void>();
+
+  // Environment and computed properties
+  protected readonly isBeta = signal(environment.isBeta);
+  
+  protected readonly canSubmit = computed(() => {
+    const requiredPolicies = this.privacyPolicyAccepted() && this.termsOfServiceAccepted();
+    const betaRequired = this.isBeta() ? this.betaPolicyAccepted() : true;
+    return requiredPolicies && betaRequired;
+  });
 
   protected getSelectedLogo(): LogoModel | undefined {
     const logo = this.logos().find((logo) => logo.id === this.selectedLogo());
@@ -67,12 +84,24 @@ export class ProjectSummaryComponent {
     this.privacyPolicyChange.emit(checkbox.checked);
   }
 
+  protected onTermsOfServiceChange(event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    this.termsOfServiceChange.emit(checkbox.checked);
+  }
+
+  protected onBetaPolicyChange(event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    this.betaPolicyChange.emit(checkbox.checked);
+  }
+
   protected onMarketingConsentChange(event: Event): void {
     const checkbox = event.target as HTMLInputElement;
     this.marketingConsentChange.emit(checkbox.checked);
   }
 
   protected submitProject(): void {
-    this.finalizeProject.emit();
+    if (this.canSubmit()) {
+      this.finalizeProject.emit();
+    }
   }
 }

@@ -85,6 +85,8 @@ export class CreateProjectComponent implements OnInit {
   protected selectedConstraints = signal<SelectElement[]>([]);
   protected visible = signal<boolean>(false);
   protected privacyPolicyAccepted = signal<boolean>(false);
+  protected termsOfServiceAccepted = signal<boolean>(false);
+  protected betaPolicyAccepted = signal<boolean>(false);
   protected marketingConsentAccepted = signal<boolean>(false);
 
   // Visual identity selections
@@ -366,6 +368,20 @@ export class CreateProjectComponent implements OnInit {
    */
   protected handlePrivacyPolicyChange(accepted: boolean): void {
     this.privacyPolicyAccepted.set(accepted);
+  }
+
+  /**
+   * Handles terms of service acceptance changes from the summary component
+   */
+  protected handleTermsOfServiceChange(accepted: boolean): void {
+    this.termsOfServiceAccepted.set(accepted);
+  }
+
+  /**
+   * Handles beta policy acceptance changes from the summary component
+   */
+  protected handleBetaPolicyChange(accepted: boolean): void {
+    this.betaPolicyAccepted.set(accepted);
   }
 
   /**

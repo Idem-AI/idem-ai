@@ -153,12 +153,38 @@ export const routes: Routes = [
 
   // Project creation route
   {
-    path: 'project/create',
+    path: 'console/create-project',
     loadComponent: () =>
       import('./modules/dashboard/pages/create-project/create-project').then(
         (m) => m.CreateProjectComponent
       ),
     data: { layout: 'empty' },
+  },
+
+  // Policy pages
+  {
+    path: 'privacy-policy',
+    loadComponent: () =>
+      import('./shared/components/privacy-policy/privacy-policy').then(
+        (m) => m.PrivacyPolicy
+      ),
+    data: { layout: 'public' },
+  },
+  {
+    path: 'terms-of-service',
+    loadComponent: () =>
+      import('./shared/components/terms-of-service/terms-of-service').then(
+        (m) => m.TermsOfService
+      ),
+    data: { layout: 'public' },
+  },
+  {
+    path: 'beta-policy',
+    loadComponent: () =>
+      import('./shared/components/beta-policy/beta-policy').then(
+        (m) => m.BetaPolicy
+      ),
+    data: { layout: 'public' },
   },
 
   // 404 Not Found route

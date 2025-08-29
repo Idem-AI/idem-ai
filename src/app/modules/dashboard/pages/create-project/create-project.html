@@ -228,7 +228,7 @@
   } @if (isStepActive(5)) {
   <section #summarySelection class="animate-slideInRight">
     <app-project-summary
-      (createProject)="finalizeProjectCreation()"
+      (finalizeProject)="finalizeProjectCreation()"
       (previousStep)="goToPreviousStep()"
       [project]="project()"
       [selectedLogo]="selectedLogo"
@@ -238,7 +238,13 @@
       [colorPalettes]="colorModels"
       [typographyOptions]="typographyModels"
       [privacyPolicyAccepted]="privacyPolicyAccepted()"
+      [termsOfServiceAccepted]="termsOfServiceAccepted()"
+      [betaPolicyAccepted]="betaPolicyAccepted()"
       [marketingConsentAccepted]="marketingConsentAccepted()"
+      (privacyPolicyChange)="handlePrivacyPolicyChange($event)"
+      (termsOfServiceChange)="handleTermsOfServiceChange($event)"
+      (betaPolicyChange)="handleBetaPolicyChange($event)"
+      (marketingConsentChange)="handleMarketingConsentChange($event)"
     ></app-project-summary>
   </section>
   } }
