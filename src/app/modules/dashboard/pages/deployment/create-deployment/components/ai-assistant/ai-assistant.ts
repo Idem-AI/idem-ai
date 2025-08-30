@@ -34,6 +34,7 @@ import {
 } from '../../../../../models/api/deployments/deployments.api.model';
 import { CookieService } from '../../../../../../../shared/services/cookie.service';
 import { DeploymentService } from '../../../../../services/deployment.service';
+import { AuthService } from '../../../../../../auth/services/auth.service';
 import { MarkdownModule } from 'ngx-markdown';
 
 // Import Prism core only - specific languages are already imported in app.config.ts
@@ -115,6 +116,7 @@ export class AiAssistant implements OnInit, AfterViewInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly cookieService = inject(CookieService);
   private readonly deploymentService = inject(DeploymentService);
+  private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
   constructor() {
@@ -141,6 +143,9 @@ export class AiAssistant implements OnInit, AfterViewInit {
     } else {
       this.projectId.set(projectId);
       console.log('AI Assistant initialized with project ID:', projectId);
+      
+      // Add initial greeting message
+      this.addInitialGreeting();
     }
 
     // Try to restore deployment ID from cookie if it exists
@@ -829,5 +834,24 @@ export class AiAssistant implements OnInit, AfterViewInit {
    */
   protected cancelSensitiveVariables(): void {
     this.showSensitiveVariablesDialog.set(false);
+  }
+
+  /**
+   * Adds initial greeting message with user name
+   */
+  private addInitialGreeting(): void {
+    // Get user name from Firebase Auth
+    this.authService.user$.subscribe((user: any) => {
+      if (user) {
+        const userName = user.displayName || 'there';
+        const greetingMessage: ChatMessage = {
+          sender: 'ai',
+          text: `Hello! ${userName}, I'm IDEM DevOps Assistant. I can generate and deploy your project or infrastructure for you, and manage responsive deployments. How can I help you today?`,
+          timestamp: new Date(),
+        };
+        
+        this.chatMessages.set([greetingMessage]);
+      }
+    });
   }
 }

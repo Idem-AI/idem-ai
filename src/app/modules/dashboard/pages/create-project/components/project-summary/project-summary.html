@@ -230,18 +230,17 @@
             </p>
           </div>
         </div>
-      </div>
-      <!-- Submit Button -->
-      <div class="flex justify-center mt-8">
-        <button
-          (click)="submitProject()"
-          [disabled]="!canSubmit()"
-          [class]="canSubmit() ? 'inner-button text-white' : 'inner-button text-gray-400 cursor-not-allowed'"
-          class="px-8 py-3 rounded-lg font-semibold transition-all duration-200 min-w-[200px]"
-        >
-          @if (canSubmit()) { Create Project } @else { Accept Required Policies
-          }
-        </button>
+        <div class="flex justify-end mt-8">
+          <button
+            (click)="submitProject()"
+            [disabled]="!canSubmit()"
+            [class]="canSubmit() ? 'inner-button text-white' : 'inner-button text-gray-400 cursor-not-allowed'"
+            class="px-8 py-3 rounded-lg font-semibold transition-all duration-200 min-w-[200px]"
+          >
+            @if (canSubmit()) { Create Project } @else { Accept Required
+            Policies }
+          </button>
+        </div>
       </div>
     </div>
   </div>
