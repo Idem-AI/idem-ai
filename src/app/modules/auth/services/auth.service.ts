@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { TokenService } from '../../../shared/services/token.service';
+import { CookieService } from '../../../shared/services/cookie.service';
 import {
   Auth,
   GithubAuthProvider,
@@ -22,7 +23,10 @@ export class AuthService {
   user$: Observable<User | null>;
   private http = inject(HttpClient);
   private tokenService = inject(TokenService);
+  private cookieService = inject(CookieService);
   private apiUrl = `${environment.services.api.url}/auth`;
+  private readonly CURRENT_USER_COOKIE = 'currentUser';
+
   constructor() {
     this.user$ = user(this.auth);
   }
@@ -60,6 +64,9 @@ export class AuthService {
       return;
     }
 
+    // Sauvegarder l'utilisateur dans les cookies
+    this.saveUserToCookies(user);
+
     try {
       await firstValueFrom(
         this.http.post<void>(
@@ -90,6 +97,8 @@ export class AuthService {
       .then(() => {
         // Effacer le token dans TokenService
         this.tokenService.clearToken();
+        // Effacer l'utilisateur des cookies
+        this.cookieService.remove(this.CURRENT_USER_COOKIE);
         sessionStorage.clear();
         return this.http.post<void>(`${this.apiUrl}/logout`, {}).toPromise();
       })
@@ -101,6 +110,76 @@ export class AuthService {
   }
 
   getCurrentUser(): User | null {
-    return this.auth.currentUser;
+    // D'abord essayer de récupérer depuis Firebase Auth
+    const firebaseUser = this.auth.currentUser;
+    if (firebaseUser) {
+      return firebaseUser;
+    }
+
+    // Si pas d'utilisateur Firebase, récupérer depuis les cookies
+    return this.getUserFromCookies();
+  }
+
+  /**
+   * Sauvegarde l'utilisateur dans les cookies
+   */
+  private saveUserToCookies(user: User): void {
+    const userData = {
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+      emailVerified: user.emailVerified,
+      phoneNumber: user.phoneNumber,
+      providerId: user.providerId,
+    };
+
+    this.cookieService.set(
+      this.CURRENT_USER_COOKIE,
+      JSON.stringify(userData),
+      30
+    );
+  }
+
+  /**
+   * Récupère l'utilisateur depuis les cookies
+   */
+  private getUserFromCookies(): User | null {
+    try {
+      const userCookie = this.cookieService.get(this.CURRENT_USER_COOKIE);
+      if (!userCookie) {
+        return null;
+      }
+
+      const userData = JSON.parse(userCookie);
+
+      // Créer un objet User-like depuis les données des cookies
+      return {
+        uid: userData.uid,
+        email: userData.email,
+        displayName: userData.displayName,
+        photoURL: userData.photoURL,
+        emailVerified: userData.emailVerified,
+        phoneNumber: userData.phoneNumber,
+        providerId: userData.providerId,
+        // Propriétés requises par l'interface User mais non stockées
+        isAnonymous: false,
+        metadata: {} as any,
+        providerData: [],
+        refreshToken: '',
+        tenantId: null,
+        delete: async () => {},
+        getIdToken: async () => '',
+        getIdTokenResult: async () => ({} as any),
+        reload: async () => {},
+        toJSON: () => ({}),
+      } as User;
+    } catch (error) {
+      console.error(
+        "Erreur lors de la récupération de l'utilisateur depuis les cookies:",
+        error
+      );
+      return null;
+    }
   }
 }
