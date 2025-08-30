@@ -54,6 +54,8 @@ export class BusinessPlanService {
             name: member.name,
             position: member.position,
             bio: member.bio,
+            email: member.email,
+            socialLinks: member.socialLinks || {},
             // Don't include pictureFile and pictureUrl in JSON
           })) || []
         };

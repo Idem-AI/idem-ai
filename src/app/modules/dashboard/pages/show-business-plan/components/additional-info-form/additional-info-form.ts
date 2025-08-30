@@ -239,13 +239,14 @@ export class AdditionalInfoFormComponent implements OnInit {
 
       const formValue = this.additionalInfoForm.value;
 
-      // Clean up team members data
+      // Clean up team members data and preserve files
       const cleanedTeamMembers = formValue.teamMembers.map((member: any) => ({
         name: member.name,
-        role: member.role,
+        position: member.role, // Backend expects 'position' not 'role'
         email: member.email,
         bio: member.bio,
         pictureUrl: member.pictureUrl || '',
+        pictureFile: member.pictureFile, // Keep the file for multipart upload
         socialLinks: {
           linkedin: member.socialLinks?.linkedin || '',
           github: member.socialLinks?.github || '',
@@ -263,7 +264,7 @@ export class AdditionalInfoFormComponent implements OnInit {
         teamMembers: cleanedTeamMembers,
       };
 
-      // Emit the data for business plan generation
+      // Emit the data for business plan generation (with files included)
       this.formSubmitted.emit(additionalInfos);
     } catch (error) {
       console.error('Error submitting additional info:', error);
