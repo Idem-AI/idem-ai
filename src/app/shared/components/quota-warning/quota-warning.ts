@@ -8,8 +8,10 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { QuotaService } from '../../services/quota.service';
 import { NotificationService } from '../../services/notification.service';
+import { CookieService } from '../../services/cookie.service';
 import {
   QuotaStatus,
   QuotaInfoResponse,
@@ -28,7 +30,7 @@ import {
         class="bg-gradient-to-r from-yellow-500/90 to-orange-500/90 backdrop-blur-sm text-white p-4 rounded-lg shadow-lg border border-yellow-400/30"
       >
         <div class="flex items-start">
-          <!-- Icône d'avertissement -->
+          <!-- Warning icon -->
           <div class="flex-shrink-0 mr-3">
             <svg
               class="w-6 h-6 text-yellow-200"
@@ -47,18 +49,18 @@ import {
             <h4 class="font-semibold text-sm mb-1">{{ warning.title }}</h4>
             <p class="text-sm text-yellow-100 mb-3">{{ warning.message }}</p>
 
-            <!-- Détails des quotas -->
+            <!-- Quota details -->
             <div class="space-y-2 text-xs">
               @if (warning.dailyWarning) {
               <div class="flex justify-between items-center">
-                <span>Quota quotidien:</span>
+                <span>Daily quota:</span>
                 <span class="font-medium"
                   >{{ warning.dailyUsage }}/{{ warning.dailyLimit }}</span
                 >
               </div>
               } @if (warning.weeklyWarning) {
               <div class="flex justify-between items-center">
-                <span>Quota hebdomadaire:</span>
+                <span>Weekly quota:</span>
                 <span class="font-medium"
                   >{{ warning.weeklyUsage }}/{{ warning.weeklyLimit }}</span
                 >
@@ -72,18 +74,18 @@ import {
                 (click)="dismissWarning()"
                 class="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition-colors"
               >
-                Compris
+                Understood
               </button>
               <button
                 (click)="showQuotaDetails()"
                 class="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition-colors"
               >
-                Voir détails
+                View Details
               </button>
             </div>
           </div>
 
-          <!-- Bouton fermer -->
+          <!-- Close button -->
           <button
             (click)="dismissWarning()"
             class="flex-shrink-0 ml-2 p-1 rounded-full hover:bg-white/20 transition-colors"
@@ -105,8 +107,11 @@ import {
 export class QuotaWarningComponent implements OnInit {
   private readonly quotaService = inject(QuotaService);
   private readonly notificationService = inject(NotificationService);
+  private readonly cookieService = inject(CookieService);
+  private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
+  private readonly DISMISS_COOKIE_NAME = 'quota_warning_dismissed';
   private warningDismissed = false;
 
   // Local state management with signals
@@ -119,7 +124,9 @@ export class QuotaWarningComponent implements OnInit {
    * Calculates if warning should be shown based on quota data
    */
   private calculateWarningState(): void {
-    if (this.warningDismissed) {
+    // Check if warning was dismissed today
+    const dismissedToday = this.isDismissedToday();
+    if (this.warningDismissed || dismissedToday) {
       this.shouldShowWarning.set(null);
       return;
     }
@@ -140,15 +147,15 @@ export class QuotaWarningComponent implements OnInit {
       return;
     }
 
-    let title = 'Quota bientôt atteint';
-    let message = "Vous approchez de vos limites d'utilisation.";
+    let title = 'Quota Nearly Reached';
+    let message = 'You are approaching your usage limits.';
 
     if (dailyWarning && weeklyWarning) {
-      message = 'Vos quotas quotidien et hebdomadaire sont bientôt atteints.';
+      message = 'Your daily and weekly quotas are nearly reached.';
     } else if (dailyWarning) {
-      message = 'Votre quota quotidien est bientôt atteint.';
+      message = 'Your daily quota is nearly reached.';
     } else if (weeklyWarning) {
-      message = 'Votre quota hebdomadaire est bientôt atteint.';
+      message = 'Your weekly quota is nearly reached.';
     }
 
     this.shouldShowWarning.set({
@@ -224,35 +231,48 @@ export class QuotaWarningComponent implements OnInit {
     return QuotaStatus.AVAILABLE;
   }
 
-  protected dismissWarning(): void {
-    this.warningDismissed = true;
-
-    // Réactiver l'avertissement après 1 heure
-    setTimeout(() => {
-      this.warningDismissed = false;
-    }, 60 * 60 * 1000);
+  /**
+   * Check if warning was dismissed today
+   */
+  private isDismissedToday(): boolean {
+    const dismissedDate = this.cookieService.get(this.DISMISS_COOKIE_NAME);
+    if (!dismissedDate) return false;
+    
+    const today = new Date().toDateString();
+    return dismissedDate === today;
   }
 
+  /**
+   * Dismiss warning for today
+   */
+  protected dismissWarning(): void {
+    this.warningDismissed = true;
+    
+    // Store dismissal date in cookie
+    const today = new Date().toDateString();
+    this.cookieService.set(this.DISMISS_COOKIE_NAME, today, 1); // Expires in 1 day
+    
+    this.shouldShowWarning.set(null);
+  }
+
+  /**
+   * Navigate to user profile page
+   */
   protected showQuotaDetails(): void {
-    this.notificationService.showInfo({
-      title: 'Informations de quota',
-      message:
-        'Consultez votre tableau de bord pour plus de détails sur vos quotas.',
-      duration: 4000,
-    });
     this.dismissWarning();
+    this.router.navigate(['/console/profile']);
   }
 
   private sendWarningNotification(warning: any): void {
-    // Envoyer une notification une seule fois
-    if (!this.warningDismissed) {
+    // Send notification only once per day
+    if (!this.warningDismissed && !this.isDismissedToday()) {
       this.notificationService.showWarning({
         title: warning.title,
         message: warning.message,
         duration: 6000,
         actions: [
           {
-            label: 'Voir détails',
+            label: 'View Details',
             action: () => this.showQuotaDetails(),
           },
         ],

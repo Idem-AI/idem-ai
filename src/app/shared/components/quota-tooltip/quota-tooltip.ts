@@ -24,39 +24,35 @@ import { QuotaService } from '../../services/quota.service';
       >
         @if (tooltipContent(); as content) {
         <div class="text-center">
-          <!-- Titre -->
+          <!-- Title -->
           <div class="font-medium mb-1">{{ content.title }}</div>
 
-          <!-- Message principal -->
+          <!-- Main message -->
           <div class="text-gray-300 mb-2">{{ content.message }}</div>
 
-          <!-- Informations de quota -->
+          <!-- Quota information -->
           @if (content.quotaInfo) {
           <div class="border-t border-gray-700 pt-2 space-y-1">
             <div class="flex justify-between text-xs">
-              <span>Quotidien:</span>
+              <span>Daily:</span>
               <span [class]="content.quotaInfo.dailyStatus">
-                {{ content.quotaInfo.remainingDaily }}/{{
-                  content.quotaInfo.dailyLimit
-                }}
+                {{ content.quotaInfo.remainingDaily }}/{{ content.quotaInfo.dailyLimit }}
               </span>
             </div>
             <div class="flex justify-between text-xs">
-              <span>Hebdomadaire:</span>
+              <span>Weekly:</span>
               <span [class]="content.quotaInfo.weeklyStatus">
-                {{ content.quotaInfo.remainingWeekly }}/{{
-                  content.quotaInfo.weeklyLimit
-                }}
+                {{ content.quotaInfo.remainingWeekly }}/{{ content.quotaInfo.weeklyLimit }}
               </span>
             </div>
           </div>
           }
 
-          <!-- Restrictions bêta -->
+          <!-- Beta restrictions -->
           @if (content.betaRestrictions) {
           <div class="border-t border-gray-700 pt-2 text-xs">
             <div class="text-orange-300 font-medium mb-1">
-              Limitations bêta:
+              Beta limitations:
             </div>
             <ul class="text-left space-y-1">
               @for (restriction of content.betaRestrictions; track restriction)
@@ -69,7 +65,7 @@ import { QuotaService } from '../../services/quota.service';
         </div>
         }
 
-        <!-- Flèche du tooltip -->
+        <!-- Tooltip arrow -->
         <div
           class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"
         ></div>
@@ -91,33 +87,33 @@ export class QuotaTooltipComponent {
 
     if (!quotaInfo) return null;
 
-    // Déterminer le titre et message principal
-    let title = 'Informations de quota';
+    // Determine title and main message
+    let title = 'Quota Information';
     let message = this.customMessage;
 
     if (!message) {
       if (!quotaDisplay?.canUseFeature) {
-        title = 'Quota dépassé';
-        message = "Vous avez atteint vos limites d'utilisation";
+        title = 'Quota Exceeded';
+        message = 'You have reached your usage limits';
       } else if (
         isBeta &&
         this.featureName &&
         !this.quotaService.isFeatureAllowedInBeta(this.featureName)
       ) {
-        title = 'Fonctionnalité limitée';
-        message = 'Non disponible en version bêta';
+        title = 'Limited Feature';
+        message = 'Not available in beta version';
       } else if (
         quotaDisplay?.dailyStatus === 'warning' ||
         quotaDisplay?.weeklyStatus === 'warning'
       ) {
-        title = 'Quota bientôt atteint';
-        message = 'Utilisez avec modération';
+        title = 'Quota Nearly Reached';
+        message = 'Use with moderation';
       } else {
-        message = 'Quotas disponibles';
+        message = 'Quotas available';
       }
     }
 
-    // Informations de quota avec statut coloré
+    // Quota information with colored status
     const quotaInfoFormatted = {
       dailyLimit: quotaInfo.dailyLimit,
       remainingDaily: quotaInfo.remainingDaily,
@@ -131,12 +127,12 @@ export class QuotaTooltipComponent {
       ),
     };
 
-    // Restrictions bêta formatées
+    // Formatted beta restrictions
     let betaRestrictionsFormatted: string[] | null = null;
     if (isBeta && betaRestrictions) {
       betaRestrictionsFormatted = [
         `${betaRestrictions.maxStyles} styles maximum`,
-        `Résolution: ${betaRestrictions.maxResolution}`,
+        `Resolution: ${betaRestrictions.maxResolution}`,
         `${betaRestrictions.maxOutputTokens} tokens max`,
       ];
 
@@ -144,7 +140,7 @@ export class QuotaTooltipComponent {
         this.featureName &&
         !betaRestrictions.allowedFeatures.includes(this.featureName)
       ) {
-        betaRestrictionsFormatted.unshift('Fonctionnalité non autorisée');
+        betaRestrictionsFormatted.unshift('Feature not authorized');
       }
     }
 

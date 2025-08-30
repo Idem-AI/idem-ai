@@ -150,6 +150,14 @@ export const routes: Routes = [
       ),
     data: { layout: 'dashboard' },
   },
+  {
+    path: 'console/profile',
+    loadComponent: () =>
+      import('./modules/dashboard/pages/profile/profile').then(
+        (m) => m.ProfileComponent
+      ),
+    data: { layout: 'dashboard' },
+  },
 
   // Project creation route
   {
