@@ -164,38 +164,34 @@ export class BrandingService {
   }
 
   /**
-   * Finalize branding creation - called at the end of the branding flow
+   * Finalize project creation - called at the end of the project creation flow
    * @param projectId Project ID
-   * @param brandingData Final branding data to save
-   * @returns Observable with the finalized branding
+   * @param acceptanceData User acceptance flags for policies
+   * @returns Observable with the finalized project
    */
-  finalizeBrandingCreation(
+  finalizeProjectCreation(
     projectId: string,
-    brandingData: {
-      selectedColor: ColorModel;
-      selectedTypography: TypographyModel;
-      selectedLogo: LogoModel;
-      logoVariations?: {
-        lightBackground?: string;
-        darkBackground?: string;
-        monochrome?: string;
-      };
+    acceptanceData: {
+      privacyPolicyAccepted: boolean;
+      termsOfServiceAccepted: boolean;
+      betaPolicyAccepted: boolean;
+      marketingAccepted: boolean;
     }
-  ): Observable<BrandIdentityModel> {
-    console.log('Finalizing branding creation...');
+  ): Observable<any> {
+    console.log('Finalizing project creation...');
     console.log('Project ID:', projectId);
-    console.log('Branding Data:', brandingData);
+    console.log('Acceptance Data:', acceptanceData);
+    
+    const finalizeUrl = `${environment.services.api.url}/projects/${projectId}/finalize`;
+    
     return this.http
-      .post<BrandIdentityModel>(
-        `${this.apiUrl}/finalize/${projectId}`,
-        brandingData
-      )
+      .post<any>(finalizeUrl, acceptanceData)
       .pipe(
         tap((response) =>
-          console.log('finalizeBrandingCreation response:', response)
+          console.log('finalizeProjectCreation response:', response)
         ),
         catchError((error) => {
-          console.error('Error in finalizeBrandingCreation:', error);
+          console.error('Error in finalizeProjectCreation:', error);
           throw error;
         })
       );

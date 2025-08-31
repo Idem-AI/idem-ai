@@ -7,6 +7,7 @@ import {
   Output,
   computed,
   signal,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +19,7 @@ import {
   TypographyModel,
 } from '../../../../models/brand-identity.model';
 import { LogoModel } from '../../../../models/logo.model';
+import { BrandingService } from '../../../../services/ai-agents/branding.service';
 import { environment } from '../../../../../../../environments/environment';
 
 @Component({
@@ -28,6 +30,9 @@ import { environment } from '../../../../../../../environments/environment';
   styleUrl: './project-summary.css',
 })
 export class ProjectSummaryComponent {
+  // Services
+  private readonly brandingService = inject(BrandingService);
+
   // Angular inputs
   readonly project = input.required<ProjectModel>();
   readonly selectedLogo = input.required<string>();
@@ -48,8 +53,9 @@ export class ProjectSummaryComponent {
   readonly marketingConsentChange = output<boolean>();
   readonly finalizeProject = output<void>();
 
-  // Environment and computed properties
+  // Component state
   protected readonly isBeta = signal(environment.isBeta);
+  protected readonly isSubmitting = signal(false);
   
   protected readonly canSubmit = computed(() => {
     const requiredPolicies = this.privacyPolicyAccepted() && this.termsOfServiceAccepted();
@@ -100,8 +106,30 @@ export class ProjectSummaryComponent {
   }
 
   protected submitProject(): void {
-    if (this.canSubmit()) {
-      this.finalizeProject.emit();
+    if (this.canSubmit() && !this.isSubmitting()) {
+      this.isSubmitting.set(true);
+      
+      const acceptanceData = {
+        privacyPolicyAccepted: this.privacyPolicyAccepted(),
+        termsOfServiceAccepted: this.termsOfServiceAccepted(),
+        betaPolicyAccepted: this.betaPolicyAccepted(),
+        marketingAccepted: this.marketingConsentAccepted()
+      };
+
+      this.brandingService
+        .finalizeProjectCreation(this.project().id!, acceptanceData)
+        .subscribe({
+          next: (response) => {
+            console.log('Project finalized successfully:', response);
+            this.isSubmitting.set(false);
+            this.finalizeProject.emit();
+          },
+          error: (error) => {
+            console.error('Error finalizing project:', error);
+            this.isSubmitting.set(false);
+            // Optionally emit error or show user feedback
+          }
+        });
     }
   }
 }
