@@ -69,6 +69,7 @@ export class BrandingService {
   generateColorsAndTypography(project: ProjectModel): Observable<{
     colors: ColorModel[];
     typography: TypographyModel[];
+    project: ProjectModel;
   }> {
     console.log('Generating colors and typography...');
     console.log('Project:', project);
@@ -76,6 +77,7 @@ export class BrandingService {
       .post<{
         colors: ColorModel[];
         typography: TypographyModel[];
+        project: ProjectModel;
       }>(`${this.apiUrl}/genColorsAndTypography`, { project })
       .pipe(
         tap((response) =>
@@ -88,6 +90,121 @@ export class BrandingService {
       );
   }
 
+  /**
+   * Step 1: Generate 4 main logo concepts with text and main SVG
+   * This replaces the old generateLogo method
+   */
+  generateLogoConcepts(
+    projectId: string,
+    selectedColor: ColorModel,
+    selectedTypography: TypographyModel
+  ): Observable<{
+    logos: LogoModel[];
+  }> {
+    console.log(
+      'Generating logo concepts with selected color and typography...'
+    );
+    console.log('Project ID:', projectId);
+    console.log('Selected Color:', selectedColor);
+    console.log('Selected Typography:', selectedTypography);
+    return this.http
+      .post<{
+        logos: LogoModel[];
+      }>(`${this.apiUrl}/genLogoConcepts/${projectId}`, {
+        colors: selectedColor,
+        typography: selectedTypography,
+      })
+      .pipe(
+        tap((response) =>
+          console.log('generateLogoConcepts response:', response)
+        ),
+        catchError((error) => {
+          console.error('Error in generateLogoConcepts:', error);
+          throw error;
+        })
+      );
+  }
+
+  /**
+   * Step 2: Generate variations (without text, light/dark/mono) for selected logo
+   * Called only when user selects a specific logo concept
+   */
+  generateLogoVariations(
+    selectedLogoId: string,
+    project: ProjectModel
+  ): Observable<{
+    variations: {
+      lightBackground?: string;
+      darkBackground?: string;
+      monochrome?: string;
+    };
+  }> {
+    console.log('Generating logo variations for selected logo...');
+    console.log('Selected Logo ID:', selectedLogoId);
+    console.log('Project:', project);
+    return this.http
+      .post<{
+        variations: {
+          lightBackground?: string;
+          darkBackground?: string;
+          monochrome?: string;
+        };
+      }>(`${this.apiUrl}/genLogoVariations/${selectedLogoId}`, {
+        project,
+      })
+      .pipe(
+        tap((response) =>
+          console.log('generateLogoVariations response:', response)
+        ),
+        catchError((error) => {
+          console.error('Error in generateLogoVariations:', error);
+          throw error;
+        })
+      );
+  }
+
+  /**
+   * Finalize branding creation - called at the end of the branding flow
+   * @param projectId Project ID
+   * @param brandingData Final branding data to save
+   * @returns Observable with the finalized branding
+   */
+  finalizeBrandingCreation(
+    projectId: string,
+    brandingData: {
+      selectedColor: ColorModel;
+      selectedTypography: TypographyModel;
+      selectedLogo: LogoModel;
+      logoVariations?: {
+        lightBackground?: string;
+        darkBackground?: string;
+        monochrome?: string;
+      };
+    }
+  ): Observable<BrandIdentityModel> {
+    console.log('Finalizing branding creation...');
+    console.log('Project ID:', projectId);
+    console.log('Branding Data:', brandingData);
+    return this.http
+      .post<BrandIdentityModel>(
+        `${this.apiUrl}/finalize/${projectId}`,
+        brandingData
+      )
+      .pipe(
+        tap((response) =>
+          console.log('finalizeBrandingCreation response:', response)
+        ),
+        catchError((error) => {
+          console.error('Error in finalizeBrandingCreation:', error);
+          throw error;
+        })
+      );
+  }
+
+  /**
+   * Legacy method for backward compatibility
+   * @deprecated Use generateLogoConcepts instead
+   */
   generateLogo(
     project: ProjectModel,
     selectedColor: ColorModel,
@@ -95,25 +212,18 @@ export class BrandingService {
   ): Observable<{
     logos: LogoModel[];
   }> {
-    console.log('Generating logo with selected color and typography...');
-    console.log('Project:', project);
-    console.log('Selected Color:', selectedColor);
-    console.log('Selected Typography:', selectedTypography);
-    return this.http
-      .post<{
-        logos: LogoModel[];
-      }>(`${this.apiUrl}/genLogos`, {
-        project,
-        color: selectedColor,
-        typography: selectedTypography,
-      })
-      .pipe(
-        tap((response) => console.log('generateLogo response:', response)),
-        catchError((error) => {
-          console.error('Error in generateLogo:', error);
-          throw error;
-        })
-      );
+    console.warn(
+      'generateLogo is deprecated, use generateLogoConcepts instead'
+    );
+    // Note: This now requires projectId, so we'll need to extract it from project
+    if (!project.id) {
+      throw new Error('Project ID is required for logo generation');
+    }
+    return this.generateLogoConcepts(
+      project.id!,
+      selectedColor,
+      selectedTypography
+    );
   }
 
   getBrandIdentityModels(projectId: string): Observable<BrandIdentityModel[]> {

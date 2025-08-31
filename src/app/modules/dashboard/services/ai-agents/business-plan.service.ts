@@ -46,35 +46,45 @@ export class BusinessPlanService {
       return new Observable<SSEStepEvent>((observer) => {
         // Create FormData for multipart/form-data request
         const formData = new FormData();
-        
+
         // Create a copy of additionalInfos without file references for JSON
         const cleanAdditionalInfos = {
           ...additionalInfos,
-          teamMembers: additionalInfos.teamMembers?.map((member: any) => ({
-            name: member.name,
-            position: member.position,
-            bio: member.bio,
-            email: member.email,
-            socialLinks: member.socialLinks || {},
-            // Don't include pictureFile and pictureUrl in JSON
-          })) || []
+          teamMembers:
+            additionalInfos.teamMembers?.map((member: any) => ({
+              name: member.name,
+              position: member.position,
+              bio: member.bio,
+              email: member.email,
+              socialLinks: member.socialLinks || {},
+              // Don't include pictureFile and pictureUrl in JSON
+            })) || [],
         };
-        
+
         // Add the JSON data as a string
-        formData.append('additionalInfos', JSON.stringify(cleanAdditionalInfos));
-        
+        formData.append(
+          'additionalInfos',
+          JSON.stringify(cleanAdditionalInfos)
+        );
+
         // Add team member images
         if (additionalInfos.teamMembers) {
           additionalInfos.teamMembers.forEach((member: any, index: number) => {
             if (member.pictureFile && member.pictureFile instanceof File) {
-              formData.append(`teamMemberImage_${index}`, member.pictureFile, member.pictureFile.name);
+              formData.append(
+                `teamMemberImage_${index}`,
+                member.pictureFile,
+                member.pictureFile.name
+              );
             }
           });
         }
-        
+
         console.log('Sending multipart data:', {
           additionalInfosJson: cleanAdditionalInfos,
-          imageCount: additionalInfos.teamMembers?.filter((m: any) => m.pictureFile).length || 0
+          imageCount:
+            additionalInfos.teamMembers?.filter((m: any) => m.pictureFile)
+              .length || 0,
         });
 
         // Send multipart data to backend

@@ -91,6 +91,7 @@ export class CreateProjectComponent implements OnInit {
 
   // Visual identity selections
   logos: LogoModel[] = [];
+  protected isGeneratingVariations = signal(false);
   protected colorModels: ColorModel[] = [];
   protected typographyModels: TypographyModel[] = [];
   protected selectedLogo = '';
@@ -299,7 +300,7 @@ export class CreateProjectComponent implements OnInit {
       }
     } else if (nextIndex === 4) {
       // Corresponds to 'Logo Selection' step (index 4)
-      // Generate logos with selected color and typography
+      // Step 1: Generate 4 main logo concepts with selected color and typography
       const selectedColor = this.colorModels.find((color) => color.id === this.selectedColor) || this.colorModels[0];
       const selectedTypography = this.typographyModels.find((typography) => typography.id === this.selectedTypography) || this.typographyModels[0];
       
@@ -308,16 +309,16 @@ export class CreateProjectComponent implements OnInit {
         this.brandingError.set(null); // Clear previous error
 
         this.brandingService
-          .generateLogo(this.project(), selectedColor, selectedTypography)
+          .generateLogoConcepts(this.project().id!, selectedColor, selectedTypography)
           .subscribe({
             next: (logoData) => {
               console.log(
-                'Logos generated successfully:',
+                'Logo concepts generated successfully:',
                 logoData
               );
               this.logos = logoData.logos;
               
-              // Update project with generated logos
+              // Update project with generated logo concepts
               this.project.update((project) => ({
                 ...project,
                 analysisResultModel: {
@@ -333,9 +334,9 @@ export class CreateProjectComponent implements OnInit {
               this.navigateToStep(nextIndex);
             },
             error: (err) => {
-              console.error('Error generating logos:', err);
+              console.error('Error generating logo concepts:', err);
               this.brandingError.set(
-                'Failed to generate logos. If the problem persists, please try again later.'
+                'Failed to generate logo concepts. If the problem persists, please try again later.'
               );
               this.isLoaded.set(false);
               // Do not navigate to the next step on error
@@ -400,7 +401,7 @@ export class CreateProjectComponent implements OnInit {
       case 1: // Moving to step 2 (colors)
         return 'Generating Colors and Typography';
       case 3: // Moving to step 4 (logos)
-        return 'Generating Logos';
+        return 'Generating Logo Concepts';
       default:
         return 'Processing...';
     }
@@ -415,7 +416,7 @@ export class CreateProjectComponent implements OnInit {
       case 1: // Moving to step 2 (colors)
         return 'Creating personalized color palettes and typography options for your project.';
       case 3: // Moving to step 4 (logos)
-        return 'This operation may take several minutes.';
+        return 'Creating 4 main logo concepts with your selected colors and typography.';
       default:
         return 'Please wait while we process your request.';
     }
@@ -430,7 +431,7 @@ export class CreateProjectComponent implements OnInit {
       case 1: // Moving to step 2 (colors)
         return 'Analyzing your project requirements...';
       case 3: // Moving to step 4 (logos)
-        return 'Processing your design preferences...';
+        return 'Analyzing your brand identity requirements...';
       default:
         return 'Working on your request...';
     }
@@ -551,7 +552,64 @@ export class CreateProjectComponent implements OnInit {
   // Logo selection methods
   protected selectLogo(logoId: string) {
     this.selectedLogo = logoId;
-    setTimeout(() => this.goToNextStep(), 300);
+    
+    // Step 2: Generate variations for the selected logo
+    const selectedLogoObj = this.logos.find(logo => logo.id === logoId);
+    if (selectedLogoObj && selectedLogoObj.svg && this.project().id) {
+      console.log('Generating variations for selected logo:', selectedLogoObj.name);
+      
+      // Show loading state for variations generation
+      this.isLoaded.set(true);
+      this.brandingError.set(null);
+      
+      this.brandingService
+        .generateLogoVariations(selectedLogoObj.id || selectedLogoObj.svg, this.project())
+        .subscribe({
+          next: (variationsData) => {
+            console.log('Logo variations generated successfully:', variationsData);
+            
+            // Update the selected logo with its variations
+            const updatedLogo = {
+              ...selectedLogoObj,
+              variations: variationsData.variations
+            };
+            
+            // Update the logos array with variations
+            this.logos = this.logos.map(logo => 
+              logo.id === logoId ? updatedLogo : logo
+            );
+            
+            // Update project with logo variations
+            this.project.update((project) => ({
+              ...project,
+              analysisResultModel: {
+                ...project.analysisResultModel,
+                branding: {
+                  ...project.analysisResultModel?.branding,
+                  logo: updatedLogo,
+                  generatedLogos: this.logos,
+                },
+              },
+            }));
+            
+            this.isLoaded.set(false);
+            setTimeout(() => this.goToNextStep(), 300);
+          },
+          error: (err) => {
+            console.error('Error generating logo variations:', err);
+            this.brandingError.set(
+              'Failed to generate logo variations. Proceeding with main logo only.'
+            );
+            this.isLoaded.set(false);
+            // Still proceed to next step even if variations fail
+            setTimeout(() => this.goToNextStep(), 300);
+          }
+        });
+    } else {
+      // If no SVG or project ID, proceed without variations
+      console.warn('No SVG data or project ID found, proceeding without variations');
+      setTimeout(() => this.goToNextStep(), 300);
+    }
   }
 
   protected selectColor(colorId: string) {
