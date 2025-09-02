@@ -10,7 +10,6 @@ import {
 } from '../../models/brand-identity.model';
 import { ProjectModel } from '../../models/project.model';
 import { LogoModel } from '../../models/logo.model';
-import { BrandingStepEvent } from '../../models/branding-step.model';
 import { SSEService } from '../../../../shared/services/sse.service';
 import {
   SSEStepEvent,
@@ -78,7 +77,7 @@ export class BrandingService {
         colors: ColorModel[];
         typography: TypographyModel[];
         project: ProjectModel;
-      }>(`${this.apiUrl}/genColorsAndTypography`, { project })
+      }>(`${this.apiUrl}/generate/colors-typography`, { project })
       .pipe(
         tap((response) =>
           console.log('generateColorsAndTypography response:', response)
@@ -110,7 +109,7 @@ export class BrandingService {
     return this.http
       .post<{
         logos: LogoModel[];
-      }>(`${this.apiUrl}/genLogoConcepts/${projectId}`, {
+      }>(`${this.apiUrl}/generate/logo-concepts/${projectId}`, {
         colors: selectedColor,
         typography: selectedTypography,
       })
@@ -149,7 +148,7 @@ export class BrandingService {
           darkBackground?: string;
           monochrome?: string;
         };
-      }>(`${this.apiUrl}/genLogoVariations/${selectedLogoId}`, {
+      }>(`${this.apiUrl}/generate/logo-variations/${selectedLogoId}`, {
         project,
       })
       .pipe(
