@@ -75,7 +75,6 @@ export class TokenService {
       console.log('User found');
 
       const token = await currentUser.getIdToken(true);
-      console.log('Token:', token);
       this.setToken(token);
       return token;
     } catch (error) {
@@ -98,9 +97,16 @@ export class TokenService {
    */
   public async getTokenAsync(): Promise<string | null> {
     try {
-      const token = await this.auth.currentUser?.getIdToken();
+      if (!this.auth.currentUser) {
+        console.log('TokenService: No current user available');
+        return null;
+      }
+      
+      // Force refresh to get a fresh token
+      const token = await this.auth.currentUser.getIdToken(true);
       if (token) {
         this.setToken(token);
+        console.log('TokenService: Fresh token obtained, length:', token.length);
       }
       return token || null;
     } catch (error) {
