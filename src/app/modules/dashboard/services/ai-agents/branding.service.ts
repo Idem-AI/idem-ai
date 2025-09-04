@@ -110,8 +110,8 @@ export class BrandingService {
       .post<{
         logos: LogoModel[];
       }>(`${this.apiUrl}/generate/logo-concepts/${projectId}`, {
-        colors: selectedColor,
-        typography: selectedTypography,
+        selectedColors: selectedColor,
+        selectedTypography: selectedTypography,
       })
       .pipe(
         tap((response) =>
@@ -129,7 +129,7 @@ export class BrandingService {
    * Called only when user selects a specific logo concept
    */
   generateLogoVariations(
-    selectedLogoId: string,
+    selectedLogo: LogoModel,
     project: ProjectModel
   ): Observable<{
     variations: {
@@ -139,7 +139,7 @@ export class BrandingService {
     };
   }> {
     console.log('Generating logo variations for selected logo...');
-    console.log('Selected Logo ID:', selectedLogoId);
+    console.log('Selected Logo:', selectedLogo.id);
     console.log('Project:', project);
     return this.http
       .post<{
@@ -148,8 +148,8 @@ export class BrandingService {
           darkBackground?: string;
           monochrome?: string;
         };
-      }>(`${this.apiUrl}/generate/logo-variations/${selectedLogoId}`, {
-        project,
+      }>(`${this.apiUrl}/generate/logo-variations/${project.id}`, {
+        selectedLogo: selectedLogo,
       })
       .pipe(
         tap((response) =>
@@ -180,20 +180,18 @@ export class BrandingService {
     console.log('Finalizing project creation...');
     console.log('Project ID:', projectId);
     console.log('Acceptance Data:', acceptanceData);
-    
+
     const finalizeUrl = `${environment.services.api.url}/project/finalize/${projectId}`;
-    
-    return this.http
-      .post<any>(finalizeUrl, acceptanceData)
-      .pipe(
-        tap((response) =>
-          console.log('finalizeProjectCreation response:', response)
-        ),
-        catchError((error) => {
-          console.error('Error in finalizeProjectCreation:', error);
-          throw error;
-        })
-      );
+
+    return this.http.post<any>(finalizeUrl, acceptanceData).pipe(
+      tap((response) =>
+        console.log('finalizeProjectCreation response:', response)
+      ),
+      catchError((error) => {
+        console.error('Error in finalizeProjectCreation:', error);
+        throw error;
+      })
+    );
   }
 
   /**

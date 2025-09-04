@@ -556,10 +556,7 @@ export class CreateProjectComponent implements OnInit {
       this.logoVariationsError.set(null);
 
       this.brandingService
-        .generateLogoVariations(
-          selectedLogoObj.id || selectedLogoObj.svg,
-          this.project()
-        )
+        .generateLogoVariations(selectedLogoObj, this.project())
         .subscribe({
           next: (variationsData) => {
             console.log(
