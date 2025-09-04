@@ -55,6 +55,7 @@ export class CreateProjectComponent implements OnInit {
   protected readonly currentStepIndex = signal<number>(0);
   protected readonly selectedTabIndex = signal<number>(0);
   protected readonly brandingError = signal<string | null>(null);
+  protected readonly logoVariationsError = signal<string | null>(null);
 
   // Simplified step structure with all necessary information
   protected readonly steps = [
@@ -552,7 +553,7 @@ export class CreateProjectComponent implements OnInit {
 
       // Show loading state for variations generation
       this.isLoaded.set(true);
-      this.brandingError.set(null);
+      this.logoVariationsError.set(null);
 
       this.brandingService
         .generateLogoVariations(
@@ -591,16 +592,16 @@ export class CreateProjectComponent implements OnInit {
             }));
 
             this.isLoaded.set(false);
+            this.logoVariationsError.set(null);
             setTimeout(() => this.goToNextStep(), 300);
           },
           error: (err) => {
             console.error('Error generating logo variations:', err);
-            this.brandingError.set(
-              'Failed to generate logo variations. Proceeding with main logo only.'
+            this.logoVariationsError.set(
+              'Échec de la génération des déclinaisons de logo. Veuillez réessayer.'
             );
             this.isLoaded.set(false);
-            // Still proceed to next step even if variations fail
-            setTimeout(() => this.goToNextStep(), 300);
+            // Do NOT proceed to next step on error
           },
         });
     } else {
@@ -648,5 +649,22 @@ export class CreateProjectComponent implements OnInit {
         this.isLoaded.set(false);
       }, animationTiming);
     }, duration * 0.2);
+  }
+
+  /**
+   * Retry logo variations generation
+   */
+  protected retryLogoVariations(): void {
+    if (this.selectedLogo) {
+      this.selectLogo(this.selectedLogo);
+    }
+  }
+
+  /**
+   * Skip logo variations and proceed to next step
+   */
+  protected skipLogoVariations(): void {
+    this.logoVariationsError.set(null);
+    setTimeout(() => this.goToNextStep(), 300);
   }
 }

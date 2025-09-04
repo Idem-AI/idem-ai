@@ -194,6 +194,85 @@
     ></app-typography-selection>
   </section>
   } @if (isStepActive(4)) {
+  <!-- Logo Variations Error Message -->
+  @if (logoVariationsError()) {
+  <div
+    class="flex flex-col items-center p-6 mb-8 space-y-4 bg-red-50 border border-red-200 rounded-lg shadow-sm dark:bg-red-900/20 dark:border-red-700/60 w-full max-w-2xl mx-auto"
+    role="alert"
+  >
+    <div class="flex items-start space-x-3 w-full">
+      <div class="flex-shrink-0">
+        <svg
+          class="w-6 h-6 text-red-500 dark:text-red-400"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12zm-1-9a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zm0 3a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </div>
+      <div class="flex-1">
+        <p class="text-sm font-semibold text-red-700 dark:text-red-300">
+          Erreur de génération
+        </p>
+        <p class="mt-1 text-sm text-red-600 dark:text-red-400">
+          {{ logoVariationsError() }}
+        </p>
+      </div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row gap-3 w-full justify-center">
+      <button
+        (click)="retryLogoVariations()"
+        class="flex items-center justify-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
+      >
+        <svg
+          class="w-4 h-4 mr-2"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          />
+        </svg>
+        Réessayer
+      </button>
+      
+      <button
+        (click)="skipLogoVariations()"
+        class="flex items-center justify-center px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
+      >
+        <svg
+          class="w-4 h-4 mr-2"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        Continuer sans déclinaisons
+      </button>
+    </div>
+  </div>
+  }
+  
   <section #logoSelection class="animate-slideInRight">
     <app-logo-selection
       (logoSelected)="selectLogo($event)"
