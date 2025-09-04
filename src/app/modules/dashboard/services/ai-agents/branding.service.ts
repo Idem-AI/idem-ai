@@ -181,7 +181,7 @@ export class BrandingService {
     console.log('Project ID:', projectId);
     console.log('Acceptance Data:', acceptanceData);
     
-    const finalizeUrl = `${environment.services.api.url}/projects/${projectId}/finalize`;
+    const finalizeUrl = `${environment.services.api.url}/project/finalize/${projectId}`;
     
     return this.http
       .post<any>(finalizeUrl, acceptanceData)

@@ -77,7 +77,6 @@ export class CreateProjectComponent implements OnInit {
   // Project model
   protected project = signal<ProjectModel>(initEmptyObject<ProjectModel>());
 
-
   protected selectedTeamSize: SelectElement | undefined;
   protected selectedTarget: SelectElement | undefined;
   protected selectedScope: SelectElement | undefined;
@@ -217,20 +216,6 @@ export class CreateProjectComponent implements OnInit {
     }
   }
 
-  private generateProjectId(): string {
-    console.log('Generating project ID...');
-    console.log('Project name:', this.project()?.name);
-    if (!this.project() || !this.project()?.name) {
-      return '';
-    }
-    const projectName = this.project()
-      .name.trim()
-      .toLowerCase()
-      .replace(/\s/g, '-');
-    const date = new Date().toISOString().replace(/[:.]/g, '-');
-    return `${projectName}-${date}`;
-  }
-
   /**
    * Handles navigation to the next step in the project creation flow
    */
@@ -239,12 +224,6 @@ export class CreateProjectComponent implements OnInit {
     const nextIndex = currentStep + 1;
 
     if (nextIndex === 2) {
-      // Corresponds to 'Color Selection' step (index 2)
-      // Generate colors and typography first
-      this.project.update((project) => ({
-        ...project,
-        id: this.generateProjectId(),
-      }));
       console.log('Project ID generated:', this.project().id);
       if (nextIndex < this.steps.length) {
         this.isLoaded.set(true);
@@ -260,6 +239,7 @@ export class CreateProjectComponent implements OnInit {
               );
               this.colorModels = brandingData.colors;
               this.typographyModels = brandingData.typography;
+              this.project.update(() => brandingData.project);
               console.log('Color models:', this.colorModels);
               console.log('Typography models:', this.typographyModels);
               // Update project with generated colors and typography
@@ -272,9 +252,10 @@ export class CreateProjectComponent implements OnInit {
                       id: 'placeholder',
                       name: 'Placeholder Logo',
                       svg: '',
-                      concept: 'Logo will be generated after color and typography selection',
+                      concept:
+                        'Logo will be generated after color and typography selection',
                       colors: [],
-                      fonts: []
+                      fonts: [],
                     }, // Placeholder logo - will be replaced when generated
                     generatedLogos: [],
                     colors: this.colorModels[0],
@@ -301,23 +282,29 @@ export class CreateProjectComponent implements OnInit {
     } else if (nextIndex === 4) {
       // Corresponds to 'Logo Selection' step (index 4)
       // Step 1: Generate 4 main logo concepts with selected color and typography
-      const selectedColor = this.colorModels.find((color) => color.id === this.selectedColor) || this.colorModels[0];
-      const selectedTypography = this.typographyModels.find((typography) => typography.id === this.selectedTypography) || this.typographyModels[0];
-      
+      const selectedColor =
+        this.colorModels.find((color) => color.id === this.selectedColor) ||
+        this.colorModels[0];
+      const selectedTypography =
+        this.typographyModels.find(
+          (typography) => typography.id === this.selectedTypography
+        ) || this.typographyModels[0];
+
       if (selectedColor && selectedTypography) {
         this.isLoaded.set(true);
         this.brandingError.set(null); // Clear previous error
 
         this.brandingService
-          .generateLogoConcepts(this.project().id!, selectedColor, selectedTypography)
+          .generateLogoConcepts(
+            this.project().id!,
+            selectedColor,
+            selectedTypography
+          )
           .subscribe({
             next: (logoData) => {
-              console.log(
-                'Logo concepts generated successfully:',
-                logoData
-              );
+              console.log('Logo concepts generated successfully:', logoData);
               this.logos = logoData.logos;
-              
+
               // Update project with generated logo concepts
               this.project.update((project) => ({
                 ...project,
@@ -344,7 +331,9 @@ export class CreateProjectComponent implements OnInit {
           });
       } else {
         console.error('Selected color or typography not found');
-        this.brandingError.set('Please select a color and typography before proceeding.');
+        this.brandingError.set(
+          'Please select a color and typography before proceeding.'
+        );
       }
     } else {
       // For any other step, proceed as usual
@@ -552,33 +541,42 @@ export class CreateProjectComponent implements OnInit {
   // Logo selection methods
   protected selectLogo(logoId: string) {
     this.selectedLogo = logoId;
-    
+
     // Step 2: Generate variations for the selected logo
-    const selectedLogoObj = this.logos.find(logo => logo.id === logoId);
+    const selectedLogoObj = this.logos.find((logo) => logo.id === logoId);
     if (selectedLogoObj && selectedLogoObj.svg && this.project().id) {
-      console.log('Generating variations for selected logo:', selectedLogoObj.name);
-      
+      console.log(
+        'Generating variations for selected logo:',
+        selectedLogoObj.name
+      );
+
       // Show loading state for variations generation
       this.isLoaded.set(true);
       this.brandingError.set(null);
-      
+
       this.brandingService
-        .generateLogoVariations(selectedLogoObj.id || selectedLogoObj.svg, this.project())
+        .generateLogoVariations(
+          selectedLogoObj.id || selectedLogoObj.svg,
+          this.project()
+        )
         .subscribe({
           next: (variationsData) => {
-            console.log('Logo variations generated successfully:', variationsData);
-            
+            console.log(
+              'Logo variations generated successfully:',
+              variationsData
+            );
+
             // Update the selected logo with its variations
             const updatedLogo = {
               ...selectedLogoObj,
-              variations: variationsData.variations
+              variations: variationsData.variations,
             };
-            
+
             // Update the logos array with variations
-            this.logos = this.logos.map(logo => 
+            this.logos = this.logos.map((logo) =>
               logo.id === logoId ? updatedLogo : logo
             );
-            
+
             // Update project with logo variations
             this.project.update((project) => ({
               ...project,
@@ -591,7 +589,7 @@ export class CreateProjectComponent implements OnInit {
                 },
               },
             }));
-            
+
             this.isLoaded.set(false);
             setTimeout(() => this.goToNextStep(), 300);
           },
@@ -603,11 +601,13 @@ export class CreateProjectComponent implements OnInit {
             this.isLoaded.set(false);
             // Still proceed to next step even if variations fail
             setTimeout(() => this.goToNextStep(), 300);
-          }
+          },
         });
     } else {
       // If no SVG or project ID, proceed without variations
-      console.warn('No SVG data or project ID found, proceeding without variations');
+      console.warn(
+        'No SVG data or project ID found, proceeding without variations'
+      );
       setTimeout(() => this.goToNextStep(), 300);
     }
   }
