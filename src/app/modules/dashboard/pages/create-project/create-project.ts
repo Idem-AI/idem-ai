@@ -431,6 +431,12 @@ export class CreateProjectComponent implements OnInit {
     }
   }
 
+  // Method to create project with selected visual identity
+  protected finalizeProjectCreation() {
+    this.cookieService.set('projectId', this.project().id!);
+    this.router.navigate([`/console/dashboard`]);
+  }
+
   protected goToThirdStep() {
     console.log('Project: ', this.project);
     this.visible.set(true);

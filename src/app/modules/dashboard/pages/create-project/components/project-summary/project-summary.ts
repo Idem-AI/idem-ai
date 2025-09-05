@@ -5,11 +5,10 @@ import {
   computed,
   signal,
   inject,
-  OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ProjectModel } from '../../../../models/project.model';
 import { SafeHtmlPipe } from '../../../projects-list/safehtml.pipe';
 import {
@@ -19,22 +18,18 @@ import {
 import { LogoModel } from '../../../../models/logo.model';
 import { environment } from '../../../../../../../environments/environment';
 import { ProjectService } from '../../../../services/project.service';
+import { Loader } from '../../../../../../components/loader/loader';
 
 @Component({
   selector: 'app-project-summary',
   standalone: true,
-  imports: [CommonModule, FormsModule, SafeHtmlPipe, RouterModule],
+  imports: [CommonModule, FormsModule, SafeHtmlPipe, RouterModule, Loader],
   templateUrl: './project-summary.html',
   styleUrl: './project-summary.css',
 })
-export class ProjectSummaryComponent implements OnInit {
+export class ProjectSummaryComponent {
   // Services
   private readonly projectService = inject(ProjectService);
-
-  ngOnInit(): void {
-    console.log('Project summary initialized');
-    console.log('Final Project Id: ', this.project().id);
-  }
 
   // Angular inputs
   readonly project = input.required<ProjectModel>();
@@ -110,7 +105,6 @@ export class ProjectSummaryComponent implements OnInit {
   }
 
   protected submitProject(): void {
-    console.log('2 - Final Project Id: ', this.project().id);
     if (this.canSubmit() && !this.isSubmitting()) {
       this.isSubmitting.set(true);
 
