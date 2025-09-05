@@ -284,7 +284,6 @@
   } @if (isStepActive(5)) {
   <section #summarySelection class="animate-slideInRight">
     <app-project-summary
-      (finalizeProject)="finalizeProjectCreation()"
       (previousStep)="goToPreviousStep()"
       [project]="project()"
       [selectedLogo]="selectedLogo"

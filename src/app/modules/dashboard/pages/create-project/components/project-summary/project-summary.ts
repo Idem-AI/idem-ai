@@ -1,13 +1,11 @@
 import {
   Component,
-  EventEmitter,
   input,
-  Input,
   output,
-  Output,
   computed,
   signal,
   inject,
+  OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -19,8 +17,8 @@ import {
   TypographyModel,
 } from '../../../../models/brand-identity.model';
 import { LogoModel } from '../../../../models/logo.model';
-import { BrandingService } from '../../../../services/ai-agents/branding.service';
 import { environment } from '../../../../../../../environments/environment';
+import { ProjectService } from '../../../../services/project.service';
 
 @Component({
   selector: 'app-project-summary',
@@ -29,9 +27,14 @@ import { environment } from '../../../../../../../environments/environment';
   templateUrl: './project-summary.html',
   styleUrl: './project-summary.css',
 })
-export class ProjectSummaryComponent {
+export class ProjectSummaryComponent implements OnInit {
   // Services
-  private readonly brandingService = inject(BrandingService);
+  private readonly projectService = inject(ProjectService);
+
+  ngOnInit(): void {
+    console.log('Project summary initialized');
+    console.log('Final Project Id: ', this.project().id);
+  }
 
   // Angular inputs
   readonly project = input.required<ProjectModel>();
@@ -56,9 +59,10 @@ export class ProjectSummaryComponent {
   // Component state
   protected readonly isBeta = signal(environment.isBeta);
   protected readonly isSubmitting = signal(false);
-  
+
   protected readonly canSubmit = computed(() => {
-    const requiredPolicies = this.privacyPolicyAccepted() && this.termsOfServiceAccepted();
+    const requiredPolicies =
+      this.privacyPolicyAccepted() && this.termsOfServiceAccepted();
     const betaRequired = this.isBeta() ? this.betaPolicyAccepted() : true;
     return requiredPolicies && betaRequired;
   });
@@ -106,17 +110,18 @@ export class ProjectSummaryComponent {
   }
 
   protected submitProject(): void {
+    console.log('2 - Final Project Id: ', this.project().id);
     if (this.canSubmit() && !this.isSubmitting()) {
       this.isSubmitting.set(true);
-      
+
       const acceptanceData = {
         privacyPolicyAccepted: this.privacyPolicyAccepted(),
         termsOfServiceAccepted: this.termsOfServiceAccepted(),
         betaPolicyAccepted: this.betaPolicyAccepted(),
-        marketingAccepted: this.marketingConsentAccepted()
+        marketingAccepted: this.marketingConsentAccepted(),
       };
 
-      this.brandingService
+      this.projectService
         .finalizeProjectCreation(this.project().id!, acceptanceData)
         .subscribe({
           next: (response) => {
@@ -127,8 +132,7 @@ export class ProjectSummaryComponent {
           error: (error) => {
             console.error('Error finalizing project:', error);
             this.isSubmitting.set(false);
-            // Optionally emit error or show user feedback
-          }
+          },
         });
     }
   }

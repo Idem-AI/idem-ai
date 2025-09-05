@@ -26,15 +26,49 @@ export class ProjectService {
    * @returns Observable of the created project ID
    */
   createProject(projectData: ProjectModel): Observable<string> {
-    return this.http.post<{ message: string; projectId: string }>(        
-      `${this.apiUrl}/create`,
-      projectData
-    ).pipe(
-      map((response) => response.projectId),
-      tap((projectId) => console.log('createProject response:', projectId)),
+    return this.http
+      .post<{ message: string; projectId: string }>(
+        `${this.apiUrl}/create`,
+        projectData
+      )
+      .pipe(
+        map((response) => response.projectId),
+        tap((projectId) => console.log('createProject response:', projectId)),
+        catchError((error) => {
+          console.error('Error in createProject:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  /**
+   * Finalize project creation - called at the end of the project creation flow
+   * @param projectId Project ID
+   * @param acceptanceData User acceptance flags for policies
+   * @returns Observable with the finalized project
+   */
+  finalizeProjectCreation(
+    projectId: string,
+    acceptanceData: {
+      privacyPolicyAccepted: boolean;
+      termsOfServiceAccepted: boolean;
+      betaPolicyAccepted: boolean;
+      marketingAccepted: boolean;
+    }
+  ): Observable<any> {
+    console.log('Finalizing project creation...');
+    console.log('Project ID:', projectId);
+    console.log('Acceptance Data:', acceptanceData);
+
+    const finalizeUrl = `${environment.services.api.url}/project/finalize/${projectId}`;
+
+    return this.http.post<any>(finalizeUrl, acceptanceData).pipe(
+      tap((response) =>
+        console.log('finalizeProjectCreation response:', response)
+      ),
       catchError((error) => {
-        console.error('Error in createProject:', error);
-        return throwError(() => error);
+        console.error('Error in finalizeProjectCreation:', error);
+        throw error;
       })
     );
   }
@@ -80,18 +114,17 @@ export class ProjectService {
     projectId: string,
     updatedData: Partial<ProjectModel>
   ): Observable<ProjectModel> {
-    return this.http.put<ProjectModel>(
-      `${this.apiUrl}/update/${projectId}`,
-      updatedData
-    ).pipe(
-      tap((response) =>
-        console.log(`updateProject response for ${projectId}:`, response)
-      ),
-      catchError((error) => {
-        console.error(`Error in updateProject for ${projectId}:`, error);
-        return throwError(() => error);
-      })
-    );
+    return this.http
+      .put<ProjectModel>(`${this.apiUrl}/update/${projectId}`, updatedData)
+      .pipe(
+        tap((response) =>
+          console.log(`updateProject response for ${projectId}:`, response)
+        ),
+        catchError((error) => {
+          console.error(`Error in updateProject for ${projectId}:`, error);
+          return throwError(() => error);
+        })
+      );
   }
 
   /**

@@ -225,11 +225,10 @@ export class CreateProjectComponent implements OnInit {
     const nextIndex = currentStep + 1;
 
     if (nextIndex === 2) {
-      console.log('Project ID generated:', this.project().id);
       if (nextIndex < this.steps.length) {
         this.isLoaded.set(true);
         this.brandingError.set(null); // Clear previous error
-
+        console.log('st2ProjectId: ', this.project().id);
         this.brandingService
           .generateColorsAndTypography(this.project())
           .subscribe({
@@ -269,6 +268,7 @@ export class CreateProjectComponent implements OnInit {
               }));
               this.isLoaded.set(false);
               this.navigateToStep(nextIndex);
+              console.log('Project ID generated:', this.project().id);
             },
             error: (err) => {
               console.error('Error generating colors and typography:', err);
@@ -283,6 +283,7 @@ export class CreateProjectComponent implements OnInit {
     } else if (nextIndex === 4) {
       // Corresponds to 'Logo Selection' step (index 4)
       // Step 1: Generate 4 main logo concepts with selected color and typography
+      console.log('st4ProjectId: ', this.project().id);
       const selectedColor =
         this.colorModels.find((color) => color.id === this.selectedColor) ||
         this.colorModels[0];
@@ -336,9 +337,12 @@ export class CreateProjectComponent implements OnInit {
           'Please select a color and typography before proceeding.'
         );
       }
+
+      console.log('st41ProjectId: ', this.project().id);
     } else {
       // For any other step, proceed as usual
       if (nextIndex < this.steps.length) {
+        console.log('st51ProjectId: ', this.project().id);
         this.navigateToStep(nextIndex);
       }
     }
@@ -424,76 +428,6 @@ export class CreateProjectComponent implements OnInit {
         return 'Analyzing your brand identity requirements...';
       default:
         return 'Working on your request...';
-    }
-  }
-
-  // Method to create project with selected visual identity
-  protected finalizeProjectCreation() {
-    try {
-      this.isLoaded.set(true);
-
-      // Get the selected logo, color and typography objects without verification
-      const selectedLogoObj =
-        this.logos.find((logo) => logo.id === this.selectedLogo) ||
-        this.logos[0];
-      const selectedColorObj =
-        this.colorModels.find((color) => color.id === this.selectedColor) ||
-        this.colorModels[0];
-      const selectedTypoObj =
-        this.typographyModels.find(
-          (typo) => typo.id === this.selectedTypography
-        ) || this.typographyModels[0];
-
-      // Single update operation to set all branding data at once
-      this.project.update((project) => ({
-        ...project,
-        analysisResultModel: {
-          ...(project.analysisResultModel || {}),
-          branding: {
-            logo: {
-              id: selectedLogoObj.id,
-              name: selectedLogoObj.name,
-              svg: selectedLogoObj.svg,
-              concept: selectedLogoObj.concept,
-              variations: selectedLogoObj.variations,
-              colors: selectedLogoObj.colors,
-              fonts: selectedLogoObj.fonts,
-            },
-            colors: {
-              id: selectedColorObj.id,
-              name: selectedColorObj.name,
-              url: selectedColorObj.url,
-              colors: selectedColorObj.colors,
-            },
-            typography: {
-              id: selectedTypoObj.id,
-              name: selectedTypoObj.name,
-              url: selectedTypoObj.url,
-              primaryFont: selectedTypoObj.primaryFont,
-              secondaryFont: selectedTypoObj.secondaryFont,
-            },
-            generatedLogos: this.logos,
-            generatedColors: this.colorModels,
-            generatedTypography: this.typographyModels,
-            sections: [],
-          },
-        },
-      }));
-
-      // Create the project with all selected data
-      this.projectService.createProject(this.project()).subscribe({
-        next: (projectId: string) => {
-          this.cookieService.set('projectId', projectId);
-          this.router.navigate([`/console/dashboard`]);
-        },
-        error: (err) => {
-          console.error('Error creating project:', err);
-          this.isLoaded.set(false);
-        },
-      });
-    } catch (e) {
-      console.error('Error finalizing project:', e);
-      this.isLoaded.set(false);
     }
   }
 

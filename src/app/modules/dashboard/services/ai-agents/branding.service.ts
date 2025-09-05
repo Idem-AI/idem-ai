@@ -162,37 +162,7 @@ export class BrandingService {
       );
   }
 
-  /**
-   * Finalize project creation - called at the end of the project creation flow
-   * @param projectId Project ID
-   * @param acceptanceData User acceptance flags for policies
-   * @returns Observable with the finalized project
-   */
-  finalizeProjectCreation(
-    projectId: string,
-    acceptanceData: {
-      privacyPolicyAccepted: boolean;
-      termsOfServiceAccepted: boolean;
-      betaPolicyAccepted: boolean;
-      marketingAccepted: boolean;
-    }
-  ): Observable<any> {
-    console.log('Finalizing project creation...');
-    console.log('Project ID:', projectId);
-    console.log('Acceptance Data:', acceptanceData);
 
-    const finalizeUrl = `${environment.services.api.url}/project/finalize/${projectId}`;
-
-    return this.http.post<any>(finalizeUrl, acceptanceData).pipe(
-      tap((response) =>
-        console.log('finalizeProjectCreation response:', response)
-      ),
-      catchError((error) => {
-        console.error('Error in finalizeProjectCreation:', error);
-        throw error;
-      })
-    );
-  }
 
   /**
    * Legacy method for backward compatibility
