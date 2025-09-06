@@ -49,7 +49,11 @@ export class ProjectsList implements OnInit {
             this.recentProjects.set(
               projects
                 .slice()
-                .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+                .sort((a, b) => {
+                  const dateA = a.createdAt instanceof Date ? a.createdAt : new Date(a.createdAt);
+                  const dateB = b.createdAt instanceof Date ? b.createdAt : new Date(b.createdAt);
+                  return dateB.getTime() - dateA.getTime();
+                })
                 .slice(0, 3)
             );
             this.isLoading.set(false);
