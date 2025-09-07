@@ -46,46 +46,62 @@ export const authInterceptor: HttpInterceptorFn = (
   // Wait for auth to be ready, then proceed with token logic
   return from(tokenService.waitForAuthReady()).pipe(
     switchMap(() => {
-      // Always get a fresh token for critical requests
+      // First try to get cached token (fast path)
+      const cachedToken = tokenService.getToken();
+      
+      if (cachedToken) {
+        console.log('Auth Interceptor: Using cached token for request:', req.url);
+        const authReq = req.clone({
+          headers: req.headers.set('Authorization', `Bearer ${cachedToken}`),
+        });
+        
+        return next(authReq).pipe(
+          catchError((error) => {
+            // If we get 401/403, the cached token might be expired
+            if (error.status === 401 || error.status === 403) {
+              console.log('Auth Interceptor: Cached token failed, refreshing from Firebase');
+              return from(tokenService.refreshToken()).pipe(
+                switchMap((refreshedToken: string | null) => {
+                  if (!refreshedToken) {
+                    console.error('Auth Interceptor: Token refresh failed');
+                    throw error;
+                  }
+                  
+                  console.log('Auth Interceptor: Retrying request with refreshed token');
+                  const retryReq = req.clone({
+                    headers: req.headers.set('Authorization', `Bearer ${refreshedToken}`),
+                  });
+                  
+                  return next(retryReq);
+                }),
+                catchError(() => {
+                  console.error('Auth Interceptor: Token refresh failed, throwing original error');
+                  throw error;
+                })
+              );
+            }
+            throw error;
+          })
+        );
+      }
+      
+      // No cached token, try to get one from Firebase (slow path)
+      console.log('Auth Interceptor: No cached token, getting from Firebase for request:', req.url);
       return from(tokenService.getTokenAsync()).pipe(
-        switchMap((freshToken: string | null) => {
-          if (!freshToken) {
+        switchMap((token: string | null) => {
+          if (!token) {
             console.warn('Auth Interceptor: No authentication token available for request:', req.url);
             return next(req);
           }
           
           const authReq = req.clone({
-            headers: req.headers.set('Authorization', `Bearer ${freshToken}`),
+            headers: req.headers.set('Authorization', `Bearer ${token}`),
           });
           
-          return next(authReq).pipe(
-            catchError((error) => {
-              // If we get 401/403, try to refresh token once more
-              if (error.status === 401 || error.status === 403) {
-                return from(tokenService.refreshToken()).pipe(
-                  switchMap((refreshedToken: string | null) => {
-                    if (!refreshedToken) {
-                      throw error;
-                    }
-                    
-                    const retryReq = req.clone({
-                      headers: req.headers.set('Authorization', `Bearer ${refreshedToken}`),
-                    });
-                    
-                    return next(retryReq);
-                  }),
-                  catchError(() => {
-                    console.error('Auth Interceptor: Token refresh failed, throwing original error');
-                    throw error;
-                  })
-                );
-              }
-              throw error;
-            })
-          );
+          return next(authReq);
         }),
         catchError((error) => {
-          console.error('Auth Interceptor: Error getting fresh token:', error);
+          console.error('Auth Interceptor: Error getting token from Firebase:', error);
           return next(req);
         })
       );
