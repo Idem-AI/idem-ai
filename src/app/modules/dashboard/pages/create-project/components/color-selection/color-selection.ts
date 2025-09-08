@@ -183,7 +183,7 @@ export class ColorSelectionComponent implements OnInit {
 
   protected selectColor(colorId: string): void {
     this.colorSelected.emit(colorId);
-    this.nextStep.emit();
+    // Removed auto-navigation - user must click Next button
   }
 
   protected async retryGeneration(): Promise<void> {

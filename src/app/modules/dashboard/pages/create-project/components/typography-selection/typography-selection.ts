@@ -145,7 +145,7 @@ export class TypographySelectionComponent implements OnInit {
 
   protected selectTypography(typographyId: string): void {
     this.typographySelected.emit(typographyId);
-    this.nextStep.emit();
+    // Removed auto-navigation - user must click Next button
   }
 
   protected async retryGeneration(): Promise<void> {

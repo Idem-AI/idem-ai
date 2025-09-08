@@ -394,12 +394,12 @@ export class CreateProjectComponent implements OnInit {
 
   protected selectColor(colorId: string) {
     this.selectedColor = colorId;
-    setTimeout(() => this.goToNextStep(), 300);
+    // Removed auto-navigation - user must click Next button
   }
 
   protected selectTypography(typographyId: string) {
     this.selectedTypography = typographyId;
-    this.goToNextStep();
+    // Removed auto-navigation - user must click Next button
   }
 
   /**
