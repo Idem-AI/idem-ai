@@ -1,31 +1,61 @@
-<div class="w-full  ">
+<div class="w-full min-h-screen">
   <!-- Step navigation indicators -->
-  <div class="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 flex flex-wrap justify-center gap-3 md:gap-4 items-center max-w-[95vw] px-2">
+  <div
+    class="fixed bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 z-50 flex  justify-center gap-2 sm:gap-3 md:gap-4 items-center max-w-[95vw] px-2 pb-safe"
+  >
     <!-- Previous Button -->
     @if (currentStepIndex() > 0) {
     <button
       (click)="goToPreviousStep()"
-      class="group flex items-center bg-black/70 hover:bg-black/90 text-white py-2 md:py-3 px-4 md:px-5 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl backdrop-blur-md">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5 mr-2 transition-transform duration-300 group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      class="group flex items-center bg-black/70 hover:bg-black/90 text-white py-2 md:py-3 px-3 sm:px-4 md:px-5 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl backdrop-blur-md"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-4 w-4 md:h-5 md:w-5 mr-1 sm:mr-2 transition-transform duration-300 group-hover:-translate-x-1"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M15 19l-7-7 7-7"
+        />
       </svg>
-      <span class="text-sm md:text-base">Previous</span>
+      <span class="text-xs sm:text-sm md:text-base">Previous</span>
     </button>
     }
-    
+
     <!-- Step Counter Badge -->
-    <div class="hidden md:flex items-center justify-center bg-gray-800/70 text-white text-xs rounded-full h-8 px-3 mx-1 backdrop-blur-md">
-      Step {{currentStepIndex() + 1}} of {{steps.length}}
+    <div
+      class="hidden sm:flex items-center justify-center bg-gray-800/70 text-white text-xs rounded-full h-6 sm:h-7 md:h-8 px-2 sm:px-3 mx-1 backdrop-blur-md"
+    >
+      <span class="text-xs"
+        >Step {{currentStepIndex() + 1}} of {{steps.length}}</span
+      >
     </div>
 
     <!-- Next Button -->
     @if (currentStepIndex() < steps.length - 1) {
     <button
       (click)="goToNextStep()"
-      class="inner-button group flex items-center text-white py-2 md:py-3 px-4 md:px-5 rounded-full">
-      <span class="text-sm md:text-base">Next</span>
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      class="inner-button group flex items-center text-white py-2 md:py-3 px-3 sm:px-4 md:px-5 rounded-full"
+    >
+      <span class="text-xs sm:text-sm md:text-base">Next</span>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-4 w-4 md:h-5 md:w-5 ml-1 sm:ml-2 transition-transform duration-300 group-hover:translate-x-1"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 5l7 7-7 7"
+        />
       </svg>
     </button>
     }
@@ -33,31 +63,30 @@
 
   <!-- Step 0: Project Description -->
   @if (isStepActive(0)) {
-  <section #projectDescription class="animate-slideInRight">
-    <app-project-description
-      (nextStep)="goToNextStep()"
-      [project]="project()">
+  <section #projectDescription class="animate-slideInRight px-4 sm:px-0">
+    <app-project-description (nextStep)="goToNextStep()" [project]="project()">
     </app-project-description>
   </section>
   }
-  
+
   <!-- Step 1: Project Details -->
   @if (isStepActive(1)) {
-  <section #projectDetails class="animate-slideInRight">
+  <section #projectDetails class="animate-slideInRight px-4 sm:px-0">
     <app-project-details
       (nextStep)="goToNextStep()"
       (previousStep)="goToPreviousStep()"
       [project]="project()"
       [groupedProjectTypes]="groupedProjectTypes"
       [groupedScopes]="groupedScopes"
-      [groupedTargets]="groupedTargets">
+      [groupedTargets]="groupedTargets"
+    >
     </app-project-details>
   </section>
   }
-  
+
   <!-- Step 2: Color Selection -->
   @if (isStepActive(2)) {
-  <section #colorSelection class="animate-slideInRight">
+  <section #colorSelection class="animate-slideInRight px-4 sm:px-0">
     <app-color-selection
       [project]="project()"
       [selectedColor]="selectedColor"
@@ -65,28 +94,30 @@
       (colorsGenerated)="colorModels = $event"
       (typographyGenerated)="typographyModels = $event"
       (nextStep)="goToNextStep()"
-      (previousStep)="goToPreviousStep()">
+      (previousStep)="goToPreviousStep()"
+    >
     </app-color-selection>
   </section>
   }
-  
+
   <!-- Step 3: Typography Selection -->
   @if (isStepActive(3)) {
-  <section #typographySelection class="animate-slideInRight">
+  <section #typographySelection class="animate-slideInRight px-4 sm:px-0">
     <app-typography-selection
       [project]="project()"
       [typographyOptions]="typographyModels"
       [selectedTypography]="selectedTypography"
       (typographySelected)="selectTypography($event)"
       (nextStep)="goToNextStep()"
-      (previousStep)="goToPreviousStep()">
+      (previousStep)="goToPreviousStep()"
+    >
     </app-typography-selection>
   </section>
   }
-  
+
   <!-- Step 4: Logo Selection -->
   @if (isStepActive(4)) {
-  <section #logoSelection class="animate-slideInRight">
+  <section #logoSelection class="animate-slideInRight px-4 sm:px-0">
     <app-logo-selection
       [projectId]="project().id"
       [selectedColor]="getSelectedColor()"
@@ -94,14 +125,15 @@
       [logos]="logos"
       [selectedLogo]="selectedLogo"
       (logoSelected)="selectLogo($event)"
-      (logosGenerated)="logos = $event">
+      (logosGenerated)="logos = $event"
+    >
     </app-logo-selection>
   </section>
   }
-  
+
   <!-- Step 5: Summary -->
   @if (isStepActive(5)) {
-  <section #summarySelection class="animate-slideInRight">
+  <section #summarySelection class="animate-slideInRight px-4 sm:px-0">
     <app-project-summary
       (finalizeProject)="finalizeProjectCreation()"
       (previousStep)="goToPreviousStep()"
@@ -117,7 +149,8 @@
       [betaPolicyAccepted]="betaPolicyAccepted()"
       [marketingConsentAccepted]="marketingConsentAccepted()"
       (privacyPolicyChange)="handlePrivacyPolicyChange($event)"
-      (termsOfServiceChange)="handleTermsOfServiceChange($event)">
+      (termsOfServiceChange)="handleTermsOfServiceChange($event)"
+    >
     </app-project-summary>
   </section>
   }

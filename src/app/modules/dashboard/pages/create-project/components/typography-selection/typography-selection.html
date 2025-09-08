@@ -10,12 +10,12 @@
 
       <!-- Skeleton Loader for Typography Options - Horizontal Layout -->
       <div
-        class="flex flex-col md:flex-row gap-4 md:gap-6 lg:gap-8 items-stretch"
+        class="flex flex-col md:flex-row gap-4 md:gap-6 lg:gap-4 items-center justify-center"
       >
         @for (item of [1,2,3]; track item) {
         <div class="flex-1">
           <div
-            class="bg-gray-800/50 rounded-2xl md:rounded-3xl p-4 md:p-6 lg:p-8 animate-pulse h-full"
+            class="bg-gray-800/50 rounded-2xl md:rounded-3xl p-4 md:p-6 lg:p-8 animate-pulse h-full lg:min-w-[350px]"
           >
             <!-- Number Badge Skeleton -->
             <div
@@ -89,8 +89,8 @@
             d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
           ></path>
         </svg>
-        <div class="text-sm text-primary">
-          <p class="font-medium mb-1">✨ Typography Tip</p>
+        <div class="text-sm text-gray-300">
+          <p class="font-medium mb-1">Typography Tip</p>
           <p>
             We're creating font combinations that enhance readability while
             reflecting your brand's personality and tone.
@@ -178,14 +178,14 @@
 <!-- Success State - Typography Selection -->
 @if (!isGenerating() && !error() && hasGenerated()) {
 <section
-  class="flex flex-col items-center justify-center w-full px-4 sm:px-6 lg:px-8 py-8 min-h-[90vh]"
+  class="flex flex-col items-center justify-center w-full px-4 sm:px-6 lg:px-8 py-8 min-h-[90vh] mt-[50px] sm:mt-0"
 >
   <!-- Header -->
-  <div class="text-center mb-12">
-    <h1 class="text-4xl font-bold text-white mb-4">
+  <div class="text-center">
+    <h1 class="text-xl sm:text-4xl font-bold text-white mb-4">
       Choose Your Typography Style
     </h1>
-    <p class="text-xl text-gray-300 mb-8">
+    <p class="text-xs sm:text-xl text-gray-300 mb-8">
       Select the typography that best represents your brand's personality
     </p>
   </div>

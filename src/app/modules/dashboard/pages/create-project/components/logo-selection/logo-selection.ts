@@ -134,14 +134,6 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
           colors: ['#10B981', '#059669'],
           fonts: ['Poppins', 'Open Sans'],
         },
-        {
-          id: 'mock-2',
-          name: 'Generated Logo 2',
-          concept: 'Creative and dynamic approach',
-          svg: '<svg viewBox="0 0 100 100"><rect x="20" y="20" width="60" height="60" fill="#10B981"/></svg>',
-          colors: ['#10B981', '#059669'],
-          fonts: ['Poppins', 'Open Sans'],
-        },
       ];
 
       this.generatedLogos.set(mockLogos);
