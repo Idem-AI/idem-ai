@@ -50,11 +50,11 @@ body {
   --font-size-subtitle: 1.7rem;
   --font-size-light-text: 1rem;
 
-  --glass-bg: rgba(15, 20, 27, 0.7);
+  --glass-bg: rgba(15, 20, 27, 0.4);
   --glass-bg-darker: rgba(20, 20, 30, 0.6);
   --glass-border: rgba(255, 255, 255, 0.1);
   --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  --glass-blur: 12px;
+  --glass-blur: 8px;
 }
 
 /* Glass Effect Utilities */

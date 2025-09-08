@@ -51,11 +51,8 @@ export class CreateProjectComponent implements OnInit {
   protected readonly cookieService = inject(CookieService);
 
   // Step management
-  protected readonly isLoaded = signal(false);
   protected readonly currentStepIndex = signal<number>(0);
   protected readonly selectedTabIndex = signal<number>(0);
-  protected readonly brandingError = signal<string | null>(null);
-  protected readonly logoVariationsError = signal<string | null>(null);
 
   // Simplified step structure with all necessary information
   protected readonly steps = [
@@ -91,7 +88,6 @@ export class CreateProjectComponent implements OnInit {
 
   // Visual identity selections
   logos: LogoModel[] = [];
-  protected isGeneratingVariations = signal(false);
   protected colorModels: ColorModel[] = [];
   protected typographyModels: TypographyModel[] = [];
   protected selectedLogo = '';
@@ -114,7 +110,7 @@ export class CreateProjectComponent implements OnInit {
   private scrollToSection(section: ElementRef): void {
     // No longer blocking scroll
     setTimeout(() => {
-      if (section) {
+      if (section?.nativeElement) {
         section.nativeElement.scrollIntoView({
           behavior: 'smooth',
           block: 'start',
@@ -207,7 +203,10 @@ export class CreateProjectComponent implements OnInit {
 
       // Scroll to the section with a slight delay for better animation
       setTimeout(() => {
-        this.scrollToSection(this.getElementForStep(index).nativeElement);
+        const elementRef = this.getElementForStep(index);
+        if (elementRef) {
+          this.scrollToSection(elementRef);
+        }
       }, 50);
 
       // Track this navigation for analytics (optional)
@@ -225,120 +224,15 @@ export class CreateProjectComponent implements OnInit {
     const nextIndex = currentStep + 1;
 
     if (nextIndex === 2) {
+      // Color selection component will handle its own generation
       if (nextIndex < this.steps.length) {
-        this.isLoaded.set(true);
-        this.brandingError.set(null); // Clear previous error
-        console.log('st2ProjectId: ', this.project().id);
-        this.brandingService
-          .generateColorsAndTypography(this.project())
-          .subscribe({
-            next: (brandingData) => {
-              console.log(
-                'Colors and typography generated successfully:',
-                brandingData
-              );
-              this.colorModels = brandingData.colors;
-              this.typographyModels = brandingData.typography;
-              this.project.update(() => brandingData.project);
-              console.log('Color models:', this.colorModels);
-              console.log('Typography models:', this.typographyModels);
-              // Update project with generated colors and typography
-              this.project.update((project) => ({
-                ...project,
-                analysisResultModel: {
-                  ...project.analysisResultModel,
-                  branding: {
-                    logo: {
-                      id: 'placeholder',
-                      name: 'Placeholder Logo',
-                      svg: '',
-                      concept:
-                        'Logo will be generated after color and typography selection',
-                      colors: [],
-                      fonts: [],
-                    }, // Placeholder logo - will be replaced when generated
-                    generatedLogos: [],
-                    colors: this.colorModels[0],
-                    generatedColors: brandingData.colors,
-                    typography: this.typographyModels[0],
-                    generatedTypography: brandingData.typography,
-                    sections: [],
-                  },
-                },
-              }));
-              this.isLoaded.set(false);
-              this.navigateToStep(nextIndex);
-              console.log('Project ID generated:', this.project().id);
-            },
-            error: (err) => {
-              console.error('Error generating colors and typography:', err);
-              this.brandingError.set(
-                'Failed to generate colors and typography. If the problem persists, please try again later.'
-              );
-              this.isLoaded.set(false);
-              // Do not navigate to the next step on error
-            },
-          });
+        this.navigateToStep(nextIndex);
       }
     } else if (nextIndex === 4) {
-      // Corresponds to 'Logo Selection' step (index 4)
-      // Step 1: Generate 4 main logo concepts with selected color and typography
-      console.log('st4ProjectId: ', this.project().id);
-      const selectedColor =
-        this.colorModels.find((color) => color.id === this.selectedColor) ||
-        this.colorModels[0];
-      const selectedTypography =
-        this.typographyModels.find(
-          (typography) => typography.id === this.selectedTypography
-        ) || this.typographyModels[0];
-
-      if (selectedColor && selectedTypography) {
-        this.isLoaded.set(true);
-        this.brandingError.set(null); // Clear previous error
-
-        this.brandingService
-          .generateLogoConcepts(
-            this.project().id!,
-            selectedColor,
-            selectedTypography
-          )
-          .subscribe({
-            next: (logoData) => {
-              console.log('Logo concepts generated successfully:', logoData);
-              this.logos = logoData.logos;
-
-              // Update project with generated logo concepts
-              this.project.update((project) => ({
-                ...project,
-                analysisResultModel: {
-                  ...project.analysisResultModel,
-                  branding: {
-                    ...project.analysisResultModel?.branding,
-                    logo: logoData.logos[0],
-                    generatedLogos: logoData.logos,
-                  },
-                },
-              }));
-              this.isLoaded.set(false);
-              this.navigateToStep(nextIndex);
-            },
-            error: (err) => {
-              console.error('Error generating logo concepts:', err);
-              this.brandingError.set(
-                'Failed to generate logo concepts. If the problem persists, please try again later.'
-              );
-              this.isLoaded.set(false);
-              // Do not navigate to the next step on error
-            },
-          });
-      } else {
-        console.error('Selected color or typography not found');
-        this.brandingError.set(
-          'Please select a color and typography before proceeding.'
-        );
+      // Logo selection component will handle its own generation
+      if (nextIndex < this.steps.length) {
+        this.navigateToStep(nextIndex);
       }
-
-      console.log('st41ProjectId: ', this.project().id);
     } else {
       // For any other step, proceed as usual
       if (nextIndex < this.steps.length) {
@@ -386,50 +280,6 @@ export class CreateProjectComponent implements OnInit {
     this.marketingConsentAccepted.set(accepted);
   }
 
-  /**
-   * Get loading title based on current step
-   */
-  protected getLoadingTitle(): string {
-    const currentStep = this.currentStepIndex();
-    switch (currentStep) {
-      case 1: // Moving to step 2 (colors)
-        return 'Generating Colors and Typography';
-      case 3: // Moving to step 4 (logos)
-        return 'Generating Logo Concepts';
-      default:
-        return 'Processing...';
-    }
-  }
-
-  /**
-   * Get loading message based on current step
-   */
-  protected getLoadingMessage(): string {
-    const currentStep = this.currentStepIndex();
-    switch (currentStep) {
-      case 1: // Moving to step 2 (colors)
-        return 'Creating personalized color palettes and typography options for your project.';
-      case 3: // Moving to step 4 (logos)
-        return 'Creating 4 main logo concepts with your selected colors and typography.';
-      default:
-        return 'Please wait while we process your request.';
-    }
-  }
-
-  /**
-   * Get loading sub-message based on current step
-   */
-  protected getLoadingSubMessage(): string {
-    const currentStep = this.currentStepIndex();
-    switch (currentStep) {
-      case 1: // Moving to step 2 (colors)
-        return 'Analyzing your project requirements...';
-      case 3: // Moving to step 4 (logos)
-        return 'Analyzing your brand identity requirements...';
-      default:
-        return 'Working on your request...';
-    }
-  }
 
   // Method to create project with selected visual identity
   protected finalizeProjectCreation() {
@@ -440,7 +290,6 @@ export class CreateProjectComponent implements OnInit {
   protected goToThirdStep() {
     console.log('Project: ', this.project);
     this.visible.set(true);
-    this.isLoaded.set(false);
   }
 
   /**
@@ -491,9 +340,7 @@ export class CreateProjectComponent implements OnInit {
         selectedLogoObj.name
       );
 
-      // Show loading state for variations generation
-      this.isLoaded.set(true);
-      this.logoVariationsError.set(null);
+      // Logo selection component will handle variations generation
 
       this.brandingService
         .generateLogoVariations(selectedLogoObj, this.project())
@@ -528,16 +375,11 @@ export class CreateProjectComponent implements OnInit {
               },
             }));
 
-            this.isLoaded.set(false);
-            this.logoVariationsError.set(null);
             setTimeout(() => this.goToNextStep(), 300);
           },
           error: (err) => {
             console.error('Error generating logo variations:', err);
-            this.logoVariationsError.set(
-              'Échec de la génération des déclinaisons de logo. Veuillez réessayer.'
-            );
-            this.isLoaded.set(false);
+            console.error('Logo variations generation failed');
             // Do NOT proceed to next step on error
           },
         });
@@ -567,41 +409,5 @@ export class CreateProjectComponent implements OnInit {
     return this.steps[index]?.active() || false;
   }
 
-  /**
-   * Navigate to a specific step with loading animation
-   * @param stepIndex The index of the step to navigate to
-   * @param duration Optional transition duration (default: 400ms)
-   */
-  protected navigateWithLoading(stepIndex: number, duration = 400): void {
-    // Show loading state
-    this.isLoaded.set(true);
 
-    // Apply a subtle transition effect
-    const animationTiming = duration * 0.8;
-
-    setTimeout(() => {
-      this.navigateToStep(stepIndex);
-      // Hide loading after animation completes
-      setTimeout(() => {
-        this.isLoaded.set(false);
-      }, animationTiming);
-    }, duration * 0.2);
-  }
-
-  /**
-   * Retry logo variations generation
-   */
-  protected retryLogoVariations(): void {
-    if (this.selectedLogo) {
-      this.selectLogo(this.selectedLogo);
-    }
-  }
-
-  /**
-   * Skip logo variations and proceed to next step
-   */
-  protected skipLogoVariations(): void {
-    this.logoVariationsError.set(null);
-    setTimeout(() => this.goToNextStep(), 300);
-  }
 }

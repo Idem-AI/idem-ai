@@ -1,287 +1,106 @@
 <div class="w-full relative pt-[140px]">
-  <!-- Centralized Loading State -->
-  @if (isLoaded()) {
-  <div class="h-[80vh] w-full flex items-center justify-center">
-    <div class="max-w-4xl mx-auto p-8">
-      <!-- Header Section -->
-      <div class="text-center mb-12">
-        <div
-          class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full mb-6"
-        >
-          <svg
-            class="w-8 h-8 text-white animate-spin"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-            ></path>
-          </svg>
-        </div>
-        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-          {{ getLoadingTitle() }}
-        </h2>
-        <p class="text-lg text-gray-600 dark:text-gray-300 mb-2">
-          {{ getLoadingMessage() }}
-        </p>
-      </div>
-
-      <!-- PrimeNG Skeleton Grid -->
-      <div class="grid grid-cols-2 gap-6 max-w-2xl mx-auto mb-8">
-        @for (item of [1,2,3,4]; track item) {
-        <div
-          class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-200 dark:border-gray-700 aspect-square flex items-center justify-center"
-        >
-          <p-skeleton
-            width="15rem"
-            height="15rem"
-            borderRadius="0.5rem"
-          ></p-skeleton>
-        </div>
-        }
-      </div>
-
-      <!-- Progress Indicator -->
-      <div class="flex flex-col items-center space-y-4">
-        <div class="flex items-center space-x-2">
-          <div
-            class="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]"
-          ></div>
-          <div
-            class="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:-0.15s]"
-          ></div>
-          <div class="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
-        </div>
-        <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">
-          {{ getLoadingSubMessage() }}
-        </p>
-      </div>
-    </div>
-  </div>
-  } @else {
-
-  <!-- Step navigation indicators with tooltips and enhanced interaction -->
-  <!-- Navigation Buttons (Fixed position) -->
-  <div
-    class="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 flex flex-wrap justify-center gap-3 md:gap-4 items-center max-w-[95vw] px-2"
-  >
+  <!-- Step navigation indicators -->
+  <div class="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 flex flex-wrap justify-center gap-3 md:gap-4 items-center max-w-[95vw] px-2">
     <!-- Previous Button -->
     @if (currentStepIndex() > 0) {
     <button
       (click)="goToPreviousStep()"
-      class="group flex items-center bg-black/70 hover:bg-black/90 text-white py-2 md:py-3 px-4 md:px-5 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl backdrop-blur-md"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-4 w-4 md:h-5 md:w-5 mr-2 transition-transform duration-300 group-hover:-translate-x-1"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M15 19l-7-7 7-7"
-        />
+      class="group flex items-center bg-black/70 hover:bg-black/90 text-white py-2 md:py-3 px-4 md:px-5 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl backdrop-blur-md">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5 mr-2 transition-transform duration-300 group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
       </svg>
       <span class="text-sm md:text-base">Previous</span>
     </button>
     }
+    
     <!-- Step Counter Badge -->
-    <div
-      class="hidden md:flex items-center justify-center bg-gray-800/70 text-white text-xs rounded-full h-8 px-3 mx-1 backdrop-blur-md"
-    >
+    <div class="hidden md:flex items-center justify-center bg-gray-800/70 text-white text-xs rounded-full h-8 px-3 mx-1 backdrop-blur-md">
       Step {{currentStepIndex() + 1}} of {{steps.length}}
     </div>
 
     <!-- Next Button -->
-    @if ((currentStepIndex() < steps.length - 1 ) && currentStepIndex() > 0) {
+    @if (currentStepIndex() < steps.length - 1) {
     <button
       (click)="goToNextStep()"
-      class="group flex items-center inner-button"
-    >
+      class="group flex items-center bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white py-2 md:py-3 px-4 md:px-5 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl backdrop-blur-md">
       <span class="text-sm md:text-base">Next</span>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-4 w-4 md:h-5 md:w-5 ml-2 transition-transform duration-300 group-hover:translate-x-1"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M9 5l7 7-7 7"
-        />
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
       </svg>
     </button>
     }
   </div>
 
+  <!-- Step 0: Project Description -->
   @if (isStepActive(0)) {
-  <section #projectDescription class="animate-fadeIn">
+  <section #projectDescription class="animate-slideInRight">
     <app-project-description
       (nextStep)="goToNextStep()"
-      [project]="project()"
-    ></app-project-description>
+      [project]="project()">
+    </app-project-description>
   </section>
-  } @if (isStepActive(1)) { @if (brandingError()) {
-  <div
-    class="flex items-start p-4 mb-6 space-x-3 bg-red-50 border border-red-200 rounded-lg shadow-sm dark:bg-red-900/20 dark:border-red-700/60 w-full max-w-2xl mx-auto"
-    role="alert"
-  >
-    <div class="flex-shrink-0">
-      <svg
-        class="w-5 h-5 text-red-500 dark:text-red-400"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-        aria-hidden="true"
-      >
-        <path
-          fill-rule="evenodd"
-          d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12zm-1-9a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zm0 3a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z"
-          clip-rule="evenodd"
-        />
-      </svg>
-    </div>
-    <div class="flex-1">
-      <p class="text-sm font-semibold text-red-700 dark:text-red-300">
-        Oops! Something went wrong.
-      </p>
-      <p class="mt-1 text-sm text-red-600 dark:text-red-400">
-        {{ brandingError() }}
-      </p>
-    </div>
-  </div>
   }
+  
+  <!-- Step 1: Project Details -->
+  @if (isStepActive(1)) {
   <section #projectDetails class="animate-slideInRight">
     <app-project-details
       (nextStep)="goToNextStep()"
       (previousStep)="goToPreviousStep()"
-      (constraintsChange)="onConstraintsChange()"
       [project]="project()"
-      (projectChange)="project.set($event)"
       [groupedProjectTypes]="groupedProjectTypes"
       [groupedScopes]="groupedScopes"
-      [groupedTargets]="groupedTargets"
-    ></app-project-details>
+      [groupedTargets]="groupedTargets">
+    </app-project-details>
   </section>
-  } @if (isStepActive(2)) {
+  }
+  
+  <!-- Step 2: Color Selection -->
+  @if (isStepActive(2)) {
   <section #colorSelection class="animate-slideInRight">
     <app-color-selection
-      (colorSelected)="selectColor($event)"
-      (nextStep)="goToNextStep()"
-      (previousStep)="goToPreviousStep()"
-      [colorPalettes]="colorModels"
+      [project]="project()"
       [selectedColor]="selectedColor"
-    ></app-color-selection>
+      (colorSelected)="selectColor($event)"
+      (colorsGenerated)="colorModels = $event"
+      (typographyGenerated)="typographyModels = $event"
+      (nextStep)="goToNextStep()"
+      (previousStep)="goToPreviousStep()">
+    </app-color-selection>
   </section>
-  } @if (isStepActive(3)) {
+  }
+  
+  <!-- Step 3: Typography Selection -->
+  @if (isStepActive(3)) {
   <section #typographySelection class="animate-slideInRight">
     <app-typography-selection
-      (typographySelected)="selectTypography($event)"
-      (nextStep)="goToNextStep()"
-      (previousStep)="goToPreviousStep()"
+      [project]="project()"
       [typographyOptions]="typographyModels"
       [selectedTypography]="selectedTypography"
-    ></app-typography-selection>
+      (typographySelected)="selectTypography($event)"
+      (nextStep)="goToNextStep()"
+      (previousStep)="goToPreviousStep()">
+    </app-typography-selection>
   </section>
-  } @if (isStepActive(4)) {
-  <!-- Logo Variations Error Message -->
-  @if (logoVariationsError()) {
-  <div
-    class="flex flex-col items-center p-6 mb-8 space-y-4 bg-red-50 border border-red-200 rounded-lg shadow-sm dark:bg-red-900/20 dark:border-red-700/60 w-full max-w-2xl mx-auto"
-    role="alert"
-  >
-    <div class="flex items-start space-x-3 w-full">
-      <div class="flex-shrink-0">
-        <svg
-          class="w-6 h-6 text-red-500 dark:text-red-400"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          aria-hidden="true"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12zm-1-9a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zm0 3a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z"
-            clip-rule="evenodd"
-          />
-        </svg>
-      </div>
-      <div class="flex-1">
-        <p class="text-sm font-semibold text-red-700 dark:text-red-300">
-          Erreur de génération
-        </p>
-        <p class="mt-1 text-sm text-red-600 dark:text-red-400">
-          {{ logoVariationsError() }}
-        </p>
-      </div>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="flex flex-col sm:flex-row gap-3 w-full justify-center">
-      <button
-        (click)="retryLogoVariations()"
-        class="flex items-center justify-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
-      >
-        <svg
-          class="w-4 h-4 mr-2"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-          />
-        </svg>
-        Réessayer
-      </button>
-
-      <button
-        (click)="skipLogoVariations()"
-        class="flex items-center justify-center px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
-      >
-        <svg
-          class="w-4 h-4 mr-2"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
-        Continuer sans déclinaisons
-      </button>
-    </div>
-  </div>
   }
-
+  
+  <!-- Step 4: Logo Selection -->
+  @if (isStepActive(4)) {
   <section #logoSelection class="animate-slideInRight">
     <app-logo-selection
-      (logoSelected)="selectLogo($event)"
-      (nextStep)="goToNextStep()"
-      (previousStep)="goToPreviousStep()"
+      [projectId]="project().id"
+      [selectedColor]="getSelectedColor()"
+      [selectedTypography]="getSelectedTypography()"
       [logos]="logos"
-    ></app-logo-selection>
+      [selectedLogo]="selectedLogo"
+      (logoSelected)="selectLogo($event)"
+      (logosGenerated)="logos = $event">
+    </app-logo-selection>
   </section>
-  } @if (isStepActive(5)) {
+  }
+  
+  <!-- Step 5: Summary -->
+  @if (isStepActive(5)) {
   <section #summarySelection class="animate-slideInRight">
     <app-project-summary
       (finalizeProject)="finalizeProjectCreation()"
@@ -298,10 +117,8 @@
       [betaPolicyAccepted]="betaPolicyAccepted()"
       [marketingConsentAccepted]="marketingConsentAccepted()"
       (privacyPolicyChange)="handlePrivacyPolicyChange($event)"
-      (termsOfServiceChange)="handleTermsOfServiceChange($event)"
-      (betaPolicyChange)="handleBetaPolicyChange($event)"
-      (marketingConsentChange)="handleMarketingConsentChange($event)"
-    ></app-project-summary>
+      (termsOfServiceChange)="handleTermsOfServiceChange($event)">
+    </app-project-summary>
   </section>
-  } }
+  }
 </div>

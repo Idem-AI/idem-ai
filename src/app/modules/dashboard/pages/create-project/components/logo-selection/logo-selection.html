@@ -1,76 +1,257 @@
-<section
-  class="flex flex-col items-center justify-center w-full px-4 sm:px-6 lg:px-8"
-  #logoSelection
->
-  <h1
-    class="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-center font-bold text-gray-100 mb-6 lg:mb-8 max-w-4xl"
-  >
-    Choose a stunning logo for your project
-  </h1>
+<!-- Main Container -->
+<section class="min-h-screen flex flex-col items-center justify-center w-full px-4 sm:px-6 lg:px-8 py-8">
+  
+  <!-- Initial Prompt State -->
+  @if (shouldShowInitialPrompt()) {
+    <div class="text-center max-w-2xl mx-auto">
+      <div class="mb-8">
+        <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+          <svg class="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a4 4 0 004-4V5z"></path>
+          </svg>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-bold text-white mb-4">
+          Ready to Generate Your Logos
+        </h1>
+        <p class="text-lg text-gray-300 mb-8">
+          We'll create personalized logos based on your selected colors and typography.
+        </p>
+      </div>
+      
+      <button 
+        (click)="startLogoGeneration()"
+        class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+        </svg>
+        Generate Logos
+      </button>
+    </div>
+  }
 
-  <div class="w-full max-w-7xl mx-auto">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
-      @for (logo of logos(); track logo.id) {
-      <div
-        class="p-4 sm:p-6 lg:p-8 border border-gray-700/50 rounded-2xl backdrop-blur-sm hover:shadow-lg hover:shadow-primary/30 hover:bg-gray-900/50 transition-all duration-300 cursor-pointer flex flex-col items-center group relative overflow-hidden bg-black/20 hover:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary/50"
-        [class.border-primary]="selectedLogo() === logo.id"
-        [class.bg-gray-900]="selectedLogo() === logo.id"
-        [class.shadow-md]="selectedLogo() === logo.id"
-        (click)="selectLogo(logo.id)"
-        tabindex="0"
-        role="button"
-        [attr.aria-pressed]="selectedLogo() === logo.id"
-        [attr.aria-label]="'Select ' + logo.name + ' logo'"
-      >
-          <!-- Background gradient effect - preserved from original -->
-          <div
-            class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            [class.opacity-50]="selectedLogo() === logo.id"
-          ></div>
-
-          <!-- Logo container with preserved hover animation -->
-        <div
-          class="w-full h-40 sm:h-44 lg:h-48 mb-3 sm:mb-4 z-10 transition-transform duration-300 group-hover:scale-105 flex items-center justify-center"
-          [class.scale-105]="selectedLogo() === logo.id"
-        >
-          <div
-            class="bg-white p-2 sm:p-3 rounded-lg shadow-sm w-auto h-auto max-h-full max-w-full flex items-center justify-center"
-          >
-            <div
-              [innerHTML]="logo.svg | safeHtml"
-              class="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 flex items-center justify-center object-contain"
-            ></div>
+  <!-- Loading State -->
+  @if (shouldShowLoader()) {
+    <div class="w-full max-w-6xl mx-auto">
+      
+      <!-- Header Section -->
+      <div class="text-center mb-12">
+        <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 mb-6 relative">
+          <div class="absolute inset-0 rounded-full bg-gradient-to-br from-primary to-secondary opacity-20 animate-pulse"></div>
+          <svg class="w-12 h-12 text-primary animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+        </div>
+        
+        <h1 class="text-4xl font-bold text-white mb-4">
+          Generating Your Logos
+        </h1>
+        
+        <p class="text-xl text-gray-300 mb-2">
+          {{ currentStep() }}
+        </p>
+        
+        <div class="flex items-center justify-center space-x-2 mb-6">
+          <span class="text-sm text-gray-400">Estimated time:</span>
+          <span class="text-sm font-semibold text-primary">{{ estimatedTime() }}</span>
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="w-full max-w-md mx-auto">
+          <div class="flex justify-between text-sm text-gray-400 mb-2">
+            <span>Progress</span>
+            <span>{{ generationProgress() }}%</span>
+          </div>
+          <div class="w-full bg-gray-700/50 rounded-full h-3 overflow-hidden">
+            <div 
+              class="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-1000 ease-out rounded-full relative"
+              [style.width.%]="generationProgress()">
+              <div class="absolute inset-0 bg-white/20 animate-pulse rounded-full"></div>
+            </div>
           </div>
         </div>
-
-        <!-- Logo name with improved typography -->
-        <h3
-          class="text-white text-base sm:text-lg font-semibold z-10 tracking-wide text-center mt-2"
-        >
-          {{ logo.name }}
-        </h3>
-
-        <!-- Logo concept -->
-        <p
-          class="text-gray-400 text-xs sm:text-sm mt-1 mb-3 z-10 text-center px-2 sm:px-3 max-w-xs"
-        >
-          {{ logo.concept }}
-        </p>
-
-        <!-- Animated indicator line - preserved from original -->
-        <div
-          class="w-0 group-hover:w-full h-1 bg-primary transition-all duration-300 rounded-full"
-          [class.w-full]="selectedLogo() === logo.id"
-        ></div>
-
-        <!-- Selected indicator dot -->
-        @if (selectedLogo() === logo.id) {
-        <div
-          class="absolute top-3 sm:top-4 right-3 sm:right-4 w-3 h-3 rounded-full bg-primary z-20 animate-pulse"
-        ></div>
+      </div>
+      
+      <!-- Loading Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        @for (item of [1,2,3,4]; track item) {
+          <div class="group">
+            <div class="bg-gray-900/40 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-8 hover:border-gray-600/50 transition-all duration-300">
+              
+              <!-- Logo Placeholder -->
+              <div class="w-full h-48 mb-6 bg-gray-800/50 rounded-xl flex items-center justify-center relative overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 animate-pulse"></div>
+                <div class="w-20 h-20 bg-gray-700/50 rounded-lg animate-pulse"></div>
+                
+                <!-- Shimmer Effect -->
+                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer"></div>
+              </div>
+              
+              <!-- Title Placeholder -->
+              <div class="space-y-3 mb-4">
+                <div class="h-6 bg-gray-700/50 rounded-lg animate-pulse"></div>
+                <div class="h-4 bg-gray-700/30 rounded-lg animate-pulse w-3/4"></div>
+              </div>
+              
+              <!-- Progress Dots -->
+              <div class="flex justify-center space-x-2">
+                @for (dot of [1,2,3]; track dot) {
+                  <div 
+                    class="w-2 h-2 bg-primary/60 rounded-full animate-bounce"
+                    [style.animation-delay]="(dot * 0.2) + 's'"></div>
+                }
+              </div>
+            </div>
+          </div>
         }
       </div>
+      
+      <!-- Tips Section -->
+      <div class="mt-12 text-center">
+        <div class="bg-gray-900/30 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6 max-w-2xl mx-auto">
+          <h3 class="text-lg font-semibold text-white mb-3">
+            💡 While you wait...
+          </h3>
+          <p class="text-gray-300 text-sm leading-relaxed">
+            Our AI is analyzing your color palette and typography to create logos that perfectly match your brand identity. 
+            This process may take 2-3 minutes as we generate multiple high-quality variations for you to choose from.
+          </p>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Logo Selection State -->
+  @if (shouldShowLogos()) {
+    <div class="w-full max-w-7xl mx-auto">
+      
+      <!-- Header -->
+      <div class="text-center mb-12">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-green-500/20 to-emerald-500/20 mb-6">
+          <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+        
+        <h1 class="text-4xl font-bold text-white mb-4">
+          Choose Your Perfect Logo
+        </h1>
+        
+        <p class="text-xl text-gray-300 mb-8">
+          Select the logo that best represents your brand identity
+        </p>
+      </div>
+      
+      <!-- Logo Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        @for (logo of displayedLogos(); track logo.id) {
+          <div
+            class="group cursor-pointer transform transition-all duration-300 hover:scale-[1.02]"
+            (click)="selectLogo(logo.id)"
+            tabindex="0"
+            role="button"
+            [attr.aria-pressed]="selectedLogo() === logo.id"
+            [attr.aria-label]="'Select ' + logo.name + ' logo'">
+            
+            <div 
+              class="relative bg-gray-900/40 backdrop-blur-sm border-2 rounded-2xl p-8 transition-all duration-300 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10"
+              [class.border-primary]="selectedLogo() === logo.id"
+              [class.border-gray-700]="selectedLogo() !== logo.id"
+              [class.bg-gray-900]="selectedLogo() === logo.id">
+              
+              <!-- Selection Indicator -->
+              @if (selectedLogo() === logo.id) {
+                <div class="absolute -top-2 -right-2 w-8 h-8 bg-primary rounded-full flex items-center justify-center z-10 animate-bounce">
+                  <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+              }
+              
+              <!-- Background Glow -->
+              <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                   [class.opacity-100]="selectedLogo() === logo.id"></div>
+              
+              <!-- Logo Container -->
+              <div class="relative z-10">
+                <div class="w-full h-56 mb-6 bg-white rounded-xl flex items-center justify-center p-4 shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+                  <div 
+                    [innerHTML]="logo.svg | safeHtml"
+                    class="w-full h-full flex items-center justify-center [&>svg]:max-w-full [&>svg]:max-h-full [&>svg]:w-auto [&>svg]:h-auto">
+                  </div>
+                </div>
+                
+                <!-- Logo Info -->
+                <div class="text-center">
+                  <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors duration-300">
+                    {{ logo.name }}
+                  </h3>
+                  
+                  <p class="text-gray-400 text-sm mb-4 leading-relaxed">
+                    {{ logo.concept }}
+                  </p>
+                  
+                  <!-- Color Palette -->
+                  <div class="flex items-center justify-center space-x-2 mb-3">
+                    <span class="text-xs text-gray-500 mr-2">Colors:</span>
+                    @for (color of logo.colors; track color) {
+                      <div 
+                        class="w-4 h-4 rounded-full border border-gray-600"
+                        [style.background-color]="color"
+                        [title]="color">
+                      </div>
+                    }
+                  </div>
+                  
+                  <!-- Fonts -->
+                  <div class="flex items-center justify-center space-x-2">
+                    <span class="text-xs text-gray-500 mr-2">Fonts:</span>
+                    <div class="flex flex-wrap justify-center gap-1">
+                      @for (font of logo.fonts; track font) {
+                        <span class="text-xs bg-gray-700/50 text-gray-300 px-2 py-1 rounded-md">
+                          {{ font }}
+                        </span>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Selection Border Animation -->
+              <div 
+                class="absolute inset-0 rounded-2xl border-2 border-primary opacity-0 transition-opacity duration-300"
+                [class.opacity-100]="selectedLogo() === logo.id"
+                [class.animate-pulse]="selectedLogo() === logo.id">
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+      
+      <!-- Retry Button (if generation failed) -->
+      @if (currentStep().includes('failed')) {
+        <div class="text-center mt-12">
+          <button 
+            (click)="retryGeneration()"
+            class="inline-flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors duration-300">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            Retry Generation
+          </button>
+        </div>
       }
     </div>
-  </div>
+  }
 </section>
+
+<!-- Custom Styles -->
+<style>
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+</style>

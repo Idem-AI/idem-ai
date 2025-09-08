@@ -155,7 +155,15 @@ export class AuthService {
         return null;
       }
 
-      const userData = JSON.parse(userCookie);
+      // Validate JSON string before parsing
+      const trimmedCookie = userCookie.trim();
+      if (!trimmedCookie.startsWith('{') || !trimmedCookie.endsWith('}')) {
+        console.warn('Invalid JSON format in user cookie, clearing cookie');
+        this.cookieService.remove(this.CURRENT_USER_COOKIE);
+        return null;
+      }
+
+      const userData = JSON.parse(trimmedCookie);
 
       // Créer un objet User-like depuis les données des cookies
       return {
