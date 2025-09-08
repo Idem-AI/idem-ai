@@ -1,5 +1,5 @@
 <!-- Main Container -->
-<section class="min-h-screen flex flex-col items-center justify-center w-full px-4 sm:px-6 lg:px-8 py-8">
+<section class="min-h-screen flex flex-col items-center justify-center w-full px-4 sm:px-6 lg:px-8 ">
   
   <!-- Initial Prompt State -->
   @if (shouldShowInitialPrompt()) {
@@ -142,7 +142,7 @@
       </div>
       
       <!-- Logo Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
         @for (logo of displayedLogos(); track logo.id) {
           <div
             class="group cursor-pointer transform transition-all duration-300 hover:scale-[1.02]"
@@ -153,7 +153,7 @@
             [attr.aria-label]="'Select ' + logo.name + ' logo'">
             
             <div 
-              class="relative bg-gray-900/40 backdrop-blur-sm border-2 rounded-2xl p-8 transition-all duration-300 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10"
+              class="relative bg-gray-900/40 backdrop-blur-sm border-2 rounded-xl p-4 md:p-6 transition-all duration-300 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10"
               [class.border-primary]="selectedLogo() === logo.id"
               [class.border-gray-700]="selectedLogo() !== logo.id"
               [class.bg-gray-900]="selectedLogo() === logo.id">
@@ -173,7 +173,7 @@
               
               <!-- Logo Container -->
               <div class="relative z-10">
-                <div class="w-full h-56 mb-6 bg-white rounded-xl flex items-center justify-center p-4 shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+                <div class="w-full h-32 sm:h-40 md:h-48 mb-4 bg-white rounded-lg flex items-center justify-center p-2 md:p-4 shadow-lg group-hover:shadow-xl transition-shadow duration-300">
                   <div 
                     [innerHTML]="logo.svg | safeHtml"
                     class="w-full h-full flex items-center justify-center [&>svg]:max-w-full [&>svg]:max-h-full [&>svg]:w-auto [&>svg]:h-auto">
@@ -182,20 +182,20 @@
                 
                 <!-- Logo Info -->
                 <div class="text-center">
-                  <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors duration-300">
+                  <h3 class="text-sm md:text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors duration-300">
                     {{ logo.name }}
                   </h3>
                   
-                  <p class="text-gray-400 text-sm mb-4 leading-relaxed">
+                  <p class="text-gray-400 text-xs md:text-sm mb-3 leading-relaxed line-clamp-2">
                     {{ logo.concept }}
                   </p>
                   
                   <!-- Color Palette -->
-                  <div class="flex items-center justify-center space-x-2 mb-3">
-                    <span class="text-xs text-gray-500 mr-2">Colors:</span>
+                  <div class="flex items-center justify-center space-x-1 mb-2">
+                    <span class="text-xs text-gray-500 mr-1">Colors:</span>
                     @for (color of logo.colors; track color) {
                       <div 
-                        class="w-4 h-4 rounded-full border border-gray-600"
+                        class="w-3 h-3 rounded-full border border-gray-600"
                         [style.background-color]="color"
                         [title]="color">
                       </div>
@@ -203,11 +203,11 @@
                   </div>
                   
                   <!-- Fonts -->
-                  <div class="flex items-center justify-center space-x-2">
-                    <span class="text-xs text-gray-500 mr-2">Fonts:</span>
+                  <div class="flex items-center justify-center space-x-1">
+                    <span class="text-xs text-gray-500 mr-1">Fonts:</span>
                     <div class="flex flex-wrap justify-center gap-1">
                       @for (font of logo.fonts; track font) {
-                        <span class="text-xs bg-gray-700/50 text-gray-300 px-2 py-1 rounded-md">
+                        <span class="text-xs bg-gray-700/50 text-gray-300 px-1.5 py-0.5 rounded">
                           {{ font }}
                         </span>
                       }

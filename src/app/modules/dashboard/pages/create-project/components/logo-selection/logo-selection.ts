@@ -12,7 +12,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SafeHtmlPipe } from '../../../projects-list/safehtml.pipe';
 import { LogoModel } from '../../../../models/logo.model';
-import { ColorModel, TypographyModel } from '../../../../models/brand-identity.model';
+import {
+  ColorModel,
+  TypographyModel,
+} from '../../../../models/brand-identity.model';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -63,14 +66,19 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
   });
 
   protected readonly shouldShowInitialPrompt = computed(() => {
-    return !this.shouldShowLoader() && !this.shouldShowLogos() && !this.hasStartedGeneration();
+    return (
+      !this.shouldShowLoader() &&
+      !this.shouldShowLogos() &&
+      !this.hasStartedGeneration()
+    );
   });
 
   ngOnInit(): void {
     // Auto-start generation if we have the required inputs and no logos yet
-    const hasRequiredInputs = this.projectId() && this.selectedColor() && this.selectedTypography();
+    const hasRequiredInputs =
+      this.projectId() && this.selectedColor() && this.selectedTypography();
     const hasNoLogos = !this.logos() || this.logos()?.length === 0;
-    
+
     if (hasRequiredInputs && hasNoLogos && !this.hasStartedGeneration()) {
       this.startLogoGeneration();
     }
@@ -87,15 +95,6 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
 
   protected startLogoGeneration(): void {
     if (this.isGenerating() || this.hasStartedGeneration()) {
-      return;
-    }
-
-    const projectId = this.projectId();
-    const selectedColor = this.selectedColor();
-    const selectedTypography = this.selectedTypography();
-
-    if (!projectId || !selectedColor || !selectedTypography) {
-      console.error('Missing required inputs for logo generation');
       return;
     }
 
@@ -117,25 +116,41 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
           concept: 'Modern and minimalist design',
           svg: '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#3B82F6"/></svg>',
           colors: ['#3B82F6', '#1E40AF'],
-          fonts: ['Inter', 'Roboto']
+          fonts: ['Inter', 'Roboto'],
         },
         {
-          id: 'mock-2', 
+          id: 'mock-2',
           name: 'Generated Logo 2',
           concept: 'Creative and dynamic approach',
           svg: '<svg viewBox="0 0 100 100"><rect x="20" y="20" width="60" height="60" fill="#10B981"/></svg>',
           colors: ['#10B981', '#059669'],
-          fonts: ['Poppins', 'Open Sans']
-        }
+          fonts: ['Poppins', 'Open Sans'],
+        },
+        {
+          id: 'mock-2',
+          name: 'Generated Logo 2',
+          concept: 'Creative and dynamic approach',
+          svg: '<svg viewBox="0 0 100 100"><rect x="20" y="20" width="60" height="60" fill="#10B981"/></svg>',
+          colors: ['#10B981', '#059669'],
+          fonts: ['Poppins', 'Open Sans'],
+        },
+        {
+          id: 'mock-2',
+          name: 'Generated Logo 2',
+          concept: 'Creative and dynamic approach',
+          svg: '<svg viewBox="0 0 100 100"><rect x="20" y="20" width="60" height="60" fill="#10B981"/></svg>',
+          colors: ['#10B981', '#059669'],
+          fonts: ['Poppins', 'Open Sans'],
+        },
       ];
-      
+
       this.generatedLogos.set(mockLogos);
       this.logosGenerated.emit(mockLogos);
       this.isGenerating.set(false);
       this.generationProgress.set(100);
       this.currentStep.set('Generation completed!');
-    }, 30000); // 30 seconds for demo
-    
+    }, 3000); // 30 seconds for demo
+
     // TODO: Replace with actual BrandingService call when available
   }
 
@@ -146,7 +161,7 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
       { progress: 45, step: 'Creating logo variations...' },
       { progress: 65, step: 'Refining designs...' },
       { progress: 80, step: 'Optimizing SVG graphics...' },
-      { progress: 95, step: 'Finalizing logos...' }
+      { progress: 95, step: 'Finalizing logos...' },
     ];
 
     let currentStepIndex = 0;

@@ -139,6 +139,13 @@ export class TypographySelectionComponent implements OnInit {
         url: '',
         primaryFont: 'Dancing Script',
         secondaryFont: 'Lato'
+      },
+      {
+        id: '4',
+        name: 'Elegant Script',
+        url: '',
+        primaryFont: 'Dancing Script',
+        secondaryFont: 'Lato'
       }
     ];
   }
