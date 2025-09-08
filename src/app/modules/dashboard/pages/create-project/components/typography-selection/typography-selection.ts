@@ -1,10 +1,4 @@
-import {
-  Component,
-  input,
-  output,
-  signal,
-  OnInit
-} from '@angular/core';
+import { Component, input, output, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TypographyModel } from '../../../../models/brand-identity.model';
 import { ProjectModel } from '../../../../models/project.model';
@@ -41,17 +35,12 @@ export class TypographySelectionComponent implements OnInit {
     { step: 'Selecting font families...', duration: 1500 },
     { step: 'Creating typography pairings...', duration: 2000 },
     { step: 'Optimizing readability...', duration: 1000 },
-    { step: 'Finalizing typography options...', duration: 500 }
+    { step: 'Finalizing typography options...', duration: 500 },
   ];
 
   ngOnInit() {
-    // Use provided typography options if available, otherwise generate new ones
-    if (this.typographyOptions().length > 0) {
-      this.typographyModels.set(this.typographyOptions());
-      this.hasGenerated.set(true);
-    } else if (!this.hasGenerated()) {
-      this.generateTypography();
-    }
+    // Force generation to show new design
+    this.generateTypography();
   }
 
   protected async generateTypography(): Promise<void> {
@@ -69,7 +58,9 @@ export class TypographySelectionComponent implements OnInit {
 
       this.hasGenerated.set(true);
     } catch (error) {
-      this.error.set('Failed to generate typography options. Please try again.');
+      this.error.set(
+        'Failed to generate typography options. Please try again.'
+      );
     } finally {
       this.isGenerating.set(false);
     }
@@ -77,29 +68,36 @@ export class TypographySelectionComponent implements OnInit {
 
   private async simulateProgress(): Promise<void> {
     let totalProgress = 0;
-    const totalDuration = this.progressSteps.reduce((sum, step) => sum + step.duration, 0);
+    const totalDuration = this.progressSteps.reduce(
+      (sum, step) => sum + step.duration,
+      0
+    );
 
     for (const step of this.progressSteps) {
       this.currentStep.set(step.step);
-      
+
       const startProgress = totalProgress;
       const endProgress = totalProgress + (step.duration / totalDuration) * 100;
-      
+
       await this.animateProgress(startProgress, endProgress, step.duration);
       totalProgress = endProgress;
     }
   }
 
-  private async animateProgress(start: number, end: number, duration: number): Promise<void> {
-    return new Promise(resolve => {
+  private async animateProgress(
+    start: number,
+    end: number,
+    duration: number
+  ): Promise<void> {
+    return new Promise((resolve) => {
       const startTime = Date.now();
       const animate = () => {
         const elapsed = Date.now() - startTime;
         const progress = Math.min(elapsed / duration, 1);
         const currentProgress = start + (end - start) * progress;
-        
+
         this.generationProgress.set(Math.round(currentProgress));
-        
+
         if (progress < 1) {
           requestAnimationFrame(animate);
         } else {
@@ -117,36 +115,22 @@ export class TypographySelectionComponent implements OnInit {
         name: 'Modern Sans',
         url: '',
         primaryFont: 'Inter',
-        secondaryFont: 'Inter'
+        secondaryFont: 'Inter',
       },
       {
         id: '2',
         name: 'Classic Serif',
         url: '',
         primaryFont: 'Playfair Display',
-        secondaryFont: 'Source Serif Pro'
+        secondaryFont: 'Source Serif Pro',
       },
       {
         id: '3',
         name: 'Creative Mix',
         url: '',
         primaryFont: 'Montserrat',
-        secondaryFont: 'Open Sans'
+        secondaryFont: 'Open Sans',
       },
-      {
-        id: '4',
-        name: 'Elegant Script',
-        url: '',
-        primaryFont: 'Dancing Script',
-        secondaryFont: 'Lato'
-      },
-      {
-        id: '4',
-        name: 'Elegant Script',
-        url: '',
-        primaryFont: 'Dancing Script',
-        secondaryFont: 'Lato'
-      }
     ];
   }
 

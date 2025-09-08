@@ -4,68 +4,68 @@
   class="flex flex-col items-center justify-center w-full px-4 sm:px-6 lg:px-8 h-screen"
 >
   <div class="w-full max-w-2xl mx-auto text-center">
-    <!-- Header -->
-    <div class="mb-8">
-      <div
-        class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full mb-4 animate-pulse"
-      >
-        <svg
-          class="w-8 h-8 text-white"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-          ></path>
-        </svg>
-      </div>
-      <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">
-        Crafting Typography
-      </h2>
-      <p class="text-gray-400 text-lg">
-        Selecting perfect font pairings for your brand...
-      </p>
-    </div>
-
-    <!-- Progress Bar -->
-    <div class="mb-6">
-      <div class="flex justify-between text-sm text-gray-400 mb-2">
-        <span>Progress</span>
-        <span>{{generationProgress()}}%</span>
-      </div>
-      <div class="w-full bg-gray-700 rounded-full h-3 overflow-hidden">
-        <div
-          class="h-full bg-gradient-to-r from-purple-500 to-pink-600 rounded-full transition-all duration-300 ease-out relative overflow-hidden"
-          [style.width.%]="generationProgress()"
-        >
-          <div class="absolute inset-0 bg-white/20 animate-shimmer"></div>
-        </div>
-      </div>
-    </div>
-
     <!-- Current Step -->
     <div class="mb-8">
       <p class="text-white font-medium mb-4">{{currentStep()}}</p>
 
-      <!-- Skeleton Loader for Typography Options -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        @for (item of [1,2,3,4]; track item) {
-        <div class="bg-gray-800/50 rounded-xl p-6 animate-pulse">
-          <div class="h-4 bg-gray-700 rounded mb-4 w-3/4"></div>
-          <div class="bg-gray-700/50 rounded-lg p-4 mb-3">
-            <div class="h-5 bg-gray-600 rounded mb-2 w-2/3"></div>
-            <div class="h-4 bg-gray-600 rounded w-1/2"></div>
-          </div>
-          <div class="bg-gray-700/30 rounded-lg p-4">
-            <div class="h-5 bg-gray-600 rounded mb-2 w-1/2"></div>
-            <div class="space-y-2">
-              <div class="h-3 bg-gray-600 rounded w-full"></div>
-              <div class="h-3 bg-gray-600 rounded w-4/5"></div>
-              <div class="h-3 bg-gray-600 rounded w-3/4"></div>
+      <!-- Skeleton Loader for Typography Options - Horizontal Layout -->
+      <div
+        class="flex flex-col md:flex-row gap-4 md:gap-6 lg:gap-8 items-stretch"
+      >
+        @for (item of [1,2,3]; track item) {
+        <div class="flex-1">
+          <div
+            class="bg-gray-800/50 rounded-2xl md:rounded-3xl p-4 md:p-6 lg:p-8 animate-pulse h-full"
+          >
+            <!-- Number Badge Skeleton -->
+            <div
+              class="w-6 h-6 md:w-8 md:h-8 bg-purple-500/20 rounded-full mb-4"
+            ></div>
+
+            <!-- Typography Name Skeleton -->
+            <div class="text-center mb-4 md:mb-6 lg:mb-8">
+              <div
+                class="h-6 md:h-7 lg:h-8 bg-gray-700 rounded mb-2 w-3/4 mx-auto"
+              ></div>
+              <div class="h-3 md:h-4 bg-gray-600 rounded w-1/2 mx-auto"></div>
+            </div>
+
+            <!-- Main Preview Skeleton -->
+            <div
+              class="bg-white/5 rounded-xl md:rounded-2xl p-3 md:p-4 lg:p-6 border border-gray-600/30 mb-3 md:mb-4 lg:mb-6"
+            >
+              <div
+                class="h-8 md:h-10 lg:h-12 bg-gray-600 rounded mb-2 md:mb-3 lg:mb-4 w-2/3 mx-auto"
+              ></div>
+              <div class="space-y-2">
+                <div class="h-3 md:h-4 bg-gray-600 rounded w-full"></div>
+                <div class="h-3 md:h-4 bg-gray-600 rounded w-4/5 mx-auto"></div>
+                <div
+                  class="h-3 md:h-4 bg-gray-600 rounded w-3/4 mx-auto md:hidden"
+                ></div>
+              </div>
+            </div>
+
+            <!-- Font Samples Skeleton -->
+            <div class="grid grid-cols-2 gap-2 md:gap-3 lg:gap-4">
+              <div
+                class="bg-gray-800/50 rounded-lg md:rounded-xl p-2 md:p-3 lg:p-4 border border-gray-700/30"
+              >
+                <div class="h-3 bg-gray-600 rounded mb-1 md:mb-2 w-1/2"></div>
+                <div
+                  class="h-5 md:h-6 lg:h-7 bg-gray-600 rounded mb-1 w-3/4"
+                ></div>
+                <div class="h-3 bg-gray-600 rounded w-1/2"></div>
+              </div>
+              <div
+                class="bg-gray-800/50 rounded-lg md:rounded-xl p-2 md:p-3 lg:p-4 border border-gray-700/30"
+              >
+                <div class="h-3 bg-gray-600 rounded mb-1 md:mb-2 w-1/2"></div>
+                <div
+                  class="h-5 md:h-6 lg:h-7 bg-gray-600 rounded mb-1 w-3/4"
+                ></div>
+                <div class="h-3 bg-gray-600 rounded w-1/2"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -77,7 +77,7 @@
     <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-4">
       <div class="flex items-start space-x-3">
         <svg
-          class="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0"
+          class="w-5 h-5 text-primary mt-0.5 flex-shrink-0"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -89,7 +89,7 @@
             d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
           ></path>
         </svg>
-        <div class="text-sm text-purple-300">
+        <div class="text-sm text-primary">
           <p class="font-medium mb-1">✨ Typography Tip</p>
           <p>
             We're creating font combinations that enhance readability while
@@ -178,46 +178,44 @@
 <!-- Success State - Typography Selection -->
 @if (!isGenerating() && !error() && hasGenerated()) {
 <section
-  class="flex flex-col items-center justify-center w-full px-4 sm:px-6 lg:px-8"
+  class="flex flex-col items-center justify-center w-full px-4 sm:px-6 lg:px-8 py-8 min-h-[90vh]"
 >
-  <div class="text-center mb-8">
-    <h1
-      class="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-100 mb-4 max-w-4xl"
-    >
-      Choose Your Brand Typography
+  <!-- Header -->
+  <div class="text-center mb-12">
+    <h1 class="text-4xl font-bold text-white mb-4">
+      Choose Your Typography Style
     </h1>
-    <p class="text-gray-400 text-lg max-w-2xl mx-auto">
-      Select the typography that best represents your brand's voice and enhances
-      readability.
+    <p class="text-xl text-gray-300 mb-8">
+      Select the typography that best represents your brand's personality
     </p>
   </div>
 
+  <!-- Typography Showcase - Responsive Layout -->
   <div class="w-full max-w-7xl mx-auto">
     <div
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
+      class="flex flex-col md:flex-row gap-4 md:gap-6 lg:gap-8 items-stretch"
     >
-      @for (typo of typographyModels(); track typo.id) {
+      @for (typo of typographyModels(); track typo.id; let i = $index) {
       <div
-        class="p-4 md:p-5 border-2 border-transparent hover:border-gray-600 rounded-xl hover:shadow-lg hover:shadow-primary/30 hover:bg-gray-900/50 transition-all duration-300 cursor-pointer group relative overflow-hidden hover:scale-[1.02] glass"
-        [class.border-primary]="selectedTypography() === typo.id"
-        [class.bg-gray-900]="selectedTypography() === typo.id"
-        [class.shadow-lg]="selectedTypography() === typo.id"
-        [class.shadow-primary]="selectedTypography() === typo.id"
+        class="flex-1 group cursor-pointer transform transition-all duration-500 hover:scale-[1.02] md:hover:scale-105"
         (click)="selectTypography(typo.id)"
+        [class.scale-[1.02]]="selectedTypography() === typo.id"
+        [class.md:scale-105]="selectedTypography() === typo.id"
+        [class.z-10]="selectedTypography() === typo.id"
       >
+        <!-- Typography Showcase Card -->
         <div
-          class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          [class.opacity-50]="selectedTypography() === typo.id"
-        ></div>
-
-        <div class="relative z-10">
+          class="relative bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-xl border-2 rounded-2xl md:rounded-3xl p-4 md:p-6 lg:p-8 h-full transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/20"
+          [class.border-primary]="selectedTypography() === typo.id"
+          [class.border-gray-700]="selectedTypography() !== typo.id"
+        >
           <!-- Selection Indicator -->
           @if (selectedTypography() === typo.id) {
           <div
-            class="absolute -top-2 -right-2 w-8 h-8 bg-primary rounded-full flex items-center justify-center z-10 animate-bounce"
+            class="absolute -top-3 -right-3 w-12 h-12 bg-gradient-to-br from-primary to-primary-glow rounded-full flex items-center justify-center"
           >
             <svg
-              class="w-4 h-4 text-white"
+              class="w-6 h-6 text-white"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -230,93 +228,96 @@
           </div>
           }
 
-          <div class="mb-3">
-            <h3 class="text-white text-sm md:text-base font-medium">
+          <!-- Typography Number Badge -->
+          <div
+            class="absolute top-2 left-2 md:top-4 md:left-4 w-6 h-6 md:w-8 md:h-8 bg-purple-500/20 rounded-full flex items-center justify-center"
+          >
+            <span class="text-primary font-bold text-xs md:text-sm"
+              >{{ i + 1 }}</span
+            >
+          </div>
+
+          <!-- Typography Name -->
+          <div class="text-center mb-4 md:mb-6 lg:mb-8 mt-2 md:mt-4">
+            <h3
+              class="text-lg md:text-xl lg:text-2xl font-bold text-white mb-1 md:mb-2"
+            >
               {{ typo.name }}
             </h3>
-          </div>
-
-          <!-- Font Information -->
-          <div
-            class="bg-gray-800/50 border border-gray-700/50 p-2 md:p-3 rounded-lg mb-3"
-          >
-            <div class="space-y-1">
-              <div class="text-center">
-                <span class="text-gray-400 text-xs">Primary:</span>
-                <span class="text-white text-xs font-medium block"
-                  >{{ typo.primaryFont }}</span
-                >
-              </div>
-              <div class="text-center">
-                <span class="text-gray-400 text-xs">Secondary:</span>
-                <span class="text-white text-xs font-medium block"
-                  >{{ typo.secondaryFont }}</span
-                >
-              </div>
+            <div
+              class="flex flex-col md:flex-row items-center justify-center md:space-x-4 text-xs md:text-sm text-gray-400"
+            >
+              <span>{{ typo.primaryFont }}</span>
+              <div
+                class="hidden md:block w-1 h-1 bg-gray-500 rounded-full"
+              ></div>
+              <span>{{ typo.primaryFont }}</span>
             </div>
           </div>
 
-          <!-- Typography Preview -->
-          <div
-            class="bg-white/5 border border-gray-600/30 p-2 md:p-3 rounded-lg"
-          >
-            <h4
-              class="text-sm md:text-base font-bold mb-2 text-white text-center"
-              [style.fontFamily]="typo.primaryFont"
+          <!-- Typography Showcase -->
+          <div class="text-center space-y-3 md:space-y-4 lg:space-y-6">
+            <!-- Main Headline -->
+            <div
+              class="bg-white/5 rounded-xl md:rounded-2xl p-3 md:p-4 lg:p-6 border border-gray-600/30"
             >
-              Brand Title
-            </h4>
-            <p
-              class="text-xs text-gray-300 leading-relaxed text-center line-clamp-3"
-              [style.fontFamily]="typo.secondaryFont"
-            >
-              Sample text showing how your content will appear with this
-              typography.
-            </p>
+              <h2
+                class="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-white mb-2 md:mb-3 lg:mb-4 leading-tight"
+                [style.fontFamily]="typo.primaryFont"
+              >
+                Your Brand
+              </h2>
+              <p
+                class="text-gray-300 text-sm md:text-base lg:text-lg leading-relaxed line-clamp-3 md:line-clamp-none"
+                [style.fontFamily]="typo.primaryFont"
+              >
+                This is how your content will look with this beautiful
+                typography combination.
+              </p>
+            </div>
 
-            <!-- Font samples -->
-            <div class="mt-2 pt-2 border-t border-gray-600/30">
-              <div class="text-center space-y-1">
-                <div>
-                  <p
-                    class="text-white text-xs font-semibold"
-                    [style.fontFamily]="typo.primaryFont"
-                  >
-                    Aa Bb Cc
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="text-white text-xs"
-                    [style.fontFamily]="typo.secondaryFont"
-                  >
-                    Aa Bb Cc
-                  </p>
-                </div>
+            <!-- Font Samples -->
+            <div class="grid grid-cols-2 gap-2 md:gap-3 lg:gap-4">
+              <div
+                class="bg-gray-800/50 rounded-lg md:rounded-xl p-2 md:p-3 lg:p-4 border border-gray-700/30"
+              >
+                <p class="text-xs text-gray-400 mb-1 md:mb-2">Primary</p>
+                <p
+                  class="text-base md:text-lg lg:text-xl font-bold text-white"
+                  [style.fontFamily]="typo.primaryFont"
+                >
+                  Aa Bb Cc
+                </p>
+                <p
+                  class="text-xs md:text-sm text-gray-300"
+                  [style.fontFamily]="typo.primaryFont"
+                >
+                  123 456
+                </p>
+              </div>
+              <div
+                class="bg-gray-800/50 rounded-lg md:rounded-xl p-2 md:p-3 lg:p-4 border border-gray-700/30"
+              >
+                <p class="text-xs text-gray-400 mb-1 md:mb-2">Primary</p>
+                <p
+                  class="text-base md:text-lg lg:text-xl text-white"
+                  [style.fontFamily]="typo.primaryFont"
+                >
+                  Aa Bb Cc
+                </p>
+                <p
+                  class="text-xs md:text-sm text-gray-300"
+                  [style.fontFamily]="typo.primaryFont"
+                >
+                  123 456
+                </p>
               </div>
             </div>
           </div>
-
-          <!-- Selection Border Animation -->
-          <div
-            class="absolute inset-0 rounded-xl border-2 border-primary opacity-0 transition-opacity duration-300"
-            [class.opacity-100]="selectedTypography() === typo.id"
-            [class.animate-pulse]="selectedTypography() === typo.id"
-          ></div>
         </div>
       </div>
       }
     </div>
-
-    <!-- Navigation Hint -->
-    @if (selectedTypography()) {
-    <div class="text-center mt-8">
-      <p class="text-gray-400 text-sm">
-        Perfect! Your typography selection will automatically advance to the
-        next step.
-      </p>
-    </div>
-    }
   </div>
 </section>
 }
