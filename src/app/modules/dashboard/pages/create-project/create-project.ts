@@ -85,6 +85,9 @@ export class CreateProjectComponent implements OnInit {
   protected termsOfServiceAccepted = signal<boolean>(false);
   protected betaPolicyAccepted = signal<boolean>(false);
   protected marketingConsentAccepted = signal<boolean>(false);
+  
+  // Loading state
+  protected isLoaded = signal<boolean>(false);
 
   // Visual identity selections
   logos: LogoModel[] = [];
@@ -225,6 +228,12 @@ export class CreateProjectComponent implements OnInit {
 
     if (nextIndex === 2) {
       // Color selection component will handle its own generation
+      if (nextIndex < this.steps.length) {
+        this.navigateToStep(nextIndex);
+      }
+    } else if (nextIndex === 3) {
+      // Typography selection - we already have typography data from color step
+      // No need to generate again, just show the 4-second loader
       if (nextIndex < this.steps.length) {
         this.navigateToStep(nextIndex);
       }
@@ -392,6 +401,77 @@ export class CreateProjectComponent implements OnInit {
     }
   }
 
+  /**
+   * Handles colors generated from the color-selection component
+   * @param colors The generated color models
+   */
+  protected handleColorsGenerated(colors: ColorModel[]): void {
+    this.colorModels = colors;
+    
+    // Make sure we have at least one color to set as the selected color
+    if (colors && colors.length > 0) {
+      // Update project with the generated colors
+      this.project.update((project) => ({
+        ...project,
+        analysisResultModel: {
+          ...project.analysisResultModel,
+          branding: {
+            ...project.analysisResultModel?.branding,
+            // Set the first color as the selected color
+            colors: colors[0],
+            // Store all generated colors
+            generatedColors: colors,
+          },
+        },
+      }));
+    }
+  }
+  
+  /**
+   * Handles colors and typography generated together from the color-selection component
+   * @param data Object containing colors and typography arrays
+   */
+  protected handleColorsAndTypographyGenerated(data: {colors: ColorModel[], typography: TypographyModel[]}): void {
+    // Update color models
+    this.colorModels = data.colors;
+    
+    // Update typography models
+    this.typographyModels = data.typography;
+    
+    // Make sure we have at least one color and typography to set as selected
+    if (data.colors?.length > 0 && data.typography?.length > 0) {
+      // Update project with both colors and typography
+      this.project.update((project) => ({
+        ...project,
+        analysisResultModel: {
+          ...project.analysisResultModel,
+          branding: {
+            ...project.analysisResultModel?.branding,
+            // Set the first color as the selected color
+            colors: data.colors[0],
+            // Store all generated colors
+            generatedColors: data.colors,
+            // Set the first typography as the selected typography
+            typography: data.typography[0],
+            // Store all generated typography options
+            generatedTypography: data.typography,
+          },
+        },
+      }));
+      
+      // Set the first items as selected by default
+      if (!this.selectedColor && data.colors.length > 0) {
+        this.selectedColor = data.colors[0].id;
+      }
+      
+      if (!this.selectedTypography && data.typography.length > 0) {
+        this.selectedTypography = data.typography[0].id;
+      }
+    }
+    
+    console.log('Colors and typography updated in project:', data);
+  }
+  
   protected selectColor(colorId: string) {
     this.selectedColor = colorId;
     // Removed auto-navigation - user must click Next button

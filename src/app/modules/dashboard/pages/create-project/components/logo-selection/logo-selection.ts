@@ -17,6 +17,7 @@ import {
   TypographyModel,
 } from '../../../../models/brand-identity.model';
 import { Subject, takeUntil } from 'rxjs';
+import { BrandingService } from '../../../../services/ai-agents/branding.service';
 
 @Component({
   selector: 'app-logo-selection',
@@ -27,6 +28,7 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class LogoSelectionComponent implements OnInit, OnDestroy {
   // Services
+  private readonly brandingService = inject(BrandingService);
   private readonly destroy$ = new Subject<void>();
 
   // Inputs
@@ -48,6 +50,7 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
   protected readonly currentStep = signal('');
   protected readonly estimatedTime = signal('2-3 minutes');
   protected readonly hasStartedGeneration = signal(false);
+  protected readonly error = signal<string | null>(null);
 
   // Computed properties
   protected readonly shouldShowLoader = computed(() => {
@@ -105,51 +108,44 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
 
     this.hasStartedGeneration.set(true);
     this.isGenerating.set(true);
-    this.currentStep.set('Initializing logo generation...');
+    this.currentStep.set('Initialisation de la génération de logo...');
     this.generationProgress.set(0);
 
-    // Simulate progress updates
+    // Simuler les mises à jour de progression
     this.simulateProgress();
 
-    // Start actual generation (mock for now - will be replaced with actual service call)
-    setTimeout(() => {
-      // Mock logo generation for demonstration
-      const mockLogos: LogoModel[] = [
-        {
-          id: 'mock-1',
-          name: 'Generated Logo 1',
-          concept: 'Modern and minimalist design',
-          svg: '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#3B82F6"/></svg>',
-          colors: ['#3B82F6', '#1E40AF'],
-          fonts: ['Inter', 'Roboto'],
-        },
-        {
-          id: 'mock-3',
-          name: 'Generated Logo 3',
-          concept: 'Bold and professional style',
-          svg: '<svg viewBox="0 0 100 100"><polygon points="50,10 90,90 10,90" fill="#F59E0B"/></svg>',
-          colors: ['#F59E0B', '#D97706'],
-          fonts: ['Montserrat', 'Source Sans Pro'],
-        },
-        {
-          id: 'mock-2',
-          name: 'Generated Logo 2',
-          concept: 'Creative and dynamic approach',
-          svg: '<svg viewBox="0 0 100 100"><rect x="20" y="20" width="60" height="60" fill="#10B981"/></svg>',
-          colors: ['#10B981', '#059669'],
-          fonts: ['Poppins', 'Open Sans'],
-        },
-      ];
+    // Utiliser le service BrandingService pour générer les logos
+    this.brandingService
+      .generateLogoConcepts(
+        this.projectId()!,
+        this.selectedColor()!,
+        this.selectedTypography()!
+      )
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          console.log('Logos générés avec succès:', response.logos);
 
-      this.generatedLogos.set(mockLogos);
-      this.logosGenerated.emit(mockLogos);
-      this.isGenerating.set(false);
-      this.generationProgress.set(100);
-      this.currentStep.set('Generation completed!');
-    }, 3000); // 30 seconds for demo
+          // Mettre à jour l'état avec les logos générés
+          this.generatedLogos.set(response.logos);
+          this.logosGenerated.emit(response.logos);
 
-    // TODO: Replace with actual BrandingService call when available
+          // Mettre à jour l'état de génération
+          this.isGenerating.set(false);
+          this.generationProgress.set(100);
+          this.currentStep.set('Génération terminée!');
+        },
+        error: (error) => {
+          console.error('Erreur lors de la génération des logos:', error);
+          this.error.set(
+            'Échec de la génération des logos. Veuillez réessayer.'
+          );
+          this.isGenerating.set(false);
+        },
+      });
   }
+
+  // Méthode supprimée car dupliquée
 
   private simulateProgress(): void {
     const steps = [
@@ -174,10 +170,17 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
     }, 15000); // Update every 15 seconds
   }
 
+  /**
+   * Méthode pour réessayer la génération de logos en cas d'échec
+   */
   protected retryGeneration(): void {
+    // Réinitialiser l'état d'erreur
+    this.error.set(null);
     this.hasStartedGeneration.set(false);
     this.generatedLogos.set([]);
     this.generationProgress.set(0);
+
+    // Relancer la génération
     this.startLogoGeneration();
   }
 }

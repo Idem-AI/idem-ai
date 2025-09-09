@@ -1,7 +1,9 @@
-import { Component, input, output, signal, OnInit } from '@angular/core';
+import { Component, input, output, signal, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TypographyModel } from '../../../../models/brand-identity.model';
+import { TypographyModel, ColorModel } from '../../../../models/brand-identity.model';
 import { ProjectModel } from '../../../../models/project.model';
+import { BrandingService } from '../../../../services/ai-agents/branding.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-typography-selection',
@@ -10,7 +12,11 @@ import { ProjectModel } from '../../../../models/project.model';
   templateUrl: './typography-selection.html',
   styleUrl: './typography-selection.css',
 })
-export class TypographySelectionComponent implements OnInit {
+export class TypographySelectionComponent implements OnInit, OnDestroy {
+  // Services
+  private readonly brandingService = inject(BrandingService);
+  private readonly destroy$ = new Subject<void>();
+
   // Inputs
   readonly project = input.required<ProjectModel>();
   readonly selectedTypography = input<string>();
@@ -20,6 +26,7 @@ export class TypographySelectionComponent implements OnInit {
   readonly typographySelected = output<string>();
   readonly nextStep = output<void>();
   readonly previousStep = output<void>();
+  readonly colorsAndTypographyGenerated = output<{colors: ColorModel[], typography: TypographyModel[]}>();
 
   // State management
   protected isGenerating = signal(false);
@@ -29,18 +36,16 @@ export class TypographySelectionComponent implements OnInit {
   protected error = signal<string | null>(null);
   protected hasGenerated = signal(false);
 
-  // Progress steps
-  private progressSteps = [
-    { step: 'Analyzing brand personality...', duration: 1000 },
-    { step: 'Selecting font families...', duration: 1500 },
-    { step: 'Creating typography pairings...', duration: 2000 },
-    { step: 'Optimizing readability...', duration: 1000 },
-    { step: 'Finalizing typography options...', duration: 500 },
-  ];
+  // Progress steps are now defined directly in the simulateProgress method
 
   ngOnInit() {
     // Force generation to show new design
     this.generateTypography();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   protected async generateTypography(): Promise<void> {
@@ -49,36 +54,47 @@ export class TypographySelectionComponent implements OnInit {
     this.generationProgress.set(0);
 
     try {
-      // Simulate progress
+      // Simulate progress for exactly 4 seconds as requested
       await this.simulateProgress();
-
-      // Mock typography generation - replace with actual service call
-      const mockTypography = this.generateMockTypography();
-      this.typographyModels.set(mockTypography);
-
-      this.hasGenerated.set(true);
+      
+      // We already have typography data from the color-selection component
+      // Just display it after the 4-second loader
+      console.log('Typography options ready to display:', this.typographyOptions());
+      
+      // Use the typography options that were passed as input
+      if (this.typographyOptions() && this.typographyOptions().length > 0) {
+        this.typographyModels.set(this.typographyOptions());
+        this.hasGenerated.set(true);
+      } else {
+        // If no typography options were passed, show an error
+        this.error.set('No typography options available. Please go back and try again.');
+      }
     } catch (error) {
-      this.error.set(
-        'Failed to generate typography options. Please try again.'
-      );
+      console.error('Error in typography display:', error);
+      this.error.set('Failed to display typography options. Please try again.');
     } finally {
       this.isGenerating.set(false);
     }
   }
 
   private async simulateProgress(): Promise<void> {
+    // Simplified progress simulation for 4 seconds total
+    const totalDuration = 4000; // 4 seconds as requested
+    const steps = [
+      { step: 'Analyzing brand personality...', duration: 1000 },
+      { step: 'Selecting font families...', duration: 1000 },
+      { step: 'Creating typography pairings...', duration: 1000 },
+      { step: 'Finalizing typography options...', duration: 1000 }
+    ];
+    
     let totalProgress = 0;
-    const totalDuration = this.progressSteps.reduce(
-      (sum, step) => sum + step.duration,
-      0
-    );
-
-    for (const step of this.progressSteps) {
+    
+    for (const step of steps) {
       this.currentStep.set(step.step);
-
+      
       const startProgress = totalProgress;
       const endProgress = totalProgress + (step.duration / totalDuration) * 100;
-
+      
       await this.animateProgress(startProgress, endProgress, step.duration);
       totalProgress = endProgress;
     }
@@ -108,31 +124,7 @@ export class TypographySelectionComponent implements OnInit {
     });
   }
 
-  private generateMockTypography(): TypographyModel[] {
-    return [
-      {
-        id: '1',
-        name: 'Modern Sans',
-        url: '',
-        primaryFont: 'Inter',
-        secondaryFont: 'Inter',
-      },
-      {
-        id: '2',
-        name: 'Classic Serif',
-        url: '',
-        primaryFont: 'Playfair Display',
-        secondaryFont: 'Source Serif Pro',
-      },
-      {
-        id: '3',
-        name: 'Creative Mix',
-        url: '',
-        primaryFont: 'Montserrat',
-        secondaryFont: 'Open Sans',
-      },
-    ];
-  }
+  // Mock typography generation removed as we're now using the actual service
 
   protected selectTypography(typographyId: string): void {
     this.typographySelected.emit(typographyId);
