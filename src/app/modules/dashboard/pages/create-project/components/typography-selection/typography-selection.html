@@ -205,7 +205,7 @@
       >
         <!-- Typography Showcase Card -->
         <div
-          class="relative bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-xl border-2 rounded-2xl md:rounded-3xl p-4 md:p-6 lg:p-8 h-full transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/20"
+          class="relative bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-xl border-2 rounded-2xl md:rounded-3xl p-3 sm:p-4 md:p-6 lg:p-8 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/20 h-[400px] sm:h-[450px] md:h-[500px]"
           [class.border-primary]="selectedTypography() === typo.id"
           [class.border-gray-700]="selectedTypography() !== typo.id"
         >
@@ -259,16 +259,16 @@
           <div class="text-center space-y-3 md:space-y-4 lg:space-y-6">
             <!-- Main Headline -->
             <div
-              class="bg-white/5 rounded-xl md:rounded-2xl p-3 md:p-4 lg:p-6 border border-gray-600/30"
+              class="bg-white/5 rounded-xl md:rounded-2xl p-2 sm:p-3 md:p-4 lg:p-6 border border-gray-600/30 h-[100px] sm:h-[120px] md:h-[150px] flex flex-col justify-center"
             >
               <h2
-                class="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-white mb-2 md:mb-3 lg:mb-4 leading-tight"
+                class="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-white mb-1 sm:mb-2 md:mb-3 lg:mb-4 leading-tight"
                 [style.fontFamily]="typo.primaryFont"
               >
                 Your Brand
               </h2>
               <p
-                class="text-gray-300 text-sm md:text-base lg:text-lg leading-relaxed line-clamp-3 md:line-clamp-none"
+                class="text-gray-300 text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed line-clamp-2 sm:line-clamp-3"
                 [style.fontFamily]="typo.primaryFont"
               >
                 This is how your content will look with this beautiful
@@ -277,7 +277,7 @@
             </div>
 
             <!-- Font Samples -->
-            <div class="grid grid-cols-2 gap-2 md:gap-3 lg:gap-4">
+            <div class="grid grid-cols-2 gap-1 sm:gap-2 md:gap-3 lg:gap-4 h-[90px] sm:h-[100px] md:h-[120px]">
               <div
                 class="bg-gray-800/50 rounded-lg md:rounded-xl p-2 md:p-3 lg:p-4 border border-gray-700/30"
               >

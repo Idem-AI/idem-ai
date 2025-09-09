@@ -58,8 +58,8 @@
   @if (shouldShowLoader()) {
   <div class="w-full max-w-6xl mx-auto">
     <!-- Loading Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      @for (item of [1,2,3,4]; track item) {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      @for (item of [1,2,3]; track item) {
       <div class="group">
         <div
           class="bg-gray-900/40 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-8 hover:border-gray-600/50 transition-all duration-300"
@@ -136,113 +136,133 @@
       </p>
     </div>
 
-    <!-- Logo Grid -->
-    <div
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
-    >
-      @for (logo of displayedLogos(); track logo.id) {
-      <div
-        class="group cursor-pointer transform transition-all duration-300 hover:scale-[1.02]"
-        (click)="selectLogo(logo.id)"
-        tabindex="0"
-        role="button"
-        [attr.aria-pressed]="selectedLogo() === logo.id"
-        [attr.aria-label]="'Select ' + logo.name + ' logo'"
-      >
-        <div
-          class="relative bg-gray-900/40 backdrop-blur-sm border-2 rounded-xl p-4 md:p-6 transition-all duration-300 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10"
-          [class.border-primary]="selectedLogo() === logo.id"
-          [class.border-gray-700]="selectedLogo() !== logo.id"
-          [class.bg-gray-900]="selectedLogo() === logo.id"
-        >
-          <!-- Selection Indicator -->
-          @if (selectedLogo() === logo.id) {
+    <!-- Logo Carousel/Masonry Layout -->
+    <div class="relative">
+      <!-- Mobile: Swipeable Cards -->
+      <div class="block sm:hidden">
+        <div class="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 px-4">
+          @for (logo of displayedLogos(); track logo.id) {
           <div
-            class="absolute -top-2 -right-2 w-8 h-8 bg-primary rounded-full flex items-center justify-center z-10 animate-bounce"
+            class="flex-shrink-0 w-80 snap-center cursor-pointer transform transition-all duration-300"
+            (click)="selectLogo(logo.id)"
+            [attr.aria-pressed]="selectedLogo() === logo.id"
           >
-            <svg
-              class="w-4 h-4 text-white"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                clip-rule="evenodd"
-              ></path>
-            </svg>
-          </div>
-          }
-
-          <!-- Background Glow -->
-          <div
-            class="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            [class.opacity-100]="selectedLogo() === logo.id"
-          ></div>
-
-          <!-- Logo Container -->
-          <div class="relative z-10">
             <div
-              class="w-full h-32 sm:h-40 md:h-48 mb-4 bg-white rounded-lg flex items-center justify-center p-2 md:p-4 shadow-lg group-hover:shadow-xl transition-shadow duration-300"
+              class="relative bg-gray-900/40 backdrop-blur-sm border-2 rounded-2xl p-6 transition-all duration-300 hover:border-primary/50"
+              [class.border-primary]="selectedLogo() === logo.id"
+              [class.border-gray-700]="selectedLogo() !== logo.id"
+              [class.bg-gray-900]="selectedLogo() === logo.id"
+              [class.scale-105]="selectedLogo() === logo.id"
             >
-              <div
-                [innerHTML]="logo.svg | safeHtml"
-                class="w-full h-full flex items-center justify-center [&>svg]:max-w-full [&>svg]:max-h-full [&>svg]:w-auto [&>svg]:h-auto"
-              ></div>
-            </div>
+              <!-- Selection Indicator -->
+              @if (selectedLogo() === logo.id) {
+              <div class="absolute -top-3 -right-3 w-10 h-10 bg-primary rounded-full flex items-center justify-center z-10 animate-bounce">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+              }
 
-            <!-- Logo Info -->
-            <div class="text-center">
-              <h3
-                class="text-sm md:text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors duration-300"
-              >
-                {{ logo.name }}
-              </h3>
-
-              <p
-                class="text-gray-400 text-xs md:text-sm mb-3 leading-relaxed line-clamp-2"
-              >
-                {{ logo.concept }}
-              </p>
-
-              <!-- Color Palette -->
-              <div class="flex items-center justify-center space-x-1 mb-2">
-                <span class="text-xs text-gray-500 mr-1">Colors:</span>
-                @for (color of logo.colors; track color) {
-                <div
-                  class="w-3 h-3 rounded-full border border-gray-600"
-                  [style.background-color]="color"
-                  [title]="color"
-                ></div>
-                }
+              <!-- Logo Container -->
+              <div class="w-full h-[140px] sm:h-[160px] md:h-[180px] mb-4 bg-white rounded-xl flex items-center justify-center p-2 sm:p-3 md:p-4 shadow-lg">
+                <div [innerHTML]="logo.svg | safeHtml" class="w-full h-full flex items-center justify-center [&>svg]:max-w-full [&>svg]:max-h-full"></div>
               </div>
 
-              <!-- Fonts -->
-              <div class="flex items-center justify-center space-x-1">
-                <span class="text-xs text-gray-500 mr-1">Fonts:</span>
-                <div class="flex flex-wrap justify-center gap-1">
-                  @for (font of logo.fonts; track font) {
-                  <span
-                    class="text-xs bg-gray-700/50 text-gray-300 px-1.5 py-0.5 rounded"
-                  >
-                    {{ font }}
-                  </span>
+              <!-- Logo Info -->
+              <div class="text-center">
+                <h3 class="text-lg font-bold text-white mb-2">{{ logo.name }}</h3>
+                <p class="text-gray-400 text-sm mb-3 line-clamp-2 h-12 overflow-hidden">{{ logo.concept }}</p>
+                
+                <!-- Color Palette -->
+                <div class="flex items-center justify-center space-x-2 mb-3">
+                  @for (color of logo.colors; track color) {
+                  <div class="w-4 h-4 rounded-full border-2 border-gray-600" [style.background-color]="color"></div>
                   }
                 </div>
               </div>
             </div>
           </div>
-
-          <!-- Selection Border Animation -->
-          <div
-            class="absolute inset-0 rounded-2xl border-2 border-primary opacity-0 transition-opacity duration-300"
-            [class.opacity-100]="selectedLogo() === logo.id"
-            [class.animate-pulse]="selectedLogo() === logo.id"
-          ></div>
+          }
         </div>
       </div>
-      }
+
+      <!-- Desktop: Masonry Grid Layout -->
+      <div class="hidden sm:block">
+        <div class="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6 mx-auto max-w-6xl">
+          @for (logo of displayedLogos(); track logo.id; let i = $index) {
+          <div
+            class="break-inside-avoid cursor-pointer transform transition-all duration-300 hover:scale-[1.02] mb-6 mx-auto"
+            (click)="selectLogo(logo.id)"
+            [attr.aria-pressed]="selectedLogo() === logo.id"
+          >
+            <div
+              class="relative bg-gray-900/40 backdrop-blur-sm border-2 rounded-2xl p-6 transition-all duration-300 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/20"
+              [class.border-primary]="selectedLogo() === logo.id"
+              [class.border-gray-700]="selectedLogo() !== logo.id"
+              [class.bg-gray-900]="selectedLogo() === logo.id"
+              [class.shadow-2xl]="selectedLogo() === logo.id"
+              [class.shadow-primary]="selectedLogo() === logo.id"
+            >
+              <!-- Selection Indicator -->
+              @if (selectedLogo() === logo.id) {
+              <div class="absolute -top-3 -right-3 w-10 h-10 bg-primary rounded-full flex items-center justify-center z-10 animate-bounce">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+              }
+
+              <!-- Background Glow -->
+              <div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-2xl opacity-0 transition-opacity duration-300" [class.opacity-100]="selectedLogo() === logo.id"></div>
+
+              <!-- Logo Container -->
+              <div class="relative z-10">
+                <div class="w-full bg-white rounded-xl flex items-center justify-center p-3 sm:p-4 md:p-6 shadow-lg mb-4 h-[140px] sm:h-[160px] md:h-[180px]">
+                  <div [innerHTML]="logo.svg | safeHtml" class="w-full h-full flex items-center justify-center [&>svg]:max-w-full [&>svg]:max-h-full"></div>
+                </div>
+
+                <!-- Logo Info -->
+                <div class="text-center">
+                  <h3 class="text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors duration-300">{{ logo.name }}</h3>
+                  <p class="text-gray-400 text-sm mb-4 leading-relaxed line-clamp-2 h-12 overflow-hidden">{{ logo.concept }}</p>
+                  
+                  <!-- Color Palette -->
+                  <div class="flex items-center justify-center space-x-2 mb-3">
+                    <span class="text-xs text-gray-500 mr-2">Colors:</span>
+                    @for (color of logo.colors; track color) {
+                    <div class="w-4 h-4 rounded-full border-2 border-gray-600" [style.background-color]="color" [title]="color"></div>
+                    }
+                  </div>
+
+                  <!-- Fonts -->
+                  <div class="flex flex-wrap justify-center gap-2">
+                    @for (font of logo.fonts; track font) {
+                    <span class="text-xs bg-gray-700/50 text-gray-300 px-2 py-1 rounded-full">{{ font }}</span>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
     </div>
+
+    <!-- Next Button - Appears when logo is selected -->
+    @if (selectedLogo()) {
+    <div class="fixed bottom-24 sm:bottom-16 md:bottom-8 left-1/2 transform -translate-x-1/2 z-50">
+      <button
+        (click)="goToNextStep()"
+        class="inner-button flex items-center gap-1 sm:gap-2 px-4 sm:px-5 md:px-6 py-2 sm:py-3 text-white text-sm sm:text-base font-semibold rounded-full shadow-2xl transform transition-all duration-300 hover:scale-105 animate-bounce-in"
+      >
+        <span class="text-sm sm:text-base">Continue with Selected Logo</span>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </button>
+    </div>
+    }
 
     <!-- Retry Button (if generation failed) -->
     @if (currentStep().includes('failed')) {

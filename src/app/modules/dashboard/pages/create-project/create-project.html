@@ -126,6 +126,7 @@
       [selectedLogo]="selectedLogo"
       (logoSelected)="selectLogo($event)"
       (logosGenerated)="logos = $event"
+      (nextStep)="goToNextStep()"
     >
     </app-logo-selection>
   </section>

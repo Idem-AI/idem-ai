@@ -39,6 +39,7 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
   // Outputs
   readonly logoSelected = output<string>();
   readonly logosGenerated = output<LogoModel[]>();
+  readonly nextStep = output<void>();
 
   // Internal state
   protected readonly isGenerating = signal(false);
@@ -93,6 +94,10 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
     this.logoSelected.emit(logoId);
   }
 
+  protected goToNextStep(): void {
+    this.nextStep.emit();
+  }
+
   protected startLogoGeneration(): void {
     if (this.isGenerating() || this.hasStartedGeneration()) {
       return;
@@ -119,12 +124,12 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
           fonts: ['Inter', 'Roboto'],
         },
         {
-          id: 'mock-2',
-          name: 'Generated Logo 2',
-          concept: 'Creative and dynamic approach',
-          svg: '<svg viewBox="0 0 100 100"><rect x="20" y="20" width="60" height="60" fill="#10B981"/></svg>',
-          colors: ['#10B981', '#059669'],
-          fonts: ['Poppins', 'Open Sans'],
+          id: 'mock-3',
+          name: 'Generated Logo 3',
+          concept: 'Bold and professional style',
+          svg: '<svg viewBox="0 0 100 100"><polygon points="50,10 90,90 10,90" fill="#F59E0B"/></svg>',
+          colors: ['#F59E0B', '#D97706'],
+          fonts: ['Montserrat', 'Source Sans Pro'],
         },
         {
           id: 'mock-2',
