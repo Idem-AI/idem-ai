@@ -73,6 +73,7 @@ export class TypographySelectionComponent implements OnInit, OnDestroy {
           ...this.project().analysisResultModel,
           branding: {
             ...this.project().analysisResultModel?.branding,
+            typography: selectedTypography, // Set the selected typography object
             generatedTypography: this.typographyModels()
           }
         }

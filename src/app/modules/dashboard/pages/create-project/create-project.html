@@ -71,6 +71,9 @@
       @if (isStepActive(4)) {
         <app-logo-selection 
           [projectId]="project().id" 
+          [project]="project()"
+          (logoSelected)="onLogoSelected($event)"
+          (projectUpdate)="onProjectUpdate($event)"
           (nextStep)="goToNextStep()"
         ></app-logo-selection>
       }

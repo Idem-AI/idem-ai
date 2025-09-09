@@ -100,6 +100,7 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
             
             // Update project with both colors and typography
             this.projectUpdate.emit({
+              id: response.project.id, // Include the project ID from the response
               analysisResultModel: {
                 ...this.project().analysisResultModel,
                 branding: {

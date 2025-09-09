@@ -227,8 +227,26 @@ export class CreateProjectComponent implements OnInit {
    * Handle project updates from child components
    */
   protected onProjectUpdate(updates: Partial<ProjectModel>): void {
-    this.project.update((current) => ({ ...current, ...updates }));
+    this.project.update(current => ({
+      ...current,
+      ...updates,
+      analysisResultModel: {
+        ...current.analysisResultModel,
+        ...updates.analysisResultModel,
+        branding: {
+          ...current.analysisResultModel?.branding,
+          ...updates.analysisResultModel?.branding
+        }
+      }
+    }));
     this.saveDraftProject();
+  }
+
+  /**
+   * Handle logo selection from logo-selection component
+   */
+  protected onLogoSelected(logoId: string): void {
+    console.log('Logo selected:', logoId);
   }
 
   /**

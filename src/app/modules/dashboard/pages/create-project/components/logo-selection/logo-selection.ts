@@ -15,6 +15,7 @@ import { LogoModel } from '../../../../models/logo.model';
 
 import { Subject, takeUntil } from 'rxjs';
 import { BrandingService } from '../../../../services/ai-agents/branding.service';
+import { ProjectModel } from '../../../../models/project.model';
 
 @Component({
   selector: 'app-logo-selection',
@@ -32,10 +33,12 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
   readonly projectId = input<string>();
   readonly logos = input<LogoModel[]>();
   readonly selectedLogo = input<string>();
+  readonly project = input<ProjectModel>();
 
   // Outputs
   readonly logoSelected = output<string>();
   readonly logosGenerated = output<LogoModel[]>();
+  readonly projectUpdate = output<ProjectModel>();
   readonly nextStep = output<void>();
 
   // Internal state
@@ -87,6 +90,38 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
 
   protected selectLogo(logoId: string): void {
     this.logoSelected.emit(logoId);
+
+    // Find the selected logo and update the project
+    const selectedLogo = this.displayedLogos().find(
+      (logo) => logo.id === logoId
+    );
+    if (selectedLogo) {
+      const currentProject = this.project();
+      const currentBranding = currentProject?.analysisResultModel?.branding;
+      
+      // Ensure all required BrandIdentityModel properties are present
+      const updatedBranding = {
+        id: currentBranding?.id,
+        createdAt: currentBranding?.createdAt,
+        updatedAt: currentBranding?.updatedAt,
+        logo: selectedLogo,
+        generatedLogos: this.displayedLogos(),
+        colors: currentBranding?.colors!,
+        generatedColors: currentBranding?.generatedColors || [],
+        typography: currentBranding?.typography!,
+        generatedTypography: currentBranding?.generatedTypography || [],
+        sections: currentBranding?.sections || [],
+        pdfBlob: currentBranding?.pdfBlob,
+      };
+      
+      this.projectUpdate.emit({
+        ...currentProject,
+        analysisResultModel: {
+          ...currentProject?.analysisResultModel,
+          branding: updatedBranding,
+        },
+      } as ProjectModel);
+    }
   }
 
   protected goToNextStep(): void {
@@ -106,9 +141,27 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
     // Simuler les mises à jour de progression
     this.simulateProgress();
 
+    // Récupérer les couleurs et typographie sélectionnées depuis le projet
+    const project = this.project();
+    const selectedColor = project?.analysisResultModel?.branding?.colors;
+    const selectedTypography =
+      project?.analysisResultModel?.branding?.typography;
+
+    if (!selectedColor || !selectedTypography) {
+      this.error.set(
+        'Couleur et typographie doivent être sélectionnées avant la génération de logos.'
+      );
+      this.isGenerating.set(false);
+      return;
+    }
+
     // Utiliser le service BrandingService pour générer les logos
     this.brandingService
-      .generateLogoConcepts(this.projectId()!)
+      .generateLogoConcepts(
+        this.projectId()!,
+        selectedColor,
+        selectedTypography
+      )
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
