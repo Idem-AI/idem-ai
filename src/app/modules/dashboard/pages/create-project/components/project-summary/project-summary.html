@@ -1,3 +1,14 @@
+@if (isSubmitting()) {
+<!-- Full-screen loading state -->
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/5 backdrop-blur-sm h-screen w-full"
+>
+  <div class="text-center space-y-6 max-w-md mx-auto px-6">
+    <app-loader></app-loader>
+    <p class="text-gray-300 text-sm">Finalizing your project...</p>
+  </div>
+</div>
+} @else {
 <section
   class="flex flex-col items-center mt-[90px] justify-center text-gray-100 w-full"
 >
@@ -231,14 +242,6 @@
           </div>
         </div>
         <div class="flex justify-end mt-8">
-          @if (isSubmitting()) {
-          <!-- Loading state with app-loader -->
-          <div class="flex flex-col items-center space-y-4">
-            <app-loader></app-loader>
-            <p class="text-gray-300 text-sm">Finalizing your project...</p>
-          </div>
-          } @else {
-          <!-- Submit button -->
           <button
             (click)="submitProject()"
             [disabled]="!canSubmit()"
@@ -248,9 +251,9 @@
             @if (canSubmit()) { Create Project } @else { Accept Required
             Policies }
           </button>
-          }
         </div>
       </div>
     </div>
   </div>
 </section>
+}

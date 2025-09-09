@@ -171,7 +171,9 @@ export class CreateProjectComponent implements OnInit {
       const nextIndex = this.currentStepIndex() + 1;
       if (nextIndex < this.steps.length) {
         this.navigateToStep(nextIndex);
-      } 
+      } else {
+        this.finalizeProject();
+      }
     }
   }
 
@@ -192,6 +194,14 @@ export class CreateProjectComponent implements OnInit {
     accepted: boolean
   ): void {
     this.acceptances.update((current) => ({ ...current, [type]: accepted }));
+  }
+
+  /**
+   * Finalize project creation
+   */
+  protected async finalizeProject(): Promise<void> {
+    this.cookieService.set('projectId', this.project().id!);
+    this.router.navigate(['/console/dashboard']);
   }
 
   /**
