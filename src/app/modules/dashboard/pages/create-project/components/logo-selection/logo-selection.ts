@@ -49,6 +49,7 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
   protected readonly estimatedTime = signal('2-3 minutes');
   protected readonly hasStartedGeneration = signal(false);
   protected readonly error = signal<string | null>(null);
+  protected readonly selectedLogoId = signal<string | null>(null);
 
   // Computed properties
   protected readonly shouldShowLoader = computed(() => {
@@ -65,6 +66,11 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
     const inputLogos = this.logos();
     const generatedLogos = this.generatedLogos();
     return inputLogos && inputLogos.length > 0 ? inputLogos : generatedLogos;
+  });
+
+  // Computed property for template binding
+  protected readonly selectedLogoComputed = computed(() => {
+    return this.selectedLogoId();
   });
 
   protected readonly shouldShowInitialPrompt = computed(() => {
@@ -89,6 +95,8 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
   }
 
   protected selectLogo(logoId: string): void {
+    // Update selected logo state
+    this.selectedLogoId.set(logoId);
     this.logoSelected.emit(logoId);
 
     // Find the selected logo and update the project
@@ -135,7 +143,7 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
 
     this.hasStartedGeneration.set(true);
     this.isGenerating.set(true);
-    this.currentStep.set('Initialisation de la génération de logo...');
+    this.currentStep.set('Initializing logo generation...');
     this.generationProgress.set(0);
 
     // Simuler les mises à jour de progression
@@ -165,22 +173,28 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          console.log('Logos générés avec succès:', response.logos);
+          console.log('Logos generated successfully:', response.logos);
 
-          // Mettre à jour l'état avec les logos générés
-          this.generatedLogos.set(response.logos);
-          this.logosGenerated.emit(response.logos);
+          // Ensure each logo has a unique ID
+          const logosWithUniqueIds = response.logos.map((logo: LogoModel, index: number) => ({
+            ...logo,
+            id: logo.id || `logo-${Date.now()}-${index}`
+          }));
 
-          // Mettre à jour l'état de génération
+          console.log('Logos with unique IDs:', logosWithUniqueIds);
+
+          // Update state with generated logos
+          this.generatedLogos.set(logosWithUniqueIds);
+          this.logosGenerated.emit(logosWithUniqueIds);
+
+          // Update generation state
           this.isGenerating.set(false);
           this.generationProgress.set(100);
-          this.currentStep.set('Génération terminée!');
+          this.currentStep.set('Generation completed!');
         },
         error: (error) => {
-          console.error('Erreur lors de la génération des logos:', error);
-          this.error.set(
-            'Échec de la génération des logos. Veuillez réessayer.'
-          );
+          console.error('Error in logo generation:', error);
+          this.error.set('Failed to generate logos. Please try again.');
           this.isGenerating.set(false);
         },
       });
@@ -212,16 +226,16 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Méthode pour réessayer la génération de logos en cas d'échec
+   * Method to retry logo generation in case of failure
    */
   protected retryGeneration(): void {
-    // Réinitialiser l'état d'erreur
+    // Reset error state
     this.error.set(null);
     this.hasStartedGeneration.set(false);
     this.generatedLogos.set([]);
     this.generationProgress.set(0);
 
-    // Relancer la génération
+    // Restart generation
     this.startLogoGeneration();
   }
 }

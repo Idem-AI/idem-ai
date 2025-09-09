@@ -43,17 +43,22 @@ export class TypographySelectionComponent implements OnInit, OnDestroy {
   protected typographyModels = signal<TypographyModel[]>([]);
   protected selectedTypographyId = signal<string | null>(null);
   protected error = signal<string | null>(null);
+  protected isLoading = signal<boolean>(true);
 
   ngOnInit() {
-    // Get typography from project data (already generated in color-selection)
-    const generatedTypography = this.project().analysisResultModel?.branding?.generatedTypography;
-    if (generatedTypography && Array.isArray(generatedTypography) && generatedTypography.length > 0) {
-      this.typographyModels.set(generatedTypography);
-      console.log('Typography options loaded:', generatedTypography);
-    } else {
-      console.error('No typography options found in project data:', this.project().analysisResultModel?.branding);
-      this.error.set('No typography options available. Please go back to the color selection step.');
-    }
+    // Show skeleton loading for 3 seconds before displaying elements
+    setTimeout(() => {
+      // Get typography from project data (already generated in color-selection)
+      const generatedTypography = this.project().analysisResultModel?.branding?.generatedTypography;
+      if (generatedTypography && Array.isArray(generatedTypography) && generatedTypography.length > 0) {
+        this.typographyModels.set(generatedTypography);
+        console.log('Typography options loaded:', generatedTypography);
+      } else {
+        console.error('No typography options found in project data:', this.project().analysisResultModel?.branding);
+        this.error.set('No typography options available. Please go back to the color selection step.');
+      }
+      this.isLoading.set(false);
+    }, 3000);
   }
 
   ngOnDestroy() {
