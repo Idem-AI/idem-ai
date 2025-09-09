@@ -171,9 +171,7 @@ export class CreateProjectComponent implements OnInit {
       const nextIndex = this.currentStepIndex() + 1;
       if (nextIndex < this.steps.length) {
         this.navigateToStep(nextIndex);
-      } else {
-        this.finalizeProject();
-      }
+      } 
     }
   }
 
@@ -197,37 +195,10 @@ export class CreateProjectComponent implements OnInit {
   }
 
   /**
-   * Finalize project creation
-   */
-  protected async finalizeProject(): Promise<void> {
-    try {
-      this.isLoading.set(true);
-      const project = this.project();
-
-      // Create project via service
-      this.projectService.createProject(project).subscribe({
-        next: (createdProject) => {
-          this.cookieService.set('projectId', createdProject);
-          this.router.navigate(['/console/dashboard']);
-          this.isLoading.set(false);
-        },
-        error: (error) => {
-          console.error('Error creating project:', error);
-          this.isLoading.set(false);
-        }
-      });
-    } catch (error) {
-      console.error('Error creating project:', error);
-    } finally {
-      this.isLoading.set(false);
-    }
-  }
-
-  /**
    * Handle project updates from child components
    */
   protected onProjectUpdate(updates: Partial<ProjectModel>): void {
-    this.project.update(current => ({
+    this.project.update((current) => ({
       ...current,
       ...updates,
       analysisResultModel: {
@@ -235,9 +206,9 @@ export class CreateProjectComponent implements OnInit {
         ...updates.analysisResultModel,
         branding: {
           ...current.analysisResultModel?.branding,
-          ...updates.analysisResultModel?.branding
-        }
-      }
+          ...updates.analysisResultModel?.branding,
+        },
+      },
     }));
     this.saveDraftProject();
   }
