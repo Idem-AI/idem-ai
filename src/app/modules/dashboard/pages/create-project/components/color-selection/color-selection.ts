@@ -34,7 +34,8 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
   readonly colorSelected = output<string>();
   readonly colorsGenerated = output<ColorModel[]>();
   readonly typographyGenerated = output<TypographyModel[]>();
-  readonly colorsAndTypographyGenerated = output<{colors: ColorModel[], typography: TypographyModel[]}>();
+  readonly colorsAndTypographyGenerated = output<{colors: ColorModel[], typography: TypographyModel[], project: ProjectModel}>();
+  readonly projectUpdate = output<Partial<ProjectModel>>();
   readonly nextStep = output<void>();
   readonly previousStep = output<void>();
 
@@ -43,8 +44,10 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
   protected generationProgress = signal(0);
   protected currentStep = signal('');
   protected colorPalettes = signal<ColorModel[]>([]);
+  protected typographyOptions = signal<TypographyModel[]>([]);
   protected error = signal<string | null>(null);
   protected hasGenerated = signal(false);
+  protected selectedColorId = signal<string | null>(null);
 
   // Progress steps
   private progressSteps = [
@@ -82,6 +85,7 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
           next: (response) => {
             console.log('Colors and typography generated:', response);
             this.colorPalettes.set(response.colors);
+            this.typographyOptions.set(response.typography);
             this.colorsGenerated.emit(response.colors);
             
             // Emit typography as well
@@ -90,7 +94,20 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
             // Emit both colors and typography together
             this.colorsAndTypographyGenerated.emit({
               colors: response.colors,
-              typography: response.typography
+              typography: response.typography,
+              project: this.project()
+            });
+            
+            // Update project with both colors and typography
+            this.projectUpdate.emit({
+              analysisResultModel: {
+                ...this.project().analysisResultModel,
+                branding: {
+                  ...this.project().analysisResultModel?.branding,
+                  generatedColors: response.colors,
+                  generatedTypography: response.typography
+                }
+              }
             });
             
             this.hasGenerated.set(true);
@@ -149,8 +166,24 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
   // Mock typography generation removed as we're now using the actual service
 
   protected selectColor(colorId: string): void {
+    this.selectedColorId.set(colorId);
     this.colorSelected.emit(colorId);
-    // Removed auto-navigation - user must click Next button
+    
+    // Find the selected color and update the project
+    const selectedColor = this.colorPalettes().find(color => color.id === colorId);
+    if (selectedColor) {
+      this.projectUpdate.emit({
+        analysisResultModel: {
+          ...this.project().analysisResultModel,
+          branding: {
+            ...this.project().analysisResultModel?.branding,
+            generatedColors: this.colorPalettes(),
+            colors: selectedColor,
+            generatedTypography: this.typographyOptions()
+          }
+        }
+      });
+    }
   }
 
   protected async retryGeneration(): Promise<void> {

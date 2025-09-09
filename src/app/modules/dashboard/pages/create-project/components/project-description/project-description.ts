@@ -23,6 +23,7 @@ import { AuthService } from '../../../../../auth/services/auth.service';
 export class ProjectDescriptionComponent implements OnInit {
   readonly project = input.required<ProjectModel>();
   readonly nextStep = output<void>();
+  readonly projectUpdate = output<Partial<ProjectModel>>();
 
   private readonly authService = inject(AuthService);
 
@@ -78,23 +79,16 @@ export class ProjectDescriptionComponent implements OnInit {
     this.characterCount.set(textarea.value.length);
     this.textareaContent.set(textarea.value);
 
-    // Update project description
-    const currentProject = this.project();
-    if (currentProject) {
-      currentProject.description = textarea.value;
-    }
+    // Update project description via output
+    this.projectUpdate.emit({ description: textarea.value });
 
     // Prevent typing if over limit
     if (textarea.value.length > this.maxCharacters) {
-      if (currentProject) {
-        currentProject.description = textarea.value.substring(
-          0,
-          this.maxCharacters
-        );
-        textarea.value = currentProject.description;
-        this.characterCount.set(this.maxCharacters);
-        this.textareaContent.set(currentProject.description);
-      }
+      const truncatedValue = textarea.value.substring(0, this.maxCharacters);
+      textarea.value = truncatedValue;
+      this.characterCount.set(this.maxCharacters);
+      this.textareaContent.set(truncatedValue);
+      this.projectUpdate.emit({ description: truncatedValue });
     }
 
     // Auto-resize with mobile-optimized height limits

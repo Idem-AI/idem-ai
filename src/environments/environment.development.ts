@@ -13,7 +13,7 @@ export const environment = {
   services: {
     domain: 'https://idem.africa',
     api: {
-      url: 'http://localhost:3001/api',
+      url: 'http://localhost:3001',
       version: 'v1',
       llmModel: 'gpt-3.5-turbo',
     },

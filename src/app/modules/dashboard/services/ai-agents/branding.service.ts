@@ -93,26 +93,17 @@ export class BrandingService {
    * Step 1: Generate 4 main logo concepts with text and main SVG
    * This replaces the old generateLogo method
    */
-  generateLogoConcepts(
-    projectId: string,
-    selectedColor: ColorModel,
-    selectedTypography: TypographyModel
-  ): Observable<{
+  generateLogoConcepts(projectId: string): Observable<{
     logos: LogoModel[];
   }> {
     console.log(
       'Generating logo concepts with selected color and typography...'
     );
     console.log('Project ID:', projectId);
-    console.log('Selected Color:', selectedColor);
-    console.log('Selected Typography:', selectedTypography);
     return this.http
       .post<{
         logos: LogoModel[];
-      }>(`${this.apiUrl}/generate/logo-concepts/${projectId}`, {
-        selectedColors: selectedColor,
-        selectedTypography: selectedTypography,
-      })
+      }>(`${this.apiUrl}/generate/logo-concepts/${projectId}`, {})
       .pipe(
         tap((response) =>
           console.log('generateLogoConcepts response:', response)
@@ -162,17 +153,11 @@ export class BrandingService {
       );
   }
 
-
-
   /**
    * Legacy method for backward compatibility
    * @deprecated Use generateLogoConcepts instead
    */
-  generateLogo(
-    project: ProjectModel,
-    selectedColor: ColorModel,
-    selectedTypography: TypographyModel
-  ): Observable<{
+  generateLogo(project: ProjectModel): Observable<{
     logos: LogoModel[];
   }> {
     console.warn(
@@ -182,11 +167,7 @@ export class BrandingService {
     if (!project.id) {
       throw new Error('Project ID is required for logo generation');
     }
-    return this.generateLogoConcepts(
-      project.id!,
-      selectedColor,
-      selectedTypography
-    );
+    return this.generateLogoConcepts(project.id!);
   }
 
   getBrandIdentityModels(projectId: string): Observable<BrandIdentityModel[]> {

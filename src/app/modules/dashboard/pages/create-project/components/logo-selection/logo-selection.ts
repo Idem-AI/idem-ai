@@ -12,10 +12,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SafeHtmlPipe } from '../../../projects-list/safehtml.pipe';
 import { LogoModel } from '../../../../models/logo.model';
-import {
-  ColorModel,
-  TypographyModel,
-} from '../../../../models/brand-identity.model';
+
 import { Subject, takeUntil } from 'rxjs';
 import { BrandingService } from '../../../../services/ai-agents/branding.service';
 
@@ -33,8 +30,6 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
 
   // Inputs
   readonly projectId = input<string>();
-  readonly selectedColor = input<ColorModel>();
-  readonly selectedTypography = input<TypographyModel>();
   readonly logos = input<LogoModel[]>();
   readonly selectedLogo = input<string>();
 
@@ -78,12 +73,9 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
   });
 
   ngOnInit(): void {
-    // Auto-start generation if we have the required inputs and no logos yet
-    const hasRequiredInputs =
-      this.projectId() && this.selectedColor() && this.selectedTypography();
     const hasNoLogos = !this.logos() || this.logos()?.length === 0;
 
-    if (hasRequiredInputs && hasNoLogos && !this.hasStartedGeneration()) {
+    if (hasNoLogos && !this.hasStartedGeneration()) {
       this.startLogoGeneration();
     }
   }
@@ -116,11 +108,7 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
 
     // Utiliser le service BrandingService pour générer les logos
     this.brandingService
-      .generateLogoConcepts(
-        this.projectId()!,
-        this.selectedColor()!,
-        this.selectedTypography()!
-      )
+      .generateLogoConcepts(this.projectId()!)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {

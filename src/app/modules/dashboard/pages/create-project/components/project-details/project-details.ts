@@ -29,6 +29,7 @@ export class ProjectDetailsComponent {
   readonly groupedTargets = input.required<SelectElement[]>();
 
   projectChange = output<ProjectModel>();
+  readonly projectUpdate = output<Partial<ProjectModel>>();
   readonly nextStep = output<void>();
   readonly previousStep = output<void>();
   readonly constraintsChange = output<void>();
@@ -43,5 +44,21 @@ export class ProjectDetailsComponent {
 
   protected onConstraintsChange(): void {
     this.constraintsChange.emit();
+  }
+
+  protected onNameChange(value: string): void {
+    this.projectUpdate.emit({ name: value });
+  }
+
+  protected onTypeChange(value: any): void {
+    this.projectUpdate.emit({ type: value });
+  }
+
+  protected onScopeChange(value: any): void {
+    this.projectUpdate.emit({ scope: value });
+  }
+
+  protected onTargetsChange(value: any): void {
+    this.projectUpdate.emit({ targets: value });
   }
 }

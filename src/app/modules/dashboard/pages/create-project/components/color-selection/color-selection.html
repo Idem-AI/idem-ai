@@ -174,16 +174,16 @@
       @for (color of colorPalettes(); track color.id) {
       <div
         class="p-4 sm:p-6 border-2 border-transparent glass hover:border-gray-600 rounded-xl hover:shadow-lg hover:shadow-primary/30 hover:bg-gray-900/50 transition-all duration-300 cursor-pointer group relative overflow-hidden hover:-translate-y-1"
-        [style.boxShadow]="selectedColor() === color.id ? '0 0 15px ' + color.colors.primary : 'none'"
-        [class.border-primary]="selectedColor() === color.id"
-        [class.bg-gray-900]="selectedColor() === color.id"
-        [style.borderColor]="selectedColor() === color.id ? color.colors.primary : ''"
+        [style.boxShadow]="selectedColorId() === color.id ? '0 0 15px ' + color.colors.primary : 'none'"
+        [class.border-primary]="selectedColorId() === color.id"
+        [class.bg-gray-900]="selectedColorId() === color.id"
+        [style.borderColor]="selectedColorId() === color.id ? color.colors.primary : ''"
         (click)="selectColor(color.id)"
       >
         <div
           class="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-10 transition-opacity duration-300"
           [style.backgroundImage]="'linear-gradient(to bottom right, ' + color.colors.primary + ', ' + color.colors.accent + ')'"
-          [class.opacity-20]="selectedColor() === color.id"
+          [class.opacity-20]="selectedColorId() === color.id"
         ></div>
 
         <div class="relative z-10">
@@ -240,7 +240,7 @@
             </div>
           </div>
 
-          @if (selectedColor() === color.id) {
+          @if (selectedColorId() === color.id) {
           <div class="absolute top-2 right-2">
             <div
               class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center"
@@ -267,11 +267,10 @@
     </div>
 
     <!-- Navigation Hint -->
-    @if (selectedColor()) {
+    @if (selectedColorId()) {
     <div class="text-center mt-8">
       <p class="text-gray-400 text-sm">
-        Great choice! Your selection will automatically advance to the next
-        step.
+        Great choice! Click Next to continue to the next step.
       </p>
     </div>
     }

@@ -1,158 +1,152 @@
-<div class="w-full min-h-screen">
-  <!-- Step navigation indicators -->
-  <div
-    class="fixed bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 z-50 flex  justify-center gap-2 sm:gap-3 md:gap-4 items-center max-w-[95vw] px-2 pb-safe"
-  >
-    <!-- Previous Button -->
-    @if (currentStepIndex() > 0) {
-    <button
-      (click)="goToPreviousStep()"
-      class="group flex items-center bg-black/70 hover:bg-black/90 text-white py-2 md:py-3 px-3 sm:px-4 md:px-5 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl backdrop-blur-md"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-4 w-4 md:h-5 md:w-5 mr-1 sm:mr-2 transition-transform duration-300 group-hover:-translate-x-1"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M15 19l-7-7 7-7"
-        />
-      </svg>
-      <span class="text-xs sm:text-sm md:text-base">Previous</span>
-    </button>
-    }
-
-    <!-- Step Counter Badge -->
-    <div
-      class="hidden sm:flex items-center justify-center bg-gray-800/70 text-white text-xs rounded-full h-6 sm:h-7 md:h-8 px-2 sm:px-3 mx-1 backdrop-blur-md"
-    >
-      <span class="text-xs"
-        >Step {{currentStepIndex() + 1}} of {{steps.length}}</span
-      >
+@if (isLoading()) {
+  <!-- Loading State -->
+  <div class="h-screen w-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+    <div class="text-center space-y-6 max-w-md mx-auto px-6">
+      <div class="flex justify-center">
+        <div class="animate-spin rounded-full h-16 w-16 border-4 border-primary border-t-transparent"></div>
+      </div>
+      <div class="space-y-2">
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Creating Your Project</h3>
+        <p class="text-gray-600 dark:text-gray-400">Please wait while we finalize your project...</p>
+      </div>
+    </div>
+  </div>
+} @else {
+  <!-- Main Content -->
+  <div class="w-full min-h-screen">
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
+      <div class="max-w-4xl mx-auto px-4 py-3">
+        <div class="flex items-center justify-between mb-2">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{{ currentStep().title }}</h2>
+          <span class="text-sm text-gray-500 dark:text-gray-400">Step {{ currentStepIndex() + 1 }} of {{ steps.length }}</span>
+        </div>
+        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+          <div 
+            class="bg-gradient-to-r from-primary to-secondary h-2 rounded-full transition-all duration-300"
+            [style.width.%]="((currentStepIndex() + 1) / steps.length) * 100"
+          ></div>
+        </div>
+      </div>
     </div>
 
-    <!-- Next Button -->
-    @if (currentStepIndex() < steps.length - 1) {
-    <button
-      (click)="goToNextStep()"
-      class="inner-button group flex items-center text-white py-2 md:py-3 px-3 sm:px-4 md:px-5 rounded-full"
-    >
-      <span class="text-xs sm:text-sm md:text-base">Next</span>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-4 w-4 md:h-5 md:w-5 ml-1 sm:ml-2 transition-transform duration-300 group-hover:translate-x-1"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M9 5l7 7-7 7"
-        />
-      </svg>
-    </button>
-    }
+    <!-- Content Area -->
+    <div class="pt-24 pb-24">
+
+      <!-- Step Content -->
+      @if (isStepActive(0)) {
+        <app-project-description 
+          [project]="project()" 
+          (nextStep)="goToNextStep()"
+          (projectUpdate)="onProjectUpdate($event)"
+        ></app-project-description>
+      }
+      @if (isStepActive(1)) {
+        <app-project-details 
+          [project]="project()" 
+          [groupedProjectTypes]="projectTypes"
+          [groupedTargets]="targets"
+          [groupedScopes]="scopes"
+          (nextStep)="goToNextStep()"
+          (previousStep)="goToPreviousStep()"
+          (projectUpdate)="onProjectUpdate($event)"
+        ></app-project-details>
+      }
+      @if (isStepActive(2)) {
+        <app-color-selection 
+          [project]="project()" 
+          (nextStep)="goToNextStep()"
+          (previousStep)="goToPreviousStep()"
+          (projectUpdate)="onProjectUpdate($event)"
+        ></app-color-selection>
+      }
+      @if (isStepActive(3)) {
+        <app-typography-selection 
+          [project]="project()" 
+          (nextStep)="goToNextStep()"
+          (previousStep)="goToPreviousStep()"
+          (projectUpdate)="onProjectUpdate($event)"
+        ></app-typography-selection>
+      }
+      @if (isStepActive(4)) {
+        <app-logo-selection 
+          [projectId]="project().id" 
+          (nextStep)="goToNextStep()"
+        ></app-logo-selection>
+      }
+      @if (isStepActive(5)) {
+        <app-project-summary 
+          [project]="project()" 
+          [selectedLogo]="project().analysisResultModel.branding.logo.id || ''"
+          [selectedColor]="project().analysisResultModel.branding.colors.id || ''"
+          [selectedTypography]="project().analysisResultModel.branding.typography.id || ''"
+          [logos]="project().analysisResultModel.branding.generatedLogos || []"
+          [colorPalettes]="project().analysisResultModel.branding.generatedColors || []"
+          [typographyOptions]="project().analysisResultModel.branding.generatedTypography || []"
+          [privacyPolicyAccepted]="acceptances().privacy"
+          [termsOfServiceAccepted]="acceptances().terms"
+          [betaPolicyAccepted]="acceptances().beta"
+          [marketingConsentAccepted]="acceptances().marketing"
+          (privacyPolicyChange)="onAcceptanceChange('privacy', $event)"
+          (termsOfServiceChange)="onAcceptanceChange('terms', $event)"
+          (betaPolicyChange)="onAcceptanceChange('beta', $event)"
+          (marketingConsentChange)="onAcceptanceChange('marketing', $event)"
+          (finalizeProject)="finalizeProject()"
+          (previousStep)="goToPreviousStep()"
+        ></app-project-summary>
+      }
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="fixed bottom-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700">
+      <div class="max-w-4xl mx-auto px-4 py-4">
+        <div class="flex justify-between items-center">
+          <button
+            (click)="goToPreviousStep()"
+            [disabled]="!canGoPrevious()"
+            class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Previous
+          </button>
+
+          <div class="flex items-center space-x-2">
+            @for (step of steps; track step.id; let i = $index) {
+              <div 
+                class="w-2 h-2 rounded-full transition-colors"
+                [class.bg-primary]="i <= currentStepIndex()"
+                [class.bg-gray-300]="i > currentStepIndex()"
+              ></div>
+            }
+          </div>
+
+          @if (isLastStep()) {
+            <button
+              (click)="goToNextStep()"
+              [disabled]="!canGoNext()"
+              class="flex items-center px-6 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              Create Project
+              <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </button>
+          } @else {
+            <button
+              (click)="goToNextStep()"
+              [disabled]="!canGoNext()"
+              class="flex items-center px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              Next
+              <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+          }
+        </div>
+      </div>
+    </div>
   </div>
-
-  <!-- Step 0: Project Description -->
-  @if (isStepActive(0)) {
-  <section #projectDescription class="animate-slideInRight px-4 sm:px-0">
-    <app-project-description (nextStep)="goToNextStep()" [project]="project()">
-    </app-project-description>
-  </section>
-  }
-
-  <!-- Step 1: Project Details -->
-  @if (isStepActive(1)) {
-  <section #projectDetails class="animate-slideInRight px-4 sm:px-0">
-    <app-project-details
-      (nextStep)="goToNextStep()"
-      (previousStep)="goToPreviousStep()"
-      [project]="project()"
-      [groupedProjectTypes]="groupedProjectTypes"
-      [groupedScopes]="groupedScopes"
-      [groupedTargets]="groupedTargets"
-    >
-    </app-project-details>
-  </section>
-  }
-
-  <!-- Step 2: Color Selection -->
-  @if (isStepActive(2)) {
-  <section #colorSelection class="animate-slideInRight px-4 sm:px-0">
-    <app-color-selection
-      [project]="project()"
-      [selectedColor]="selectedColor"
-      (colorSelected)="selectColor($event)"
-      (colorsGenerated)="handleColorsGenerated($event)"
-      (colorsAndTypographyGenerated)="handleColorsAndTypographyGenerated($event)"
-      (nextStep)="goToNextStep()"
-      (previousStep)="goToPreviousStep()"
-    >
-    </app-color-selection>
-  </section>
-  }
-
-  <!-- Step 3: Typography Selection -->
-  @if (isStepActive(3)) {
-  <section #typographySelection class="animate-slideInRight px-4 sm:px-0">
-    <app-typography-selection
-      [project]="project()"
-      [typographyOptions]="typographyModels"
-      [selectedTypography]="selectedTypography"
-      (typographySelected)="selectTypography($event)"
-      (nextStep)="goToNextStep()"
-      (previousStep)="goToPreviousStep()"
-    >
-    </app-typography-selection>
-  </section>
-  }
-
-  <!-- Step 4: Logo Selection -->
-  @if (isStepActive(4)) {
-  <section #logoSelection class="animate-slideInRight px-4 sm:px-0">
-    <app-logo-selection
-      [projectId]="project().id"
-      [selectedColor]="getSelectedColor()"
-      [selectedTypography]="getSelectedTypography()"
-      [logos]="logos"
-      [selectedLogo]="selectedLogo"
-      (logoSelected)="selectLogo($event)"
-      (logosGenerated)="logos = $event"
-      (nextStep)="goToNextStep()"
-    >
-    </app-logo-selection>
-  </section>
-  }
-
-  <!-- Step 5: Summary -->
-  @if (isStepActive(5)) {
-  <section #summarySelection class="animate-slideInRight px-4 sm:px-0">
-    <app-project-summary
-      (finalizeProject)="finalizeProjectCreation()"
-      (previousStep)="goToPreviousStep()"
-      [project]="project()"
-      [selectedLogo]="selectedLogo"
-      [selectedColor]="selectedColor"
-      [selectedTypography]="selectedTypography"
-      [logos]="logos"
-      [colorPalettes]="colorModels"
-      [typographyOptions]="typographyModels"
-      [privacyPolicyAccepted]="privacyPolicyAccepted()"
-      [termsOfServiceAccepted]="termsOfServiceAccepted()"
-      [betaPolicyAccepted]="betaPolicyAccepted()"
-      [marketingConsentAccepted]="marketingConsentAccepted()"
-      (privacyPolicyChange)="handlePrivacyPolicyChange($event)"
-      (termsOfServiceChange)="handleTermsOfServiceChange($event)"
-    >
-    </app-project-summary>
-  </section>
-  }
-</div>
+}

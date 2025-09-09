@@ -29,7 +29,8 @@
             <input
               pInputText
               id="in_label"
-              [(ngModel)]="project()!.name"
+              [ngModel]="project()!.name"
+              (ngModelChange)="onNameChange($event)"
               autocomplete="off"
               class="w-full text-sm sm:text-base"
             />
@@ -50,7 +51,8 @@
           <div class="card flex justify-start w-full">
             <p-select
               [options]="groupedProjectTypes()"
-              [(ngModel)]="project()!.type"
+              [ngModel]="project()!.type"
+              (ngModelChange)="onTypeChange($event)"
               placeholder="Select a type"
               [editable]="false"
               optionLabel="name"
@@ -79,7 +81,8 @@
             <div class="card flex justify-start w-full">
               <p-select
                 [options]="groupedScopes()"
-                [(ngModel)]="project()!.scope"
+                [ngModel]="project()!.scope"
+                (ngModelChange)="onScopeChange($event)"
                 placeholder="Select a scope"
                 [editable]="true"
                 optionLabel="name"
@@ -99,7 +102,8 @@
             <div class="card flex justify-start w-full">
               <p-select
                 [options]="groupedTargets()"
-                [(ngModel)]="project()!.targets"
+                [ngModel]="project()!.targets"
+                (ngModelChange)="onTargetsChange($event)"
                 placeholder="Select a target"
                 [editable]="true"
                 optionLabel="name"
