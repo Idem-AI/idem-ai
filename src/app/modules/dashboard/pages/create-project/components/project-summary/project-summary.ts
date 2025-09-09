@@ -18,6 +18,7 @@ import {
 import { LogoModel } from '../../../../models/logo.model';
 import { environment } from '../../../../../../../environments/environment';
 import { ProjectService } from '../../../../services/project.service';
+import { CookieService } from '../../../../../../shared/services/cookie.service';
 import { Loader } from '../../../../../../components/loader/loader';
 
 @Component({
@@ -30,6 +31,7 @@ import { Loader } from '../../../../../../components/loader/loader';
 export class ProjectSummaryComponent {
   // Services
   private readonly projectService = inject(ProjectService);
+  private readonly cookieService = inject(CookieService);
 
   // Angular inputs
   readonly project = input.required<ProjectModel>();
@@ -119,7 +121,8 @@ export class ProjectSummaryComponent {
         .finalizeProjectCreation(this.project().id!, acceptanceData)
         .subscribe({
           next: (response) => {
-            console.log('Project finalized successfully:', response);
+            this.clearProjectCookies();
+
             this.isSubmitting.set(false);
             this.finalizeProject.emit();
           },
@@ -129,5 +132,10 @@ export class ProjectSummaryComponent {
           },
         });
     }
+  }
+
+  private clearProjectCookies(): void {
+    this.cookieService.remove('projectId');
+    this.cookieService.remove('draftProject');
   }
 }
