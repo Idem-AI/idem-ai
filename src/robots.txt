@@ -1,11 +1,28 @@
-# See http://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
-#
-# To ban all spiders from the entire site uncomment the following two lines:
-# User-agent: *
-
+# Robots.txt for Idem - AI-powered open source project builder
+# https://idem.africa
 
 User-agent: *
+Allow: /
 Disallow: /api/
 Disallow: /assets/private/
+Disallow: /console/
+Disallow: /auth/
+Disallow: /*.json$
+Disallow: /*?*
 
+# Allow important assets for SEO
+Allow: /assets/seo/
+Allow: /assets/icons/
+Allow: /assets/images/
+Allow: /sitemap.xml
+Allow: /robots.txt
+
+# Crawl delay to be respectful
+Crawl-delay: 1
+
+# Sitemap location
 Sitemap: https://idem.africa/sitemap.xml
+
+# Additional sitemaps (if needed in the future)
+# Sitemap: https://idem.africa/sitemap-pages.xml
+# Sitemap: https://idem.africa/sitemap-blog.xml
