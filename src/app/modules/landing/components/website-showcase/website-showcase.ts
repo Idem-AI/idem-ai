@@ -4,8 +4,11 @@ import {
   OnInit,
   OnDestroy,
   HostListener,
+  inject,
+  PLATFORM_ID,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { SeoService } from '../../../../shared/services/seo.service';
 
 interface WebsiteExample {
   id: string;
@@ -25,6 +28,11 @@ interface WebsiteExample {
   styleUrl: './website-showcase.css',
 })
 export class WebsiteShowcase implements OnInit, OnDestroy {
+  // Angular-initialized properties
+  protected readonly isBrowser = signal(isPlatformBrowser(inject(PLATFORM_ID)));
+  private readonly seoService = inject(SeoService);
+
+  // State properties
   protected readonly websites = signal<WebsiteExample[]>([
     {
       id: '1',
@@ -91,6 +99,7 @@ export class WebsiteShowcase implements OnInit, OnDestroy {
   private intervalId?: number;
 
   ngOnInit(): void {
+    this.setupSeoForWebsiteShowcase();
     this.checkScreenSize();
     this.startAutoScroll();
   }
@@ -141,5 +150,38 @@ export class WebsiteShowcase implements OnInit, OnDestroy {
 
   protected getItemsPerSlide(): number {
     return this.isMobile() ? 1 : 3;
+  }
+
+  private setupSeoForWebsiteShowcase(): void {
+    // Add structured data for website showcase
+    const websiteShowcaseStructuredData = {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "AI-Generated Website Examples",
+      "description": "Showcase of websites created using Idem's AI-powered development platform",
+      "numberOfItems": this.websites().length,
+      "itemListElement": this.websites().map((website, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "item": {
+          "@type": "WebSite",
+          "name": website.title,
+          "description": website.description,
+          "url": website.liveUrl,
+          "image": `${this.seoService.domain}${website.imageUrl}`,
+          "applicationCategory": website.category,
+          "programmingLanguage": website.technologies
+        }
+      }))
+    };
+
+    // Add structured data to page if not already present
+    if (this.isBrowser() && !document.querySelector('script[data-website-showcase-structured-data]')) {
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.setAttribute('data-website-showcase-structured-data', 'true');
+      script.textContent = JSON.stringify(websiteShowcaseStructuredData);
+      document.head.appendChild(script);
+    }
   }
 }

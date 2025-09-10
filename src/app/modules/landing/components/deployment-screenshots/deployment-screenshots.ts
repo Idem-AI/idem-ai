@@ -1,5 +1,6 @@
-import { Component, signal, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, signal, OnInit, OnDestroy, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { SeoService } from '../../../../shared/services/seo.service';
 
 interface DeploymentScreenshot {
   id: string;
@@ -19,6 +20,11 @@ interface DeploymentScreenshot {
   styleUrl: './deployment-screenshots.css'
 })
 export class DeploymentScreenshots implements OnInit, OnDestroy {
+  // Angular-initialized properties
+  protected readonly isBrowser = signal(isPlatformBrowser(inject(PLATFORM_ID)));
+  private readonly seoService = inject(SeoService);
+
+  // State properties
   protected readonly activeScreenshot = signal<number>(0);
   private rotationInterval?: number;
 
@@ -82,6 +88,7 @@ export class DeploymentScreenshots implements OnInit, OnDestroy {
   ]);
 
   ngOnInit(): void {
+    this.setupSeoForDeploymentScreenshots();
     this.startAutoRotation();
   }
 
@@ -107,5 +114,33 @@ export class DeploymentScreenshots implements OnInit, OnDestroy {
 
   protected getCurrentScreenshot(): DeploymentScreenshot {
     return this.screenshots()[this.activeScreenshot()];
+  }
+
+  private setupSeoForDeploymentScreenshots(): void {
+    // Add structured data for deployment screenshots
+    const deploymentStructuredData = {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Idem Deployment Interface",
+      "description": "Multiple deployment modes including AI assistant, quick deploy, templates, and expert configuration",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "featureList": this.screenshots().map(screenshot => screenshot.title),
+      "screenshot": this.screenshots().map(screenshot => ({
+        "@type": "ImageObject",
+        "name": screenshot.title,
+        "description": screenshot.description,
+        "url": `${this.seoService.domain}${screenshot.imageUrl}`
+      }))
+    };
+
+    // Add structured data to page if not already present
+    if (this.isBrowser() && !document.querySelector('script[data-deployment-screenshots-structured-data]')) {
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.setAttribute('data-deployment-screenshots-structured-data', 'true');
+      script.textContent = JSON.stringify(deploymentStructuredData);
+      document.head.appendChild(script);
+    }
   }
 }

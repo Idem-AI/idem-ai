@@ -46,7 +46,7 @@ export class Home implements OnInit {
 
   // Lifecycle methods
   ngOnInit(): void {
-    // this.setupSeo();
+    this.setupSeo();
   }
 
   // SEO setup

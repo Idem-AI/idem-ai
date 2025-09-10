@@ -1,5 +1,6 @@
-import { Component, HostBinding, HostListener, ElementRef, inject, signal, AfterViewInit, OnDestroy, PLATFORM_ID } from '@angular/core';
+import { Component, HostBinding, HostListener, ElementRef, inject, signal, AfterViewInit, OnDestroy, PLATFORM_ID, OnInit } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { SeoService } from '../../../../shared/services/seo.service';
 
 @Component({
   selector: 'app-pricing',
@@ -8,10 +9,11 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
   templateUrl: './pricing.html',
   styleUrl: './pricing.css',
 })
-export class Pricing implements AfterViewInit, OnDestroy {
+export class Pricing implements OnInit, AfterViewInit, OnDestroy {
   // Angular-initialized properties
   protected readonly isBrowser = signal(isPlatformBrowser(inject(PLATFORM_ID)));
   private readonly elementRef = inject(ElementRef);
+  private readonly seoService = inject(SeoService);
   
   // Apply host class for animation timing
   @HostBinding('class.animate-in')
@@ -21,6 +23,10 @@ export class Pricing implements AfterViewInit, OnDestroy {
   protected mouseX = signal(0);
   protected mouseY = signal(0);
   protected observer: IntersectionObserver | null = null;
+  
+  ngOnInit(): void {
+    this.setupSeoForPricingSection();
+  }
   
   ngAfterViewInit(): void {
     if (this.isBrowser()) {
@@ -105,6 +111,51 @@ export class Pricing implements AfterViewInit, OnDestroy {
     }
   }
   
+  private setupSeoForPricingSection(): void {
+    // Add structured data for pricing section
+    const pricingStructuredData = {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "Idem Platform",
+      "description": "AI-powered platform for instant brand creation and application deployment",
+      "brand": {
+        "@type": "Brand",
+        "name": "Idem"
+      },
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Free Plan",
+          "description": "Get started with basic features",
+          "price": "0",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "validFrom": new Date().toISOString(),
+          "priceValidUntil": new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          "@type": "Offer",
+          "name": "Pro Plan",
+          "description": "Advanced features for professionals",
+          "price": "29",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "validFrom": new Date().toISOString(),
+          "priceValidUntil": new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
+        }
+      ]
+    };
+
+    // Add structured data to page if not already present
+    if (this.isBrowser() && !document.querySelector('script[data-pricing-structured-data]')) {
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.setAttribute('data-pricing-structured-data', 'true');
+      script.textContent = JSON.stringify(pricingStructuredData);
+      document.head.appendChild(script);
+    }
+  }
+
   private destroyIntersectionObserver(): void {
     this.observer?.disconnect();
     this.observer = null;

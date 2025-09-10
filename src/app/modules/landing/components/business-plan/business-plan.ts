@@ -1,5 +1,6 @@
-import { Component, signal, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, signal, OnInit, OnDestroy, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { SeoService } from '../../../../shared/services/seo.service';
 
 interface BusinessPlanSection {
   id: string;
@@ -28,6 +29,11 @@ interface BusinessPlanExample {
   styleUrl: './business-plan.css'
 })
 export class BusinessPlan implements OnInit {
+  // Angular-initialized properties
+  protected readonly isBrowser = signal(isPlatformBrowser(inject(PLATFORM_ID)));
+  private readonly seoService = inject(SeoService);
+
+  // State properties
   protected readonly activeTab = signal<string>('overview');
   protected readonly selectedExample = signal<number>(0);
   protected readonly showAll = signal<boolean>(false);
@@ -125,6 +131,7 @@ export class BusinessPlan implements OnInit {
   ]);
 
   ngOnInit(): void {
+    this.setupSeoForBusinessPlanSection();
     this.startAutoRotation();
   }
 
@@ -157,6 +164,43 @@ export class BusinessPlan implements OnInit {
   protected getVisibleSections(): BusinessPlanSection[] {
     const sections = this.planSections();
     return this.showAllSections() ? sections : sections.slice(0, 3);
+  }
+
+  private setupSeoForBusinessPlanSection(): void {
+    // Add structured data for business plan section
+    const businessPlanStructuredData = {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "AI Business Plan Generation",
+      "description": "Comprehensive business plan creation with AI-powered market analysis, financial projections, and strategic planning",
+      "provider": {
+        "@type": "Organization",
+        "name": "Idem"
+      },
+      "serviceType": "Business Planning Software",
+      "areaServed": "Worldwide",
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Business Plan Components",
+        "itemListElement": this.planSections().map((section, index) => ({
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": section.title,
+            "description": section.description
+          }
+        }))
+      }
+    };
+
+    // Add structured data to page if not already present
+    if (this.isBrowser() && !document.querySelector('script[data-business-plan-structured-data]')) {
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.setAttribute('data-business-plan-structured-data', 'true');
+      script.textContent = JSON.stringify(businessPlanStructuredData);
+      document.head.appendChild(script);
+    }
   }
 
   protected getCurrentExample(): BusinessPlanExample {

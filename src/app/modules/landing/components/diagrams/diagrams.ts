@@ -1,5 +1,6 @@
-import { Component, signal, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, signal, OnInit, OnDestroy, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { SeoService } from '../../../../shared/services/seo.service';
 
 interface DiagramType {
   id: string;
@@ -30,6 +31,11 @@ interface DiagramExample {
   styleUrl: './diagrams.css'
 })
 export class Diagrams implements OnInit, OnDestroy {
+  // Angular-initialized properties
+  protected readonly isBrowser = signal(isPlatformBrowser(inject(PLATFORM_ID)));
+  private readonly seoService = inject(SeoService);
+
+  // State properties
   protected readonly showAll = signal<boolean>(false);
   protected readonly activeExample = signal<number>(0);
   private intervalId?: number;
@@ -133,6 +139,7 @@ export class Diagrams implements OnInit, OnDestroy {
   ]);
 
   ngOnInit(): void {
+    this.setupSeoForDiagramsSection();
     this.startAutoRotation();
   }
 
@@ -170,6 +177,44 @@ export class Diagrams implements OnInit, OnDestroy {
 
   protected getCurrentExample(): DiagramExample {
     return this.diagramExamples()[this.activeExample()];
+  }
+
+  private setupSeoForDiagramsSection(): void {
+    // Add structured data for diagrams section
+    const diagramsStructuredData = {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "AI UML Diagram Generation",
+      "description": "Automated generation of UML diagrams including use case, class, sequence, activity, component, and deployment diagrams",
+      "provider": {
+        "@type": "Organization",
+        "name": "Idem"
+      },
+      "serviceType": "Software Development Tools",
+      "areaServed": "Worldwide",
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "UML Diagram Types",
+        "itemListElement": this.diagramTypes().map((diagram, index) => ({
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": diagram.title,
+            "description": diagram.description,
+            "category": "UML Diagram Generation"
+          }
+        }))
+      }
+    };
+
+    // Add structured data to page if not already present
+    if (this.isBrowser() && !document.querySelector('script[data-diagrams-structured-data]')) {
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.setAttribute('data-diagrams-structured-data', 'true');
+      script.textContent = JSON.stringify(diagramsStructuredData);
+      document.head.appendChild(script);
+    }
   }
 
   protected getComplexityColor(complexity: string): string {

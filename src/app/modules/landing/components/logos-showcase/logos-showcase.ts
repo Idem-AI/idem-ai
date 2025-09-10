@@ -1,5 +1,6 @@
-import { Component, signal, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, signal, OnInit, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { SeoService } from '../../../../shared/services/seo.service';
 
 interface LogoExample {
   id: string;
@@ -18,7 +19,12 @@ interface LogoExample {
   templateUrl: './logos-showcase.html',
   styleUrl: './logos-showcase.css',
 })
-export class LogosShowcase {
+export class LogosShowcase implements OnInit {
+  // Angular-initialized properties
+  protected readonly isBrowser = signal(isPlatformBrowser(inject(PLATFORM_ID)));
+  private readonly seoService = inject(SeoService);
+
+  // State properties
   protected readonly logos = signal<LogoExample[]>([
     {
       id: '1',
@@ -58,7 +64,9 @@ export class LogosShowcase {
     },
   ]);
 
-  // No additional state needed for simplified showcase
+  ngOnInit(): void {
+    this.setupSeoForLogosShowcase();
+  }
 
   protected getColorGradient(colors: string[]): string {
     if (colors.length === 1) {
@@ -70,5 +78,39 @@ export class LogosShowcase {
   protected getVisibleLogos(): LogoExample[] {
     // Return only first 4 logos for simplified showcase
     return this.logos().slice(0, 4);
+  }
+
+  private setupSeoForLogosShowcase(): void {
+    // Add structured data for logo showcase
+    const logosStructuredData = {
+      "@context": "https://schema.org",
+      "@type": "CreativeWork",
+      "name": "AI Logo Generation Examples",
+      "description": "Showcase of AI-generated logos across different industries and styles",
+      "creator": {
+        "@type": "Organization",
+        "name": "Idem"
+      },
+      "hasPart": this.logos().map(logo => ({
+        "@type": "ImageObject",
+        "name": `${logo.brandName} Logo`,
+        "description": logo.description,
+        "url": `${this.seoService.domain}${logo.logoUrl}`,
+        "about": {
+          "@type": "Thing",
+          "name": logo.industry,
+          "description": `${logo.style} style logo for ${logo.industry} industry`
+        }
+      }))
+    };
+
+    // Add structured data to page if not already present
+    if (this.isBrowser() && !document.querySelector('script[data-logos-showcase-structured-data]')) {
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.setAttribute('data-logos-showcase-structured-data', 'true');
+      script.textContent = JSON.stringify(logosStructuredData);
+      document.head.appendChild(script);
+    }
   }
 }

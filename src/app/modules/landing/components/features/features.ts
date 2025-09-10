@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, signal, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Cta } from "../cta/cta";
+import { SeoService } from '../../../../shared/services/seo.service';
 
 interface Feature {
   id: string;
@@ -28,7 +29,12 @@ interface FeatureCategory {
   templateUrl: './features.html',
   styleUrl: './features.css',
 })
-export class Features {
+export class Features implements OnInit {
+  // Angular-initialized properties
+  protected readonly isBrowser = signal(isPlatformBrowser(inject(PLATFORM_ID)));
+  private readonly seoService = inject(SeoService);
+
+  // State properties
   protected readonly selectedCategory = signal<string>('business');
   protected readonly hoveredFeature = signal<string | null>(null);
   
@@ -220,6 +226,51 @@ export class Features {
       color: '#06b6d4'
     }
   ]);
+
+  ngOnInit(): void {
+    this.setupSeoForFeaturesSection();
+  }
+
+  private setupSeoForFeaturesSection(): void {
+    // Add structured data for features section
+    const featuresStructuredData = {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Idem Platform Features",
+      "description": "Comprehensive AI-powered features for business planning, branding, development, and deployment",
+      "numberOfItems": this.features().length,
+      "itemListElement": this.features().map((feature, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "item": {
+          "@type": "SoftwareApplication",
+          "name": feature.title,
+          "description": feature.description,
+          "applicationCategory": this.getCategoryName(feature.category),
+          "featureList": feature.benefits
+        }
+      }))
+    };
+
+    // Add structured data to page if not already present
+    if (this.isBrowser() && !document.querySelector('script[data-features-structured-data]')) {
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.setAttribute('data-features-structured-data', 'true');
+      script.textContent = JSON.stringify(featuresStructuredData);
+      document.head.appendChild(script);
+    }
+  }
+
+  private getCategoryName(categoryId: string): string {
+    const categoryMap: Record<string, string> = {
+      'business': 'Business Planning Software',
+      'branding': 'Design Software',
+      'development': 'Development Tools',
+      'deployment': 'Deployment Platform'
+    };
+    return categoryMap[categoryId] || 'Software Application';
+  }
 
   protected selectCategory(categoryId: string): void {
     this.selectedCategory.set(categoryId);

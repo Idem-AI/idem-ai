@@ -1,5 +1,6 @@
-import { Component, signal, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, signal, OnInit, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { SeoService } from '../../../../shared/services/seo.service';
 
 interface BrandElement {
   id: string;
@@ -28,6 +29,11 @@ interface BrandShowcase {
   styleUrl: './brand-charter.css'
 })
 export class BrandCharter implements OnInit {
+  // Angular-initialized properties
+  protected readonly isBrowser = signal(isPlatformBrowser(inject(PLATFORM_ID)));
+  private readonly seoService = inject(SeoService);
+
+  // State properties
   protected readonly activeTab = signal<string>('elements');
   protected readonly showAll = signal<boolean>(false);
   protected readonly showAllElements = signal<boolean>(false);
@@ -97,7 +103,7 @@ export class BrandCharter implements OnInit {
   ]);
 
   ngOnInit(): void {
-    // Component initialization
+    this.setupSeoForBrandCharter();
   }
 
   protected setActiveTab(tab: string): void {
@@ -130,5 +136,53 @@ export class BrandCharter implements OnInit {
     const b = parseInt(hex.substr(4, 2), 16);
     const brightness = (r * 299 + g * 587 + b * 114) / 1000;
     return brightness > 128 ? '#000000' : '#ffffff';
+  }
+
+  private setupSeoForBrandCharter(): void {
+    // Add structured data for brand charter
+    const brandCharterStructuredData = {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "AI Brand Identity Creation",
+      "description": "Comprehensive brand charter creation including color palettes, typography, logos, and visual style guidelines",
+      "provider": {
+        "@type": "Organization",
+        "name": "Idem"
+      },
+      "serviceType": "Brand Design Service",
+      "areaServed": "Worldwide",
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Brand Elements",
+        "itemListElement": this.brandElements().map((element, index) => ({
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": element.title,
+            "description": element.description,
+            "category": "Brand Design"
+          }
+        }))
+      },
+      "workExample": this.brandShowcases().map(showcase => ({
+        "@type": "CreativeWork",
+        "name": `${showcase.brandName} Brand Identity`,
+        "description": showcase.description,
+        "about": {
+          "@type": "Thing",
+          "name": showcase.industry,
+          "description": `Brand identity for ${showcase.industry} industry`
+        }
+      }))
+    };
+
+    // Add structured data to page if not already present
+    if (this.isBrowser() && !document.querySelector('script[data-brand-charter-structured-data]')) {
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.setAttribute('data-brand-charter-structured-data', 'true');
+      script.textContent = JSON.stringify(brandCharterStructuredData);
+      document.head.appendChild(script);
+    }
   }
 }
