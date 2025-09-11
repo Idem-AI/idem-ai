@@ -11,12 +11,11 @@
       </div>
 
       <h1 class="text-4xl font-bold text-light-text text-glow-primary">
-        Déclinaisons du Logo
+        Logo variations
       </h1>
 
       <p class="text-xl text-light-text/80 leading-relaxed">
-        Nous allons créer plusieurs variations de votre logo sélectionné pour
-        différents contextes d'utilisation.
+        We will create several variations of your selected logo for different usage contexts.
       </p>
     </div>
 
@@ -25,16 +24,16 @@
       <div class="glass-card p-6 text-left">
         <div class="flex items-start space-x-4">
           <div
-            class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0 glow-primary"
+            class="w-12 h-12  rounded-lg flex items-center justify-center flex-shrink-0 glow-primary"
           >
             <i class="pi pi-sun text-primary text-xl"></i>
           </div>
           <div>
             <h3 class="text-lg font-semibold text-light-text mb-2">
-              Fond Clair
+              Light Background
             </h3>
             <p class="text-light-text/70 text-sm">
-              Optimisé pour les arrière-plans blancs et clairs
+              Optimized for white and light backgrounds
             </p>
           </div>
         </div>
@@ -49,10 +48,10 @@
           </div>
           <div>
             <h3 class="text-lg font-semibold text-light-text mb-2">
-              Fond Sombre
+              Dark Background
             </h3>
             <p class="text-light-text/70 text-sm">
-              Parfait pour les interfaces sombres et modernes
+              Optimized for dark and modern backgrounds
             </p>
           </div>
         </div>
@@ -70,7 +69,7 @@
               Monochrome
             </h3>
             <p class="text-light-text/70 text-sm">
-              Version en noir et blanc pour tous usages
+              Version in black and white for all uses
             </p>
           </div>
         </div>
@@ -85,10 +84,10 @@
           </div>
           <div>
             <h3 class="text-lg font-semibold text-light-text mb-2">
-              Formats Multiples
+              Multiple Formats
             </h3>
             <p class="text-light-text/70 text-sm">
-              Avec texte et icône seule pour tous contextes
+              With text and icon alone for all contexts
             </p>
           </div>
         </div>
@@ -102,14 +101,14 @@
         class="inner-button px-8 py-4"
       >
         <i class="pi pi-play mr-2"></i>
-        Générer les Déclinaisons
+        Generate Variations
       </button>
     </div>
 
     <!-- Estimated Time -->
     <p class="text-sm text-light-text/60">
       <i class="pi pi-clock mr-1"></i>
-      Temps estimé : {{ estimatedTime() }}
+      Estimated time: {{ estimatedTime() }}
     </p>
   </div>
 </div>
@@ -128,7 +127,7 @@
       </div>
 
       <h2 class="text-3xl font-bold text-light-text text-glow-primary">
-        Génération en cours...
+        Generating...
       </h2>
 
       <p class="text-lg text-light-text/80">
@@ -139,7 +138,7 @@
     <!-- Progress Bar -->
     <div class="w-full max-w-2xl mx-auto">
       <div class="flex justify-between text-sm text-light-text/70 mb-2">
-        <span>Progression</span>
+        <span>Progress</span>
         <span>{{ generationProgress() }}%</span>
       </div>
       <div class="w-full bg-glass-bg rounded-full h-3 border border-glass-border">
@@ -159,10 +158,10 @@
           <i class="pi pi-sun text-primary text-2xl"></i>
         </div>
         <h3 class="text-lg font-semibold text-light-text mb-2">
-          Fond Clair
+          Light Background
         </h3>
         <p class="text-sm text-light-text/70">
-          Optimisation pour arrière-plans clairs
+          Optimized for white and light backgrounds
         </p>
       </div>
 
@@ -173,10 +172,10 @@
           <i class="pi pi-moon text-accent text-2xl"></i>
         </div>
         <h3 class="text-lg font-semibold text-light-text mb-2">
-          Fond Sombre
+          Dark Background
         </h3>
         <p class="text-sm text-light-text/70">
-          Adaptation pour interfaces sombres
+          Optimized for dark and modern backgrounds
         </p>
       </div>
 
@@ -190,7 +189,7 @@
           Monochrome
         </h3>
         <p class="text-sm text-light-text/70">
-          Version noir et blanc universelle
+          Universal black and white version
         </p>
       </div>
     </div>
@@ -210,7 +209,7 @@
       </div>
 
       <h2 class="text-3xl font-bold text-light-text">
-        Erreur de génération
+        Generation Error
       </h2>
 
       <p class="text-lg text-danger">
@@ -225,7 +224,7 @@
         class="outer-button px-8 py-4 bg-danger/20 border-danger/30 hover:bg-danger/30"
       >
         <i class="pi pi-refresh mr-2"></i>
-        Réessayer
+        Retry
       </button>
     </div>
   </div>
@@ -239,18 +238,17 @@
     <!-- Header -->
     <div class="text-center space-y-4">
       <h2 class="text-3xl font-bold text-light-text text-glow-primary">
-        Déclinaisons du Logo
+        Logo Variations
       </h2>
       <p class="text-lg text-light-text/80">
-        Sélectionnez les variations que vous souhaitez conserver pour votre
-        projet.
+        Select the variations you want to keep for your project.
       </p>
     </div>
 
     <!-- Variations Grid -->
     <div class="space-y-8">
       <!-- Group variations by category -->
-      @for (category of ['Avec Texte', 'Icône Seule']; track category) {
+      @for (category of ['With Text', 'Icon Only']; track category) {
         @if (hasVariationsForCategory(category)) {
           <div class="space-y-4">
             <h3 class="text-2xl font-bold text-light-text text-center">
@@ -299,11 +297,11 @@
                       @if (isVariationSelected(variation.id)) {
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/20 text-primary">
                           <i class="pi pi-check mr-1"></i>
-                          Sélectionnée
+                          Selected
                         </span>
                       } @else {
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-glass-bg text-light-text/60 border border-glass-border">
-                          Cliquez pour sélectionner
+                          Click to select
                         </span>
                       }
                     </div>
@@ -321,7 +319,7 @@
     <div class="glass-card p-6 text-center">
       <p class="text-lg text-light-text mb-4">
         <i class="pi pi-check-circle text-success mr-2"></i>
-        {{ selectedVariations().length }} déclinaison(s) sélectionnée(s)
+        {{ selectedVariations().length }} selection(s) made
       </p>
 
       <button
@@ -330,13 +328,13 @@
         class="inner-button px-8 py-4 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <i class="pi pi-arrow-right mr-2"></i>
-        Continuer avec la sélection
+        Proceed with selection
       </button>
     </div>
     } @else {
     <div class="glass-card p-6 text-center">
       <p class="text-lg text-light-text/70 mb-4">
-        Sélectionnez au moins une déclinaison pour continuer
+        Please select at least one variation to continue
       </p>
     </div>
     }

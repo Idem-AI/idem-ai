@@ -82,10 +82,16 @@ export class LogoVariationsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Auto-start generation when component loads
-    if (this.selectedLogo() && this.project()) {
+    console.log(this.project().analysisResultModel.branding.logo.variations);
+    if (
+      this.selectedLogo() &&
+      !this.project().analysisResultModel.branding.logo.variations
+    ) {
       this.startVariationGeneration();
     } else {
-      this.error.set('Logo or project not found');
+      this.variationsGenerated.emit(
+        this.project().analysisResultModel.branding.logo.variations!
+      );
     }
   }
 
