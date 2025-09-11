@@ -44,68 +44,44 @@
 
   <!-- Loading State -->
   @if (shouldShowLoader()) {
-  <div class="w-full max-w-6xl mx-auto">
-    <!-- Loading Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      @for (item of [1,2,3]; track item) {
-      <div class="group">
-        <div
-          class="bg-gray-900/40 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-8 hover:border-gray-600/50 transition-all duration-300"
-        >
-          <!-- Logo Placeholder -->
-          <div
-            class="w-full h-48 mb-6 bg-gray-800/50 rounded-xl flex items-center justify-center relative overflow-hidden"
-          >
-            <div
-              class="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 animate-pulse"
-            ></div>
-            <div
-              class="w-20 h-20 bg-gray-700/50 rounded-lg animate-pulse"
-            ></div>
+  <div class="text-center mb-8">
+    <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-100 mb-4 max-w-4xl">
+      Generating Your Logos...
+    </h1>
+    <p class="text-gray-400 sm:text-lg text-sm max-w-2xl mx-auto">
+      Creating personalized logos based on your brand preferences.
+    </p>
+  </div>
 
-            <!-- Shimmer Effect -->
-            <div
-              class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer"
-            ></div>
+  <div class="w-full max-w-7xl mx-auto">
+    <!-- Loading Carousel -->
+    <app-carousel 
+      [items]="[1, 2, 3]"
+      [selectedItem]="null"
+      [trackByFn]="trackSkeleton"
+      [gridCols]="3"
+      [showDots]="true"
+      [showArrows]="false"
+      [infinite]="false"
+    >
+      <ng-template let-item>
+        <div class="p-4 sm:p-6 border-2 border-gray-700/50 glass rounded-xl">
+          <div class="w-full h-48 mb-4 bg-gray-800/50 rounded-xl flex items-center justify-center">
+            <div class="w-20 h-20 bg-gray-700/50 rounded-lg animate-pulse"></div>
           </div>
-
-          <!-- Title Placeholder -->
-          <div class="space-y-3 mb-4">
-            <div class="h-6 bg-gray-700/50 rounded-lg animate-pulse"></div>
-            <div
-              class="h-4 bg-gray-700/30 rounded-lg animate-pulse w-3/4"
-            ></div>
-          </div>
-
-          <!-- Progress Dots -->
-          <div class="flex justify-center space-x-2">
-            @for (dot of [1,2,3]; track dot) {
-            <div
-              class="w-2 h-2 bg-primary/60 rounded-full animate-bounce"
-              [style.animation-delay]="(dot * 0.2) + 's'"
-            ></div>
-            }
-          </div>
+          <div class="h-6 bg-gray-700/50 rounded-lg animate-pulse mb-2"></div>
+          <div class="h-4 bg-gray-700/30 rounded-lg animate-pulse w-3/4"></div>
         </div>
-      </div>
-      }
-    </div>
+      </ng-template>
+    </app-carousel>
+  </div>
 
-    <!-- Tips Section -->
-    <div class="mt-12 text-center">
-      <div
-        class="bg-gray-900/30 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6 max-w-2xl mx-auto"
-      >
-        <h3 class="text-lg font-semibold text-white mb-3">
-          💡 While you wait...
-        </h3>
-        <p class="text-gray-300 text-sm leading-relaxed">
-          Our AI is analyzing your color palette and typography to create logos
-          that perfectly match your brand identity. This process may take 2-3
-          minutes as we generate multiple high-quality variations for you to
-          choose from.
-        </p>
-      </div>
+  <div class="mt-12 text-center">
+    <div class="bg-gray-900/30 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6 max-w-2xl mx-auto">
+      <h3 class="text-lg font-semibold text-white mb-3">💡 While you wait...</h3>
+      <p class="text-gray-300 text-sm leading-relaxed">
+        Our AI is analyzing your color palette and typography to create logos that perfectly match your brand identity.
+      </p>
     </div>
   </div>
   }

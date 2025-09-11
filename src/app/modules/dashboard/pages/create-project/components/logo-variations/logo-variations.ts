@@ -86,6 +86,11 @@ export class LogoVariationsComponent implements OnInit, OnDestroy {
     return variation.id;
   };
 
+  // Track function for skeleton loading
+  protected readonly trackSkeleton = (index: number, item: number): string => {
+    return `skeleton-${index}`;
+  };
+
   ngOnInit(): void {
     // Auto-start generation when component loads
     console.log(this.project().analysisResultModel.branding.logo.variations);

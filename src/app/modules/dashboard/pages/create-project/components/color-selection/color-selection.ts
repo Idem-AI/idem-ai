@@ -188,4 +188,9 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
   protected readonly trackColor = (index: number, color: ColorModel): string => {
     return color.id || `color-${index}`;
   };
+
+  // Track function for skeleton loading
+  protected readonly trackSkeleton = (index: number, item: number): string => {
+    return `skeleton-${index}`;
+  };
 }

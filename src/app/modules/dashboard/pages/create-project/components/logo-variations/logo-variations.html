@@ -116,37 +116,51 @@
 
 <!-- Loading State -->
 @if (shouldShowLoader()) {
-<div class="flex items-center justify-center p-6 min-h-[80vh]">
-  <div class="max-w-4xl w-full text-center space-y-8">
-    <!-- Progress Header -->
-    <div class="space-y-4">
-      <div
-        class="w-20 h-20 mx-auto bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mb-6 animate-pulse glow-primary"
-      >
-        <i class="pi pi-cog text-3xl text-white animate-spin"></i>
-      </div>
+<section class="sm:min-h-[90vh] flex flex-col items-center justify-center w-full px-4 mt-[80px] sm:mt-0">
+  <div class="text-center mb-8">
+    <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-100 mb-4 max-w-4xl">
+      Generating Logo Variations...
+    </h1>
+    <p class="text-gray-400 sm:text-lg text-sm max-w-2xl mx-auto">
+      Creating different versions of your logo for various use cases.
+    </p>
+  </div>
 
-      <h2 class="text-3xl font-bold text-light-text text-glow-primary">
-        Generating...
-      </h2>
+  <div class="w-full max-w-7xl mx-auto">
+    <!-- Loading Carousel -->
+    <app-carousel 
+      [items]="[1, 2, 3]"
+      [selectedItem]="null"
+      [trackByFn]="trackSkeleton"
+      [gridCols]="3"
+      [showDots]="true"
+      [showArrows]="false"
+      [infinite]="false"
+    >
+      <ng-template let-item>
+        <div class="p-4 sm:p-6 border-2 border-gray-700/50 glass rounded-xl">
+          <div class="w-full h-32 mb-4 bg-gray-800/50 rounded-xl flex items-center justify-center">
+            <div class="w-16 h-16 bg-gray-700/50 rounded-lg animate-pulse"></div>
+          </div>
+          <div class="h-5 bg-gray-700/50 rounded animate-pulse mb-2"></div>
+          <div class="h-4 bg-gray-700/30 rounded animate-pulse w-2/3"></div>
+        </div>
+      </ng-template>
+    </app-carousel>
+  </div>
 
-      <p class="text-lg text-light-text/80">
-        {{ currentStep() }}
-      </p>
+  <!-- Progress Bar -->
+  <div class="w-full max-w-2xl mx-auto mt-8">
+    <div class="flex justify-between text-sm text-gray-400 mb-2">
+      <span>Progress</span>
+      <span>{{ generationProgress() }}%</span>
     </div>
-
-    <!-- Progress Bar -->
-    <div class="w-full max-w-2xl mx-auto">
-      <div class="flex justify-between text-sm text-light-text/70 mb-2">
-        <span>Progress</span>
-        <span>{{ generationProgress() }}%</span>
-      </div>
-      <div class="w-full bg-glass-bg rounded-full h-3 border border-glass-border">
-        <div
-          class="bg-gradient-to-r from-primary to-secondary h-3 rounded-full transition-all duration-500 ease-out glow-primary"
-          [style.width.%]="generationProgress()"
-        ></div>
-      </div>
+    <div class="w-full bg-gray-800 rounded-full h-3">
+      <div
+        class="bg-gradient-to-r from-primary to-secondary h-3 rounded-full transition-all duration-500"
+        [style.width.%]="generationProgress()"
+      ></div>
+    </div>
     </div>
 
     <!-- Generation Steps -->
@@ -193,8 +207,7 @@
         </p>
       </div>
     </div>
-  </div>
-</div>
+</section>
 }
 
 <!-- Error State -->

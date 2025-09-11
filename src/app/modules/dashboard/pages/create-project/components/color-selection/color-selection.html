@@ -10,52 +10,35 @@
     </h1>
   </div>
 
-  <!-- Loading Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-    @for (item of [1,2,3]; track item) {
-    <div class="group">
-      <div
-        class="glass border border-gray-700/50 rounded-2xl p-8 hover:border-gray-600/50 transition-all duration-300"
-      >
-        <!-- Color Palette Placeholder -->
-        <div
-          class="w-full h-32 mb-6 glass-dark rounded-xl flex items-center justify-center relative overflow-hidden"
-        >
-          <div
-            class="absolute inset-0  animate-pulse"
-          ></div>
-          <div class="flex space-x-2">
+  <div class="w-full max-w-7xl mx-auto">
+    <!-- Loading Carousel -->
+    <app-carousel 
+      [items]="[1, 2, 3]"
+      [selectedItem]="null"
+      [trackByFn]="trackSkeleton"
+      [gridCols]="3"
+      [showDots]="true"
+      [showArrows]="false"
+      [infinite]="false"
+    >
+      <ng-template let-item>
+        <div class="p-4 sm:p-6 border-2 border-gray-700/50 glass rounded-xl">
+          <div class="h-6 bg-gray-700/50 rounded-lg animate-pulse mb-3"></div>
+          <div class="flex gap-2 mb-4">
             @for (color of [1,2,3,4]; track color) {
-            <div
-              class="w-12 h-12 bg-gray-700/50 rounded-full animate-pulse"
-            ></div>
+            <div class="w-8 h-8 bg-gray-700/50 rounded-full animate-pulse"></div>
             }
           </div>
-
-          <!-- Shimmer Effect -->
-          <div
-            class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer"
-          ></div>
+          <div class="p-3 rounded-lg bg-gray-800/30">
+            <div class="h-4 bg-gray-700/50 rounded animate-pulse mb-2"></div>
+            <div class="flex gap-2">
+              <div class="w-16 h-6 bg-gray-700/50 rounded animate-pulse"></div>
+              <div class="w-12 h-6 bg-gray-700/50 rounded animate-pulse"></div>
+            </div>
+          </div>
         </div>
-
-        <!-- Title Placeholder -->
-        <div class="space-y-3 mb-4">
-          <div class="h-6 bg-gray-700/50 rounded-lg animate-pulse"></div>
-          <div class="h-4 bg-gray-700/30 rounded-lg animate-pulse w-3/4"></div>
-        </div>
-
-        <!-- Progress Dots -->
-        <div class="flex justify-center space-x-2">
-          @for (dot of [1,2,3]; track dot) {
-          <div
-            class="w-2 h-2 bg-primary/60 rounded-full animate-bounce"
-            [style.animation-delay]="(dot * 0.2) + 's'"
-          ></div>
-          }
-        </div>
-      </div>
-    </div>
-    }
+      </ng-template>
+    </app-carousel>
   </div>
 
   <!-- Tips Section -->

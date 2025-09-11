@@ -87,6 +87,11 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
     return logo.id || `logo-${index}`;
   };
 
+  // Track function for skeleton loading
+  protected readonly trackSkeleton = (index: number, item: number): string => {
+    return `skeleton-${index}`;
+  };
+
   ngOnInit(): void {
     const hasNoLogos = !this.logos() || this.logos()?.length === 0;
 

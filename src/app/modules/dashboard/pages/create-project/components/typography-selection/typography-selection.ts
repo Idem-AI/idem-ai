@@ -95,4 +95,9 @@ export class TypographySelectionComponent implements OnInit, OnDestroy {
   protected readonly trackTypography = (index: number, typography: TypographyModel): string => {
     return typography.id || `typography-${index}`;
   };
+
+  // Track function for skeleton loading
+  protected readonly trackSkeleton = (index: number, item: number): string => {
+    return `skeleton-${index}`;
+  };
 }
