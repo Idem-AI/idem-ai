@@ -52,7 +52,7 @@ export class Home implements OnInit {
   // SEO setup
   private setupSeo(): void {
     const title =
-      'Idem - AI-Powered Brand Creation, Business Plan & Instant App Deployment Platform';
+      'Idem - AI-Powered Logo, Brand, Business Plan & App builder & Deployment Generator';
     const description =
       "Transform your ideas into live applications with Idem's AI platform. Create professional brands, generate business plans, build UML diagrams, and deploy apps instantly. From concept to production in minutes.";
 
