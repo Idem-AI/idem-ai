@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { SafeHtmlPipe } from '../../../projects-list/safehtml.pipe';
 import { LogoModel, LogoVariations } from '../../../../models/logo.model';
 import { ProjectModel } from '../../../../models/project.model';
+import { CarouselComponent } from '../../../../../../shared/components/carousel/carousel.component';
 
 import { Subject, takeUntil } from 'rxjs';
 import { BrandingService } from '../../../../services/ai-agents/branding.service';
@@ -31,7 +32,7 @@ interface DisplayVariation {
 @Component({
   selector: 'app-logo-variations',
   standalone: true,
-  imports: [CommonModule, FormsModule, SafeHtmlPipe],
+  imports: [CommonModule, FormsModule, SafeHtmlPipe, CarouselComponent],
   templateUrl: './logo-variations.html',
   styleUrl: './logo-variations.css',
 })
@@ -79,6 +80,11 @@ export class LogoVariationsComponent implements OnInit, OnDestroy {
   protected readonly canProceed = computed(() => {
     return this.selectedVariations().length > 0;
   });
+
+  // Track function for carousel
+  protected readonly trackVariation = (index: number, variation: DisplayVariation): string => {
+    return variation.id;
+  };
 
   ngOnInit(): void {
     // Auto-start generation when component loads

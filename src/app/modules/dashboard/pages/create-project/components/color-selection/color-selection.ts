@@ -14,12 +14,13 @@ import {
 } from '../../../../models/brand-identity.model';
 import { ProjectModel } from '../../../../models/project.model';
 import { BrandingService } from '../../../../services/ai-agents/branding.service';
+import { CarouselComponent } from '../../../../../../shared/components/carousel/carousel.component';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-color-selection',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CarouselComponent],
   templateUrl: './color-selection.html',
   styleUrl: './color-selection.css',
 })
@@ -57,10 +58,9 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     console.log(this.project());
-    if (
-      this.project().analysisResultModel?.branding?.generatedColors?.length ===
-      0
-    ) {
+    const generatedColors = this.project().analysisResultModel?.branding?.generatedColors;
+    
+    if (!generatedColors || generatedColors.length === 0) {
       this.generateColors();
     } else {
       this.typographyGenerated.emit(
@@ -183,4 +183,9 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
   protected goToPreviousStep(): void {
     this.previousStep.emit();
   }
+
+  // Track function for carousel
+  protected readonly trackColor = (index: number, color: ColorModel): string => {
+    return color.id || `color-${index}`;
+  };
 }

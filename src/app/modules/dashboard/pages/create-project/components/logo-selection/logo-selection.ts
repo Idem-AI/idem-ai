@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SafeHtmlPipe } from '../../../projects-list/safehtml.pipe';
 import { LogoModel } from '../../../../models/logo.model';
+import { CarouselComponent } from '../../../../../../shared/components/carousel/carousel.component';
 
 import { Subject, takeUntil } from 'rxjs';
 import { BrandingService } from '../../../../services/ai-agents/branding.service';
@@ -20,7 +21,7 @@ import { ProjectModel } from '../../../../models/project.model';
 @Component({
   selector: 'app-logo-selection',
   standalone: true,
-  imports: [CommonModule, FormsModule, SafeHtmlPipe],
+  imports: [CommonModule, FormsModule, SafeHtmlPipe, CarouselComponent],
   templateUrl: './logo-selection.html',
   styleUrl: './logo-selection.css',
 })
@@ -80,6 +81,11 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
       !this.hasStartedGeneration()
     );
   });
+
+  // Track function for carousel
+  protected readonly trackLogo = (index: number, logo: LogoModel): string => {
+    return logo.id || `logo-${index}`;
+  };
 
   ngOnInit(): void {
     const hasNoLogos = !this.logos() || this.logos()?.length === 0;

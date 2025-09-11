@@ -245,7 +245,7 @@
       </p>
     </div>
 
-    <!-- Variations Grid -->
+    <!-- Variations Display -->
     <div class="space-y-8">
       <!-- Group variations by category -->
       @for (category of ['With Text', 'Icon Only']; track category) {
@@ -255,10 +255,19 @@
               {{ category }}
             </h3>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-              @for (variation of getVariationsByCategory(category); track variation.id) {
+            <!-- Responsive Carousel/Grid -->
+            <app-carousel 
+              [items]="getVariationsByCategory(category)"
+              [selectedItem]="null"
+              [trackByFn]="trackVariation"
+              [gridCols]="3"
+              [showDots]="true"
+              [showArrows]="true"
+              [infinite]="false"
+            >
+              <ng-template let-variation let-index="index" let-isSelected="isSelected">
                 <div
-                  class="glass-card p-6 cursor-pointer transition-all duration-300"
+                  class="glass-card p-6 cursor-pointer transition-all duration-300 hover:-translate-y-1"
                   [class.ring-4]="isVariationSelected(variation.id)"
                   [class.ring-primary]="isVariationSelected(variation.id)"
                   [class.glow-primary]="isVariationSelected(variation.id)"
@@ -307,8 +316,8 @@
                     </div>
                   </div>
                 </div>
-              }
-            </div>
+              </ng-template>
+            </app-carousel>
           </div>
         }
       }

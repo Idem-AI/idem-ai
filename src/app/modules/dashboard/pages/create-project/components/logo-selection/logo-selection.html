@@ -177,188 +177,105 @@
       </p>
     </div>
 
-    <!-- Logo Carousel/Masonry Layout -->
-    <div class="relative">
-      <!-- Mobile: Swipeable Cards -->
-      <div class="block sm:hidden">
-        <div class="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 px-4">
-          @for (logo of displayedLogos(); track logo.id) {
-          <div
-            class="flex-shrink-0 w-80 snap-center cursor-pointer transform transition-all duration-300"
-            (click)="selectLogo(logo.id)"
-            [attr.aria-pressed]="selectedLogoComputed() === logo.id"
-          >
-            <div
-              class="relative bg-gray-900/40 backdrop-blur-sm border-2 border-transparent glass hover:border-gray-600 rounded-2xl p-6 transition-all duration-300 cursor-pointer group overflow-hidden hover:-translate-y-1"
-              [style.boxShadow]="selectedLogoComputed() === logo.id ? '0 0 15px rgba(99, 102, 241, 0.5)' : 'none'"
-              [class.border-primary]="selectedLogoComputed() === logo.id"
-              [class.bg-gray-900]="selectedLogoComputed() === logo.id"
-              [style.borderColor]="selectedLogoComputed() === logo.id ? 'rgb(99, 102, 241)' : ''"
-            >
-              <!-- Background Gradient -->
-              <div
-                class="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 opacity-0 group-hover:opacity-10 transition-opacity duration-300"
-                [class.opacity-20]="selectedLogoComputed() === logo.id"
-              ></div>
-
-              <!-- Selection Indicator -->
-              @if (selectedLogoComputed() === logo.id) {
-              <div class="absolute top-4 right-4">
-                <div
-                  class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center"
-                >
-                  <svg
-                    class="w-4 h-4 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M5 13l4 4L19 7"
-                    ></path>
-                  </svg>
-                </div>
-              </div>
-              }
-
-              <!-- Logo Container -->
-              <div class="relative z-10">
-                <div
-                  class="w-full h-[140px] sm:h-[160px] md:h-[180px] mb-4 bg-white rounded-xl flex items-center justify-center p-2 sm:p-3 md:p-4 shadow-lg"
-                >
-                  <div
-                    [innerHTML]="logo.svg | safeHtml"
-                    class="w-full h-full flex items-center justify-center [&>svg]:max-w-full [&>svg]:max-h-full"
-                  ></div>
-                </div>
-
-                <!-- Logo Info -->
-                <div class="text-center">
-                  <h3 class="text-lg font-bold text-white mb-2">
-                    {{ logo.name }}
-                  </h3>
-                  <p
-                    class="text-gray-400 text-sm mb-3 line-clamp-2 h-12 overflow-hidden"
-                  >
-                    {{ logo.concept }}
-                  </p>
-
-                  <!-- Color Palette -->
-                  <div class="flex items-center justify-center space-x-2 mb-3">
-                    @for (color of logo.colors; track color) {
-                    <div
-                      class="w-4 h-4 rounded-full border-2 border-gray-600"
-                      [style.background-color]="color"
-                    ></div>
-                    }
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          }
-        </div>
-      </div>
-
-      <!-- Desktop: Masonry Grid Layout -->
-      <div class="hidden sm:block">
+    <!-- Responsive Logo Display -->
+    <app-carousel 
+      [items]="displayedLogos()"
+      [selectedItem]="null"
+      [trackByFn]="trackLogo"
+      [gridCols]="3"
+      [showDots]="true"
+      [showArrows]="true"
+      [infinite]="false"
+    >
+      <ng-template let-logo let-index="index" let-isSelected="isSelected">
         <div
-          class="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6 mx-auto max-w-6xl"
+          class="cursor-pointer transform transition-all duration-300 hover:scale-[1.02]"
+          (click)="selectLogo(logo.id)"
+          [attr.aria-pressed]="selectedLogoComputed() === logo.id"
         >
-          @for (logo of displayedLogos(); track logo.id; let i = $index) {
           <div
-            class="break-inside-avoid cursor-pointer transform transition-all duration-300 hover:scale-[1.02] mb-6 mx-auto"
-            (click)="selectLogo(logo.id)"
-            [attr.aria-pressed]="selectedLogoComputed() === logo.id"
+            class="relative bg-gray-900/40 backdrop-blur-sm border-2 border-transparent glass hover:border-gray-600 rounded-2xl p-6 transition-all duration-300 cursor-pointer group overflow-hidden hover:-translate-y-1"
+            [style.boxShadow]="selectedLogoComputed() === logo.id ? '0 0 15px rgba(99, 102, 241, 0.5)' : 'none'"
+            [class.border-primary]="selectedLogoComputed() === logo.id"
+            [class.bg-gray-900]="selectedLogoComputed() === logo.id"
+            [style.borderColor]="selectedLogoComputed() === logo.id ? 'rgb(99, 102, 241)' : ''"
           >
+            <!-- Selection Indicator -->
+            @if (selectedLogoComputed() === logo.id) {
             <div
-              class="relative bg-gray-900/40 backdrop-blur-sm border-2 border-transparent glass hover:border-gray-600 rounded-2xl p-6 transition-all duration-300 cursor-pointer group overflow-hidden hover:-translate-y-1"
-              [style.boxShadow]="selectedLogoComputed() === logo.id ? '0 0 15px rgba(99, 102, 241, 0.5)' : 'none'"
-              [class.border-primary]="selectedLogoComputed() === logo.id"
-              [class.bg-gray-900]="selectedLogoComputed() === logo.id"
-              [style.borderColor]="selectedLogoComputed() === logo.id ? 'rgb(99, 102, 241)' : ''"
+              class="absolute top-3 right-3 z-50 w-10 h-10 bg-primary rounded-full flex items-center justify-center"
             >
-              <!-- Selection Indicator -->
-              @if (selectedLogoComputed() === logo.id) {
-              <div
-                class="absolute top-3 right-3 z-50 w-10 h-10 bg-primary rounded-full flex items-center justify-center"
+              <svg
+                class="w-5 h-5 text-white"
+                fill="currentColor"
+                viewBox="0 0 20 20"
               >
-                <svg
-                  class="w-5 h-5 text-white"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clip-rule="evenodd"
-                  ></path>
-                </svg>
-              </div>
-              }
+                <path
+                  fill-rule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+            </div>
+            }
 
-              <!-- Background Gradient -->
+            <!-- Background Gradient -->
+            <div
+              class="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 opacity-0 group-hover:opacity-10 transition-opacity duration-300"
+              [class.opacity-20]="selectedLogoComputed() === logo.id"
+            ></div>
+
+            <!-- Logo Container -->
+            <div class="relative z-10">
               <div
-                class="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 opacity-0 group-hover:opacity-10 transition-opacity duration-300"
-                [class.opacity-20]="selectedLogoComputed() === logo.id"
-              ></div>
-
-              <!-- Logo Container -->
-              <div class="relative z-10">
+                class="w-full bg-white rounded-xl flex items-center justify-center p-3 sm:p-4 md:p-6 shadow-lg mb-4 h-[140px] sm:h-[160px] md:h-[180px]"
+              >
                 <div
-                  class="w-full bg-white rounded-xl flex items-center justify-center p-3 sm:p-4 md:p-6 shadow-lg mb-4 h-[140px] sm:h-[160px] md:h-[180px]"
+                  [innerHTML]="logo.svg | safeHtml"
+                  class="w-full h-full flex items-center justify-center [&>svg]:max-w-full [&>svg]:max-h-full"
+                ></div>
+              </div>
+
+              <!-- Logo Info -->
+              <div class="text-center">
+                <h3
+                  class="text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors duration-300"
                 >
+                  {{ logo.name }}
+                </h3>
+                <p
+                  class="text-gray-400 text-sm mb-4 leading-relaxed line-clamp-2 h-12 overflow-hidden"
+                >
+                  {{ logo.concept }}
+                </p>
+
+                <!-- Color Palette -->
+                <div class="flex items-center justify-center space-x-2 mb-3">
+                  <span class="text-xs text-gray-500 mr-2">Colors:</span>
+                  @for (color of logo.colors; track color) {
                   <div
-                    [innerHTML]="logo.svg | safeHtml"
-                    class="w-full h-full flex items-center justify-center [&>svg]:max-w-full [&>svg]:max-h-full"
+                    class="w-4 h-4 rounded-full border-2 border-gray-600"
+                    [style.background-color]="color"
+                    [title]="color"
                   ></div>
+                  }
                 </div>
 
-                <!-- Logo Info -->
-                <div class="text-center">
-                  <h3
-                    class="text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors duration-300"
+                <!-- Fonts -->
+                <div class="flex flex-wrap justify-center gap-2">
+                  @for (font of logo.fonts; track font) {
+                  <span
+                    class="text-xs bg-gray-700/50 text-gray-300 px-2 py-1 rounded-full"
+                    >{{ font }}</span
                   >
-                    {{ logo.name }}
-                  </h3>
-                  <p
-                    class="text-gray-400 text-sm mb-4 leading-relaxed line-clamp-2 h-12 overflow-hidden"
-                  >
-                    {{ logo.concept }}
-                  </p>
-
-                  <!-- Color Palette -->
-                  <div class="flex items-center justify-center space-x-2 mb-3">
-                    <span class="text-xs text-gray-500 mr-2">Colors:</span>
-                    @for (color of logo.colors; track color) {
-                    <div
-                      class="w-4 h-4 rounded-full border-2 border-gray-600"
-                      [style.background-color]="color"
-                      [title]="color"
-                    ></div>
-                    }
-                  </div>
-
-                  <!-- Fonts -->
-                  <div class="flex flex-wrap justify-center gap-2">
-                    @for (font of logo.fonts; track font) {
-                    <span
-                      class="text-xs bg-gray-700/50 text-gray-300 px-2 py-1 rounded-full"
-                      >{{ font }}</span
-                    >
-                    }
-                  </div>
+                  }
                 </div>
               </div>
             </div>
           </div>
-          }
         </div>
-      </div>
-    </div>
+      </ng-template>
+    </app-carousel>
 
     <!-- Retry Button (if generation failed) -->
     @if (currentStep().includes('failed')) {

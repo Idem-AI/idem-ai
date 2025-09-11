@@ -14,12 +14,13 @@ import {
 } from '../../../../models/brand-identity.model';
 import { ProjectModel } from '../../../../models/project.model';
 import { BrandingService } from '../../../../services/ai-agents/branding.service';
+import { CarouselComponent } from '../../../../../../shared/components/carousel/carousel.component';
 import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-typography-selection',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CarouselComponent],
   templateUrl: './typography-selection.html',
   styleUrl: './typography-selection.css',
 })
@@ -89,4 +90,9 @@ export class TypographySelectionComponent implements OnInit, OnDestroy {
   protected goToPreviousStep(): void {
     this.previousStep.emit();
   }
+
+  // Track function for carousel
+  protected readonly trackTypography = (index: number, typography: TypographyModel): string => {
+    return typography.id || `typography-${index}`;
+  };
 }

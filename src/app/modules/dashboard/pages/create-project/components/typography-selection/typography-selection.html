@@ -75,59 +75,68 @@
   </div>
 
   <div class="w-full max-w-7xl mx-auto">
-    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-      @for (typography of typographyModels(); track typography.id) {
-      <div
-        class="p-4 sm:p-6 border-2 border-transparent glass hover:border-gray-600 rounded-xl hover:shadow-lg hover:shadow-primary/30 hover:bg-gray-900/50 transition-all duration-300 cursor-pointer group relative overflow-hidden hover:-translate-y-1"
-        [style.boxShadow]="selectedTypographyId() === typography.id ? '0 0 15px rgba(99, 102, 241, 0.5)' : 'none'"
-        [class.border-primary]="selectedTypographyId() === typography.id"
-        [class.bg-gray-900]="selectedTypographyId() === typography.id"
-        [style.borderColor]="selectedTypographyId() === typography.id ? 'rgb(99, 102, 241)' : ''"
-        (click)="selectTypography(typography.id)"
-      >
-        <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-10 transition-opacity duration-300"
-             [class.opacity-20]="selectedTypographyId() === typography.id"></div>
+    <!-- Responsive Typography Display -->
+    <app-carousel 
+      [items]="typographyModels()"
+      [selectedItem]="null"
+      [trackByFn]="trackTypography"
+      [gridCols]="3"
+      [showDots]="true"
+      [showArrows]="true"
+      [infinite]="false"
+    >
+      <ng-template let-typography let-index="index" let-isSelected="isSelected">
+        <div
+          class="p-4 sm:p-6 border-2 border-transparent glass hover:border-gray-600 rounded-xl hover:shadow-lg hover:shadow-primary/30 hover:bg-gray-900/50 transition-all duration-300 cursor-pointer group relative overflow-hidden hover:-translate-y-1"
+          [style.boxShadow]="selectedTypographyId() === typography.id ? '0 0 15px rgba(99, 102, 241, 0.5)' : 'none'"
+          [class.border-primary]="selectedTypographyId() === typography.id"
+          [class.bg-gray-900]="selectedTypographyId() === typography.id"
+          [style.borderColor]="selectedTypographyId() === typography.id ? 'rgb(99, 102, 241)' : ''"
+          (click)="selectTypography(typography.id)"
+        >
+          <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-10 transition-opacity duration-300"
+               [class.opacity-20]="selectedTypographyId() === typography.id"></div>
 
-        <div class="relative z-10">
-          <h3 class="text-white text-lg font-medium mb-3">{{ typography.name }}</h3>
+          <div class="relative z-10">
+            <h3 class="text-white text-lg font-medium mb-3">{{ typography.name }}</h3>
 
-          <!-- Typography Preview -->
-          <div class="bg-white/5 rounded-lg p-4 mb-4 border border-gray-600/30">
-            <div class="mb-3">
-              <h4 [style.fontFamily]="typography.primaryFont" class="text-white text-xl font-bold mb-2">
-                Your Brand Name
-              </h4>
-              <p [style.fontFamily]="typography.secondaryFont" class="text-gray-300 text-sm">
-                This is how your content will look with this typography combination.
-              </p>
+            <!-- Typography Preview -->
+            <div class="bg-white/5 rounded-lg p-4 mb-4 border border-gray-600/30">
+              <div class="mb-3">
+                <h4 [style.fontFamily]="typography.primaryFont" class="text-white text-xl font-bold mb-2">
+                  Your Brand Name
+                </h4>
+                <p [style.fontFamily]="typography.secondaryFont" class="text-gray-300 text-sm">
+                  This is how your content will look with this typography combination.
+                </p>
+              </div>
             </div>
+
+            <!-- Font Details -->
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between">
+                <span class="text-gray-400">Primary:</span>
+                <span class="text-white font-medium">{{ typography.primaryFont }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-400">Secondary:</span>
+                <span class="text-white font-medium">{{ typography.secondaryFont }}</span>
+              </div>
+            </div>
+
+            @if (selectedTypographyId() === typography.id) {
+            <div class="absolute top-2 right-2">
+              <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+            </div>
+            }
           </div>
-
-          <!-- Font Details -->
-          <div class="space-y-2 text-sm">
-            <div class="flex justify-between">
-              <span class="text-gray-400">Primary:</span>
-              <span class="text-white font-medium">{{ typography.primaryFont }}</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-400">Secondary:</span>
-              <span class="text-white font-medium">{{ typography.secondaryFont }}</span>
-            </div>
-          </div>
-
-          @if (selectedTypographyId() === typography.id) {
-          <div class="absolute top-2 right-2">
-            <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-              </svg>
-            </div>
-          </div>
-          }
         </div>
-      </div>
-      }
-    </div>
+      </ng-template>
+    </app-carousel>
 
     <!-- Navigation Hint -->
     @if (selectedTypographyId()) {
