@@ -1,0 +1,167 @@
+/* Logo Variations Component Styles */
+
+.glass-card {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(229, 231, 235, 0.5);
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.dark .glass-card {
+  background-color: rgba(31, 41, 55, 0.8);
+  border-color: rgba(55, 65, 81, 0.5);
+}
+
+.btn-primary {
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  outline: none;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transform: scale(1.05);
+}
+
+.btn-primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(var(--primary-color), 0.5);
+}
+
+/* Animation for progress dots */
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40%, 43% {
+    transform: translateY(-8px);
+  }
+  70% {
+    transform: translateY(-4px);
+  }
+  90% {
+    transform: translateY(-2px);
+  }
+}
+
+/* Custom hover effects for variation cards */
+.variation-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.variation-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Selection ring animation */
+.ring-4 {
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+/* SVG container styling */
+.svg-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.svg-container svg {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+}
+
+/* Progress bar animation */
+.progress-bar {
+  transition: width 0.5s ease-in-out;
+}
+
+/* Loading skeleton animation */
+.skeleton-loader {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Dark mode skeleton */
+.dark .skeleton-loader {
+  background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+  background-size: 200% 100%;
+}
+
+/* Variation type badges */
+.variation-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.variation-badge.light {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.dark .variation-badge.light {
+  background-color: rgba(120, 53, 15, 0.2);
+  color: #fbbf24;
+}
+
+.variation-badge.dark {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+.dark .variation-badge.dark {
+  background-color: #1f2937;
+  color: #d1d5db;
+}
+
+.variation-badge.monochrome {
+  background-color: #f3e8ff;
+  color: #7c3aed;
+}
+
+.dark .variation-badge.monochrome {
+  background-color: rgba(109, 40, 217, 0.2);
+  color: #a78bfa;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .glass-card {
+    padding: 1rem;
+  }
+  
+  .variation-card:hover {
+    transform: none;
+  }
+}

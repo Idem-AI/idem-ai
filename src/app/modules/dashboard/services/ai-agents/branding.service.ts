@@ -133,9 +133,16 @@ export class BrandingService {
     project: ProjectModel
   ): Observable<{
     variations: {
-      lightBackground?: string;
-      darkBackground?: string;
-      monochrome?: string;
+      withText?: {
+        lightBackground?: string;
+        darkBackground?: string;
+        monochrome?: string;
+      };
+      iconOnly?: {
+        lightBackground?: string;
+        darkBackground?: string;
+        monochrome?: string;
+      };
     };
   }> {
     console.log('Generating logo variations for selected logo...');
@@ -144,9 +151,16 @@ export class BrandingService {
     return this.http
       .post<{
         variations: {
-          lightBackground?: string;
-          darkBackground?: string;
-          monochrome?: string;
+          withText?: {
+            lightBackground?: string;
+            darkBackground?: string;
+            monochrome?: string;
+          };
+          iconOnly?: {
+            lightBackground?: string;
+            darkBackground?: string;
+            monochrome?: string;
+          };
         };
       }>(`${this.apiUrl}/generate/logo-variations/${project.id}`, {
         selectedLogo: selectedLogo,

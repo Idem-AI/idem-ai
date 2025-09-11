@@ -55,18 +55,38 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
   protected hasGenerated = signal(false);
   protected selectedColorId = signal<string | null>(null);
 
-  // Progress steps
-  private progressSteps = [
-    { step: 'Analyzing project requirements...', duration: 1000 },
-    { step: 'Generating color harmonies...', duration: 2000 },
-    { step: 'Creating palette variations...', duration: 1500 },
-    { step: 'Optimizing for accessibility...', duration: 1000 },
-    { step: 'Finalizing color schemes...', duration: 500 },
-  ];
-
   ngOnInit() {
-    if (!this.hasGenerated()) {
+    console.log(this.project());
+    if (
+      this.project().analysisResultModel?.branding?.generatedColors?.length ===
+      0
+    ) {
       this.generateColors();
+    } else {
+      this.typographyGenerated.emit(
+        this.project().analysisResultModel?.branding?.generatedTypography
+      );
+      this.colorsAndTypographyGenerated.emit({
+        colors: this.project().analysisResultModel?.branding?.generatedColors,
+        typography:
+          this.project().analysisResultModel?.branding?.generatedTypography,
+        project: this.project(),
+      });
+      this.colorPalettes.set(
+        this.project().analysisResultModel?.branding?.generatedColors
+      );
+      this.typographyOptions.set(
+        this.project().analysisResultModel?.branding?.generatedTypography
+      );
+      this.colorsGenerated.emit(
+        this.project().analysisResultModel?.branding?.generatedColors
+      );
+      this.typographyGenerated.emit(
+        this.project().analysisResultModel?.branding?.generatedTypography
+      );
+
+      this.hasGenerated.set(true);
+      this.isGenerating.set(false);
     }
   }
 
@@ -132,34 +152,6 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
       this.isGenerating.set(false);
     }
   }
-
-  private async animateProgress(
-    start: number,
-    end: number,
-    duration: number
-  ): Promise<void> {
-    return new Promise((resolve) => {
-      const startTime = Date.now();
-      const animate = () => {
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const currentProgress = start + (end - start) * progress;
-
-        this.generationProgress.set(Math.round(currentProgress));
-
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          resolve();
-        }
-      };
-      animate();
-    });
-  }
-
-  // Mock color generation removed as we're now using the actual service
-
-  // Mock typography generation removed as we're now using the actual service
 
   protected selectColor(colorId: string): void {
     this.selectedColorId.set(colorId);

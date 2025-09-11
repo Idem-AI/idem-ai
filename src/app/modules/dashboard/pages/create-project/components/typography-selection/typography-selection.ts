@@ -58,7 +58,7 @@ export class TypographySelectionComponent implements OnInit, OnDestroy {
         this.error.set('No typography options available. Please go back to the color selection step.');
       }
       this.isLoading.set(false);
-    }, 3000);
+    }, 2000);
   }
 
   ngOnDestroy() {

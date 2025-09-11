@@ -1,0 +1,345 @@
+<!-- Initial Prompt State -->
+@if (shouldShowInitialPrompt()) {
+<div class="flex items-center justify-center p-6 min-h-[80vh]">
+  <div class="max-w-2xl w-full text-center space-y-8">
+    <!-- Header -->
+    <div class="space-y-4">
+      <div
+        class="w-20 h-20 mx-auto bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mb-6 glow-primary"
+      >
+        <i class="pi pi-palette text-3xl text-white"></i>
+      </div>
+
+      <h1 class="text-4xl font-bold text-light-text text-glow-primary">
+        Déclinaisons du Logo
+      </h1>
+
+      <p class="text-xl text-light-text/80 leading-relaxed">
+        Nous allons créer plusieurs variations de votre logo sélectionné pour
+        différents contextes d'utilisation.
+      </p>
+    </div>
+
+    <!-- Features List -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-12">
+      <div class="glass-card p-6 text-left">
+        <div class="flex items-start space-x-4">
+          <div
+            class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0 glow-primary"
+          >
+            <i class="pi pi-sun text-primary text-xl"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-light-text mb-2">
+              Fond Clair
+            </h3>
+            <p class="text-light-text/70 text-sm">
+              Optimisé pour les arrière-plans blancs et clairs
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card p-6 text-left">
+        <div class="flex items-start space-x-4">
+          <div
+            class="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center flex-shrink-0 glow-accent"
+          >
+            <i class="pi pi-moon text-accent text-xl"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-light-text mb-2">
+              Fond Sombre
+            </h3>
+            <p class="text-light-text/70 text-sm">
+              Parfait pour les interfaces sombres et modernes
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card p-6 text-left">
+        <div class="flex items-start space-x-4">
+          <div
+            class="w-12 h-12 bg-secondary/20 rounded-lg flex items-center justify-center flex-shrink-0 glow-secondary"
+          >
+            <i class="pi pi-circle text-secondary text-xl"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-light-text mb-2">
+              Monochrome
+            </h3>
+            <p class="text-light-text/70 text-sm">
+              Version en noir et blanc pour tous usages
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card p-6 text-left">
+        <div class="flex items-start space-x-4">
+          <div
+            class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0 glow-primary"
+          >
+            <i class="pi pi-sparkles text-primary text-xl"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-light-text mb-2">
+              Formats Multiples
+            </h3>
+            <p class="text-light-text/70 text-sm">
+              Avec texte et icône seule pour tous contextes
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Button -->
+    <div class="pt-8">
+      <button
+        (click)="startVariationGeneration()"
+        class="inner-button px-8 py-4"
+      >
+        <i class="pi pi-play mr-2"></i>
+        Générer les Déclinaisons
+      </button>
+    </div>
+
+    <!-- Estimated Time -->
+    <p class="text-sm text-light-text/60">
+      <i class="pi pi-clock mr-1"></i>
+      Temps estimé : {{ estimatedTime() }}
+    </p>
+  </div>
+</div>
+}
+
+<!-- Loading State -->
+@if (shouldShowLoader()) {
+<div class="flex items-center justify-center p-6 min-h-[80vh]">
+  <div class="max-w-4xl w-full text-center space-y-8">
+    <!-- Progress Header -->
+    <div class="space-y-4">
+      <div
+        class="w-20 h-20 mx-auto bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mb-6 animate-pulse glow-primary"
+      >
+        <i class="pi pi-cog text-3xl text-white animate-spin"></i>
+      </div>
+
+      <h2 class="text-3xl font-bold text-light-text text-glow-primary">
+        Génération en cours...
+      </h2>
+
+      <p class="text-lg text-light-text/80">
+        {{ currentStep() }}
+      </p>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="w-full max-w-2xl mx-auto">
+      <div class="flex justify-between text-sm text-light-text/70 mb-2">
+        <span>Progression</span>
+        <span>{{ generationProgress() }}%</span>
+      </div>
+      <div class="w-full bg-glass-bg rounded-full h-3 border border-glass-border">
+        <div
+          class="bg-gradient-to-r from-primary to-secondary h-3 rounded-full transition-all duration-500 ease-out glow-primary"
+          [style.width.%]="generationProgress()"
+        ></div>
+      </div>
+    </div>
+
+    <!-- Generation Steps -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+      <div class="glass-card p-6 text-center">
+        <div
+          class="w-16 h-16 mx-auto bg-primary/20 rounded-full flex items-center justify-center mb-4 glow-primary"
+        >
+          <i class="pi pi-sun text-primary text-2xl"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-light-text mb-2">
+          Fond Clair
+        </h3>
+        <p class="text-sm text-light-text/70">
+          Optimisation pour arrière-plans clairs
+        </p>
+      </div>
+
+      <div class="glass-card p-6 text-center">
+        <div
+          class="w-16 h-16 mx-auto bg-accent/20 rounded-full flex items-center justify-center mb-4 glow-accent"
+        >
+          <i class="pi pi-moon text-accent text-2xl"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-light-text mb-2">
+          Fond Sombre
+        </h3>
+        <p class="text-sm text-light-text/70">
+          Adaptation pour interfaces sombres
+        </p>
+      </div>
+
+      <div class="glass-card p-6 text-center">
+        <div
+          class="w-16 h-16 mx-auto bg-secondary/20 rounded-full flex items-center justify-center mb-4 glow-secondary"
+        >
+          <i class="pi pi-circle text-secondary text-2xl"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-light-text mb-2">
+          Monochrome
+        </h3>
+        <p class="text-sm text-light-text/70">
+          Version noir et blanc universelle
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<!-- Error State -->
+@if (error()) {
+<div class="flex items-center justify-center p-6 min-h-[80vh]">
+  <div class="max-w-2xl w-full text-center space-y-8">
+    <div class="space-y-4">
+      <div
+        class="w-20 h-20 mx-auto bg-danger/20 rounded-2xl flex items-center justify-center mb-6"
+      >
+        <i class="pi pi-exclamation-triangle text-3xl text-danger"></i>
+      </div>
+
+      <h2 class="text-3xl font-bold text-light-text">
+        Erreur de génération
+      </h2>
+
+      <p class="text-lg text-danger">
+        {{ error() }}
+      </p>
+    </div>
+
+    <!-- Retry Button -->
+    <div class="pt-8">
+      <button
+        (click)="startVariationGeneration()"
+        class="outer-button px-8 py-4 bg-danger/20 border-danger/30 hover:bg-danger/30"
+      >
+        <i class="pi pi-refresh mr-2"></i>
+        Réessayer
+      </button>
+    </div>
+  </div>
+</div>
+}
+
+<!-- Variations Display -->
+@if (shouldShowVariations()) {
+<div class="p-6 min-h-[80vh]">
+  <div class="max-w-6xl mx-auto space-y-8">
+    <!-- Header -->
+    <div class="text-center space-y-4">
+      <h2 class="text-3xl font-bold text-light-text text-glow-primary">
+        Déclinaisons du Logo
+      </h2>
+      <p class="text-lg text-light-text/80">
+        Sélectionnez les variations que vous souhaitez conserver pour votre
+        projet.
+      </p>
+    </div>
+
+    <!-- Variations Grid -->
+    <div class="space-y-8">
+      <!-- Group variations by category -->
+      @for (category of ['Avec Texte', 'Icône Seule']; track category) {
+        @if (hasVariationsForCategory(category)) {
+          <div class="space-y-4">
+            <h3 class="text-2xl font-bold text-light-text text-center">
+              {{ category }}
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              @for (variation of getVariationsByCategory(category); track variation.id) {
+                <div
+                  class="glass-card p-6 cursor-pointer transition-all duration-300"
+                  [class.ring-4]="isVariationSelected(variation.id)"
+                  [class.ring-primary]="isVariationSelected(variation.id)"
+                  [class.glow-primary]="isVariationSelected(variation.id)"
+                  (click)="toggleVariationSelection(variation.id)"
+                >
+                  <!-- Variation Preview -->
+                  <div
+                    class="w-full h-48 rounded-lg flex items-center justify-center mb-4 border-2 border-glass-border"
+                    [style.background-color]="variation.backgroundColor"
+                  >
+                    <div
+                      class="w-24 h-24 flex items-center justify-center"
+                      [innerHTML]="variation.svgContent | safeHtml"
+                    ></div>
+                  </div>
+
+                  <!-- Variation Info -->
+                  <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                      <h4 class="text-lg font-semibold text-light-text">
+                        {{ variation.label }}
+                      </h4>
+                      @if (isVariationSelected(variation.id)) {
+                        <div class="w-6 h-6 bg-primary rounded-full flex items-center justify-center glow-primary">
+                          <i class="pi pi-check text-white text-sm"></i>
+                        </div>
+                      }
+                    </div>
+
+                    <p class="text-sm text-light-text/70">
+                      {{ variation.description }}
+                    </p>
+
+                    <!-- Selection Indicator -->
+                    <div class="pt-2">
+                      @if (isVariationSelected(variation.id)) {
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/20 text-primary">
+                          <i class="pi pi-check mr-1"></i>
+                          Sélectionnée
+                        </span>
+                      } @else {
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-glass-bg text-light-text/60 border border-glass-border">
+                          Cliquez pour sélectionner
+                        </span>
+                      }
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      }
+    </div>
+
+    <!-- Selection Summary -->
+    @if (selectedVariations().length > 0) {
+    <div class="glass-card p-6 text-center">
+      <p class="text-lg text-light-text mb-4">
+        <i class="pi pi-check-circle text-success mr-2"></i>
+        {{ selectedVariations().length }} déclinaison(s) sélectionnée(s)
+      </p>
+
+      <button
+        (click)="goToNextStep()"
+        [disabled]="!canProceed()"
+        class="inner-button px-8 py-4 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <i class="pi pi-arrow-right mr-2"></i>
+        Continuer avec la sélection
+      </button>
+    </div>
+    } @else {
+    <div class="glass-card p-6 text-center">
+      <p class="text-lg text-light-text/70 mb-4">
+        Sélectionnez au moins une déclinaison pour continuer
+      </p>
+    </div>
+    }
+  </div>
+</div>
+}

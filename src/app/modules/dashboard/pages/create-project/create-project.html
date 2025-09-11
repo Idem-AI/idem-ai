@@ -81,11 +81,19 @@
     <app-logo-selection
       [projectId]="project().id"
       [project]="project()"
+      [logos]="project().analysisResultModel.branding.generatedLogos ? project().analysisResultModel.branding.generatedLogos : []"
       (logoSelected)="onLogoSelected($event)"
       (projectUpdate)="onProjectUpdate($event)"
       (nextStep)="goToNextStep()"
     ></app-logo-selection>
     } @if (isStepActive(5)) {
+    <app-logo-variations
+      [selectedLogo]="project().analysisResultModel.branding.logo"
+      [project]="project()"
+      (projectUpdate)="onProjectUpdate($event)"
+      (nextStep)="goToNextStep()"
+    ></app-logo-variations>
+    } @if (isStepActive(6)) {
     <app-project-summary
       [project]="project()"
       [selectedLogo]="project().analysisResultModel.branding.logo.id || ''"

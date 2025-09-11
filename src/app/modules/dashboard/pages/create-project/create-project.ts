@@ -13,6 +13,7 @@ import { ProjectDetailsComponent } from './components/project-details/project-de
 import { ColorSelectionComponent } from './components/color-selection/color-selection';
 import { TypographySelectionComponent } from './components/typography-selection/typography-selection';
 import { LogoSelectionComponent } from './components/logo-selection/logo-selection';
+import { LogoVariationsComponent } from './components/logo-variations/logo-variations';
 import { ProjectSummaryComponent } from './components/project-summary/project-summary';
 import { SkeletonModule } from 'primeng/skeleton';
 
@@ -34,6 +35,7 @@ interface Step {
     LogoSelectionComponent,
     ColorSelectionComponent,
     TypographySelectionComponent,
+    LogoVariationsComponent,
     ProjectSummaryComponent,
   ],
   templateUrl: './create-project.html',
@@ -67,6 +69,7 @@ export class CreateProjectComponent implements OnInit {
       component: 'typography',
     },
     { id: 'logo', title: 'Logo Selection', component: 'logo' },
+    { id: 'variations', title: 'Logo Variations', component: 'variations' },
     { id: 'summary', title: 'Summary', component: 'summary' },
   ];
 
@@ -145,6 +148,8 @@ export class CreateProjectComponent implements OnInit {
         return !!project.analysisResultModel?.branding?.typography;
       case 'logo':
         return !!project.analysisResultModel?.branding?.logo;
+      case 'variations':
+        return !!project.analysisResultModel?.branding?.logo?.variations;
       case 'summary':
         const acceptances = this.acceptances();
         return acceptances.privacy && acceptances.terms && acceptances.beta;

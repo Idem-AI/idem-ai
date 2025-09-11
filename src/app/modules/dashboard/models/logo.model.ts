@@ -6,9 +6,15 @@ export interface LogoModel {
   colors: string[]; // Array of HEX color codes used in the logo
   fonts: string[]; // Fonts used in the logo (if any)
 
-  variations?: {
-    lightBackground?: string; // Version optimized for light backgrounds
-    darkBackground?: string; // Version optimized for dark backgrounds
-    monochrome?: string; // Simplified version in black or white
-  };
+  variations?: LogoVariations;
+}
+export interface LogoVariationSet {
+  lightBackground?: string; // SVG optimized for light backgrounds
+  darkBackground?: string; // SVG optimized for dark backgrounds
+  monochrome?: string; // Monochrome version (black or white)
+}
+
+export interface LogoVariations {
+  withText?: LogoVariationSet; // Logo variations including text elements
+  iconOnly?: LogoVariationSet; // Icon-only variations without text elements
 }
