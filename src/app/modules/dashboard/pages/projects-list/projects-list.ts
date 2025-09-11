@@ -45,27 +45,40 @@ export class ProjectsList implements OnInit {
         if (user) {
           this.isLoading.set(true);
           this.userProjects$ = this.projectService.getProjects();
-          this.userProjects$.subscribe((projects) => {
-            this.recentProjects.set(
-              projects
-                .slice()
-                .sort((a, b) => {
-                  const dateA = a.createdAt instanceof Date ? a.createdAt : new Date(a.createdAt);
-                  const dateB = b.createdAt instanceof Date ? b.createdAt : new Date(b.createdAt);
-                  return dateB.getTime() - dateA.getTime();
-                })
-                .slice(0, 3)
-            );
-            this.isLoading.set(false);
+          this.userProjects$.subscribe({
+            next: (projects) => {
+              this.recentProjects.set(
+                projects
+                  .slice()
+                  .sort((a, b) => {
+                    const dateA = a.createdAt instanceof Date ? a.createdAt : new Date(a.createdAt);
+                    const dateB = b.createdAt instanceof Date ? b.createdAt : new Date(b.createdAt);
+                    return dateB.getTime() - dateA.getTime();
+                  })
+                  .slice(0, 3)
+              );
+              this.isLoading.set(false);
+            },
+            error: (error) => {
+              console.error('Error fetching projects:', error);
+              this.isLoading.set(false);
+              // If there's an auth error, redirect to login
+              if (error.status === 401 || error.status === 403) {
+                console.log('Authentication error, redirecting to login');
+                this.router.navigate(['/login']);
+              }
+            }
           });
         } else {
-          console.log('User not found');
+          console.log('User not authenticated, redirecting to login');
           this.isLoading.set(false);
+          this.router.navigate(['/login']);
         }
       });
     } catch (error) {
-      console.error('Error fetching projects:', error);
+      console.error('Error in ngOnInit:', error);
       this.isLoading.set(false);
+      this.router.navigate(['/login']);
     }
   }
 

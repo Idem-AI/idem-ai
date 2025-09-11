@@ -1,4 +1,11 @@
-import { Component, signal, OnInit, OnDestroy, inject, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  signal,
+  OnInit,
+  OnDestroy,
+  inject,
+  PLATFORM_ID,
+} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../../../../shared/services/seo.service';
 
@@ -28,7 +35,7 @@ interface DiagramExample {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './diagrams.html',
-  styleUrl: './diagrams.css'
+  styleUrl: './diagrams.css',
 })
 export class Diagrams implements OnInit, OnDestroy {
   // Angular-initialized properties
@@ -44,42 +51,51 @@ export class Diagrams implements OnInit, OnDestroy {
     {
       id: 'use-case',
       title: 'Use Case Diagrams',
-      description: 'Visual representation of system functionality and user interactions',
+      description:
+        'Visual representation of system functionality and user interactions',
       icon: 'pi-users',
       color: '#1447e6',
-      examples: ['User Registration', 'Payment Processing', 'Content Management']
+      examples: [
+        'User Registration',
+        'Payment Processing',
+        'Content Management',
+      ],
     },
     {
       id: 'class',
       title: 'Class Diagrams',
-      description: 'Object-oriented system structure with classes, attributes, and relationships',
+      description:
+        'Object-oriented system structure with classes, attributes, and relationships',
       icon: 'pi-sitemap',
       color: '#22c55e',
-      examples: ['User Management', 'Product Catalog', 'Order System']
+      examples: ['User Management', 'Product Catalog', 'Order System'],
     },
     {
       id: 'sequence',
       title: 'Sequence Diagrams',
-      description: 'Time-ordered interaction between system components and actors',
+      description:
+        'Time-ordered interaction between system components and actors',
       icon: 'pi-arrows-h',
       color: '#d11ec0',
-      examples: ['Login Flow', 'API Calls', 'Data Processing']
+      examples: ['Login Flow', 'API Calls', 'Data Processing'],
     },
     {
       id: 'activity',
       title: 'Activity Diagrams',
-      description: 'Workflow and business process modeling with decision points',
+      description:
+        'Workflow and business process modeling with decision points',
       icon: 'pi-share-alt',
       color: '#f59e0b',
-      examples: ['Order Processing', 'User Onboarding', 'Content Approval']
+      examples: ['Order Processing', 'User Onboarding', 'Content Approval'],
     },
     {
       id: 'component',
       title: 'Component Diagrams',
-      description: 'System architecture showing components and their dependencies',
+      description:
+        'System architecture showing components and their dependencies',
       icon: 'pi-th-large',
       color: '#8b5cf6',
-      examples: ['Microservices', 'Frontend Architecture', 'Database Design']
+      examples: ['Microservices', 'Frontend Architecture', 'Database Design'],
     },
     {
       id: 'deployment',
@@ -87,8 +103,12 @@ export class Diagrams implements OnInit, OnDestroy {
       description: 'Infrastructure and deployment architecture visualization',
       icon: 'pi-cloud',
       color: '#06b6d4',
-      examples: ['Cloud Infrastructure', 'Server Architecture', 'Network Topology']
-    }
+      examples: [
+        'Cloud Infrastructure',
+        'Server Architecture',
+        'Network Topology',
+      ],
+    },
   ]);
 
   protected readonly diagramExamples = signal<DiagramExample[]>([
@@ -101,7 +121,8 @@ export class Diagrams implements OnInit, OnDestroy {
       description: 'User journey from registration to checkout',
       elements: 12,
       connections: 18,
-      previewData: 'User → Browse Products → Add to Cart → Checkout → Payment → Order Confirmation'
+      previewData:
+        'User → Browse Products → Add to Cart → Checkout → Payment → Order Confirmation',
     },
     {
       id: '2',
@@ -112,7 +133,8 @@ export class Diagrams implements OnInit, OnDestroy {
       description: 'Multi-tenant SaaS application structure',
       elements: 8,
       connections: 14,
-      previewData: 'User ← extends → Admin | Product → contains → Features | Subscription → manages → Billing'
+      previewData:
+        'User ← extends → Admin | Product → contains → Features | Subscription → manages → Billing',
     },
     {
       id: '3',
@@ -123,7 +145,8 @@ export class Diagrams implements OnInit, OnDestroy {
       description: 'JWT authentication flow',
       elements: 5,
       connections: 10,
-      previewData: 'Client → Auth Server → Database → Token Generation → Response'
+      previewData:
+        'Client → Auth Server → Database → Token Generation → Response',
     },
     {
       id: '4',
@@ -134,8 +157,9 @@ export class Diagrams implements OnInit, OnDestroy {
       description: 'Patient treatment workflow',
       elements: 15,
       connections: 22,
-      previewData: 'Patient Registration → Triage → Doctor Assignment → Treatment → Billing → Discharge'
-    }
+      previewData:
+        'Patient Registration → Triage → Doctor Assignment → Treatment → Billing → Discharge',
+    },
   ]);
 
   ngOnInit(): void {
@@ -182,33 +206,37 @@ export class Diagrams implements OnInit, OnDestroy {
   private setupSeoForDiagramsSection(): void {
     // Add structured data for diagrams section
     const diagramsStructuredData = {
-      "@context": "https://schema.org",
-      "@type": "Service",
-      "name": "AI UML Diagram Generation",
-      "description": "Automated generation of UML diagrams including use case, class, sequence, activity, component, and deployment diagrams",
-      "provider": {
-        "@type": "Organization",
-        "name": "Idem"
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: 'AI UML Diagram Generation',
+      description:
+        'Automated generation of UML diagrams including use case, class, sequence, activity, component, and deployment diagrams',
+      provider: {
+        '@type': 'Organization',
+        name: 'Idem',
       },
-      "serviceType": "Software Development Tools",
-      "areaServed": "Worldwide",
-      "hasOfferCatalog": {
-        "@type": "OfferCatalog",
-        "name": "UML Diagram Types",
-        "itemListElement": this.diagramTypes().map((diagram, index) => ({
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": diagram.title,
-            "description": diagram.description,
-            "category": "UML Diagram Generation"
-          }
-        }))
-      }
+      serviceType: 'Software Development Tools',
+      areaServed: 'Worldwide',
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'UML Diagram Types',
+        itemListElement: this.diagramTypes().map((diagram, index) => ({
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: diagram.title,
+            description: diagram.description,
+            category: 'UML Diagram Generation',
+          },
+        })),
+      },
     };
 
     // Add structured data to page if not already present
-    if (this.isBrowser() && !document.querySelector('script[data-diagrams-structured-data]')) {
+    if (
+      this.isBrowser() &&
+      !document.querySelector('script[data-diagrams-structured-data]')
+    ) {
       const script = document.createElement('script');
       script.type = 'application/ld+json';
       script.setAttribute('data-diagrams-structured-data', 'true');
@@ -219,10 +247,14 @@ export class Diagrams implements OnInit, OnDestroy {
 
   protected getComplexityColor(complexity: string): string {
     switch (complexity) {
-      case 'Simple': return '#22c55e';
-      case 'Medium': return '#f59e0b';
-      case 'Complex': return '#ef4444';
-      default: return '#6b7280';
+      case 'Simple':
+        return '#22c55e';
+      case 'Medium':
+        return '#f59e0b';
+      case 'Complex':
+        return '#ef4444';
+      default:
+        return '#6b7280';
     }
   }
 }
