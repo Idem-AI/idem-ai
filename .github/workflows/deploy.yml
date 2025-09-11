@@ -33,7 +33,7 @@ jobs:
 
             BRANCH="${{ github.ref_name }}"
             COMMIT_ID="${{ steps.vars.outputs.commit_id }}"
-            IMAGE_NAME="ghcr.io/idem-ia/idem:$COMMIT_ID"
+            IMAGE_NAME="ghcr.io/idem-engine/idem:$COMMIT_ID"
 
             echo "📍 BRANCH: $BRANCH"
             echo "📍 COMMIT_ID: $COMMIT_ID"
@@ -63,7 +63,7 @@ jobs:
             cd /root/Idem-app/idem
 
             COMMIT_ID="${{ needs.build.outputs.commit_id }}"
-            IMAGE_NAME="ghcr.io/idem-ia/idem:$COMMIT_ID"
+            IMAGE_NAME="ghcr.io/idem-engine/idem:$COMMIT_ID"
 
             echo "📤 Push Docker image $IMAGE_NAME"
             docker push $IMAGE_NAME
@@ -86,7 +86,7 @@ jobs:
 
             BRANCH="${{ github.ref_name }}"
             COMMIT_ID="${{ needs.build.outputs.commit_id }}"
-            IMAGE_NAME="ghcr.io/idem-ia/idem:$COMMIT_ID"
+            IMAGE_NAME="ghcr.io/idem-engine/idem:$COMMIT_ID"
 
             if [ "$BRANCH" = "main" ]; then
               COMPOSE_FILE="docker-compose.prod.yml"
