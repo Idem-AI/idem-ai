@@ -238,21 +238,33 @@ export class ProjectDescriptionComponent implements OnInit {
           ? example.substring(0, this.maxCharacters)
           : example;
 
+      // Update project description
       currentProject.description = truncatedExample;
       this.characterCount.set(truncatedExample.length);
       this.textareaContent.set(truncatedExample);
 
-      // Trigger auto-resize for the new content
+      // Update the textarea value in the DOM and trigger change detection
       setTimeout(() => {
         const textarea = document.getElementById(
           'projectDescription'
         ) as HTMLTextAreaElement;
         if (textarea) {
+          // Set the textarea value
+          textarea.value = truncatedExample;
+
+          // Trigger input event to update ngModel and signals
+          const inputEvent = new Event('input', { bubbles: true });
+          textarea.dispatchEvent(inputEvent);
+
+          // Auto-resize the textarea
           textarea.style.height = 'auto';
           const newHeight = Math.min(textarea.scrollHeight, 400);
           textarea.style.height = newHeight + 'px';
         }
       }, 0);
+
+      // Emit the project update
+      this.projectUpdate.emit({ description: truncatedExample });
     }
   }
 
