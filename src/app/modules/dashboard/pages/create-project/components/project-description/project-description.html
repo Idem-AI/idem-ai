@@ -1,5 +1,5 @@
 <section
-  class="flex flex-col min-h-[78vh] items-start justify-center w-full  max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-5xl mx-auto sm:px-6 md:px-8 py-6 sm:py-8 md:py-12"
+  class="flex flex-col min-h-[65vh] items-start justify-center w-full max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-5xl mx-auto sm:px-6 md:px-8 py-6 sm:py-8 md:py-4"
 >
   <!-- Gradient Title -->
   <h1
@@ -78,62 +78,34 @@
     <h3
       class="text-base sm:text-lg font-medium text-gray-300 mb-4 sm:mb-6 text-center sm:text-left"
     >
-      Not Inspiration ?
+      Need Inspiration?
     </h3>
 
-    <!-- Suggestion Pills - Mobile-Optimized Grid -->
-    <div
-      class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 w-full"
-    >
-      <button
-        class="flex items-center justify-center sm:justify-start gap-1 sm:gap-2 px-2 sm:px-4 py-2.5 sm:py-2 glass hover:glass-dark rounded-lg sm:rounded-full text-xs sm:text-sm text-[var(--color-light-text)] transition-all duration-200 min-h-[44px] sm:min-h-auto hover:cursor-pointer"
-        (click)="selectExample('A tipping calculator app with split bill functionality')"
+    <!-- African Projects Section -->
+    <div class="mb-6">
+      <div
+        class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 w-full mb-6"
       >
-        <i class="pi pi-calculator text-xs flex-shrink-0"></i>
-        <span class="truncate text-center sm:text-left"
-          >Tipping Calculator</span
+        @for (project of africanProjectExamples; track project.name) {
+        <button
+          class="flex items-center justify-center sm:justify-start gap-1 sm:gap-2 px-2 sm:px-4 py-2.5 sm:py-2 glass hover:glass-dark rounded-lg sm:rounded-full text-xs sm:text-sm text-[var(--color-light-text)] transition-all duration-200 min-h-[44px] sm:min-h-auto hover:cursor-pointer"
+          (click)="selectExample(project.prompt)"
         >
-      </button>
-
-      <button
-        class="flex items-center justify-center sm:justify-start gap-1 sm:gap-2 px-2 sm:px-4 py-2.5 sm:py-2 glass hover:glass-dark rounded-lg sm:rounded-full text-xs sm:text-sm text-[var(--color-light-text)] transition-all duration-200 min-h-[44px] sm:min-h-auto hover:cursor-pointer"
-        (click)="selectExample('A recipe generator app with ingredient suggestions')"
-      >
-        <i class="pi pi-book text-xs flex-shrink-0"></i>
-        <span class="truncate text-center sm:text-left">Recipe Generator</span>
-      </button>
-
-      <button
-        class="flex items-center justify-center sm:justify-start gap-1 sm:gap-2 px-2 sm:px-4 py-2.5 sm:py-2 glass hover:glass-dark rounded-lg sm:rounded-full text-xs sm:text-sm text-[var(--color-light-text)] transition-all duration-200 min-h-[44px] sm:min-h-auto hover:cursor-pointer"
-        (click)="selectExample('An ERP dashboard for business management')"
-      >
-        <i class="pi pi-chart-bar text-xs flex-shrink-0"></i>
-        <span class="truncate text-center sm:text-left">ERP Dashboard</span>
-      </button>
-
-      <button
-        class="flex items-center justify-center sm:justify-start gap-1 sm:gap-2 px-2 sm:px-4 py-2.5 sm:py-2 glass hover:glass-dark rounded-lg sm:rounded-full text-xs sm:text-sm text-[var(--color-light-text)] transition-all duration-200 min-h-[44px] sm:min-h-auto hover:cursor-pointer"
-        (click)="selectExample('An expense tracker app with budget management')"
-      >
-        <i class="pi pi-wallet text-xs flex-shrink-0"></i>
-        <span class="truncate text-center sm:text-left">Expense Tracker</span>
-      </button>
-
-      <button
-        class="flex items-center justify-center sm:justify-start gap-1 sm:gap-2 px-2 sm:px-4 py-2.5 sm:py-2 glass hover:glass-dark rounded-lg sm:rounded-full text-xs sm:text-sm text-[var(--color-light-text)] transition-all duration-200 min-h-[44px] sm:min-h-auto hover:cursor-pointer"
-        (click)="selectExample('A landing page builder with drag and drop functionality')"
-      >
-        <i class="pi pi-desktop text-xs flex-shrink-0"></i>
-        <span class="truncate text-center sm:text-left">Landing Page</span>
-      </button>
-
-      <button
-        class="flex items-center justify-center sm:justify-start gap-1 sm:gap-2 px-2 sm:px-4 py-2.5 sm:py-2 glass hover:glass-dark rounded-lg sm:rounded-full text-xs sm:text-sm text-[var(--color-light-text)] transition-all duration-200 min-h-[44px] sm:min-h-auto hover:cursor-pointer"
-        (click)="selectExample('I am feeling lucky - surprise me with a random project idea')"
-      >
-        <i class="pi pi-sparkles text-xs flex-shrink-0"></i>
-        <span class="truncate text-center sm:text-left">I'm Feeling Lucky</span>
-      </button>
+          <span class="truncate text-center sm:text-left"
+            >{{ project.name }}</span
+          >
+        </button>
+        }
+        <button
+          class="flex items-center justify-center sm:justify-start gap-1 sm:gap-2 px-2 sm:px-4 py-2.5 sm:py-2 glass hover:glass-dark rounded-lg sm:rounded-full text-xs sm:text-sm text-[var(--color-light-text)] transition-all duration-200 min-h-[44px] sm:min-h-auto hover:cursor-pointer"
+          (click)="selectExample('I am feeling lucky - surprise me with a random project idea')"
+        >
+          <i class="pi pi-sparkles text-xs flex-shrink-0 text-secondary"></i>
+          <span class="truncate text-center sm:text-left"
+            >I'm Feeling Lucky</span
+          >
+        </button>
+      </div>
     </div>
   </div>
 </section>

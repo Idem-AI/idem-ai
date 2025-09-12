@@ -182,6 +182,53 @@ export class ProjectDescriptionComponent implements OnInit {
     }
   }
 
+  // African project examples
+  protected readonly africanProjectExamples = [
+    {
+      name: 'M-Pesa Clone',
+      description:
+        'A mobile money transfer and microfinancing service for African markets',
+      icon: 'pi pi-wallet',
+      prompt:
+        'A mobile money platform like M-Pesa with secure transactions, agent network management, and financial inclusion features for rural communities in Africa',
+    },
+    {
+      name: 'Agri-Tech Platform',
+      description: 'Farm management system for small-scale African farmers',
+      icon: 'pi pi-seedling',
+      prompt:
+        'An agricultural management platform for small-scale African farmers with weather forecasting, crop disease detection using AI, and marketplace for selling produce directly to buyers',
+    },
+    {
+      name: 'Solar Pay-as-you-go',
+      description: 'Solar energy payment and management system',
+      icon: 'pi pi-sun',
+      prompt:
+        'A pay-as-you-go solar energy management system for off-grid communities in Africa with mobile payments, usage tracking, and maintenance alerts',
+    },
+    {
+      name: 'Health Passport',
+      description: 'Digital health records for underserved communities',
+      icon: 'pi pi-heart',
+      prompt:
+        'A digital health passport app for underserved African communities that works offline, stores vaccination records, and connects patients with local healthcare providers',
+    },
+    {
+      name: 'African Artisan Marketplace',
+      description: 'E-commerce platform for African artisans',
+      icon: 'pi pi-shopping-bag',
+      prompt:
+        'An e-commerce platform connecting African artisans directly with global buyers, featuring secure payments, logistics management, and cultural storytelling for each product',
+    },
+    {
+      name: 'EdTech for Low Bandwidth',
+      description: 'Educational platform optimized for low connectivity',
+      icon: 'pi pi-book',
+      prompt:
+        'An educational platform designed for low-bandwidth African regions with offline content caching, SMS-based learning modules, and localized curriculum in multiple African languages',
+    },
+  ];
+
   protected selectExample(example: string): void {
     const currentProject = this.project();
     if (currentProject) {

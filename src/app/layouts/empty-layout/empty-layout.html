@@ -1,6 +1,6 @@
 <!-- Mobile Drawer Backdrop -->
 @if (isMobileDrawerOpen()) {
-<div 
+<div
   class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
   (click)="toggleMobileDrawer()"
 ></div>
@@ -13,16 +13,6 @@
   <div class="flex items-center justify-between">
     <!-- Left Section with Logo and Mobile Menu Button -->
     <div class="flex items-center">
-      <!-- Mobile menu button -->
-      <button
-        type="button"
-        class="inline-flex items-center p-2 text-sm text-gray-400 rounded-lg md:hidden hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-primary/50 mr-2 transition-all duration-200"
-        (click)="toggleMobileDrawer()"
-      >
-        <span class="sr-only">Open mobile menu</span>
-        <i class="pi pi-bars text-lg"></i>
-      </button>
-
       <!-- Logo -->
       <div class="flex-shrink-0 flex items-center">
         <a
@@ -69,7 +59,7 @@
         <!-- User Dropdown -->
         @if (isDropdownOpen()) {
         <div
-          class="absolute right-0 mt-2 w-56 glass  border border-white/10 rounded-xl shadow-xl z-50 py-2"
+          class="absolute right-0 mt-2 w-56 bg-bg-dark border border-white/10 rounded-xl shadow-xl z-50 py-2"
         >
           <div class="px-4 py-3 border-b border-white/10">
             <p class="text-white font-medium truncate">
@@ -118,7 +108,7 @@
         }
       </div>
       } @else {
-      <div class="w-10 h-10 rounded-full bg-gray-600 animate-pulse"></div>
+      
       }
     </div>
   </div>
