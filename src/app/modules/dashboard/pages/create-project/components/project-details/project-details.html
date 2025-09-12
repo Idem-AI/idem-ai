@@ -48,7 +48,7 @@
           >
             Project Type
           </label>
-          <div class="card flex justify-start w-full">
+          <div class="card flex justify-start w-full z-50">
             <p-select
               [options]="groupedProjectTypes()"
               [ngModel]="project()!.type"
@@ -56,7 +56,7 @@
               placeholder="Select a type"
               [editable]="false"
               optionLabel="name"
-              styleClass="w-full text-sm sm:text-base"
+              class="w-full text-sm sm:text-base z-50"
             />
           </div>
         </div>
@@ -84,9 +84,9 @@
                 [ngModel]="project()!.scope"
                 (ngModelChange)="onScopeChange($event)"
                 placeholder="Select a scope"
-                [editable]="true"
+                [editable]="false"
                 optionLabel="name"
-                styleClass="w-full text-sm sm:text-base"
+                class="w-full text-sm sm:text-base"
               />
             </div>
           </div>
@@ -105,9 +105,9 @@
                 [ngModel]="project()!.targets"
                 (ngModelChange)="onTargetsChange($event)"
                 placeholder="Select a target"
-                [editable]="true"
+                [editable]="false"
                 optionLabel="name"
-                styleClass="w-full text-sm sm:text-base"
+                class="w-full text-sm sm:text-base"
               />
             </div>
           </div>

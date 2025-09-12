@@ -53,12 +53,12 @@ export const MyPreset = definePreset(Aura, {
     // Accordion styling aligned with project glass UI and primary blue
     accordion: {
       root: {
-        transitionDuration: '{transition.duration}'
+        transitionDuration: '{transition.duration}',
       },
       panel: {
         // subtle bottom divider between panels
         borderWidth: '0 0 1px 0',
-        borderColor: '{content.border.color}'
+        borderColor: '{content.border.color}',
       },
       header: {
         color: '{text.muted.color}',
@@ -79,29 +79,72 @@ export const MyPreset = definePreset(Aura, {
           style: '{focus.ring.style}',
           color: '{primary.color}',
           offset: '2px',
-          shadow: '{focus.ring.shadow}'
+          shadow: '{focus.ring.shadow}',
         },
         toggleIcon: {
           color: '{text.muted.color}',
           hoverColor: '{text.color}',
           activeColor: '{text.color}',
-          activeHoverColor: '{text.color}'
+          activeHoverColor: '{text.color}',
         },
         first: {
           topBorderRadius: '1.25rem',
-          borderWidth: '1px'
+          borderWidth: '1px',
         },
         last: {
           bottomBorderRadius: '1.25rem',
-          activeBottomBorderRadius: '1.25rem'
-        }
+          activeBottomBorderRadius: '1.25rem',
+        },
       },
       content: {
         borderColor: '{content.border.color}',
         background: 'rgba(15, 20, 27, 0.7)',
         color: '{text.color}',
-        padding: '0 1rem 1rem 1rem'
-      }
-    }
-  }
+        padding: '0 1rem 1rem 1rem',
+      },
+    },
+    select: {
+      root: {
+        background: 'rgba(15, 20, 27, 0.7)',
+        borderColor: '{content.border.color}',
+        color: '{text.color}',
+        borderRadius: '0.5rem',
+        paddingX: '0.75rem',
+        paddingY: '0.5rem',
+        transitionDuration: '{transition.duration}',
+        hoverBorderColor: '{primary.color}',
+        focusRing: {
+          width: '{focus.ring.width}',
+          style: '{focus.ring.style}',
+          color: '{primary.color}',
+          offset: '0px',
+          shadow: 'none',
+        },
+      },
+      overlay: {
+        background: 'rgba(20, 25, 32, 0.95)',
+        borderColor: '{content.border.color}',
+        borderRadius: '0.5rem',
+        color: '{text.color}',
+        shadow: 'none',
+      },
+      list: {
+        padding: '0.5rem',
+        gap: '2px',
+      },
+      option: {
+        padding: '0.5rem 0.75rem',
+        borderRadius: '0.375rem',
+        color: '{text.muted.color}',
+        focusBackground: 'rgba(255, 255, 255, 0.07)',
+        selectedBackground: '{highlight.background}',
+        selectedFocusBackground: '{highlight.focus.background}',
+        selectedColor: '{highlight.color}',
+        selectedFocusColor: '{highlight.focus.color}',
+      },
+      dropdown: {
+        color: '{text.muted.color}',
+      },
+    },
+  },
 });

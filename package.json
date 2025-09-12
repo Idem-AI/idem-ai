@@ -42,7 +42,7 @@
     "openai": "^4.89.0",
     "postcss": "^8.5.3",
     "primeicons": "^7.0.0",
-    "primeng": "^20.0.0",
+    "primeng": "^20.1.1",
     "prismjs": "^1.30.0",
     "rxjs": "~7.8.0",
     "tailwindcss": "^4.0.15",
