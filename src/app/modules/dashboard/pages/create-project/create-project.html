@@ -22,28 +22,6 @@
 } @else {
 <!-- Main Content -->
 <div class="w-full min-h-screen">
-  <!-- Progress Bar -->
-  <div
-    class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700"
-  >
-    <div class="max-w-4xl mx-auto px-4 py-3">
-      <div class="flex items-center justify-between mb-2">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-          {{ currentStep().title }}
-        </h2>
-        <span class="text-sm text-gray-500 dark:text-gray-400"
-          >Step {{ currentStepIndex() + 1 }} of {{ steps.length }}</span
-        >
-      </div>
-      <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-        <div
-          class="bg-gradient-to-r from-primary to-secondary h-2 rounded-full transition-all duration-300"
-          [style.width.%]="((currentStepIndex() + 1) / steps.length) * 100"
-        ></div>
-      </div>
-    </div>
-  </div>
-
   <!-- Content Area -->
   <div class="pt-24 pb-24">
     <!-- Step Content -->
