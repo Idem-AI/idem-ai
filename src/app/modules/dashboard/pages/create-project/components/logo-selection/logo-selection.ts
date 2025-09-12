@@ -236,6 +236,13 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
     }, 15000); // Update every 15 seconds
   }
 
+  protected onCarouselItemChanged(logo: LogoModel): void {
+    // Auto-select the logo when carousel navigation changes on mobile
+    if (logo && logo.id) {
+      this.selectLogo(logo.id);
+    }
+  }
+
   /**
    * Method to retry logo generation in case of failure
    */

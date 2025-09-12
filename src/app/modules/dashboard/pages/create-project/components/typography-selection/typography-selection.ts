@@ -91,6 +91,13 @@ export class TypographySelectionComponent implements OnInit, OnDestroy {
     this.previousStep.emit();
   }
 
+  protected onCarouselItemChanged(typography: TypographyModel): void {
+    // Auto-select the typography when carousel navigation changes on mobile
+    if (typography && typography.id) {
+      this.selectTypography(typography.id);
+    }
+  }
+
   // Track function for carousel
   protected readonly trackTypography = (index: number, typography: TypographyModel): string => {
     return typography.id || `typography-${index}`;

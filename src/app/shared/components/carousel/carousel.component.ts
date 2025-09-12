@@ -99,6 +99,7 @@ export class CarouselComponent<T> implements OnInit, OnDestroy {
 
   @Output() readonly itemSelected = new EventEmitter<T>();
   @Output() readonly slideChanged = new EventEmitter<number>();
+  @Output() readonly currentItemChanged = new EventEmitter<T>();
 
   @ContentChild(TemplateRef) itemTemplate!: TemplateRef<any>;
   @ViewChild('carouselContainer') carouselContainer!: ElementRef;
@@ -132,6 +133,11 @@ export class CarouselComponent<T> implements OnInit, OnDestroy {
     if (index >= 0 && index < this.items.length) {
       this.currentIndex.set(index);
       this.slideChanged.emit(index);
+      // Emit the current item for auto-selection on mobile
+      const currentItem = this.items[index];
+      if (currentItem) {
+        this.currentItemChanged.emit(currentItem);
+      }
     }
   }
 

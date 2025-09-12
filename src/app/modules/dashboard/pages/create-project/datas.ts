@@ -18,6 +18,7 @@ export interface SelectElement {
 
 export default class CreateProjectDatas {
   static groupedProjectTypes: SelectElement[] = [
+    { name: 'Enterprise creation', code: 'enterprise' },
     { name: 'Web Application', code: 'web' },
     { name: 'Mobile Application', code: 'mobile' },
     { name: 'IoT', code: 'iot' },

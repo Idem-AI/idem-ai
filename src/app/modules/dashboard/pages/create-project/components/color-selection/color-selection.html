@@ -160,6 +160,7 @@
       [showDots]="true"
       [showArrows]="true"
       [infinite]="false"
+      (currentItemChanged)="onCarouselItemChanged($event)"
     >
       <ng-template let-color let-index="index" let-isSelected="isSelected">
         <div

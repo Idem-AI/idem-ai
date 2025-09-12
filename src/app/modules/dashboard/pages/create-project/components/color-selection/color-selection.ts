@@ -184,6 +184,13 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
     this.previousStep.emit();
   }
 
+  protected onCarouselItemChanged(color: ColorModel): void {
+    // Auto-select the color when carousel navigation changes on mobile
+    if (color && color.id) {
+      this.selectColor(color.id);
+    }
+  }
+
   // Track function for carousel
   protected readonly trackColor = (index: number, color: ColorModel): string => {
     return color.id || `color-${index}`;
