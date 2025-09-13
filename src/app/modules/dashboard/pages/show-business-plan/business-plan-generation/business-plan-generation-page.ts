@@ -14,7 +14,7 @@ import { BusinessPlanGenerationComponent } from '../components/business-plan-gen
   standalone: true,
   imports: [BusinessPlanGenerationComponent],
   template: `
-    <div class="w-full min-h-screen p-6 rounded-2xl relative">
+    <div class="w-full min-h-screen sm:p-6 rounded-2xl relative">
       @if(projectId()) {
       <app-business-plan-generation
         (businessPlanGenerated)="onBusinessPlanGenerated($event)"

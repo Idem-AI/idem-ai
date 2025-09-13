@@ -164,7 +164,7 @@
     >
       <ng-template let-color let-index="index" let-isSelected="isSelected">
         <div
-          class="p-4 sm:p-6 border-2 border-transparent glass hover:border-gray-600 rounded-xl hover:shadow-lg hover:shadow-primary/30 hover:bg-gray-900/50 transition-all duration-300 cursor-pointer group relative overflow-hidden hover:-translate-y-1"
+          class="p-4 sm:p-6 border-2 border-transparent glass rounded-xl hover:shadow-lg hover:shadow-primary/30 hover:bg-gray-900/50 transition-all duration-300 cursor-pointer group relative hover:-translate-y-1"
           [style.boxShadow]="selectedColorId() === color.id ? '0 0 15px ' + color.colors.primary : 'none'"
           [class.border-primary]="selectedColorId() === color.id"
           [class.bg-gray-900]="selectedColorId() === color.id"

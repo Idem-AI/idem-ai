@@ -89,7 +89,7 @@ export class AdditionalInfoFormComponent implements OnInit {
       city: ['', [Validators.required]],
       country: ['', [Validators.required]],
       zipCode: ['', [Validators.required]],
-      teamMembers: this.fb.array([this.createTeamMemberForm()]),
+      teamMembers: this.fb.array([]), // Start with empty array
     });
   }
 
@@ -162,9 +162,8 @@ export class AdditionalInfoFormComponent implements OnInit {
         });
         teamMembersArray.push(memberForm);
       });
-    } else {
-      teamMembersArray.push(this.createTeamMemberForm());
     }
+    // No else clause - keep team members array empty if no existing data
   }
 
   protected addTeamMember(): void {
@@ -172,9 +171,7 @@ export class AdditionalInfoFormComponent implements OnInit {
   }
 
   protected removeTeamMember(index: number): void {
-    if (this.teamMembersArray().length > 1) {
-      this.teamMembersArray().removeAt(index);
-    }
+    this.teamMembersArray().removeAt(index);
   }
 
   protected async onFileSelect(event: any, memberIndex: number): Promise<void> {
