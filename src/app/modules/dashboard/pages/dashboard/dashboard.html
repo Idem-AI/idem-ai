@@ -4,251 +4,318 @@
   <p class="text-gray-400 text-xl">Loading project dashboard...</p>
 </div>
 } @else if(error()){
-<div
-  class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md shadow-md"
-  role="alert"
->
-  <p class="font-bold">Error</p>
-  <p>{{ error() }}</p>
+<div class="glass-card p-6 mx-4 my-8 border-red-500/20">
+  <div class="flex items-center space-x-3">
+    <i class="pi pi-exclamation-triangle text-red-400 text-2xl"></i>
+    <div>
+      <p class="font-bold text-red-300">Error</p>
+      <p class="text-red-200">{{ error() }}</p>
+    </div>
+  </div>
 </div>
 } @else {
-<div class="p-4 sm:p-6 lg:p-8 text-gray-300 min-h-screen">
+<div class="min-h-screen p-4 sm:p-6 lg:p-8">
   @if (project(); as currentProject) {
-  <div class="space-y-6 sm:space-y-8">
-    <!-- Project Header -->
-    <header class="bg-gray-900 shadow-md rounded-lg p-4 sm:p-6">
-      <div class="flex flex-col lg:flex-row justify-between items-start gap-4">
-        <div class="flex-1 min-w-0">
-          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-100 truncate">
-            {{ currentProject.name }}
-          </h1>
-          <p class="text-xs sm:text-sm text-gray-400 mt-1 flex flex-col sm:flex-row sm:gap-2">
-            <span>Created: {{ currentProject.createdAt | date : "mediumDate" }}</span>
-            <span class="hidden sm:inline">|</span>
-            <span>Last Updated: {{ currentProject.updatedAt | date : "mediumDate" }}</span>
-          </p>
-        </div>
-        <div class="w-full lg:w-auto">
-          <button
-            class="w-full lg:w-auto inner-button text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-150 ease-in-out text-sm sm:text-base"
-          >
-            Project Settings (Soon)
-          </button>
-        </div>
-      </div>
-    </header>
 
-    <!-- Project Vitals -->
-    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-      <div class="bg-gray-900 shadow-md rounded-lg p-4 sm:p-6">
-        <h2 class="text-lg sm:text-xl font-semibold text-gray-300 mb-3">Description</h2>
-        <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
+  <!-- Project Header -->
+  <header class="glass-card p-6 mb-8">
+    <div class="flex flex-col lg:flex-row justify-between items-start gap-6">
+      <div class="flex-1 min-w-0">
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-2">
+          {{ currentProject.name }}
+        </h1>
+        <p class="text-gray-300 text-lg mb-4">
           {{ currentProject.description || "No description provided." }}
         </p>
+        <div class="flex flex-wrap gap-4 text-sm text-gray-400">
+          <span class="flex items-center space-x-2">
+            <i class="pi pi-calendar"></i>
+            <span
+              >Created: {{ currentProject.createdAt | date : "mediumDate"
+              }}</span
+            >
+          </span>
+          <span class="flex items-center space-x-2">
+            <i class="pi pi-clock"></i>
+            <span
+              >Updated: {{ currentProject.updatedAt | date : "mediumDate"
+              }}</span
+            >
+          </span>
+        </div>
       </div>
-      <div class="bg-gray-900 shadow-md rounded-lg p-4 sm:p-6">
-        <h2 class="text-lg sm:text-xl font-semibold text-gray-300 mb-3">Scope</h2>
-        <p class="text-gray-400 text-sm sm:text-base">
-          {{ currentProject.scope || "Not specified." }}
-        </p>
-      </div>
-      <div class="bg-gray-900 shadow-md rounded-lg p-4 sm:p-6">
-        <h2 class="text-lg sm:text-xl font-semibold text-gray-300 mb-3">
-          Target Audience
-        </h2>
-        <p class="text-gray-400 text-sm sm:text-base">
-          {{ currentProject.targets || "Not specified." }}
-        </p>
-      </div>
-      <div class="bg-gray-900 shadow-md rounded-lg p-4 sm:p-6">
-        <h2 class="text-lg sm:text-xl font-semibold text-gray-300 mb-3">Budget</h2>
-        <p class="text-gray-400 text-sm sm:text-base">
-          {{ currentProject.budgetIntervals || "Not specified." }}
-        </p>
-      </div>
-      <div class="bg-gray-900 shadow-md rounded-lg p-4 sm:p-6">
-        <h2 class="text-lg sm:text-xl font-semibold text-gray-300 mb-3">Team Size</h2>
-        <p class="text-gray-400 text-sm sm:text-base">
-          {{ currentProject.teamSize || "Not specified." }}
-        </p>
-      </div>
-    </section>
+      <button class="inner-button">
+        <i class="pi pi-cog mr-2"></i>
+        Project Settings
+      </button>
+    </div>
+  </header>
 
-    <!-- Development Lifecycle Stages -->
-    <section class="bg-gray-900 shadow-md rounded-lg p-4 sm:p-6">
-      <h2 class="text-xl sm:text-2xl font-semibold text-gray-100 mb-4 sm:mb-6">
-        Software Development Lifecycle
+  <!-- Idem Platform Overview -->
+  <section class="mb-12">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-bold text-white mb-4">
+        Complete Business & Software Lifecycle
       </h2>
-      <div class="space-y-4 sm:space-y-6">
-        <div>
-          <h3 class="text-xl font-medium text-indigo-400 mb-2">
-            Analysis & Business Plan
-          </h3>
-          <div class="pl-4 border-l-2 border-indigo-600 space-y-3">
-            <p class="text-sm text-gray-400">
-              <span class="font-semibold">Constraints:</span>
-              @if (currentProject.constraints &&
-              currentProject.constraints.length > 0) {
-              <span class="ml-1"
-                >{{ currentProject.constraints.join(", ") }}</span
-              >
-              } @else {
-              <span class="ml-1 text-gray-500">None specified.</span>
-              }
-            </p>
-            <p class="text-sm text-gray-400">
-              <span class="font-semibold">Selected Phases:</span>
-              @if (currentProject.selectedPhases &&
-              currentProject.selectedPhases.length > 0) {
-              <span class="ml-1"
-                >{{ currentProject.selectedPhases.join(", ") }}</span
-              >
-              } @else {
-              <span class="ml-1 text-gray-500">None specified.</span>
-              }
-            </p>
-            @if (currentProject.analysisResultModel &&
-            currentProject.analysisResultModel.businessPlan) {
-            <a
-              [routerLink]="['/console/business-plan', currentProject.id]"
-              class="text-indigo-600 hover:text-indigo-800 hover:underline text-sm font-medium"
-            >
-              View Business Plan &rarr;
-            </a>
-            }
-          </div>
-        </div>
+      <p class="text-xl text-gray-300 max-w-4xl mx-auto">
+        Idem guides you through every step of your project, from initial
+        branding to final deployment. Track your progress and access each phase
+        of development.
+      </p>
+    </div>
 
-        <!-- Design -->
-        <div>
-          <h3 class="text-xl font-medium text-teal-400 mb-2">Design</h3>
-          <div class="pl-4 border-l-2 border-teal-600 space-y-3">
-            @if (currentProject.analysisResultModel &&
-            currentProject.analysisResultModel.branding &&
-            currentProject.analysisResultModel.branding.logo &&
-            currentProject.analysisResultModel.branding.logo.svg) {
-            <div class="mb-2">
-              <span class="font-semibold text-sm text-gray-400"
-                >Selected Logo:</span
-              >
-              <img src="{{ currentProject.analysisResultModel.branding.logo.svg }}" type="image/svg+xml">
-            </div>
-            }
-            <a
-              [routerLink]="['/console/branding', currentProject.id]"
-              class="text-teal-600 hover:text-teal-800 hover:underline text-sm font-medium"
-            >
-              View Full Branding Guidelines &rarr;
-            </a>
-            @if (currentProject.analysisResultModel &&
-            currentProject.analysisResultModel.design) {
-            <a
-              [routerLink]="['/console/diagrams', currentProject.id]"
-              class="text-teal-600 hover:text-teal-800 hover:underline text-sm font-medium ml-4"
-            >
-              View Design Diagrams &rarr;
-            </a>
-            }
+    <!-- Lifecycle Flow -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+      <!-- 1. Branding -->
+      <div
+        class="glass-card p-6 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl group"
+        [routerLink]="['/console/branding']"
+      >
+        <div class="text-center">
+          <div
+            class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-purple-500/30"
+          >
+            <i class="pi pi-palette text-white text-2xl"></i>
           </div>
-        </div>
+          <h3 class="text-xl font-semibold text-white mb-2">Branding</h3>
+          <p class="text-gray-300 text-sm mb-4">
+            Create your brand identity, logos, and visual guidelines
+          </p>
 
-        <!-- Development -->
-        <div>
-          <h3 class="text-xl font-medium text-sky-400 mb-2">Development</h3>
-          <div class="pl-4 border-l-2 border-sky-600 space-y-3">
-            @if (currentProject.analysisResultModel &&
-            currentProject.analysisResultModel.development) {
-            <p class="text-sm text-gray-400">
-              <span class="font-semibold">Summary:</span>
-              <span class="ml-1"
-                >{{ currentProject.analysisResultModel.development }}</span
-              >
-            </p>
-            } @else {
-            <p class="text-sm text-gray-500">
-              No development summary available.
-            </p>
-            }
-            <a
-              [routerLink]="['/console/development', currentProject.id]"
-              class="text-sky-600 hover:text-sky-800 hover:underline text-sm font-medium"
-            >
-              View Development Details &rarr;
-            </a>
+          @if (currentProject.analysisResultModel!.branding) {
+          <div
+            class="flex items-center justify-center space-x-2 text-green-400 text-sm"
+          >
+            <i class="pi pi-check-circle"></i>
+            <span>Completed</span>
           </div>
-        </div>
-
-        <!-- Testing -->
-        <div>
-          <h3 class="text-xl font-medium text-amber-400 mb-2">Testing</h3>
-          <div class="pl-4 border-l-2 border-amber-600 space-y-3">
-            @if (currentProject.analysisResultModel &&
-            currentProject.analysisResultModel.testing) {
-            <p class="text-sm text-gray-400">
-              <span class="font-semibold">Summary:</span>
-              <span class="ml-1"
-                >{{ currentProject.analysisResultModel.testing }}</span
-              >
-            </p>
-            } @else {
-            <p class="text-sm text-gray-500">No testing summary available.</p>
-            }
-            <a
-              [routerLink]="['/console/tests', currentProject.id]"
-              class="text-amber-600 hover:text-amber-800 hover:underline text-sm font-medium"
-            >
-              View Testing Details &rarr;
-            </a>
+          } @else {
+          <div
+            class="flex items-center justify-center space-x-2 text-gray-400 text-sm"
+          >
+            <i class="pi pi-circle"></i>
+            <span>Not Started</span>
           </div>
+          }
         </div>
+      </div>
 
-        <!-- Deployment & Landing -->
-        <div>
-          <h3 class="text-xl font-medium text-lime-500 mb-2">
-            Deployment & Landing Page
-          </h3>
-          <div class="pl-4 border-l-2 border-lime-600 space-y-3">
-            @if (currentProject.analysisResultModel &&
-            currentProject.analysisResultModel.landing) {
-            <a
-              [routerLink]="['/console/landing', currentProject.id]"
-              class="text-lime-600 hover:text-lime-800 hover:underline text-sm font-medium"
-            >
-              View Landing Page Details &rarr;
-            </a>
-            } @else {
-            <p class="text-sm text-gray-500">
-              Landing page details not yet available.
-            </p>
-            }
+      <!-- 2. Business Plan -->
+      <div
+        class="glass-card p-6 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl group"
+        [routerLink]="['/console/business-plan']"
+      >
+        <div class="text-center">
+          <div
+            class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-blue-500/30"
+          >
+            <i class="pi pi-chart-line text-white text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-2">Business Plan</h3>
+          <p class="text-gray-300 text-sm mb-4">
+            Develop comprehensive business strategy and planning
+          </p>
+
+          @if (currentProject.analysisResultModel?.businessPlan) {
+          <div
+            class="flex items-center justify-center space-x-2 text-green-400 text-sm"
+          >
+            <i class="pi pi-check-circle"></i>
+            <span>Completed</span>
+          </div>
+          } @else {
+          <div
+            class="flex items-center justify-center space-x-2 text-gray-400 text-sm"
+          >
+            <i class="pi pi-circle"></i>
+            <span>Not Started</span>
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- 3. System Analysis -->
+      <div
+        class="glass-card p-6 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl group"
+        [routerLink]="['/console/diagrams']"
+      >
+        <div class="text-center">
+          <div
+            class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-emerald-500/30"
+          >
+            <i class="pi pi-sitemap text-white text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-2">System Analysis</h3>
+          <p class="text-gray-300 text-sm mb-4">
+            Generate UML diagrams and system architecture
+          </p>
+
+          @if (currentProject.analysisResultModel?.design) {
+          <div
+            class="flex items-center justify-center space-x-2 text-green-400 text-sm"
+          >
+            <i class="pi pi-check-circle"></i>
+            <span>Completed</span>
+          </div>
+          } @else {
+          <div
+            class="flex items-center justify-center space-x-2 text-gray-400 text-sm"
+          >
+            <i class="pi pi-circle"></i>
+            <span>Not Started</span>
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- 4. Application Development -->
+      <div
+        class="glass-card p-6 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl group"
+        [routerLink]="['/console/development']"
+      >
+        <div class="text-center">
+          <div
+            class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-orange-500/30"
+          >
+            <i class="pi pi-code text-white text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-2">Development</h3>
+          <p class="text-gray-300 text-sm mb-4">
+            Configure and generate your application code
+          </p>
+
+          @if (currentProject.analysisResultModel?.development) {
+          <div
+            class="flex items-center justify-center space-x-2 text-green-400 text-sm"
+          >
+            <i class="pi pi-check-circle"></i>
+            <span>Completed</span>
+          </div>
+          } @else {
+          <div
+            class="flex items-center justify-center space-x-2 text-gray-400 text-sm"
+          >
+            <i class="pi pi-circle"></i>
+            <span>Not Started</span>
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- 5. Deployment -->
+      <div
+        class="glass-card p-6 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl group"
+        [routerLink]="['/console/deployment']"
+      >
+        <div class="text-center">
+          <div
+            class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-indigo-500/30"
+          >
+            <i class="pi pi-cloud-upload text-white text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-2">Deployment</h3>
+          <p class="text-gray-300 text-sm mb-4">
+            Deploy your application to the cloud
+          </p>
+
+          <div
+            class="flex items-center justify-center space-x-2 text-gray-400 text-sm"
+          >
+            <i class="pi pi-circle"></i>
+            <span>Not Started</span>
           </div>
         </div>
       </div>
-    </section>
+    </div>
 
-    <!-- Recommendations / Next Steps -->
-    <section class="bg-gray-900 shadow-md rounded-lg p-6">
-      <h2 class="text-xl font-semibold text-gray-300 mb-3">Recommendations</h2>
-      <ul class="list-disc list-inside text-gray-400 text-sm space-y-1">
-        <li>Review and finalize branding guidelines.</li>
-        <li>Define detailed technical architecture if not already done.</li>
-        <li>Plan initial development sprints and tasks.</li>
-        <li>Set up testing environments and strategy.</li>
-      </ul>
-    </section>
-  </div>
-  } @else if (error()) {
-  <div
-    class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md shadow-md"
-    role="alert"
-  >
-    <p class="font-bold">Error</p>
-    <p>{{ error() }}</p>
-  </div>
+    <!-- Progress Flow Indicator -->
+    <div class="flex justify-center mb-8">
+      <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-2">
+          <div class="w-3 h-3 rounded-full bg-green-500"></div>
+          <span class="text-sm text-gray-300">Completed</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <div class="w-3 h-3 rounded-full border-2 border-gray-400"></div>
+          <span class="text-sm text-gray-300">Not Started</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Project Details -->
+  <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <div class="glass-card p-6">
+      <div class="flex items-center space-x-3 mb-4">
+        <i class="pi pi-users text-blue-400 text-xl"></i>
+        <h3 class="text-lg font-semibold text-white">Target Audience</h3>
+      </div>
+      <p class="text-gray-300">{{ currentProject.targets.name }}</p>
+    </div>
+
+    <div class="glass-card p-6">
+      <div class="flex items-center space-x-3 mb-4">
+        <i class="pi pi-users text-purple-400 text-xl"></i>
+        <h3 class="text-lg font-semibold text-white">Team Size</h3>
+      </div>
+      <p class="text-gray-300">
+        {{ currentProject.teamSize || "Not specified" }}
+      </p>
+    </div>
+
+    <div class="glass-card p-6">
+      <div class="flex items-center space-x-3 mb-4">
+        <i class="pi pi-flag text-orange-400 text-xl"></i>
+        <h3 class="text-lg font-semibold text-white">Scope</h3>
+      </div>
+      <p class="text-gray-300">{{ currentProject.scope || "Not specified" }}</p>
+    </div>
+  </section>
+
+  <!-- Quick Actions -->
+  <section class="glass-card p-6">
+    <h3
+      class="text-xl font-semibold text-white mb-6 flex items-center space-x-2"
+    >
+      <i class="pi pi-bolt text-yellow-400"></i>
+      <span>Quick Actions</span>
+    </h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <button
+        class="outer-button flex items-center justify-center space-x-2 py-3"
+        [routerLink]="['/console/projects/create']"
+      >
+        <i class="pi pi-plus"></i>
+        <span>New Project</span>
+      </button>
+      <button
+        class="outer-button flex items-center justify-center space-x-2 py-3"
+        [routerLink]="['/console/projects']"
+      >
+        <i class="pi pi-list"></i>
+        <span>All Projects</span>
+      </button>
+      <button
+        class="outer-button flex items-center justify-center space-x-2 py-3"
+      >
+        <i class="pi pi-download"></i>
+        <span>Export Data</span>
+      </button>
+      <button
+        class="outer-button flex items-center justify-center space-x-2 py-3"
+      >
+        <i class="pi pi-share-alt"></i>
+        <span>Share Project</span>
+      </button>
+    </div>
+  </section>
+
   } @else {
   <div class="flex justify-center items-center h-64">
-    <p class="text-gray-400 text-xl">No project data to display.</p>
-    <!-- This case should ideally be covered by the error() check if projectId was missing or project not found -->
+    <div class="glass-card p-8 text-center">
+      <i class="pi pi-exclamation-circle text-gray-400 text-4xl mb-4"></i>
+      <p class="text-gray-400 text-xl">No project data to display</p>
+    </div>
   </div>
   }
 </div>
