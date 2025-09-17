@@ -1,6 +1,7 @@
 import { Component, signal, OnInit, inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../../../../shared/services/seo.service';
+import { RouterLink } from '@angular/router';
 
 interface LogoExample {
   id: string;
@@ -15,7 +16,7 @@ interface LogoExample {
 @Component({
   selector: 'app-logos-showcase',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './logos-showcase.html',
   styleUrl: './logos-showcase.css',
 })
