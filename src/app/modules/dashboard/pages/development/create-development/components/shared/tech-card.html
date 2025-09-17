@@ -1,9 +1,23 @@
 <div
-  class="template-card backdrop-blur-md bg-gray-900/40 rounded-xl border border-gray-800/50 p-3 md:p-6 flex flex-col hover:border-primary/50 hover:-translate-y-1 transition-all cursor-pointer shadow-lg relative glass"
+  class="template-card backdrop-blur-md rounded-xl border p-3 md:p-6 flex flex-col transition-all shadow-lg relative glass"
+  [class.bg-gray-900]="tech().isAvailable"
+  [class.bg-gray-900]="!tech().isAvailable"
+  [class.border-gray-800]="tech().isAvailable"
+  [class.border-gray-700]="!tech().isAvailable"
+  [class.hover:border-primary]="tech().isAvailable"
+  [class.hover:-translate-y-1]="tech().isAvailable"
+  [class.cursor-pointer]="tech().isAvailable"
+  [class.cursor-not-allowed]="!tech().isAvailable"
+  [class.opacity-50]="!tech().isAvailable"
 >
   <!-- Card Header -->
   <div class="flex items-start justify-between mb-2 md:mb-4">
-    <div class="flex items-center cursor-pointer" (click)="selectTech()">
+    <div
+      class="flex items-center"
+      [class.cursor-pointer]="tech().isAvailable"
+      [class.cursor-not-allowed]="!tech().isAvailable"
+      (click)="selectTech()"
+    >
       <!-- Icon - smaller on mobile -->
       <div
         class="w-6 h-6 md:w-12 md:h-12 rounded-xl flex items-center justify-center mr-2 md:mr-4 text-lg md:text-2xl"
@@ -16,15 +30,26 @@
           class="w-6 h-6 md:w-12 md:h-12 rounded-lg mr-1 md:mr-3"
         />
       </div>
-      <h4 class="text-sm md:text-xl font-semibold text-white leading-tight">
-        {{ tech()!.name }}
-      </h4>
+      <div class="flex flex-col">
+        <h4 class="text-sm md:text-xl font-semibold text-white leading-tight">
+          {{ tech()!.name }}
+        </h4>
+        @if (!tech().isAvailable) {
+        <span class="text-xs text-orange-400 font-medium mt-1"
+          >Available Soon</span
+        >
+        }
+      </div>
     </div>
     <div
-      class="w-5 h-5 md:w-6 md:h-6 rounded-full border-2 flex items-center justify-center cursor-pointer flex-shrink-0"
-      [class.bg-primary]="selected()"
-      [class.border-primary]="selected()"
-      [class.border-gray-500]="!selected()"
+      class="w-5 h-5 md:w-6 md:h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0"
+      [class.bg-primary]="selected() && tech().isAvailable"
+      [class.border-primary]="selected() && tech().isAvailable"
+      [class.border-gray-500]="!selected() && tech().isAvailable"
+      [class.border-gray-600]="!tech().isAvailable"
+      [class.bg-gray-700]="!tech().isAvailable"
+      [class.cursor-pointer]="tech().isAvailable"
+      [class.cursor-not-allowed]="!tech().isAvailable"
       (click)="selectTech()"
     >
       @if (selected()) {
@@ -35,7 +60,11 @@
 
   <!-- Description - hidden on mobile -->
   <p
-    class="text-gray-300 text-sm mb-4 cursor-pointer flex-grow hidden md:block"
+    class="text-sm mb-4 flex-grow hidden md:block"
+    [class.text-gray-300]="tech().isAvailable"
+    [class.text-gray-500]="!tech().isAvailable"
+    [class.cursor-pointer]="tech().isAvailable"
+    [class.cursor-not-allowed]="!tech().isAvailable"
     (click)="selectTech()"
   >
     {{ tech()!.description }}
@@ -43,11 +72,18 @@
 
   <!-- Badges - hidden on mobile -->
   <div
-    class="hidden md:flex flex-wrap gap-2 mt-auto mb-4 cursor-pointer"
+    class="hidden md:flex flex-wrap gap-2 mt-auto mb-4"
+    [class.cursor-pointer]="tech().isAvailable"
+    [class.cursor-not-allowed]="!tech().isAvailable"
     (click)="selectTech()"
   >
     @for (badge of tech()!.badges; track badge) {
-    <span class="text-xs px-2 py-1 rounded-md bg-gray-800/50 text-gray-300"
+    <span
+      class="text-xs px-2 py-1 rounded-md"
+      [class.bg-gray-800]="tech().isAvailable"
+      [class.text-gray-300]="tech().isAvailable"
+      [class.bg-gray-800]="!tech().isAvailable"
+      [class.text-gray-500]="!tech().isAvailable"
       >{{ badge }}</span
     >
     }

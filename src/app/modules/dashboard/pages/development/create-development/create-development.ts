@@ -293,16 +293,16 @@ export class CreateDevelopmentComponent implements OnInit {
 
     // Backend form with language first, then framework
     this.backendForm = this.fb.group({
-      language: ['python', Validators.required],
+      language: ['typescript', Validators.required],
       languageVersion: ['latest', Validators.required],
       languageIconUrl: [''],
-      framework: ['flask', Validators.required],
+      framework: ['express', Validators.required],
       frameworkVersion: ['latest', Validators.required],
       frameworkIconUrl: [''],
       apiType: ['rest', Validators.required],
       apiVersion: ['latest', Validators.required],
       apiIconUrl: [''],
-      orm: ['sqlalchemy'],
+      orm: ['sequelize'],
       ormVersion: ['latest'],
       ormIconUrl: [''],
       features: this.fb.group({

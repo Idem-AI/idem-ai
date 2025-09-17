@@ -207,7 +207,7 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
    */
   protected onLoginSuccess(): void {
     this.showLoginModal.set(false);
-    // Now generate colors since user is authenticated
+    
     this.generateColors();
   }
 

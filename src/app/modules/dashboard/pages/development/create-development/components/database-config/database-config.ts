@@ -46,6 +46,17 @@ export class DatabaseConfigComponent {
       description: 'NoSQL document database',
       badges: ['Document Store', 'Flexible Schema', 'JSON'],
       versions: ['6.0', '5.0', '4.4', '4.2'],
+      isAvailable: true,
+    },
+    {
+      id: 'supabase',
+      name: 'Supabase',
+      icon: 'https://img.icons8.com/color/512/supabase.png',
+      color: '#000000',
+      description: 'Open source Firebase alternative',
+      badges: ['PostgreSQL', 'Prisma', 'Authentication'],
+      versions: ['1.0'],
+      isAvailable: true,
     },
     {
       id: 'postgres',
@@ -55,6 +66,7 @@ export class DatabaseConfigComponent {
       description: 'Advanced open-source SQL database',
       badges: ['ACID', 'JSON Support', 'Extensible'],
       versions: ['15', '14', '13', '12', '11'],
+      isAvailable: false,
     },
     {
       id: 'mysql',
@@ -64,15 +76,7 @@ export class DatabaseConfigComponent {
       description: 'Popular relational database',
       badges: ['Relational', 'ACID', 'Mature'],
       versions: ['8.0', '5.7', '5.6'],
-    },
-    {
-      id: 'redis',
-      name: 'Redis',
-      icon: 'https://icon.icepanel.io/Technology/png-shadow-512/Redis.png',
-      color: '#DC382D',
-      description: 'In-memory data structure store',
-      badges: ['Key-Value', 'In-Memory', 'Caching'],
-      versions: ['7.0', '6.2', '6.0', '5.0'],
+      isAvailable: false,
     },
     {
       id: 'firebase',
@@ -82,6 +86,7 @@ export class DatabaseConfigComponent {
       description: 'Realtime NoSQL cloud database',
       badges: ['Realtime', 'NoSQL', 'Cloud'],
       versions: ['9.x', '8.x', '7.x'],
+      isAvailable: true,
     },
     {
       id: 'sqlite',
@@ -91,7 +96,10 @@ export class DatabaseConfigComponent {
       description: 'Lightweight file-based database',
       badges: ['Serverless', 'File-based', 'Embedded'],
       versions: ['3.41', '3.39', '3.37', '3.35'],
+      isAvailable: true,
     },
+
+
   ];
 
   // La logique ORM a été déplacée vers le composant backend-config

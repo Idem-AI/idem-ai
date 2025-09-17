@@ -12,6 +12,7 @@ export interface TechCardModel {
   description: string;
   badges: string[];
   versions?: string[];
+  isAvailable: boolean;
 }
 
 @Component({
@@ -39,7 +40,9 @@ export class TechCardComponent {
   }
 
   protected selectTech(): void {
-    this.techSelect.emit(this.tech().id);
+    if (this.tech().isAvailable) {
+      this.techSelect.emit(this.tech().id);
+    }
   }
 
   protected selectVersion(version: string): void {

@@ -106,6 +106,7 @@ export class DeploymentConfigComponent {
       description: 'Container-based deployment',
       badges: ['Containerization', 'Portable', 'Scalable'],
       versions: ['24.0', '23.0', '20.10'],
+      isAvailable: true,
     },
     {
       id: 'kubernetes',
@@ -115,6 +116,7 @@ export class DeploymentConfigComponent {
       description: 'Container orchestration platform',
       badges: ['Orchestration', 'Scalability', 'Self-healing'],
       versions: ['1.29', '1.28', '1.27', '1.26'],
+      isAvailable: false,
     },
     {
       id: 'aws',
@@ -124,6 +126,7 @@ export class DeploymentConfigComponent {
       description: 'Amazon Web Services cloud',
       badges: ['EC2', 'Lambda', 'S3'],
       versions: ['Latest'],
+      isAvailable: false,
     },
     {
       id: 'azure',
@@ -133,6 +136,7 @@ export class DeploymentConfigComponent {
       description: 'Microsoft cloud platform',
       badges: ['App Service', 'Functions', 'Storage'],
       versions: ['Latest'],
+      isAvailable: false,
     },
     {
       id: 'vercel',
@@ -142,6 +146,7 @@ export class DeploymentConfigComponent {
       description: 'Frontend deployment platform',
       badges: ['Edge Network', 'Serverless', 'Preview'],
       versions: ['Latest'],
+      isAvailable: true,
     },
     {
       id: 'netlify',
@@ -151,6 +156,7 @@ export class DeploymentConfigComponent {
       description: 'Frontend deployment platform',
       badges: ['Continuous Deployment', 'Forms', 'Functions'],
       versions: ['Latest'],
+      isAvailable: true,
     },
   ];
 
@@ -165,6 +171,7 @@ export class DeploymentConfigComponent {
       color: '#2088FF',
       description: 'GitHub integrated CI/CD',
       badges: ['GitHub', 'Built-in', 'YAML'],
+      isAvailable: true,
     },
     {
       id: 'gitlab',
@@ -173,6 +180,7 @@ export class DeploymentConfigComponent {
       color: '#FC6D26',
       description: 'GitLab integrated pipelines',
       badges: ['GitLab', 'Built-in', 'YAML'],
+      isAvailable: false,
     },
     {
       id: 'jenkins',
@@ -181,6 +189,7 @@ export class DeploymentConfigComponent {
       color: '#D33833',
       description: 'Self-hosted automation server',
       badges: ['Self-hosted', 'Groovy', 'Plugins'],
+      isAvailable: false,
     },
     {
       id: 'circleci',
@@ -189,6 +198,7 @@ export class DeploymentConfigComponent {
       color: '#343434',
       description: 'Cloud-based CI/CD service',
       badges: ['Cloud', 'Orbs', 'YAML'],
+      isAvailable: false,
     },
   ];
 }

@@ -9,6 +9,7 @@ export const PROGRAMMING_LANGUAGES: TechCardModel[] = [
     description: 'Dynamic programming language for web development',
     badges: ['Node.js', 'Express', 'React'],
     versions: ['ES2023', 'ES2022', 'ES2021', 'ES2020'],
+    isAvailable: true,
   },
   {
     id: 'typescript',
@@ -18,6 +19,7 @@ export const PROGRAMMING_LANGUAGES: TechCardModel[] = [
     description: 'Typed superset of JavaScript',
     badges: ['Type Safety', 'Modern JS', 'IntelliSense'],
     versions: ['5.3', '5.2', '5.1', '5.0', '4.9'],
+    isAvailable: true,
   },
   {
     id: 'python',
@@ -27,6 +29,7 @@ export const PROGRAMMING_LANGUAGES: TechCardModel[] = [
     description: 'Versatile language with rich ecosystem',
     badges: ['Flask', 'Django', 'FastAPI'],
     versions: ['3.12', '3.11', '3.10', '3.9', '3.8'],
+    isAvailable: false,
   },
   {
     id: 'java',
@@ -36,6 +39,7 @@ export const PROGRAMMING_LANGUAGES: TechCardModel[] = [
     description: 'Robust enterprise-grade language',
     badges: ['Spring Boot', 'Jakarta EE', 'Quarkus'],
     versions: ['21 (LTS)', '17 (LTS)', '11 (LTS)', '8 (LTS)'],
+    isAvailable: false,
   },
   {
     id: 'csharp',
@@ -45,6 +49,7 @@ export const PROGRAMMING_LANGUAGES: TechCardModel[] = [
     description: 'Modern object-oriented programming language',
     badges: ['ASP.NET Core', 'Entity Framework', 'Blazor'],
     versions: ['12.0', '11.0', '10.0', '9.0', '8.0'],
+    isAvailable: false,
   },
 ];
 
@@ -58,6 +63,7 @@ export const LANGUAGE_FRAMEWORKS: { [key: string]: TechCardModel[] } = {
       description: 'JavaScript runtime for server-side applications',
       badges: ['Express', 'NestJS', 'Fastify'],
       versions: ['20.x', '18.x (LTS)', '16.x', '14.x'],
+      isAvailable: true,
     },
   ],
   typescript: [
@@ -69,6 +75,7 @@ export const LANGUAGE_FRAMEWORKS: { [key: string]: TechCardModel[] } = {
       description: 'Progressive Node.js framework built with TypeScript',
       badges: ['TypeScript', 'Decorators', 'Modular'],
       versions: ['10.x', '9.x', '8.x'],
+      isAvailable: true,
     },
     {
       id: 'express',
@@ -78,6 +85,7 @@ export const LANGUAGE_FRAMEWORKS: { [key: string]: TechCardModel[] } = {
       description: 'Fast, unopinionated, minimalist web framework',
       badges: ['Node.js', 'typescript', 'Minimalist'],
       versions: ['4.x', '3.x', '2.x'],
+      isAvailable: true,
     },
   ],
   python: [
@@ -89,6 +97,7 @@ export const LANGUAGE_FRAMEWORKS: { [key: string]: TechCardModel[] } = {
       description: 'High-level Python web framework',
       badges: ['Batteries-included', 'ORM', 'Admin'],
       versions: ['5.0', '4.2 (LTS)', '3.2 (LTS)'],
+      isAvailable: false,
     },
     {
       id: 'flask',
@@ -98,6 +107,7 @@ export const LANGUAGE_FRAMEWORKS: { [key: string]: TechCardModel[] } = {
       description: 'Lightweight WSGI web application framework',
       badges: ['Microframework', 'Extensible', 'Simple'],
       versions: ['2.3.x', '2.2.x', '2.0.x'],
+      isAvailable: false,
     },
     {
       id: 'fastapi',
@@ -107,6 +117,7 @@ export const LANGUAGE_FRAMEWORKS: { [key: string]: TechCardModel[] } = {
       description: 'Modern, fast web framework for building APIs',
       badges: ['High Performance', 'Type Hints', 'OpenAPI'],
       versions: ['0.100.x', '0.95.x', '0.90.x'],
+      isAvailable: false,
     },
   ],
   java: [
@@ -118,6 +129,7 @@ export const LANGUAGE_FRAMEWORKS: { [key: string]: TechCardModel[] } = {
       description: 'Java-based framework for microservices',
       badges: ['Enterprise', 'Dependency Injection', 'Opinionated'],
       versions: ['3.2', '3.1', '3.0', '2.7 (LTS)'],
+      isAvailable: false,
     },
   ],
   csharp: [
@@ -129,6 +141,7 @@ export const LANGUAGE_FRAMEWORKS: { [key: string]: TechCardModel[] } = {
       description: 'Cross-platform framework for building web apps',
       badges: ['Cross-platform', 'High Performance', 'Cloud-ready'],
       versions: ['8.0', '7.0', '6.0 (LTS)'],
+      isAvailable: false,
     },
   ],
 };
@@ -143,6 +156,7 @@ export const FRAMEWORK_API_TYPES: { [key: string]: TechCardModel[] } = {
       color: '#4CAF50',
       badges: ['HTTP', 'Resource-based', 'CRUD'],
       versions: ['OpenAPI 3.1', 'OpenAPI 3.0'],
+      isAvailable: true,
     },
     {
       id: 'graphql',
@@ -152,6 +166,7 @@ export const FRAMEWORK_API_TYPES: { [key: string]: TechCardModel[] } = {
       color: '#E10098',
       badges: ['Schema', 'Query/Mutation', 'Single Endpoint'],
       versions: ['v16.x', 'v15.x'],
+      isAvailable: true,
     },
   ],
   express: [
@@ -163,6 +178,7 @@ export const FRAMEWORK_API_TYPES: { [key: string]: TechCardModel[] } = {
       color: '#4CAF50',
       badges: ['HTTP', 'Resource-based', 'CRUD'],
       versions: ['OpenAPI 3.1', 'OpenAPI 3.0'],
+      isAvailable: true,
     },
     {
       id: 'graphql',
@@ -172,6 +188,7 @@ export const FRAMEWORK_API_TYPES: { [key: string]: TechCardModel[] } = {
       color: '#E10098',
       badges: ['Schema', 'Query/Mutation', 'Single Endpoint'],
       versions: ['v16.x', 'v15.x'],
+      isAvailable: true,
     },
   ],
   nestjs: [
@@ -183,6 +200,7 @@ export const FRAMEWORK_API_TYPES: { [key: string]: TechCardModel[] } = {
       color: '#4CAF50',
       badges: ['HTTP', 'Resource-based', 'CRUD'],
       versions: ['OpenAPI 3.1', 'OpenAPI 3.0'],
+      isAvailable: true,
     },
     {
       id: 'graphql',
@@ -192,6 +210,7 @@ export const FRAMEWORK_API_TYPES: { [key: string]: TechCardModel[] } = {
       color: '#E10098',
       badges: ['Schema', 'Query/Mutation', 'Single Endpoint'],
       versions: ['v16.x', 'v15.x'],
+      isAvailable: true,
     },
     {
       id: 'grpc',
@@ -201,6 +220,7 @@ export const FRAMEWORK_API_TYPES: { [key: string]: TechCardModel[] } = {
       color: '#244c5a',
       badges: ['Protocol Buffers', 'HTTP/2', 'Streaming'],
       versions: ['v1.60', 'v1.59'],
+      isAvailable: true,
     },
   ],
   django: [
@@ -212,6 +232,7 @@ export const FRAMEWORK_API_TYPES: { [key: string]: TechCardModel[] } = {
       color: '#A30000',
       badges: ['Serializers', 'ViewSets', 'Authentication'],
       versions: ['3.14.x', '3.13.x'],
+      isAvailable: false,
     },
   ],
   flask: [
@@ -223,6 +244,7 @@ export const FRAMEWORK_API_TYPES: { [key: string]: TechCardModel[] } = {
       color: '#000000',
       badges: ['Resource Classes', 'Request Parsing'],
       versions: ['0.3.x', '0.2.x'],
+      isAvailable: false,
     },
   ],
   fastapi: [
@@ -234,6 +256,7 @@ export const FRAMEWORK_API_TYPES: { [key: string]: TechCardModel[] } = {
       color: '#4CAF50',
       badges: ['Auto Documentation', 'Pydantic', 'Type Hints'],
       versions: ['OpenAPI 3.1', 'OpenAPI 3.0'],
+      isAvailable: false,
     },
     {
       id: 'websocket',
@@ -243,6 +266,7 @@ export const FRAMEWORK_API_TYPES: { [key: string]: TechCardModel[] } = {
       color: '#FF6B35',
       badges: ['Async', 'Real-time', 'Built-in'],
       versions: ['Native'],
+      isAvailable: false,
     },
   ],
   spring: [
@@ -254,6 +278,7 @@ export const FRAMEWORK_API_TYPES: { [key: string]: TechCardModel[] } = {
       color: '#6DB33F',
       badges: ['Annotations', 'MVC', 'RESTful'],
       versions: ['6.x', '5.x'],
+      isAvailable: false,
     },
   ],
   aspnet: [
@@ -265,6 +290,7 @@ export const FRAMEWORK_API_TYPES: { [key: string]: TechCardModel[] } = {
       color: '#512BD4',
       badges: ['Controllers', 'Model Binding', 'OpenAPI'],
       versions: ['8.0', '7.0', '6.0'],
+      isAvailable: false,
     },
   ],
 };
@@ -279,6 +305,7 @@ export const FRAMEWORK_SPECIFIC_ORMS: { [key: string]: TechCardModel[] } = {
       color: '#5A67D8',
       badges: ['Type-safe', 'Auto-migration', 'Multi-database'],
       versions: ['5.x', '4.x'],
+      isAvailable: true,
     },
     {
       id: 'typeorm',
@@ -288,6 +315,7 @@ export const FRAMEWORK_SPECIFIC_ORMS: { [key: string]: TechCardModel[] } = {
       color: '#FE0A5A',
       badges: ['TypeScript', 'Multi-database', 'Decorators'],
       versions: ['0.3.x', '0.2.x'],
+      isAvailable: true,
     },
   ],
   express: [
@@ -299,6 +327,7 @@ export const FRAMEWORK_SPECIFIC_ORMS: { [key: string]: TechCardModel[] } = {
       color: '#000000',
       badges: ['Node.js', 'JavaScript', 'ORM'],
       versions: ['6.x', '5.x'],
+      isAvailable: true,
     },
     {
       id: 'mongoose',
@@ -308,6 +337,7 @@ export const FRAMEWORK_SPECIFIC_ORMS: { [key: string]: TechCardModel[] } = {
       color: '#3A495D',
       badges: ['Node.js', 'MongoDB', 'ODM'],
       versions: ['7.x', '6.x'],
+      isAvailable: true,
     },
   ],
   nestjs: [
@@ -319,6 +349,7 @@ export const FRAMEWORK_SPECIFIC_ORMS: { [key: string]: TechCardModel[] } = {
       color: '#FE0A5A',
       badges: ['TypeScript', 'Multi-database', 'Decorators'],
       versions: ['0.3.x', '0.2.x'],
+      isAvailable: true,
     },
     {
       id: 'prisma',
@@ -328,6 +359,7 @@ export const FRAMEWORK_SPECIFIC_ORMS: { [key: string]: TechCardModel[] } = {
       color: '#5A67D8',
       badges: ['Type-safe', 'Auto-migration', 'Multi-database'],
       versions: ['5.x', '4.x'],
+      isAvailable: true,
     },
   ],
 
@@ -340,6 +372,7 @@ export const FRAMEWORK_SPECIFIC_ORMS: { [key: string]: TechCardModel[] } = {
       color: '#092E20',
       badges: ['Integrated', 'Model-based', 'Admin'],
       versions: ['5.0', '4.2'],
+      isAvailable: false,
     },
   ],
   flask: [
@@ -351,6 +384,7 @@ export const FRAMEWORK_SPECIFIC_ORMS: { [key: string]: TechCardModel[] } = {
       color: '#D71F00',
       badges: ['Pythonic', 'Powerful', 'Flexible'],
       versions: ['2.0', '1.4'],
+      isAvailable: false,
     },
   ],
   fastapi: [
@@ -362,6 +396,7 @@ export const FRAMEWORK_SPECIFIC_ORMS: { [key: string]: TechCardModel[] } = {
       color: '#D71F00',
       badges: ['Pythonic', 'Powerful', 'Flexible'],
       versions: ['2.0', '1.4'],
+      isAvailable: false,
     },
   ],
   spring: [
@@ -373,6 +408,7 @@ export const FRAMEWORK_SPECIFIC_ORMS: { [key: string]: TechCardModel[] } = {
       color: '#6DB33F',
       badges: ['Spring', 'Repository', 'JPA'],
       versions: ['3.2', '3.1'],
+      isAvailable: false,
     },
   ],
   aspnet: [
@@ -384,6 +420,7 @@ export const FRAMEWORK_SPECIFIC_ORMS: { [key: string]: TechCardModel[] } = {
       color: '#512BD4',
       badges: ['Code-first', 'Database-first', 'LINQ'],
       versions: ['8.0', '7.0'],
+      isAvailable: false,
     },
   ],
 };
