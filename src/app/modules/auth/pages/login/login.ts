@@ -4,12 +4,12 @@ import { environment } from '../../../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
 import { SeoService } from '../../../../shared/services/seo.service';
 import { Router } from '@angular/router';
-import { Loader } from "../../../../components/loader/loader";
+import { LoginCardComponent } from '../../components/login-card/login-card';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, Loader],
+  imports: [CommonModule, LoginCardComponent],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -22,7 +22,6 @@ export class Login implements OnInit {
   private readonly router = inject(Router);
   // Get waitlist form URL from environment
   protected readonly waitlistFormUrl = signal(environment.waitlistUrl);
-  protected isLoading = signal<boolean>(false);
   ngOnInit(): void {
     this.setupSeo();
   }
@@ -78,27 +77,11 @@ export class Login implements OnInit {
     window.open(this.waitlistFormUrl(), '_blank');
   }
 
-  protected async loginWithGoogle(): Promise<void> {
+  protected async onLoginSuccess(): Promise<void> {
     try {
-      this.isLoading.set(true);
-      await this.authService.loginWithGoogle();
       await this.router.navigate(['/console']);
     } catch (error) {
-      console.error('Error logging in with Google:', error);
-    } finally {
-      this.isLoading.set(false);
-    }
-  }
-
-  protected async loginWithGithub(): Promise<void> {
-    try {
-      this.isLoading.set(true);
-      await this.authService.loginWithGithub();
-      await this.router.navigate(['/console']);
-    } catch (error) {
-      console.error('Error logging in with GitHub:', error);
-    } finally {
-      this.isLoading.set(false);
+      console.error('Error navigating after login:', error);
     }
   }
 }

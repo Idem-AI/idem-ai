@@ -116,7 +116,7 @@
             Develop comprehensive business strategy and planning
           </p>
 
-          @if (currentProject.analysisResultModel?.businessPlan) {
+          @if (currentProject.analysisResultModel!.businessPlan) {
           <div
             class="flex items-center justify-center space-x-2 text-green-400 text-sm"
           >
@@ -150,7 +150,7 @@
             Generate UML diagrams and system architecture
           </p>
 
-          @if (currentProject.analysisResultModel?.design) {
+          @if (currentProject.analysisResultModel!.design) {
           <div
             class="flex items-center justify-center space-x-2 text-green-400 text-sm"
           >
@@ -184,7 +184,7 @@
             Configure and generate your application code
           </p>
 
-          @if (currentProject.analysisResultModel?.development) {
+          @if (currentProject.analysisResultModel!.development) {
           <div
             class="flex items-center justify-center space-x-2 text-green-400 text-sm"
           >

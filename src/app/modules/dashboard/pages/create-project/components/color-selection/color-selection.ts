@@ -16,17 +16,21 @@ import { ProjectModel } from '../../../../models/project.model';
 import { BrandingService } from '../../../../services/ai-agents/branding.service';
 import { CarouselComponent } from '../../../../../../shared/components/carousel/carousel.component';
 import { Subject, takeUntil } from 'rxjs';
+import { AuthService } from '../../../../../auth/services/auth.service';
+import { LoginCardComponent } from '../../../../../auth/components/login-card/login-card';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-color-selection',
   standalone: true,
-  imports: [CommonModule, CarouselComponent],
+  imports: [CommonModule, CarouselComponent, DialogModule, LoginCardComponent],
   templateUrl: './color-selection.html',
   styleUrl: './color-selection.css',
 })
 export class ColorSelectionComponent implements OnInit, OnDestroy {
   // Services
   private readonly brandingService = inject(BrandingService);
+  private readonly authService = inject(AuthService);
   private readonly destroy$ = new Subject<void>();
 
   // Inputs
@@ -55,13 +59,16 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
   protected error = signal<string | null>(null);
   protected hasGenerated = signal(false);
   protected selectedColorId = signal<string | null>(null);
+  
+  // Authentication modal state
+  protected showLoginModal = signal(false);
 
   ngOnInit() {
     console.log(this.project());
     const generatedColors = this.project().analysisResultModel?.branding?.generatedColors;
     
     if (!generatedColors || generatedColors.length === 0) {
-      this.generateColors();
+      this.checkAuthAndGenerate();
     } else {
       this.typographyGenerated.emit(
         this.project().analysisResultModel?.branding?.generatedTypography
@@ -177,7 +184,38 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
   }
 
   protected async retryGeneration(): Promise<void> {
-    await this.generateColors();
+    await this.checkAuthAndGenerate();
+  }
+
+  /**
+   * Check if user is authenticated before generating colors
+   */
+  protected checkAuthAndGenerate(): void {
+    const user = this.authService.getCurrentUser();
+    
+    if (!user) {
+      // User is not authenticated, show login modal
+      this.showLoginModal.set(true);
+    } else {
+      // User is authenticated, proceed with generation
+      this.generateColors();
+    }
+  }
+
+  /**
+   * Handle successful login from modal
+   */
+  protected onLoginSuccess(): void {
+    this.showLoginModal.set(false);
+    // Now generate colors since user is authenticated
+    this.generateColors();
+  }
+
+  /**
+   * Close login modal
+   */
+  protected closeLoginModal(): void {
+    this.showLoginModal.set(false);
   }
 
   protected goToPreviousStep(): void {

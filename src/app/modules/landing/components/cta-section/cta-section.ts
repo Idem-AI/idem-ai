@@ -1,6 +1,7 @@
 import { Component, signal, inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { SeoService } from '../../../../shared/services/seo.service';
+import { RouterLink } from '@angular/router';
 
 interface CtaFeature {
   id: string;
@@ -12,7 +13,7 @@ interface CtaFeature {
 @Component({
   selector: 'app-cta-section',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,RouterLink],
   templateUrl: './cta-section.html',
   styleUrl: './cta-section.css'
 })

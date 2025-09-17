@@ -15,7 +15,6 @@ import { Diagrams } from '../../components/diagrams/diagrams';
 import { DeploymentScreenshots } from '../../components/deployment-screenshots/deployment-screenshots';
 import { CtaSection } from '../../components/cta-section/cta-section';
 import { Cta } from '../../components/cta/cta';
-import { Pricing } from '../../components/pricing/pricing';
 
 @Component({
   selector: 'app-home',
@@ -32,7 +31,6 @@ import { Pricing } from '../../components/pricing/pricing';
     DeploymentScreenshots,
     CtaSection,
     Cta,
-    Pricing,
   ],
   templateUrl: './home.html',
   styleUrl: './home.css',
