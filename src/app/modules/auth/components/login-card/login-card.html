@@ -66,14 +66,19 @@
       </svg>
       Continue with Google
     </button>
-    <button
-      class="outer-button flex text-base sm:text-lg items-center justify-center gap-2 sm:gap-3 md:gap-4 w-full transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-      (click)="loginWithGithub()"
-      [disabled]="isLoading()"
-    >
-      <i class="pi pi-github text-base sm:text-lg md:text-xl"></i>
-      Continue with Github
-    </button>
+    <div class="relative">
+      <button
+        class="outer-button flex text-base sm:text-lg items-center justify-center gap-2 sm:gap-3 md:gap-4 w-full transition-all duration-300 opacity-50 cursor-not-allowed"
+        disabled
+      >
+        <i class="pi pi-github text-base sm:text-lg md:text-xl"></i>
+        Continue with Github
+      </button>
+      <!-- Coming Soon Sticker -->
+      <div class="absolute -top-2 -right-2 bg-gradient-to-r from-orange-400 to-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg transform rotate-7 animate-pulse">
+        Soon...
+      </div>
+    </div>
   </div>
   }
 </div>
