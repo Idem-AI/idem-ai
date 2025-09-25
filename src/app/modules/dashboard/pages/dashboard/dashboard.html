@@ -17,298 +17,210 @@
 <div class="min-h-screen p-4 sm:p-6 lg:p-8">
   @if (project(); as currentProject) {
 
-  <!-- Project Header -->
-  <header class="glass-card p-6 mb-8">
-    <div class="flex flex-col lg:flex-row justify-between items-start gap-6">
-      <div class="flex-1 min-w-0">
-        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-2">
-          {{ currentProject.name }}
-        </h1>
-        <p class="text-gray-300 text-lg mb-4">
-          {{ currentProject.description || "No description provided." }}
-        </p>
-        <div class="flex flex-wrap gap-4 text-sm text-gray-400">
-          <span class="flex items-center space-x-2">
-            <i class="pi pi-calendar"></i>
-            <span
-              >Created: {{ currentProject.createdAt | date : "mediumDate"
-              }}</span
-            >
-          </span>
-          <span class="flex items-center space-x-2">
-            <i class="pi pi-clock"></i>
-            <span
-              >Updated: {{ currentProject.updatedAt | date : "mediumDate"
-              }}</span
-            >
-          </span>
-        </div>
-      </div>
-      <button class="inner-button">
-        <i class="pi pi-cog mr-2"></i>
-        Project Settings
-      </button>
+  <!-- Hero Section -->
+  <div class="glass-card p-8 mb-8 text-center">
+    <h1 class="text-4xl sm:text-5xl font-bold text-white mb-3">
+      {{ currentProject.name }}
+    </h1>
+    <p class="text-gray-300 text-lg max-w-2xl mx-auto mb-6">
+      {{ currentProject.description || "Your AI-powered project workspace" }}
+    </p>
+    <div class="flex justify-center items-center space-x-6 text-sm text-gray-400">
+      <span class="flex items-center space-x-2">
+        <i class="pi pi-calendar"></i>
+        <span>{{ currentProject.createdAt | date : "MMM d, y" }}</span>
+      </span>
+      <span class="flex items-center space-x-2">
+        <i class="pi pi-users"></i>
+        <span>{{ currentProject.targets.name }}</span>
+      </span>
     </div>
-  </header>
+  </div>
 
-  <!-- Idem Platform Overview -->
-  <section class="mb-12">
-    <div class="text-center mb-8">
-      <h2 class="text-3xl font-bold text-white mb-4">
-        Complete Business & Software Lifecycle
-      </h2>
-      <p class="text-md text-gray-200 max-w-4xl mx-auto">
-        Idem guides you through every step of your project, from initial
-        branding to final deployment. Track your progress and access each phase
-        of development.
-      </p>
-    </div>
-
-    <!-- Lifecycle Flow -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-      <!-- 1. Branding -->
-      <div
-        class="glass-card p-6 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl group"
-        [routerLink]="['/console/branding']"
-      >
-        <div class="text-center">
-          <div
-            class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-purple-500/30"
-          >
-            <i class="pi pi-palette text-white text-2xl"></i>
-          </div>
-          <h3 class="text-xl font-semibold text-white mb-2">Branding</h3>
-          <p class="text-gray-300 text-sm mb-4">
-            Create your brand identity, logos, and visual guidelines
-          </p>
-
-          @if (currentProject.analysisResultModel!.branding.sections.length > 0) {
-          <div
-            class="flex items-center justify-center space-x-2 text-green-400 text-sm"
-          >
-            <i class="pi pi-check-circle"></i>
-            <span>Completed</span>
-          </div>
-          } @else {
-          <div
-            class="flex items-center justify-center space-x-2 text-gray-400 text-sm"
-          >
-            <i class="pi pi-circle"></i>
-            <span>Not Started</span>
-          </div>
-          }
-        </div>
-      </div>
-
-      <!-- 2. Business Plan -->
-      <div
-        class="glass-card p-6 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl group"
-        [routerLink]="['/console/business-plan']"
-      >
-        <div class="text-center">
-          <div
-            class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-blue-500/30"
-          >
-            <i class="pi pi-chart-line text-white text-2xl"></i>
-          </div>
-          <h3 class="text-xl font-semibold text-white mb-2">Business Plan</h3>
-          <p class="text-gray-300 text-sm mb-4">
-            Develop comprehensive business strategy and planning
-          </p>
-
-          @if (currentProject.analysisResultModel!.businessPlan) {
-          <div
-            class="flex items-center justify-center space-x-2 text-green-400 text-sm"
-          >
-            <i class="pi pi-check-circle"></i>
-            <span>Completed</span>
-          </div>
-          } @else {
-          <div
-            class="flex items-center justify-center space-x-2 text-gray-400 text-sm"
-          >
-            <i class="pi pi-circle"></i>
-            <span>Not Started</span>
-          </div>
-          }
-        </div>
-      </div>
-
-      <!-- 3. System Analysis -->
-      <div
-        class="glass-card p-6 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl group"
-        [routerLink]="['/console/diagrams']"
-      >
-        <div class="text-center">
-          <div
-            class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-emerald-500/30"
-          >
-            <i class="pi pi-sitemap text-white text-2xl"></i>
-          </div>
-          <h3 class="text-xl font-semibold text-white mb-2">System Analysis</h3>
-          <p class="text-gray-300 text-sm mb-4">
-            Generate UML diagrams and system architecture
-          </p>
-
-          @if (currentProject.analysisResultModel!.design) {
-          <div
-            class="flex items-center justify-center space-x-2 text-green-400 text-sm"
-          >
-            <i class="pi pi-check-circle"></i>
-            <span>Completed</span>
-          </div>
-          } @else {
-          <div
-            class="flex items-center justify-center space-x-2 text-gray-400 text-sm"
-          >
-            <i class="pi pi-circle"></i>
-            <span>Not Started</span>
-          </div>
-          }
-        </div>
-      </div>
-
-      <!-- 4. Application Development -->
-      <div
-        class="glass-card p-6 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl group"
-        [routerLink]="['/console/development']"
-      >
-        <div class="text-center">
-          <div
-            class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-orange-500/30"
-          >
-            <i class="pi pi-code text-white text-2xl"></i>
-          </div>
-          <h3 class="text-xl font-semibold text-white mb-2">Development</h3>
-          <p class="text-gray-300 text-sm mb-4">
-            Configure and generate your application code
-          </p>
-
-          @if (currentProject.analysisResultModel!.development) {
-          <div
-            class="flex items-center justify-center space-x-2 text-green-400 text-sm"
-          >
-            <i class="pi pi-check-circle"></i>
-            <span>Completed</span>
-          </div>
-          } @else {
-          <div
-            class="flex items-center justify-center space-x-2 text-gray-400 text-sm"
-          >
-            <i class="pi pi-circle"></i>
-            <span>Not Started</span>
-          </div>
-          }
-        </div>
-      </div>
-
-      <!-- 5. Deployment -->
-      <div
-        class="glass-card p-6 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl group"
-        [routerLink]="['/console/deployment']"
-      >
-        <div class="text-center">
-          <div
-            class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-indigo-500/30"
-          >
-            <i class="pi pi-cloud-upload text-white text-2xl"></i>
-          </div>
-          <h3 class="text-xl font-semibold text-white mb-2">Deployment</h3>
-          <p class="text-gray-300 text-sm mb-4">
-            Deploy your application to the cloud
-          </p>
-
-          <div
-            class="flex items-center justify-center space-x-2 text-gray-400 text-sm"
-          >
-            <i class="pi pi-circle"></i>
-            <span>Not Started</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Progress Flow Indicator -->
-    <div class="flex justify-center mb-8">
-      <div class="flex items-center space-x-4">
-        <div class="flex items-center space-x-2">
-          <div class="w-3 h-3 rounded-full bg-green-500"></div>
-          <span class="text-sm text-gray-300">Completed</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <div class="w-3 h-3 rounded-full border-2 border-gray-400"></div>
-          <span class="text-sm text-gray-300">Not Started</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Project Details -->
-  <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-    <div class="glass-card p-6">
-      <div class="flex items-center space-x-3 mb-4">
-        <i class="pi pi-users text-blue-400 text-xl"></i>
-        <h3 class="text-lg font-semibold text-white">Target Audience</h3>
-      </div>
-      <p class="text-gray-300">{{ currentProject.targets.name }}</p>
-    </div>
-
-    <div class="glass-card p-6">
-      <div class="flex items-center space-x-3 mb-4">
-        <i class="pi pi-users text-purple-400 text-xl"></i>
-        <h3 class="text-lg font-semibold text-white">Team Size</h3>
-      </div>
-      <p class="text-gray-300">
-        {{ currentProject.teamSize || "Not specified" }}
-      </p>
-    </div>
-
-    <div class="glass-card p-6">
-      <div class="flex items-center space-x-3 mb-4">
-        <i class="pi pi-flag text-orange-400 text-xl"></i>
-        <h3 class="text-lg font-semibold text-white">Scope</h3>
-      </div>
-      <p class="text-gray-300">{{ currentProject.scope || "Not specified" }}</p>
-    </div>
-  </section>
-
-  <!-- Quick Actions -->
-  <section class="glass-card p-6">
-    <h3
-      class="text-xl font-semibold text-white mb-6 flex items-center space-x-2"
+  <!-- Main Workflow -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+    
+    <!-- 1. Branding -->
+    <div
+      class="glass-card p-6 cursor-pointer transition-all duration-300 hover:scale-105 group relative overflow-hidden"
+      [routerLink]="['/console/branding']"
     >
-      <i class="pi pi-bolt text-yellow-400"></i>
-      <span>Quick Actions</span>
-    </h3>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <button
-        class="outer-button flex items-center justify-center space-x-2 py-3"
-        [routerLink]="['/console/projects/create']"
-      >
-        <i class="pi pi-plus"></i>
-        <span>New Project</span>
-      </button>
-      <button
-        class="outer-button flex items-center justify-center space-x-2 py-3"
-        [routerLink]="['/console/projects']"
-      >
-        <i class="pi pi-list"></i>
-        <span>All Projects</span>
-      </button>
-      <button
-        class="outer-button flex items-center justify-center space-x-2 py-3"
-      >
-        <i class="pi pi-download"></i>
-        <span>Export Data</span>
-      </button>
-      <button
-        class="outer-button flex items-center justify-center space-x-2 py-3"
-      >
-        <i class="pi pi-share-alt"></i>
-        <span>Share Project</span>
-      </button>
+      <div class="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      <div class="relative z-10 text-center">
+        <div class="w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+          <i class="pi pi-palette text-white text-lg"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-white mb-2">Brand</h3>
+        
+        @if (currentProject.analysisResultModel!.branding.sections.length > 0) {
+        <div class="flex items-center justify-center space-x-1 text-green-400 text-xs">
+          <i class="pi pi-check-circle"></i>
+          <span>Done</span>
+        </div>
+        } @else {
+        <div class="flex items-center justify-center space-x-1 text-gray-400 text-xs">
+          <i class="pi pi-circle"></i>
+          <span>Start</span>
+        </div>
+        }
+      </div>
     </div>
-  </section>
+
+    <!-- 2. Business Plan -->
+    <div
+      class="glass-card p-6 cursor-pointer transition-all duration-300 hover:scale-105 group relative overflow-hidden"
+      [routerLink]="['/console/business-plan']"
+    >
+      <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      <div class="relative z-10 text-center">
+        <div class="w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+          <i class="pi pi-chart-line text-white text-lg"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-white mb-2">Business</h3>
+        
+        @if (currentProject.analysisResultModel!.businessPlan) {
+        <div class="flex items-center justify-center space-x-1 text-green-400 text-xs">
+          <i class="pi pi-check-circle"></i>
+          <span>Done</span>
+        </div>
+        } @else {
+        <div class="flex items-center justify-center space-x-1 text-gray-400 text-xs">
+          <i class="pi pi-circle"></i>
+          <span>Start</span>
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- 3. System Analysis -->
+    <div
+      class="glass-card p-6 cursor-pointer transition-all duration-300 hover:scale-105 group relative overflow-hidden"
+      [routerLink]="['/console/diagrams']"
+    >
+      <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      <div class="relative z-10 text-center">
+        <div class="w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
+          <i class="pi pi-sitemap text-white text-lg"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-white mb-2">Design</h3>
+        
+        @if (currentProject.analysisResultModel!.design) {
+        <div class="flex items-center justify-center space-x-1 text-green-400 text-xs">
+          <i class="pi pi-check-circle"></i>
+          <span>Done</span>
+        </div>
+        } @else {
+        <div class="flex items-center justify-center space-x-1 text-gray-400 text-xs">
+          <i class="pi pi-circle"></i>
+          <span>Start</span>
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- 4. Development -->
+    <div
+      class="glass-card p-6 cursor-pointer transition-all duration-300 hover:scale-105 group relative overflow-hidden"
+      [routerLink]="['/console/development']"
+    >
+      <div class="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      <div class="relative z-10 text-center">
+        <div class="w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center">
+          <i class="pi pi-code text-white text-lg"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-white mb-2">Code</h3>
+        
+        @if (currentProject.analysisResultModel!.development) {
+        <div class="flex items-center justify-center space-x-1 text-green-400 text-xs">
+          <i class="pi pi-check-circle"></i>
+          <span>Done</span>
+        </div>
+        } @else {
+        <div class="flex items-center justify-center space-x-1 text-gray-400 text-xs">
+          <i class="pi pi-circle"></i>
+          <span>Start</span>
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- 5. Deployment -->
+    <div
+      class="glass-card p-6 cursor-pointer transition-all duration-300 hover:scale-105 group relative overflow-hidden"
+      [routerLink]="['/console/deployment']"
+    >
+      <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      <div class="relative z-10 text-center">
+        <div class="w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center">
+          <i class="pi pi-cloud-upload text-white text-lg"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-white mb-2">Deploy</h3>
+        
+        <div class="flex items-center justify-center space-x-1 text-gray-400 text-xs">
+          <i class="pi pi-circle"></i>
+          <span>Start</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Stats & Actions -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    
+    <!-- Progress Overview -->
+    <div class="glass-card p-6">
+      <h3 class="text-lg font-semibold text-white mb-4 flex items-center space-x-2">
+
+        <span>Progress</span>
+      </h3>
+      <div class="space-y-3">
+        <div class="flex justify-between items-center">
+          <span class="text-gray-300 text-sm">Completed</span>
+          <span class="text-green-400 font-semibold">3/5</span>
+        </div>
+        <div class="w-full bg-gray-700 rounded-full h-2">
+          <div class="bg-gradient-to-r from-green-500 to-blue-500 h-2 rounded-full" style="width: 60%"></div>
+        </div>
+        <p class="text-gray-400 text-xs">Keep going! You're making great progress.</p>
+      </div>
+    </div>
+
+    <!-- Project Info -->
+    <div class="glass-card p-6">
+      <h3 class="text-lg font-semibold text-white mb-4 flex items-center space-x-2">
+        <span>Details</span>
+      </h3>
+      <div class="space-y-2 text-sm">
+        <div class="flex justify-between">
+          <span class="text-gray-400">Team Size</span>
+          <span class="text-gray-300">{{ currentProject.teamSize || "1" }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-400">Scope</span>
+          <span class="text-gray-300">{{ currentProject.scope.name.toString().toLowerCase() }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-400">Updated</span>
+          <span class="text-gray-300">{{ currentProject.updatedAt | date : "MMM d" }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="glass-card p-6">
+      <h3 class="text-lg font-semibold text-white mb-4 flex items-center space-x-2">
+        <span>Actions</span>
+      </h3>
+      <div class="space-y-2">
+        <button class="w-full outer-button text-sm py-2" [routerLink]="['/console/projects/create']">
+          <i class="pi pi-plus mr-2"></i>New Project
+        </button>
+        <button class="w-full outer-button text-sm py-2" [routerLink]="['/console/projects']">
+          <i class="pi pi-list mr-2"></i>All Projects
+        </button>
+      </div>
+    </div>
+  </div>
 
   } @else {
   <div class="flex justify-center items-center h-64">
