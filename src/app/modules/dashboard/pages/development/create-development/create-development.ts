@@ -69,7 +69,7 @@ export class CreateDevelopmentComponent implements OnInit {
   );
 
   // - UI state
-  protected readonly selectedTab = signal<'frontend' | 'backend' | 'database'>(
+  protected readonly selectedTab = signal<'frontend' | 'backend' | 'database' | 'deployment'>(
     'frontend'
   );
   protected readonly showAdvancedOptions = signal<boolean>(false);
@@ -85,7 +85,7 @@ export class CreateDevelopmentComponent implements OnInit {
    * Select a tab in the form
    * @param tab The tab to select
    */
-  protected selectTab(tab: 'frontend' | 'backend' | 'database'): void {
+  protected selectTab(tab: 'frontend' | 'backend' | 'database' | 'deployment'): void {
     this.selectedTab.set(tab);
   }
 
