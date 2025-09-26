@@ -74,16 +74,22 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- Logo Section -->
       <div class="glass-card p-6">
-        <div class="flex items-center mb-6">
-          <div
-            class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center mr-4"
-          >
-            <i class="pi pi-image text-white text-xl"></i>
-          </div>
+        <div class="flex items-center justify-between mb-6">
           <div>
             <h3 class="text-xl font-semibold text-white">Logos</h3>
             <p class="text-gray-400 text-sm">Visual identity</p>
           </div>
+          @if(existingBranding() && (existingBranding()!.logo!.svg ||
+          existingBranding()!.generatedLogos!.length > 0)) {
+          <button
+            (click)="openExtensionDialog()"
+            class="glass-card px-4 py-2 text-white hover:bg-white/20 transition-all duration-300 rounded-lg flex items-center gap-2"
+            title="Télécharger toutes les déclinaisons du logo au format ZIP"
+          >
+            <i class="pi pi-download text-sm"></i>
+            <span class="text-sm">ZIP</span>
+          </button>
+          }
         </div>
 
         @if(existingBranding() && (existingBranding()!.logo!.svg ||
@@ -175,11 +181,6 @@
       <!-- Colors Section -->
       <div class="glass-card p-6">
         <div class="flex items-center mb-6">
-          <div
-            class="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center mr-4"
-          >
-            <i class="pi pi-palette text-white text-xl"></i>
-          </div>
           <div>
             <h3 class="text-xl font-semibold text-white">Colors</h3>
             <p class="text-gray-400 text-sm">Color palette</p>
@@ -257,11 +258,6 @@
       <!-- Typography Section -->
       <div class="glass-card p-6">
         <div class="flex items-center mb-6">
-          <div
-            class="w-12 h-12 rounded-full bg-gradient-to-r from-green-500 to-teal-500 flex items-center justify-center mr-4"
-          >
-            <i class="pi pi-font text-white text-xl"></i>
-          </div>
           <div>
             <h3 class="text-xl font-semibold text-white">Typography</h3>
             <p class="text-gray-400 text-sm">Font families</p>
@@ -390,4 +386,116 @@
     </div>
   </div>
   }
+
+  <!-- Extension Selection Dialog -->
+  <p-dialog
+    [(visible)]="showExtensionDialog"
+    [modal]="true"
+    [closable]="true"
+    [draggable]="false"
+    [resizable]="false"
+    styleClass="extension-dialog"
+    [style]="{ width: '400px' }"
+    header="Choisir le format"
+    (onHide)="closeExtensionDialog()"
+  >
+    <div class="space-y-6">
+      <!-- Dialog Content -->
+      <div class="text-center mb-6">
+        <i class="pi pi-download text-4xl text-blue-400 mb-3"></i>
+        <p class="text-gray-300 text-sm">
+          Sélectionnez le format souhaité pour télécharger toutes les déclinaisons du logo
+        </p>
+      </div>
+
+      <!-- Extension Options -->
+      <div class="space-y-3">
+        <!-- SVG Option -->
+        <div
+          class="glass-card p-4 cursor-pointer transition-all duration-300 hover:bg-white/10"
+          [class.ring-2]="selectedExtension() === 'svg'"
+          [class.ring-blue-400]="selectedExtension() === 'svg'"
+          (click)="selectExtension('svg')"
+        >
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                <i class="pi pi-code text-blue-400"></i>
+              </div>
+              <div>
+                <h4 class="text-white font-medium">SVG</h4>
+                <p class="text-gray-400 text-sm">Format vectoriel, redimensionnable</p>
+              </div>
+            </div>
+            @if(selectedExtension() === 'svg') {
+            <i class="pi pi-check-circle text-blue-400"></i>
+            }
+          </div>
+        </div>
+
+        <!-- PNG Option -->
+        <div
+          class="glass-card p-4 cursor-pointer transition-all duration-300 hover:bg-white/10"
+          [class.ring-2]="selectedExtension() === 'png'"
+          [class.ring-blue-400]="selectedExtension() === 'png'"
+          (click)="selectExtension('png')"
+        >
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
+                <i class="pi pi-image text-green-400"></i>
+              </div>
+              <div>
+                <h4 class="text-white font-medium">PNG</h4>
+                <p class="text-gray-400 text-sm">Format bitmap, haute qualité</p>
+              </div>
+            </div>
+            @if(selectedExtension() === 'png') {
+            <i class="pi pi-check-circle text-green-400"></i>
+            }
+          </div>
+        </div>
+
+        <!-- PSD Option -->
+        <div
+          class="glass-card p-4 cursor-pointer transition-all duration-300 hover:bg-white/10"
+          [class.ring-2]="selectedExtension() === 'psd'"
+          [class.ring-blue-400]="selectedExtension() === 'psd'"
+          (click)="selectExtension('psd')"
+        >
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                <i class="pi pi-palette text-purple-400"></i>
+              </div>
+              <div>
+                <h4 class="text-white font-medium">PSD</h4>
+                <p class="text-gray-400 text-sm">Photoshop, calques modifiables</p>
+              </div>
+            </div>
+            @if(selectedExtension() === 'psd') {
+            <i class="pi pi-check-circle text-purple-400"></i>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex justify-end space-x-3 pt-4 border-t border-white/10">
+        <button
+          class="glass-card px-4 py-2 text-white hover:bg-white/20 transition-all duration-300 rounded-lg"
+          (click)="closeExtensionDialog()"
+        >
+          Annuler
+        </button>
+        <button
+          class="inner-button px-6 py-2"
+          (click)="downloadLogosZip()"
+        >
+          <i class="pi pi-download mr-2"></i>
+          Télécharger
+        </button>
+      </div>
+    </div>
+  </p-dialog>
 </div>

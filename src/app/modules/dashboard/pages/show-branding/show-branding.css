@@ -1,3 +1,53 @@
 :host {
   display: block;
 }
+
+/* Custom PrimeNG Dialog Styles */
+:host ::ng-deep .extension-dialog .p-dialog {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  box-shadow: var(--glass-shadow);
+}
+
+:host ::ng-deep .extension-dialog .p-dialog-header {
+  background: transparent;
+  border-bottom: 1px solid var(--glass-border);
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
+}
+
+:host ::ng-deep .extension-dialog .p-dialog-title {
+  color: var(--color-light-text);
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-family: "Jura", sans-serif;
+}
+
+:host ::ng-deep .extension-dialog .p-dialog-header-icon {
+  color: var(--color-light-text);
+  background: transparent;
+  border: none;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep .extension-dialog .p-dialog-header-icon:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-primary);
+}
+
+:host ::ng-deep .extension-dialog .p-dialog-content {
+  background: transparent;
+  padding: 1.5rem;
+  color: var(--color-light-text);
+}
+
+:host ::ng-deep .extension-dialog .p-dialog-mask {
+  background: rgba(6, 8, 13, 0.8);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}

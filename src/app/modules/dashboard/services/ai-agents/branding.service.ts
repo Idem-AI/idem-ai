@@ -332,4 +332,60 @@ export class BrandingService {
         })
       );
   }
+
+  /**
+   * Download all logo variations as a ZIP file
+   * @param projectId Project ID
+   * @param extension File extension (svg, png, psd)
+   * @returns Observable with blob data for ZIP download
+   */
+  downloadLogosZip(projectId: string, extension: string): Observable<Blob> {
+    const zipUrl = `${this.apiUrl}/logos-zip/${projectId}/${extension}`;
+
+    return this.http
+      .get(zipUrl, {
+        responseType: 'blob',
+        headers: {
+          Accept: 'application/zip',
+        },
+      })
+      .pipe(
+        tap(() =>
+          console.log(`Downloading logos ZIP for project: ${projectId}`)
+        ),
+        catchError((error) => {
+          console.error(
+            `Error downloading logos ZIP for project ${projectId}:`,
+            error
+          );
+
+          // Handle specific error cases
+          if (error.status === 401) {
+            return throwError(() => new Error('User not authenticated'));
+          } else if (error.status === 400) {
+            return throwError(() => new Error('Project ID is required'));
+          } else if (error.status === 404) {
+            return throwError(() => {
+              const notFoundError = new Error('LOGOS_NOT_FOUND');
+              (notFoundError as any).isRetryable = false;
+              return notFoundError;
+            });
+          } else if (error.status === 500) {
+            return throwError(
+              () =>
+                new Error(
+                  'Error generating logos ZIP - project not found or no logo variations available'
+                )
+            );
+          }
+
+          // Generic error - also retryable
+          return throwError(() => {
+            const genericError = new Error('DOWNLOAD_ERROR');
+            (genericError as any).isRetryable = true;
+            return genericError;
+          });
+        })
+      );
+  }
 }
