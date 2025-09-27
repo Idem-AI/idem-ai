@@ -490,8 +490,28 @@
     </div>
 
     <div class="flex justify-end gap-2">
-      <p-button label="Cancel" severity="secondary" (click)="visible = false" />
-      <p-button label="Download" (click)="downloadLogosZip()" />
+      <p-button 
+        label="Cancel" 
+        severity="secondary" 
+        (click)="visible = false"
+        [disabled]="isDownloading()" 
+      />
+      <p-button 
+        [label]="isDownloading() ? 'Downloading...' : 'Download'" 
+        (click)="downloadLogosZip()"
+        [disabled]="isDownloading()"
+      />
     </div>
+
+    <!-- Loading overlay -->
+    @if(isDownloading()) {
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm rounded-lg flex items-center justify-center">
+      <div class="text-center">
+        <app-loader />
+        <p class="text-white mt-4 font-medium">Preparing download...</p>
+        <p class="text-gray-400 text-sm">This may take a few moments</p>
+      </div>
+    </div>
+    }
   </p-dialog>
 </div>

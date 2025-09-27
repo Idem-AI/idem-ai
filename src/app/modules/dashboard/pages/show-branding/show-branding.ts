@@ -53,6 +53,7 @@ export class ShowBrandingComponent implements OnInit {
   // Dialog state for logo download
   protected visible = false;
   protected selectedExtension = 'svg';
+  protected readonly isDownloading = signal<boolean>(false);
 
   // Computed properties for UI state
   protected readonly hasProjectData = computed(() => {
@@ -307,11 +308,14 @@ export class ShowBrandingComponent implements OnInit {
     const extension = this.selectedExtension;
     console.log('Downloading logos ZIP for project:', projectId, 'with extension:', extension);
     
-    // Close dialog
-    this.visible = false;
+    // Start loading
+    this.isDownloading.set(true);
     
     this.brandingService.downloadLogosZip(projectId, extension).subscribe({
       next: (zipBlob: Blob) => {
+        // Stop loading
+        this.isDownloading.set(false);
+        
         if (zipBlob && zipBlob.size > 0) {
           // Create download link
           const url = window.URL.createObjectURL(zipBlob);
@@ -332,11 +336,18 @@ export class ShowBrandingComponent implements OnInit {
           window.URL.revokeObjectURL(url);
           
           console.log('Logos ZIP download completed');
+          
+          // Close dialog after successful download
+          this.visible = false;
         } else {
           console.error('Empty ZIP file received');
+          alert('Empty ZIP file received. Please try again.');
         }
       },
       error: (err: any) => {
+        // Stop loading
+        this.isDownloading.set(false);
+        
         console.error('Error downloading logos ZIP:', err);
         
         // Handle specific error cases

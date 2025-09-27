@@ -50,6 +50,7 @@
   background: transparent;
   padding: 1.5rem;
   color: var(--color-light-text);
+  position: relative;
 }
 
 :host ::ng-deep .extension-dialog .p-text-secondary {
