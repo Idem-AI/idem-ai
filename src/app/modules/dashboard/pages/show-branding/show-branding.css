@@ -3,6 +3,12 @@
 }
 
 /* Custom PrimeNG Dialog Styles */
+:host ::ng-deep .extension-dialog .p-dialog-mask {
+  background: rgba(6, 8, 13, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
 :host ::ng-deep .extension-dialog .p-dialog {
   background: var(--glass-bg);
   backdrop-filter: blur(var(--glass-blur));
@@ -46,8 +52,32 @@
   color: var(--color-light-text);
 }
 
-:host ::ng-deep .extension-dialog .p-dialog-mask {
-  background: rgba(6, 8, 13, 0.8);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+:host ::ng-deep .extension-dialog .p-text-secondary {
+  color: var(--color-light-text) !important;
+  opacity: 0.8;
+}
+
+:host ::ng-deep .extension-dialog .p-button {
+  font-family: "Jura", sans-serif;
+}
+
+:host ::ng-deep .extension-dialog .p-button.p-button-secondary {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--color-light-text);
+}
+
+:host ::ng-deep .extension-dialog .p-button.p-button-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+:host ::ng-deep .extension-dialog .p-button:not(.p-button-secondary) {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-glow));
+  border: none;
+  color: white;
+}
+
+:host ::ng-deep .extension-dialog .p-button:not(.p-button-secondary):hover {
+  background: linear-gradient(135deg, var(--color-primary-glow), var(--color-primary));
+  transform: translateY(-1px);
 }

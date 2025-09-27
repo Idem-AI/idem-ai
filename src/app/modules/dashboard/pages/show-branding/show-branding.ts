@@ -21,13 +21,13 @@ import { ProjectModel } from '../../models/project.model';
 import { BrandingDisplayComponent } from './components/branding-display/branding-display';
 import { Loader } from '../../../../components/loader/loader';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
-import { DialogModule } from 'primeng/dialog';
+import { Dialog } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-show-branding',
   standalone: true,
-  imports: [CommonModule, BrandingDisplayComponent, Loader, PdfViewerModule, DialogModule, ButtonModule],
+  imports: [CommonModule, BrandingDisplayComponent, Loader, PdfViewerModule, Dialog, ButtonModule],
   templateUrl: './show-branding.html',
   styleUrl: './show-branding.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,8 +51,8 @@ export class ShowBrandingComponent implements OnInit {
   protected readonly showBrandingGuide = signal<boolean>(false);
 
   // Dialog state for logo download
-  protected readonly showExtensionDialog = signal<boolean>(false);
-  protected readonly selectedExtension = signal<string>('svg');
+  protected visible = false;
+  protected selectedExtension = 'svg';
 
   // Computed properties for UI state
   protected readonly hasProjectData = computed(() => {
@@ -281,17 +281,9 @@ export class ShowBrandingComponent implements OnInit {
   /**
    * Open extension selection dialog for logo download
    */
-  protected openExtensionDialog(): void {
+  protected showDialog(): void {
     console.log('Opening extension selection dialog');
-    this.showExtensionDialog.set(true);
-  }
-
-  /**
-   * Close extension selection dialog
-   */
-  protected closeExtensionDialog(): void {
-    console.log('Closing extension selection dialog');
-    this.showExtensionDialog.set(false);
+    this.visible = true;
   }
 
   /**
@@ -299,7 +291,7 @@ export class ShowBrandingComponent implements OnInit {
    */
   protected selectExtension(extension: string): void {
     console.log('Selected extension:', extension);
-    this.selectedExtension.set(extension);
+    this.selectedExtension = extension;
   }
 
   /**
@@ -312,11 +304,11 @@ export class ShowBrandingComponent implements OnInit {
       return;
     }
 
-    const extension = this.selectedExtension();
+    const extension = this.selectedExtension;
     console.log('Downloading logos ZIP for project:', projectId, 'with extension:', extension);
     
     // Close dialog
-    this.closeExtensionDialog();
+    this.visible = false;
     
     this.brandingService.downloadLogosZip(projectId, extension).subscribe({
       next: (zipBlob: Blob) => {
@@ -349,11 +341,11 @@ export class ShowBrandingComponent implements OnInit {
         
         // Handle specific error cases
         if (err.message === 'LOGOS_NOT_FOUND') {
-          alert('Aucune déclinaison de logo trouvée pour ce projet.');
+          alert('No logo variations found for this project.');
         } else if (err.message === 'User not authenticated') {
-          alert('Vous devez être connecté pour télécharger les logos.');
+          alert('You must be logged in to download logos.');
         } else {
-          alert('Erreur lors du téléchargement du fichier ZIP des logos. Veuillez réessayer.');
+          alert('Error downloading logos ZIP file. Please try again.');
         }
       },
     });
