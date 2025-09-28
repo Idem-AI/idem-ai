@@ -12,7 +12,10 @@
   </div>
   } @else if(showBrandingGuide() && existingBranding()) {
   <!-- Display PDF Branding Guide -->
-  <app-branding-display [branding]="existingBranding()!"></app-branding-display>
+  <app-branding-display 
+    [branding]="existingBranding()!" 
+    (generateRequested)="generateBranding()">
+  </app-branding-display>
   <div class="fixed top-4 left-4 z-50">
     <button
       (click)="hideBrandingGuide()"
@@ -53,10 +56,7 @@
     <div class="glass-card p-6">
       <div class="flex items-center justify-between mb-6">
         <div>
-          <h1 class="text-3xl font-bold text-white mb-2">
-            <i class="pi pi-palette mr-3 text-purple-400"></i>
-            Brand Identity
-          </h1>
+          <h1 class="text-3xl font-bold text-white mb-2">Brand Identity</h1>
           <p class="text-gray-300">
             @if(currentProject()) { {{ currentProject()!.name }} }
           </p>
@@ -100,7 +100,7 @@
           <!-- Selected Logo -->
           <div class="glass-card p-4 text-center">
             <div
-              class="w-24 h-24 mx-auto mb-3 bg-white/10 rounded-lg flex items-center justify-center p-2"
+              class="w-24 h-24 mx-auto mb-3 bg-white rounded-lg flex items-center justify-center p-2"
             >
               <img [src]="existingBranding()!.logo.svg" class="w-full h-full" />
             </div>
@@ -118,7 +118,7 @@
             {
             <div class="glass-card p-3 text-center">
               <div
-                class="w-16 h-16 mx-auto mb-2 bg-white/10 rounded flex items-center justify-center p-1"
+                class="w-16 h-16 mx-auto mb-2 bg-white rounded flex items-center justify-center p-1"
               >
                 <img
                   [src]="existingBranding()!.logo!.variations!.withText!.lightBackground"
@@ -145,7 +145,7 @@
             {
             <div class="glass-card p-3 text-center">
               <div
-                class="w-16 h-16 mx-auto mb-2 bg-white/10 rounded flex items-center justify-center p-1"
+                class="w-16 h-16 mx-auto mb-2 bg-white rounded flex items-center justify-center p-1"
               >
                 <img
                   [src]="existingBranding()!.logo.variations!.iconOnly!.lightBackground"
@@ -343,30 +343,6 @@
         }
       </div>
     </div>
-
-    <!-- Action Buttons -->
-    <div class="glass-card p-6">
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        @if(!hasBrandingGuide()) {
-        <button class="inner-button" (click)="generateBranding()">
-          <i class="pi pi-plus mr-2"></i>
-          Generate Brand Guide
-        </button>
-        } @else {
-        <button (click)="viewBrandingGuide()" class="inner-button">
-          <i class="pi pi-file-pdf mr-2"></i>
-          View Brand Guide
-        </button>
-        <button
-          class="glass-card px-6 py-3 text-white hover:bg-white/20 transition-all duration-300 rounded-lg"
-          (click)="generateBranding()"
-        >
-          <i class="pi pi-refresh mr-2"></i>
-          Regenerate
-        </button>
-        }
-      </div>
-    </div>
   </div>
   } @else {
   <!-- Empty State - No project ID -->
@@ -393,7 +369,7 @@
     [modal]="true"
     [(visible)]="visible"
     [style]="{ width: '25rem' }"
-    styleClass="extension-dialog"
+    styleClass="extension-dialog centered-modal"
   >
     <span class="p-text-secondary block mb-8"
       >Select the desired format to download all logo variations.</span
@@ -440,7 +416,7 @@
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-3">
             <div
-              class="w-12 h-12  bg-zinc-200 rounded-lg flex items-center justify-center p-2"
+              class="w-12 h-12 bg-zinc-200 rounded-lg flex items-center justify-center p-2"
             >
               <img
                 src="https://cdn-icons-png.flaticon.com/512/337/337948.png"
@@ -490,22 +466,27 @@
     </div>
 
     <div class="flex justify-end gap-2">
-      <p-button 
-        label="Cancel" 
-        severity="secondary" 
+      <button
+        class="outer-button"
         (click)="visible = false"
-        [disabled]="isDownloading()" 
-      />
-      <p-button 
-        [label]="isDownloading() ? 'Downloading...' : 'Download'" 
+        [disabled]="isDownloading()"
+      >
+        Cancel
+      </button>
+      <button
+        class="inner-button"
         (click)="downloadLogosZip()"
         [disabled]="isDownloading()"
-      />
+      >
+        {{ isDownloading() ? 'Downloading...' : 'Download' }}
+      </button>
     </div>
 
     <!-- Loading overlay -->
     @if(isDownloading()) {
-    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm rounded-lg flex items-center justify-center">
+    <div
+      class="absolute inset-0 bg-black/50 backdrop-blur-sm rounded-lg flex items-center justify-center"
+    >
       <div class="text-center">
         <app-loader />
         <p class="text-white mt-4 font-medium">Preparing download...</p>

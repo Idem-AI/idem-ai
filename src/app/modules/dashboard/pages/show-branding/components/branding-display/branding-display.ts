@@ -3,6 +3,7 @@ import {
   Component,
   inject,
   input,
+  output,
   signal,
   OnInit,
 } from '@angular/core';
@@ -22,6 +23,7 @@ import { PdfViewer } from '../../../../../../shared/components/pdf-viewer/pdf-vi
 })
 export class BrandingDisplayComponent implements OnInit {
   readonly branding = input.required<BrandIdentityModel | null>();
+  readonly generateRequested = output<void>();
 
   private readonly brandingService = inject(BrandingService);
   private readonly cookieService = inject(CookieService);
@@ -139,5 +141,9 @@ export class BrandingDisplayComponent implements OnInit {
       link.download = 'branding-guide.pdf';
       link.click();
     }
+  }
+
+  protected handleGenerateRequest(): void {
+    this.generateRequested.emit();
   }
 }
