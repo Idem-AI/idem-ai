@@ -55,7 +55,7 @@ export class AuthService {
   private async postLogin(user: User) {
     if (!user) return;
     const currentUser = this.auth.currentUser;
-    
+
     // Le TokenService va automatiquement sauvegarder le token dans les cookies
     const token = currentUser
       ? await this.tokenService.refreshToken(currentUser)
@@ -67,7 +67,7 @@ export class AuthService {
     }
 
     console.log('Token obtenu et sauvegardé automatiquement lors du login');
-    
+
     // Sauvegarder l'utilisateur dans les cookies
     this.saveUserToCookies(user);
 

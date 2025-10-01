@@ -341,74 +341,124 @@
     </section>
     }
 
-    <!-- Advanced Mode Configuration -->
+    <!-- Advanced Mode Configuration with Step-by-Step -->
     @if (selectedMode() === 'advanced') {
-    <section class="sm:glass-card sm:p-6 mb-8 backdrop-blur-sm">
-      <div class="text-center mb-8">
-        <h2 class="text-2xl font-bold text-white mb-4">
-          Advanced Configuration
-        </h2>
-        <p class="text-gray-400">Configure all aspects of your application</p>
-      </div>
-
-      <!-- Tab Navigation -->
-      <div class="mb-8">
-        <div
-          class="glass p-2 rounded-2xl grid grid-cols-2 md:grid-cols-3 gap-1 backdrop-blur-sm"
-        >
-          @for (tab of tabs; track tab) {
-          <button
-            class="py-4 text-white text-base font-medium flex items-center justify-center outer-button gap-3 transition-all duration-300 rounded-xl"
-            [class.inner-button]="selectedTab() === tab"
-            [class.glass]="selectedTab() !== tab"
-            (click)="selectTab(tab)"
-          >
-            <span
-              class="pi"
-              [class.pi-desktop]="tab === 'frontend'"
-              [class.pi-server]="tab === 'backend'"
-              [class.pi-database]="tab === 'database'"
-              [class.pi-database]="tab === 'deployment'"
+    <section class="mb-8">
+      <!-- Step Progress Indicator -->
+      <div class="glass-card p-6 mb-6 backdrop-blur-sm">
+        <div class="flex items-center justify-between mb-4">
+          @for (step of advancedSteps; track step.id; let i = $index) {
+            <div class="flex items-center">
+              <!-- Step Circle -->
+              <div 
+                class="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300"
+                [class.inner-button]="advancedCurrentStep() === i"
+                [class.glass]="advancedCurrentStep() !== i"
+                [class.opacity-50]="advancedCurrentStep() < i"
+              >
+                @if (advancedCurrentStep() > i) {
+                  <i class="pi pi-check text-green-400"></i>
+                } @else {
+                  <span class="pi" [class]="step.icon"></span>
+                }
+              </div>
               
+              <!-- Step Label (hidden on mobile) -->
+              <span class="ml-2 text-sm font-medium hidden md:block"
+                [class.text-white]="advancedCurrentStep() === i"
+                [class.text-gray-400]="advancedCurrentStep() !== i"
+              >
+                {{ step.label }}
+              </span>
               
-            ></span>
-            <span>{{ tab | titlecase }}</span>
-          </button>
+              <!-- Connection Line -->
+              @if (i < advancedSteps.length - 1) {
+                <div class="w-12 md:w-20 h-0.5 mx-2 md:mx-4 transition-all duration-300"
+                  [class.bg-primary]="advancedCurrentStep() > i"
+                  [class.bg-gray-600]="advancedCurrentStep() <= i"
+                ></div>
+              }
+            </div>
           }
+        </div>
+        
+        <!-- Current Step Title -->
+        <div class="text-center mt-4">
+          <h2 class="text-2xl font-bold text-white">
+            {{ advancedSteps[advancedCurrentStep()].label }} Configuration
+          </h2>
+          <p class="text-gray-400 text-sm mt-1">
+            Step {{ advancedCurrentStep() + 1 }} of {{ advancedSteps.length }}
+          </p>
         </div>
       </div>
 
-      <!-- Tab Content -->
-      @switch (selectedTab()) { @case ('frontend') {
-      <app-frontend-config
-        [frontendForm]="frontendForm"
-        [versionOptions]="{}"
-        [showAdvancedOptions]="showAdvancedOptions()"
-        [selectedStylingPreferences]="selectedStylingPreferences()"
-      >
-      </app-frontend-config>
-      } @case ('backend') {
-      <app-backend-config
-        [backendForm]="backendForm"
-        [versionOptions]="{}"
-        [showAdvancedOptions]="showAdvancedOptions()"
-      >
-      </app-backend-config>
-      } @case ('database') {
-      <app-database-config [databaseForm]="databaseForm"></app-database-config>
-      } @case ('deployment') {
-      <app-deployment-config ></app-deployment-config>
-      } }
+      <!-- Step Content -->
+      <div class="glass-card p-6 mb-6 backdrop-blur-sm">
+        @switch (advancedCurrentStep()) {
+          @case (0) {
+            <!-- Frontend Configuration -->
+            <app-frontend-config
+              [frontendForm]="frontendForm"
+              [versionOptions]="{}"
+              [showAdvancedOptions]="showAdvancedOptions()"
+              [selectedStylingPreferences]="selectedStylingPreferences()"
+            />
+          }
+          @case (1) {
+            <!-- Backend Configuration -->
+            <app-backend-config
+              [backendForm]="backendForm"
+              [versionOptions]="{}"
+              [showAdvancedOptions]="showAdvancedOptions()"
+            />
+          }
+          @case (2) {
+            <!-- Database Configuration -->
+            <app-database-config [databaseForm]="databaseForm" />
+          }
+          @case (3) {
+            <!-- Deployment Configuration -->
+            <app-deployment-config 
+              [frontendConfig]="frontendForm.value"
+              [backendConfig]="backendForm.value"
+              [databaseConfig]="databaseForm.value"
+            />
+          }
+        }
+      </div>
 
-      <!-- Action Buttons -->
-      <div class="flex justify-end mt-8">
+      <!-- Navigation Buttons -->
+      <div class="flex justify-between items-center">
         <button
-          class="inner-button flex items-center gap-2"
-          (click)="onSaveConfiguration()"
+          class="outer-button flex items-center gap-2"
+          (click)="goToPreviousAdvancedStep()"
+          [disabled]="advancedCurrentStep() === 0"
         >
-          <span>Save configs</span>
-          <span class="pi pi-arrow-right"></span>
+          <span class="pi pi-arrow-left"></span>
+          <span>Previous</span>
         </button>
+
+        <div class="flex gap-3">
+          @if (advancedCurrentStep() < advancedSteps.length - 1) {
+            <button
+              class="inner-button flex items-center gap-2"
+              (click)="goToNextAdvancedStep()"
+              [disabled]="!isCurrentStepValid()"
+            >
+              <span>Next</span>
+              <span class="pi pi-arrow-right"></span>
+            </button>
+          } @else {
+            <button
+              class="inner-button flex items-center gap-2"
+              (click)="onSaveConfiguration()"
+            >
+              <span>Save Configuration</span>
+              <span class="pi pi-check"></span>
+            </button>
+          }
+        </div>
       </div>
     </section>
     } } }

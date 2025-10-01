@@ -2,6 +2,9 @@ export const environment = {
   environment: 'prod',
   isBeta: true, 
   waitlistUrl: 'https://forms.gle/gP7fr8te9qMUovad6',
+  analytics: {
+    enabled: true, // Analytics enabled in production only
+  },
   firebase: {
     apiKey: 'AIzaSyCsUpHmK5-o4hp8_HldvlaLU2gLOUVeHgY',
     authDomain: 'lexis-ia.firebaseapp.com',

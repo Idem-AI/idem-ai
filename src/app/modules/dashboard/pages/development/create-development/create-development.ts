@@ -52,7 +52,16 @@ import { DeploymentConfigComponent } from "./components/deployment-config/deploy
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateDevelopmentComponent implements OnInit {
-  protected readonly tabs = ['frontend', 'backend', 'database', 'deployment'] as const; 
+  protected readonly tabs = ['frontend', 'backend', 'database', 'deployment'] as const;
+  
+  // Advanced mode step state
+  protected readonly advancedCurrentStep = signal<number>(0);
+  protected readonly advancedSteps = [
+    { id: 'frontend', label: 'Frontend', icon: 'pi-desktop' },
+    { id: 'backend', label: 'Backend', icon: 'pi-server' },
+    { id: 'database', label: 'Database', icon: 'pi-database' },
+    { id: 'deployment', label: 'Deployment', icon: 'pi-cloud' }
+  ] as const; 
 
   // Injectable services - suivant le style guide Angular
   protected readonly auth = inject(AuthService);
@@ -89,6 +98,57 @@ export class CreateDevelopmentComponent implements OnInit {
    */
   protected selectTab(tab: 'frontend' | 'backend' | 'database' | 'deployment'): void {
     this.selectedTab.set(tab);
+  }
+
+  /**
+   * Go to next step in advanced mode
+   */
+  protected goToNextAdvancedStep(): void {
+    const currentStep = this.advancedCurrentStep();
+    if (currentStep < this.advancedSteps.length - 1) {
+      this.advancedCurrentStep.set(currentStep + 1);
+      this.clearErrors();
+    }
+  }
+
+  /**
+   * Go to previous step in advanced mode
+   */
+  protected goToPreviousAdvancedStep(): void {
+    const currentStep = this.advancedCurrentStep();
+    if (currentStep > 0) {
+      this.advancedCurrentStep.set(currentStep - 1);
+    }
+  }
+
+  /**
+   * Check if current step is valid before moving forward
+   */
+  protected isCurrentStepValid(): boolean {
+    const currentStep = this.advancedCurrentStep();
+    switch (currentStep) {
+      case 0: // Frontend
+        return this.frontendForm.valid;
+      case 1: // Backend
+        return this.backendForm.valid;
+      case 2: // Database
+        return this.databaseForm.valid;
+      case 3: // Deployment
+        return true; // Deployment is optional
+      default:
+        return false;
+    }
+  }
+
+  /**
+   * Get current step configuration for deployment component
+   */
+  protected getCurrentStepConfig() {
+    return {
+      frontend: this.frontendForm.value,
+      backend: this.backendForm.value,
+      database: this.databaseForm.value
+    };
   }
 
   /**
@@ -492,5 +552,22 @@ export class CreateDevelopmentComponent implements OnInit {
     } finally {
       this.isLoaded.set(false);
     }
+  }
+
+  /**
+   * Clear all error messages
+   */
+  private clearErrors(): void {
+    this.errorMessages.set([]);
+  }
+
+  /**
+   * Reset to mode selection (from advanced mode)
+   */
+  protected resetToModeSelection(): void {
+    this.currentStep.set('mode-selection');
+    this.selectedMode.set(null);
+    this.advancedCurrentStep.set(0);
+    this.clearErrors();
   }
 }

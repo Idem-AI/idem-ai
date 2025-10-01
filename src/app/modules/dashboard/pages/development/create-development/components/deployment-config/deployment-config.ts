@@ -3,27 +3,34 @@ import {
   Component,
   input,
   computed,
+  signal,
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TechCardModel } from '../shared/tech-card';
 import { ButtonModule } from 'primeng/button';
-import { CreateDeployment } from '../../../../deployment/create-deployment/create-deployment';
 
 @Component({
   selector: 'app-deployment-config',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ButtonModule, CreateDeployment],
+  imports: [CommonModule, ReactiveFormsModule, ButtonModule],
   templateUrl: './deployment-config.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeploymentConfigComponent {
-  // Input properties
+  // Input properties - configuration from previous steps
+  readonly frontendConfig = input<any>();
+  readonly backendConfig = input<any>();
+  readonly databaseConfig = input<any>();
   readonly deploymentForm = input<FormGroup>();
   readonly showAdvancedOptions = input<boolean>();
   readonly versionOptions = input<{
     [key: string]: { [key: string]: string[] };
   }>({});
+
+  // Selected deployment platform
+  protected readonly selectedPlatform = signal<string | null>(null);
 
   /**
    * Track whether form is valid for parent components
@@ -31,6 +38,115 @@ export class DeploymentConfigComponent {
   protected readonly formValid = computed(() => {
     return this.deploymentForm()?.valid ?? false;
   });
+
+  /**
+   * Filtered deployment options based on frontend/backend/database choices
+   */
+  protected readonly filteredDeploymentOptions = computed(() => {
+    const frontend = this.frontendConfig();
+    const backend = this.backendConfig();
+    const database = this.databaseConfig();
+
+    return this.deploymentOptions.filter(option => {
+      // Docker - compatible with all stacks
+      if (option.id === 'docker') return true;
+
+      // Vercel - only for frontend frameworks (React, Next.js, Vue, Angular)
+      if (option.id === 'vercel') {
+        return frontend?.framework && ['react', 'nextjs', 'vue', 'angular'].includes(frontend.framework);
+      }
+
+      // Netlify - only for frontend frameworks
+      if (option.id === 'netlify') {
+        return frontend?.framework && ['react', 'vue', 'angular', 'svelte'].includes(frontend.framework);
+      }
+
+      // AWS - compatible with all, but requires backend
+      if (option.id === 'aws') {
+        return backend?.framework && backend.framework !== '';
+      }
+
+      // Azure - compatible with all, prefers .NET/C# backends
+      if (option.id === 'azure') {
+        return backend?.framework && backend.framework !== '';
+      }
+
+      // Kubernetes - only for complex setups (backend + database)
+      if (option.id === 'kubernetes') {
+        return backend?.framework && database?.provider;
+      }
+
+      return true;
+    });
+  });
+
+  /**
+   * Get recommended platform based on stack
+   */
+  protected readonly recommendedPlatform = computed(() => {
+    const frontend = this.frontendConfig();
+    const backend = this.backendConfig();
+    const database = this.databaseConfig();
+
+    // React/Next.js -> Vercel
+    if (frontend?.framework === 'react' || frontend?.framework === 'nextjs') {
+      return 'vercel';
+    }
+
+    // Node.js backend with Firebase -> Vercel or Netlify
+    if (backend?.language === 'javascript' || backend?.language === 'typescript') {
+      if (database?.provider === 'firebase' || database?.provider === 'supabase') {
+        return 'vercel';
+      }
+    }
+
+    // Complex backend (Java, Python, Go) -> AWS or Docker
+    if (backend?.language && ['java', 'python', 'go', 'csharp'].includes(backend.language)) {
+      return 'aws';
+    }
+
+    // Default to Docker for flexibility
+    return 'docker';
+  });
+
+  /**
+   * Get deployment description based on current stack
+   */
+  protected getDeploymentDescription(platformId: string): string {
+    const frontend = this.frontendConfig();
+    const backend = this.backendConfig();
+
+    switch(platformId) {
+      case 'vercel':
+        return `Perfect for ${frontend?.framework || 'frontend'} with serverless backend`;
+      case 'netlify':
+        return `Optimized for ${frontend?.framework || 'frontend'} static sites`;
+      case 'docker':
+        return `Containerized deployment for ${backend?.framework || 'your'} stack`;
+      case 'aws':
+        return `Scalable cloud infrastructure for ${backend?.language || 'your'} backend`;
+      case 'azure':
+        return `Enterprise cloud for ${backend?.framework || 'your'} application`;
+      case 'kubernetes':
+        return `Orchestrated containers for complex ${backend?.framework || ''} architectures`;
+      default:
+        return 'Flexible deployment solution';
+    }
+  }
+
+  /**
+   * Check if platform is recommended
+   */
+  protected isPlatformRecommended(platformId: string): boolean {
+    return this.recommendedPlatform() === platformId;
+  }
+
+  /**
+   * Select a deployment platform
+   */
+  protected selectPlatform(platformId: string): void {
+    this.selectedPlatform.set(platformId);
+  }
 
   /**
    * Get versions for the selected deployment platform

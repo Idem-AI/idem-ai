@@ -1,3 +1,166 @@
-<section class="container p-6 mb-8">
-  <app-create-deployment/>
+<section class="space-y-6">
+  <!-- Configuration Summary -->
+  <div class="glass-card p-6">
+    <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+      <i class="pi pi-info-circle text-primary"></i>
+      Your Stack Configuration
+    </h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <!-- Frontend Summary -->
+      <div class="glass p-4 rounded-lg">
+        <div class="flex items-center gap-2 mb-2">
+          <i class="pi pi-desktop text-primary"></i>
+          <span class="text-sm font-medium text-gray-400">Frontend</span>
+        </div>
+        <p class="text-white font-medium">{{ frontendConfig()?.framework || 'Not configured' }}</p>
+        @if (frontendConfig()?.styling) {
+          <p class="text-xs text-gray-400 mt-1">{{ frontendConfig()?.styling }}</p>
+        }
+      </div>
+
+      <!-- Backend Summary -->
+      <div class="glass p-4 rounded-lg">
+        <div class="flex items-center gap-2 mb-2">
+          <i class="pi pi-server text-secondary"></i>
+          <span class="text-sm font-medium text-gray-400">Backend</span>
+        </div>
+        <p class="text-white font-medium">{{ backendConfig()?.framework || 'Not configured' }}</p>
+        @if (backendConfig()?.language) {
+          <p class="text-xs text-gray-400 mt-1">{{ backendConfig()?.language }}</p>
+        }
+      </div>
+
+      <!-- Database Summary -->
+      <div class="glass p-4 rounded-lg">
+        <div class="flex items-center gap-2 mb-2">
+          <i class="pi pi-database text-accent"></i>
+          <span class="text-sm font-medium text-gray-400">Database</span>
+        </div>
+        <p class="text-white font-medium">{{ databaseConfig()?.provider || 'Not configured' }}</p>
+        @if (databaseConfig()?.orm) {
+          <p class="text-xs text-gray-400 mt-1">{{ databaseConfig()?.orm }}</p>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Deployment Platform Selection -->
+  <div class="glass-card p-6">
+    <h3 class="text-lg font-semibold text-white mb-2 flex items-center gap-2">
+      <i class="pi pi-cloud text-primary"></i>
+      Select Deployment Platform
+    </h3>
+    <p class="text-sm text-gray-400 mb-6">
+      Based on your stack configuration, here are the compatible deployment options
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      @for (platform of filteredDeploymentOptions(); track platform.id) {
+        <div 
+          class="glass p-4 rounded-lg cursor-pointer transition-all duration-300 hover:scale-105 relative"
+          [class.ring-2]="selectedPlatform() === platform.id"
+          [class.ring-primary]="selectedPlatform() === platform.id"
+          [class.glow-primary]="selectedPlatform() === platform.id"
+          [class.opacity-50]="!platform.isAvailable"
+          (click)="platform.isAvailable && selectPlatform(platform.id)"
+        >
+          <!-- Recommended Badge -->
+          @if (isPlatformRecommended(platform.id)) {
+            <div class="absolute top-2 right-2">
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary text-white">
+                <i class="pi pi-star-fill mr-1 text-xs"></i>
+                Recommended
+              </span>
+            </div>
+          }
+
+          <!-- Platform Icon & Name -->
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-12 h-12 flex items-center justify-center rounded-lg glass">
+              @if (platform.icon) {
+                <img [src]="platform.icon" [alt]="platform.name" class="w-8 h-8 object-contain" />
+              } @else {
+                <i class="pi pi-cloud text-2xl" [style.color]="platform.color"></i>
+              }
+            </div>
+            <div class="flex-1">
+              <h4 class="text-white font-semibold">{{ platform.name }}</h4>
+              @if (!platform.isAvailable) {
+                <span class="text-xs text-gray-500">Coming soon</span>
+              }
+            </div>
+          </div>
+
+          <!-- Dynamic Description -->
+          <p class="text-sm text-gray-400 mb-3">
+            {{ getDeploymentDescription(platform.id) }}
+          </p>
+
+          <!-- Platform Badges -->
+          <div class="flex flex-wrap gap-1">
+            @for (badge of platform.badges; track badge) {
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium glass text-gray-300">
+                {{ badge }}
+              </span>
+            }
+          </div>
+
+          <!-- Selection Indicator -->
+          @if (selectedPlatform() === platform.id) {
+            <div class="mt-3 flex items-center justify-center">
+              <i class="pi pi-check-circle text-primary text-xl"></i>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- No Compatible Platforms Message -->
+    @if (filteredDeploymentOptions().length === 0) {
+      <div class="glass p-6 rounded-lg text-center">
+        <i class="pi pi-exclamation-triangle text-4xl text-warning mb-3"></i>
+        <p class="text-white font-medium mb-2">No compatible deployment platforms found</p>
+        <p class="text-sm text-gray-400">
+          Please review your frontend, backend, and database configurations
+        </p>
+      </div>
+    }
+  </div>
+
+  <!-- Selected Platform Details (if any) -->
+  @if (selectedPlatform()) {
+    <div class="glass-card p-6">
+      <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+        <i class="pi pi-cog text-primary"></i>
+        Deployment Configuration
+      </h3>
+
+      <div class="space-y-4">
+        <!-- Platform-specific configuration would go here -->
+        <div class="glass p-4 rounded-lg">
+          <p class="text-sm text-gray-400">
+            Platform: <span class="text-white font-medium">{{ selectedPlatform() }}</span>
+          </p>
+          <p class="text-xs text-gray-500 mt-2">
+            Additional configuration options will be available in the deployment wizard
+          </p>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Help Text -->
+  <div class="glass p-4 rounded-lg border border-primary/30">
+    <div class="flex gap-3">
+      <i class="pi pi-info-circle text-primary text-xl"></i>
+      <div>
+        <p class="text-sm text-white font-medium mb-1">Need help choosing?</p>
+        <p class="text-xs text-gray-400">
+          We've pre-selected the recommended platform based on your stack. 
+          You can always change this later or configure multiple deployment targets.
+        </p>
+      </div>
+    </div>
+  </div>
 </section>
