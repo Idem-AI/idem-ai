@@ -368,6 +368,8 @@
               [class.pi-desktop]="tab === 'frontend'"
               [class.pi-server]="tab === 'backend'"
               [class.pi-database]="tab === 'database'"
+              [class.pi-database]="tab === 'deployment'"
+              
               
             ></span>
             <span>{{ tab | titlecase }}</span>
@@ -394,6 +396,8 @@
       </app-backend-config>
       } @case ('database') {
       <app-database-config [databaseForm]="databaseForm"></app-database-config>
+      } @case ('deployment') {
+      <app-deployment-config ></app-deployment-config>
       } }
 
       <!-- Action Buttons -->

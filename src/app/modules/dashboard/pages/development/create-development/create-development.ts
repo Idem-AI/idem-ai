@@ -33,6 +33,7 @@ import { User } from '@angular/fire/auth';
 import { first } from 'rxjs/operators';
 import { DevelopmentService } from '../../../services/ai-agents/development.service';
 import { Router } from '@angular/router';
+import { DeploymentConfigComponent } from "./components/deployment-config/deployment-config";
 
 @Component({
   selector: 'app-show-development',
@@ -44,13 +45,14 @@ import { Router } from '@angular/router';
     FrontendConfigComponent,
     BackendConfigComponent,
     DatabaseConfigComponent,
-  ],
+    DeploymentConfigComponent
+],
   templateUrl: './create-development.html',
   styleUrl: './create-development.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateDevelopmentComponent implements OnInit {
-  protected readonly tabs = ['frontend', 'backend', 'database'] as const; 
+  protected readonly tabs = ['frontend', 'backend', 'database', 'deployment'] as const; 
 
   // Injectable services - suivant le style guide Angular
   protected readonly auth = inject(AuthService);
