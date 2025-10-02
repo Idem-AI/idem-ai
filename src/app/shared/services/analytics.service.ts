@@ -33,36 +33,43 @@ import {
   providedIn: 'root',
 })
 export class AnalyticsService {
-  private analytics: Analytics | null = null;
+  private analytics: Analytics;
   private readonly router = inject(Router);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
-  private readonly isEnabled = true;
+  private readonly isEnabled = environment.analytics?.enabled ?? false;
 
   constructor() {
-    // Only initialize Analytics in browser (not during SSR)
-    if (this.isBrowser) {
-      try {
-        this.analytics = inject(Analytics);
-        if (this.isEnabled) {
-          // Enable debug mode for local testing
-          if (typeof window !== 'undefined') {
-            (window as any)['ga-disable-G-1YQGTP97EJ'] = false;
-            console.log('🔧 Analytics Debug Mode: Enabled for local testing');
-          }
-          
-          this.initializePageTracking();
-          console.log('📊 Firebase Analytics: ENABLED (Production Mode)');
-          console.log('📊 Measurement ID: G-1YQGTP97EJ');
-          console.log('📊 To see events in Firebase: Console > Analytics > DebugView');
-        } else {
-          console.log('📊 Firebase Analytics: DISABLED (Development Mode)');
-        }
-      } catch (error) {
-        console.warn('📊 Firebase Analytics: Could not initialize', error);
+    // Inject Analytics (Angular will handle SSR automatically)
+    this.analytics = inject(Analytics);
+
+    console.log('🔍 Analytics Service Init:', {
+      isBrowser: this.isBrowser,
+      isEnabled: this.isEnabled,
+      analyticsInjected: !!this.analytics,
+      environment: environment.environment,
+    });
+
+    // Only track in browser (not during SSR)
+    if (this.isBrowser && this.isEnabled && this.analytics) {
+      // Enable debug mode for local testing
+      if (typeof window !== 'undefined') {
+        (window as any)['ga-disable-G-1YQGTP97EJ'] = false;
+        console.log('🔧 Analytics Debug Mode: Enabled');
       }
+
+      this.initializePageTracking();
+      console.log('📊 Firebase Analytics: ENABLED');
+      console.log('📊 Measurement ID: G-1YQGTP97EJ');
+      console.log('📊 Environment:', environment.environment);
     } else {
-      console.log('📊 Firebase Analytics: SKIPPED (Server-Side Rendering)');
+      console.warn('📊 Firebase Analytics: DISABLED', {
+        reason: !this.isBrowser
+          ? 'SSR'
+          : !this.isEnabled
+          ? 'Not Enabled'
+          : 'Analytics Not Injected',
+      });
     }
   }
 
@@ -99,7 +106,15 @@ export class AnalyticsService {
    * Check if analytics is enabled
    */
   private canTrack(): boolean {
-    return this.isBrowser && this.isEnabled && this.analytics !== null;
+    const canTrack = this.isBrowser && this.isEnabled && !!this.analytics;
+    if (!canTrack) {
+      console.debug('⚠️ Analytics tracking blocked:', {
+        isBrowser: this.isBrowser,
+        isEnabled: this.isEnabled,
+        hasAnalytics: !!this.analytics,
+      });
+    }
+    return canTrack;
   }
 
   /**
