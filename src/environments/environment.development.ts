@@ -3,7 +3,7 @@ export const environment = {
   isBeta: true, // Set to true to show normal login page in development
   waitlistUrl: 'https://forms.gle/YourDevGoogleFormUrlHere', // Development waitlist form URL
   analytics: {
-    enabled: false, // Analytics disabled in development
+    enabled: true, // Analytics disabled in development
   },
   firebase: {
     apiKey: 'AIzaSyCsUpHmK5-o4hp8_HldvlaLU2gLOUVeHgY',

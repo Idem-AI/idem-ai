@@ -2,7 +2,9 @@ import {
   ApplicationConfig,
   provideZoneChangeDetection,
   SecurityContext,
+  PLATFORM_ID,
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 // Router imports moved to app.routes.ts
 import { providePrimeNG } from 'primeng/config';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -71,6 +73,7 @@ export const appConfig: ApplicationConfig = {
     }),
     provideAuth(() => getAuth()),
     provideAnalytics(() => getAnalytics()),
+    // Analytics tracking services - only in browser (not during SSR)
     ScreenTrackingService,
     UserTrackingService,
     provideFirestore(() => getFirestore()),

@@ -33,18 +33,28 @@ import {
   providedIn: 'root',
 })
 export class AnalyticsService {
-  private readonly analytics = inject(Analytics);
+  private analytics: Analytics | null = null;
   private readonly router = inject(Router);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly isEnabled = true;
 
   constructor() {
-    if (this.isBrowser && this.isEnabled) {
-      this.initializePageTracking();
-      console.log('📊 Firebase Analytics: ENABLED (Production Mode)');
+    // Only initialize Analytics in browser (not during SSR)
+    if (this.isBrowser) {
+      try {
+        this.analytics = inject(Analytics);
+        if (this.isEnabled) {
+          this.initializePageTracking();
+          console.log('📊 Firebase Analytics: ENABLED (Production Mode)');
+        } else {
+          console.log('📊 Firebase Analytics: DISABLED (Development Mode)');
+        }
+      } catch (error) {
+        console.warn('📊 Firebase Analytics: Could not initialize', error);
+      }
     } else {
-      console.log('📊 Firebase Analytics: DISABLED (Development Mode)');
+      console.log('📊 Firebase Analytics: SKIPPED (Server-Side Rendering)');
     }
   }
 
@@ -67,7 +77,7 @@ export class AnalyticsService {
    * Check if analytics is enabled
    */
   private canTrack(): boolean {
-    return this.isBrowser && this.isEnabled;
+    return this.isBrowser && this.isEnabled && this.analytics !== null;
   }
 
   /**
@@ -76,7 +86,7 @@ export class AnalyticsService {
   trackPageView(params: PageViewParams): void {
     if (!this.canTrack()) return;
 
-    logEvent(this.analytics, AnalyticsEvent.PAGE_VIEW, {
+    logEvent(this.analytics!, AnalyticsEvent.PAGE_VIEW, {
       page_title: params.page_title,
       page_location: params.page_location,
       page_path: params.page_path,
@@ -90,7 +100,7 @@ export class AnalyticsService {
    * Set user ID for tracking
    */
   setUser(userId: string): void {
-    if (!this.canTrack()) return;
+    if (!this.canTrack() || !this.analytics) return;
     setUserId(this.analytics, userId);
     console.log('📊 Analytics: User ID set', userId);
   }
@@ -99,7 +109,7 @@ export class AnalyticsService {
    * Set user properties
    */
   setUserProperties(properties: UserProperties): void {
-    if (!this.canTrack()) return;
+    if (!this.canTrack() || !this.analytics) return;
     setUserProperties(this.analytics, properties);
     console.log('📊 Analytics: User properties set', properties);
   }
@@ -411,7 +421,7 @@ export class AnalyticsService {
    * Generic event tracking method
    */
   private trackEvent(eventName: string, params: Record<string, any>): void {
-    if (!this.canTrack()) return;
+    if (!this.canTrack() || !this.analytics) return;
 
     logEvent(this.analytics, eventName, params);
     console.log(`📊 Analytics: ${eventName}`, params);
