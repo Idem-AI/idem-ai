@@ -1,13 +1,10 @@
 import {
   ApplicationConfig,
-  importProvidersFrom,
   provideZoneChangeDetection,
-  REQUEST,
   SecurityContext,
 } from '@angular/core';
 // Router imports moved to app.routes.ts
 import { providePrimeNG } from 'primeng/config';
-import Aura from '@primeng/themes/aura';
 import { provideAnimations } from '@angular/platform-browser/animations';
 
 import {
@@ -50,9 +47,6 @@ import 'prismjs/themes/prism-tomorrow.css';
 import { AuthService } from './modules/auth/services/auth.service';
 import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 
-import { PLATFORM_ID, inject } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { initializeServerApp } from '@angular/fire/app';
 import { ProjectService } from './modules/dashboard/services/project.service';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './app.routes';
@@ -65,6 +59,7 @@ const firebaseConfig = {
   storageBucket: environment.firebase.storageBucket,
   messagingSenderId: environment.firebase.messagingSenderId,
   appId: environment.firebase.appId,
+  measurementId: environment.firebase.measurementId, 
 };
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -88,10 +83,7 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     provideAnimations(),
-    provideHttpClient(
-      withFetch(),
-      withInterceptors([authInterceptor])
-    ),
+    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     provideMarkdown({
       sanitize: SecurityContext.NONE,
       markedOptions: {

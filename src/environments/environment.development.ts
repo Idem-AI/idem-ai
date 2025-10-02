@@ -12,6 +12,7 @@ export const environment = {
     storageBucket: 'lexis-ia.firebasestorage.app',
     messagingSenderId: '78825247320',
     appId: '1:78825247320:web:2a69ba8ceabad513f3f02d',
+    measurementId: 'G-1YQGTP97EJ', 
   },
   services: {
     domain: 'https://idem.africa',

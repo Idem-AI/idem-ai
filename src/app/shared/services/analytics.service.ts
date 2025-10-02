@@ -1,6 +1,11 @@
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Analytics, logEvent, setUserId, setUserProperties } from '@angular/fire/analytics';
+import {
+  Analytics,
+  logEvent,
+  setUserId,
+  setUserProperties,
+} from '@angular/fire/analytics';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
@@ -32,7 +37,7 @@ export class AnalyticsService {
   private readonly router = inject(Router);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
-  private readonly isEnabled = environment.analytics?.enabled ?? false;
+  private readonly isEnabled = true;
 
   constructor() {
     if (this.isBrowser && this.isEnabled) {
@@ -70,14 +75,14 @@ export class AnalyticsService {
    */
   trackPageView(params: PageViewParams): void {
     if (!this.canTrack()) return;
-    
+
     logEvent(this.analytics, AnalyticsEvent.PAGE_VIEW, {
       page_title: params.page_title,
       page_location: params.page_location,
       page_path: params.page_path,
       timestamp: new Date().toISOString(),
     });
-    
+
     console.log('📊 Analytics: Page View', params.page_path);
   }
 
@@ -407,7 +412,7 @@ export class AnalyticsService {
    */
   private trackEvent(eventName: string, params: Record<string, any>): void {
     if (!this.canTrack()) return;
-    
+
     logEvent(this.analytics, eventName, params);
     console.log(`📊 Analytics: ${eventName}`, params);
   }
