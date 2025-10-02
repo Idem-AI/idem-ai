@@ -41,7 +41,7 @@ export class WebsiteShowcase implements OnInit, OnDestroy {
       description:
         'Modern B2B software solution with clean design and powerful features',
       imageUrl: '/assets/showcase/website-1.jpg',
-      liveUrl: 'https://techflow-demo.idem.africa',
+      liveUrl: 'https://techflow-demo.idem-ai.com',
       technologies: ['Angular', 'Node.js', 'PostgreSQL'],
     },
     {
@@ -51,7 +51,7 @@ export class WebsiteShowcase implements OnInit, OnDestroy {
       description:
         'Sustainable products marketplace with integrated payment system',
       imageUrl: '/assets/showcase/website-2.jpg',
-      liveUrl: 'https://ecogreen-demo.idem.africa',
+      liveUrl: 'https://ecogreen-demo.idem-ai.com',
       technologies: ['React', 'Express', 'MongoDB'],
     },
     {
@@ -60,7 +60,7 @@ export class WebsiteShowcase implements OnInit, OnDestroy {
       category: 'Healthcare',
       description: 'Patient management system with telemedicine capabilities',
       imageUrl: '/assets/showcase/website-3.jpg',
-      liveUrl: 'https://healthcare-demo.idem.africa',
+      liveUrl: 'https://healthcare-demo.idem-ai.com',
       technologies: ['Vue.js', 'Laravel', 'MySQL'],
     },
     {
@@ -70,7 +70,7 @@ export class WebsiteShowcase implements OnInit, OnDestroy {
       description:
         'Interactive learning platform with video streaming and assessments',
       imageUrl: '/assets/showcase/website-4.jpg',
-      liveUrl: 'https://edulearn-demo.idem.africa',
+      liveUrl: 'https://edulearn-demo.idem-ai.com',
       technologies: ['Angular', 'NestJS', 'PostgreSQL'],
     },
     {
@@ -79,7 +79,7 @@ export class WebsiteShowcase implements OnInit, OnDestroy {
       category: 'Finance',
       description: 'Real-time financial analytics and trading dashboard',
       imageUrl: '/assets/showcase/website-5.jpg',
-      liveUrl: 'https://fintech-demo.idem.africa',
+      liveUrl: 'https://fintech-demo.idem-ai.com',
       technologies: ['React', 'FastAPI', 'Redis'],
     },
     {
@@ -89,7 +89,7 @@ export class WebsiteShowcase implements OnInit, OnDestroy {
       description:
         'Artist portfolio with interactive galleries and booking system',
       imageUrl: '/assets/showcase/website-6.jpg',
-      liveUrl: 'https://portfolio-demo.idem.africa',
+      liveUrl: 'https://portfolio-demo.idem-ai.com',
       technologies: ['Next.js', 'Strapi', 'PostgreSQL'],
     },
   ]);
@@ -155,28 +155,32 @@ export class WebsiteShowcase implements OnInit, OnDestroy {
   private setupSeoForWebsiteShowcase(): void {
     // Add structured data for website showcase
     const websiteShowcaseStructuredData = {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      "name": "AI-Generated Website Examples",
-      "description": "Showcase of websites created using Idem's AI-powered development platform",
-      "numberOfItems": this.websites().length,
-      "itemListElement": this.websites().map((website, index) => ({
-        "@type": "ListItem",
-        "position": index + 1,
-        "item": {
-          "@type": "WebSite",
-          "name": website.title,
-          "description": website.description,
-          "url": website.liveUrl,
-          "image": `${this.seoService.domain}${website.imageUrl}`,
-          "applicationCategory": website.category,
-          "programmingLanguage": website.technologies
-        }
-      }))
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'AI-Generated Website Examples',
+      description:
+        "Showcase of websites created using Idem's AI-powered development platform",
+      numberOfItems: this.websites().length,
+      itemListElement: this.websites().map((website, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'WebSite',
+          name: website.title,
+          description: website.description,
+          url: website.liveUrl,
+          image: `${this.seoService.domain}${website.imageUrl}`,
+          applicationCategory: website.category,
+          programmingLanguage: website.technologies,
+        },
+      })),
     };
 
     // Add structured data to page if not already present
-    if (this.isBrowser() && !document.querySelector('script[data-website-showcase-structured-data]')) {
+    if (
+      this.isBrowser() &&
+      !document.querySelector('script[data-website-showcase-structured-data]')
+    ) {
       const script = document.createElement('script');
       script.type = 'application/ld+json';
       script.setAttribute('data-website-showcase-structured-data', 'true');

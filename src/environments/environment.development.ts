@@ -3,7 +3,7 @@ export const environment = {
   isBeta: true, // Set to true to show normal login page in development
   waitlistUrl: 'https://forms.gle/YourDevGoogleFormUrlHere', // Development waitlist form URL
   analytics: {
-    enabled: false, 
+    enabled: false,
   },
   firebase: {
     apiKey: 'AIzaSyCsUpHmK5-o4hp8_HldvlaLU2gLOUVeHgY',
@@ -12,10 +12,10 @@ export const environment = {
     storageBucket: 'lexis-ia.firebasestorage.app',
     messagingSenderId: '78825247320',
     appId: '1:78825247320:web:2a69ba8ceabad513f3f02d',
-    measurementId: 'G-1YQGTP97EJ', 
+    measurementId: 'G-1YQGTP97EJ',
   },
   services: {
-    domain: 'https://idem.africa',
+    domain: 'https://idem-ai.com',
     api: {
       url: 'http://localhost:3001',
       version: 'v1',
