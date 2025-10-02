@@ -43,33 +43,9 @@ export class AnalyticsService {
     // Inject Analytics (Angular will handle SSR automatically)
     this.analytics = inject(Analytics);
 
-    console.log('🔍 Analytics Service Init:', {
-      isBrowser: this.isBrowser,
-      isEnabled: this.isEnabled,
-      analyticsInjected: !!this.analytics,
-      environment: environment.environment,
-    });
-
-    // Only track in browser (not during SSR)
+    // Only track in browser and when enabled (production)
     if (this.isBrowser && this.isEnabled && this.analytics) {
-      // Enable debug mode for local testing
-      if (typeof window !== 'undefined') {
-        (window as any)['ga-disable-G-1YQGTP97EJ'] = false;
-        console.log('🔧 Analytics Debug Mode: Enabled');
-      }
-
       this.initializePageTracking();
-      console.log('📊 Firebase Analytics: ENABLED');
-      console.log('📊 Measurement ID: G-1YQGTP97EJ');
-      console.log('📊 Environment:', environment.environment);
-    } else {
-      console.warn('📊 Firebase Analytics: DISABLED', {
-        reason: !this.isBrowser
-          ? 'SSR'
-          : !this.isEnabled
-          ? 'Not Enabled'
-          : 'Analytics Not Injected',
-      });
     }
   }
 
@@ -85,7 +61,6 @@ export class AnalyticsService {
           page_location: window.location.href,
           page_path: window.location.pathname,
         });
-        console.log('📊 Initial page load tracked:', window.location.pathname);
       }, 100);
     }
 
@@ -98,7 +73,6 @@ export class AnalyticsService {
           page_location: window.location.href,
           page_path: event.urlAfterRedirects,
         });
-        console.log('📊 Navigation tracked:', event.urlAfterRedirects);
       });
   }
 
@@ -106,15 +80,7 @@ export class AnalyticsService {
    * Check if analytics is enabled
    */
   private canTrack(): boolean {
-    const canTrack = this.isBrowser && this.isEnabled && !!this.analytics;
-    if (!canTrack) {
-      console.debug('⚠️ Analytics tracking blocked:', {
-        isBrowser: this.isBrowser,
-        isEnabled: this.isEnabled,
-        hasAnalytics: !!this.analytics,
-      });
-    }
-    return canTrack;
+    return this.isBrowser && this.isEnabled && !!this.analytics;
   }
 
   /**
@@ -129,8 +95,6 @@ export class AnalyticsService {
       page_path: params.page_path,
       timestamp: new Date().toISOString(),
     });
-
-    console.log('📊 Analytics: Page View', params.page_path);
   }
 
   /**
@@ -139,7 +103,6 @@ export class AnalyticsService {
   setUser(userId: string): void {
     if (!this.canTrack() || !this.analytics) return;
     setUserId(this.analytics!, userId);
-    console.log('📊 Analytics: User ID set', userId);
   }
 
   /**
@@ -148,7 +111,6 @@ export class AnalyticsService {
   setUserProperties(properties: UserProperties): void {
     if (!this.canTrack() || !this.analytics) return;
     setUserProperties(this.analytics!, properties);
-    console.log('📊 Analytics: User properties set', properties);
   }
 
   // ============================================
@@ -461,7 +423,6 @@ export class AnalyticsService {
     if (!this.canTrack() || !this.analytics) return;
 
     logEvent(this.analytics!, eventName, params);
-    console.log(`📊 Analytics: ${eventName}`, params);
   }
 
   /**

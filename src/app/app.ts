@@ -66,10 +66,6 @@ export class App implements OnInit, OnDestroy {
   );
 
   ngOnInit(): void {
-    // Log confirmation that App component is initialized
-    console.log('🚀 App Component Initialized');
-    console.log('📊 Analytics Service Injected:', !!this.analytics);
-
     // Masquer le splash screen après le chargement initial
     this.hideInitialSplashScreen();
 
