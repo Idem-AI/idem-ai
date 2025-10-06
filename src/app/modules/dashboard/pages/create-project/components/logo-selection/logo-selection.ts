@@ -14,6 +14,7 @@ import { SafeHtmlPipe } from '../../../projects-list/safehtml.pipe';
 import { LogoModel, LogoPreferences } from '../../../../models/logo.model';
 import { CarouselComponent } from '../../../../../../shared/components/carousel/carousel.component';
 import { LogoPreferencesComponent } from '../logo-preferences/logo-preferences.component';
+import { LogoEditorChatComponent } from '../logo-editor-chat/logo-editor-chat.component';
 
 import { Subject, takeUntil } from 'rxjs';
 import { BrandingService } from '../../../../services/ai-agents/branding.service';
@@ -28,6 +29,7 @@ import { ProjectModel } from '../../../../models/project.model';
     SafeHtmlPipe,
     CarouselComponent,
     LogoPreferencesComponent,
+    LogoEditorChatComponent,
   ],
   templateUrl: './logo-selection.html',
   styleUrl: './logo-selection.css',
@@ -61,10 +63,8 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
   protected readonly showPreferences = signal(true);
   protected readonly logoPreferences = signal<LogoPreferences | null>(null);
 
-  // Edit logo state
-  protected readonly showEditModal = signal(false);
-  protected editPrompt = signal('');
-  protected readonly isEditing = signal(false);
+  // Edit logo state - replaced by chat
+  protected readonly showEditorChat = signal(false);
 
   // Computed properties
   protected readonly shouldShowLoader = computed(() => {
@@ -94,6 +94,12 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
 
   protected readonly shouldShowPreferences = computed(() => {
     return this.showPreferences() && !this.logoPreferences();
+  });
+
+  protected readonly selectedLogoForEdit = computed(() => {
+    const logoId = this.selectedLogoId();
+    if (!logoId) return null;
+    return this.displayedLogos().find(l => l.id === logoId) || null;
   });
 
   // Track function for carousel
@@ -281,62 +287,31 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
     this.logoPreferences.set(null);
   }
 
-  protected openEditModal(): void {
+  protected openEditorChat(): void {
     if (!this.selectedLogoId()) {
       return;
     }
-    this.showEditModal.set(true);
-    this.editPrompt.set('');
+    this.showEditorChat.set(true);
   }
 
-  protected closeEditModal(): void {
-    this.showEditModal.set(false);
-    this.editPrompt.set('');
+  protected closeEditorChat(): void {
+    this.showEditorChat.set(false);
   }
 
-  protected async editSelectedLogo(): Promise<void> {
+  protected onLogoSelectedFromChat(logo: LogoModel): void {
+    // Update the logo in the list
     const logoId = this.selectedLogoId();
-    const projectId = this.projectId();
-    const prompt = this.editPrompt().trim();
-
-    if (!logoId || !projectId || !prompt) {
-      return;
+    if (logoId) {
+      const updatedLogos = this.generatedLogos().map(l =>
+        l.id === logoId ? logo : l
+      );
+      this.generatedLogos.set(updatedLogos);
+      
+      // Emit the updated logos
+      this.logosGenerated.emit(updatedLogos);
     }
-
-    // Find the selected logo to get its SVG
-    const selectedLogo = this.displayedLogos().find(
-      (logo) => logo.id === logoId
-    );
-    if (!selectedLogo || !selectedLogo.svg) {
-      this.error.set('Selected logo not found or has no SVG content.');
-      return;
-    }
-
-    this.isEditing.set(true);
-    this.error.set(null);
-
-    this.brandingService
-      .editLogo(projectId, selectedLogo.svg, prompt)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          console.log('Logo edited successfully:', response);
-
-          // Update the logo in the list
-          const updatedLogos = this.generatedLogos().map((logo) =>
-            logo.id === logoId ? response.logo : logo
-          );
-          this.generatedLogos.set(updatedLogos);
-
-          this.isEditing.set(false);
-          this.closeEditModal();
-        },
-        error: (error) => {
-          console.error('Error editing logo:', error);
-          this.error.set('Failed to edit logo. Please try again.');
-          this.isEditing.set(false);
-        },
-      });
+    
+    this.closeEditorChat();
   }
 
   protected regenerateAllLogos(): void {
