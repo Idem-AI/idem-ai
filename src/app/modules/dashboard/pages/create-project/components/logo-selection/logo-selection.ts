@@ -11,8 +11,11 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SafeHtmlPipe } from '../../../projects-list/safehtml.pipe';
-import { LogoModel } from '../../../../models/logo.model';
+import { LogoModel, LogoPreferences } from '../../../../models/logo.model';
 import { CarouselComponent } from '../../../../../../shared/components/carousel/carousel.component';
+import { LogoPreferencesComponent } from '../logo-preferences/logo-preferences.component';
+import { ColorCustomizerComponent } from '../color-customizer/color-customizer.component';
+import { ColorModel } from '../../../../models/brand-identity.model';
 
 import { Subject, takeUntil } from 'rxjs';
 import { BrandingService } from '../../../../services/ai-agents/branding.service';
@@ -21,7 +24,14 @@ import { ProjectModel } from '../../../../models/project.model';
 @Component({
   selector: 'app-logo-selection',
   standalone: true,
-  imports: [CommonModule, FormsModule, SafeHtmlPipe, CarouselComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    SafeHtmlPipe,
+    CarouselComponent,
+    LogoPreferencesComponent,
+    ColorCustomizerComponent,
+  ],
   templateUrl: './logo-selection.html',
   styleUrl: './logo-selection.css',
 })
@@ -51,6 +61,10 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
   protected readonly hasStartedGeneration = signal(false);
   protected readonly error = signal<string | null>(null);
   protected readonly selectedLogoId = signal<string | null>(null);
+  protected readonly showPreferences = signal(true);
+  protected readonly logoPreferences = signal<LogoPreferences | null>(null);
+  protected readonly showColorCustomizer = signal(false);
+  protected readonly customizedColors = signal<ColorModel | null>(null);
 
   // Computed properties
   protected readonly shouldShowLoader = computed(() => {
@@ -75,11 +89,11 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
   });
 
   protected readonly shouldShowInitialPrompt = computed(() => {
-    return (
-      !this.shouldShowLoader() &&
-      !this.shouldShowLogos() &&
-      !this.hasStartedGeneration()
-    );
+    return false; // Always show preferences first
+  });
+
+  protected readonly shouldShowPreferences = computed(() => {
+    return this.showPreferences() && !this.logoPreferences();
   });
 
   // Track function for carousel
@@ -95,8 +109,12 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const hasNoLogos = !this.logos() || this.logos()?.length === 0;
 
+    // Don't auto-start, wait for preferences
     if (hasNoLogos && !this.hasStartedGeneration()) {
-      this.startLogoGeneration();
+      this.showPreferences.set(true);
+    } else if (this.logos() && this.logos()!.length > 0) {
+      this.showPreferences.set(false);
+      this.generatedLogos.set(this.logos()!);
     }
   }
 
@@ -147,8 +165,21 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
     this.nextStep.emit();
   }
 
+  protected onPreferencesSelected(preferences: LogoPreferences): void {
+    console.log('Logo preferences selected:', preferences);
+    this.logoPreferences.set(preferences);
+    this.showPreferences.set(false);
+    this.startLogoGeneration();
+  }
+
   protected startLogoGeneration(): void {
     if (this.isGenerating() || this.hasStartedGeneration()) {
+      return;
+    }
+
+    const preferences = this.logoPreferences();
+    if (!preferences) {
+      console.error('Logo preferences not set');
       return;
     }
 
@@ -157,48 +188,44 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
     this.currentStep.set('Initializing logo generation...');
     this.generationProgress.set(0);
 
-    // Simuler les mises à jour de progression
     this.simulateProgress();
 
-    // Récupérer les couleurs et typographie sélectionnées depuis le projet
     const project = this.project();
-    const selectedColor = project?.analysisResultModel?.branding?.colors;
-    const selectedTypography =
-      project?.analysisResultModel?.branding?.typography;
+    const selectedColor = this.customizedColors() || project?.analysisResultModel?.branding?.colors;
+    const selectedTypography = project?.analysisResultModel?.branding?.typography;
 
     if (!selectedColor || !selectedTypography) {
       this.error.set(
-        'Couleur et typographie doivent être sélectionnées avant la génération de logos.'
+        'Color and typography must be selected before generating logos.'
       );
       this.isGenerating.set(false);
       return;
     }
 
-    // Utiliser le service BrandingService pour générer les logos
     this.brandingService
-      .generateLogoConcepts(
+      .generateLogosWithPreferences(
         this.projectId()!,
         selectedColor,
-        selectedTypography
+        selectedTypography,
+        preferences
       )
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           console.log('Logos generated successfully:', response.logos);
 
-          // Ensure each logo has a unique ID
           const logosWithUniqueIds = response.logos.map((logo: LogoModel, index: number) => ({
             ...logo,
-            id: logo.id || `logo-${Date.now()}-${index}`
+            id: logo.id || `logo-${Date.now()}-${index}`,
+            type: preferences.type,
+            customDescription: preferences.customDescription,
           }));
 
           console.log('Logos with unique IDs:', logosWithUniqueIds);
 
-          // Update state with generated logos
           this.generatedLogos.set(logosWithUniqueIds);
           this.logosGenerated.emit(logosWithUniqueIds);
 
-          // Update generation state
           this.isGenerating.set(false);
           this.generationProgress.set(100);
           this.currentStep.set('Generation completed!');
@@ -209,6 +236,20 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
           this.isGenerating.set(false);
         },
       });
+  }
+
+  protected openColorCustomizer(): void {
+    this.showColorCustomizer.set(true);
+  }
+
+  protected onColorsUpdated(colors: ColorModel): void {
+    console.log('Colors updated:', colors);
+    this.customizedColors.set(colors);
+    this.showColorCustomizer.set(false);
+  }
+
+  protected closeColorCustomizer(): void {
+    this.showColorCustomizer.set(false);
   }
 
   // Méthode supprimée car dupliquée
@@ -243,17 +284,12 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Method to retry logo generation in case of failure
-   */
   protected retryGeneration(): void {
-    // Reset error state
     this.error.set(null);
     this.hasStartedGeneration.set(false);
     this.generatedLogos.set([]);
     this.generationProgress.set(0);
-
-    // Restart generation
-    this.startLogoGeneration();
+    this.logoPreferences.set(null);
+    this.showPreferences.set(true);
   }
 }

@@ -1,45 +1,21 @@
+<!-- Color Customizer Modal -->
+@if (showColorCustomizer()) {
+<app-color-customizer
+  [initialColors]="project()?.analysisResultModel?.branding?.colors!"
+  (colorsUpdated)="onColorsUpdated($event)"
+  (closed)="closeColorCustomizer()"
+></app-color-customizer>
+}
+
 <!-- Main Container -->
 <section
-  class=" flex flex-col min-h-[78vh] items-center justify-center w-full px-4 sm:px-6 lg:px-8 mt-[50px] sm:mt-0"
+  class="flex flex-col min-h-[78vh] items-center justify-center w-full px-4 sm:px-6 lg:px-8 mt-[50px] sm:mt-0"
 >
-  <!-- Initial Prompt State -->
-  @if (shouldShowInitialPrompt()) {
-  <div class="text-center max-w-2xl mx-auto">
-    <div class="mb-8">
-      <div
-        class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center"
-      >
-        <i class="pi pi-science p-4 text-primary"></i>
-      </div>
-      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-4">
-        Ready to Generate Your Logos
-      </h1>
-      <p class="text-lg text-gray-300 mb-8">
-        We'll create personalized logos based on your selected colors and
-        typography.
-      </p>
-    </div>
-
-    <button
-      (click)="startLogoGeneration()"
-      class="inner-button inline-flex items-center px-8 py-4 text-white font-semibold rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50"
-    >
-      <svg
-        class="w-5 h-5 mr-2"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M13 10V3L4 14h7v7l9-11h-7z"
-        ></path>
-      </svg>
-      Generate Logos
-    </button>
-  </div>
+  <!-- Logo Preferences Step -->
+  @if (shouldShowPreferences()) {
+  <app-logo-preferences
+    (preferencesSelected)="onPreferencesSelected($event)"
+  ></app-logo-preferences>
   }
 
   <!-- Loading State -->
@@ -148,9 +124,22 @@
         Choose Your Perfect Logo
       </h1>
 
-      <p class="text-xs md:text-xl text-gray-300">
+      <p class="text-xs md:text-xl text-gray-300 mb-4">
         Select the logo that best represents your brand identity
       </p>
+
+      <!-- Color Customization Button -->
+      @if (project()?.analysisResultModel?.branding?.colors) {
+      <button
+        (click)="openColorCustomizer()"
+        class="outer-button inline-flex items-center px-6 py-3 mb-6"
+      >
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
+        </svg>
+        Customize Colors
+      </button>
+      }
     </div>
 
     <!-- Responsive Logo Display -->

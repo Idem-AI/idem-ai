@@ -9,7 +9,7 @@
 }
 
 .tfvars-form-editor ::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-700;
+  @apply bg-gray-200 dark:bg-gray-700;
 }
 
 .tfvars-form-editor ::-webkit-scrollbar-thumb {

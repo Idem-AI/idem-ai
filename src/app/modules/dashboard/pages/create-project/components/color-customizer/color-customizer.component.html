@@ -1,0 +1,113 @@
+<div
+  class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+>
+  <div class="glass-card max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+    <div
+      class="sticky top-0 glass-dark px-6 py-4 flex justify-between items-center border-b border-gray-700/50"
+    >
+      <h2 class="text-2xl font-bold text-white">Customize Colors</h2>
+      <button
+        (click)="close()"
+        class="text-gray-400 hover:text-white transition-colors"
+        aria-label="Close"
+      >
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <div class="p-6">
+      <div class="mb-8">
+        <p class="text-gray-300 mb-4">
+          Adjust colors to match your vision. When you change one color, related
+          colors automatically adjust to maintain harmony.
+        </p>
+        <div class="glass p-4 rounded-lg border border-primary/30">
+          <p class="text-sm text-primary mb-2 font-semibold">
+            Smart Color Harmonization
+          </p>
+          <ul class="text-xs text-gray-400 space-y-1">
+            <li>• Changing Primary automatically adjusts Accent</li>
+            <li>• Changing Secondary adjusts Background</li>
+            <li>• Changing Background adjusts Text for optimal contrast</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        @for (colorKey of colorKeys; track colorKey) {
+        <div
+          class="glass p-6 rounded-xl border border-gray-700/50 hover:border-gray-600 transition-all duration-300"
+        >
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex-1">
+              <h3 class="text-white font-semibold mb-1">
+                {{ getColorLabel(colorKey) }}
+              </h3>
+              <p class="text-xs text-gray-400">
+                {{ getColorDescription(colorKey) }}
+              </p>
+            </div>
+            <div
+              class="w-16 h-16 rounded-xl border-2 border-gray-600 shadow-lg ml-4 flex-shrink-0"
+              [style.backgroundColor]="customColors()[colorKey]"
+            ></div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <input
+              type="color"
+              [value]="customColors()[colorKey]"
+              (input)="updateColor(colorKey, $event)"
+              class="w-12 h-12 rounded-lg border-2 border-gray-600 cursor-pointer bg-transparent"
+            />
+            <input
+              type="text"
+              [value]="customColors()[colorKey]"
+              (input)="updateColor(colorKey, $event)"
+              class="input flex-1 py-2 text-sm font-mono"
+              placeholder="#000000"
+              maxlength="7"
+            />
+          </div>
+        </div>
+        }
+      </div>
+
+      <div class="glass p-6 rounded-xl border border-gray-700/50 mb-8">
+        <h3 class="text-white font-semibold mb-4">Color Palette Preview</h3>
+        <div class="flex gap-2 flex-wrap">
+          @for (colorKey of colorKeys; track colorKey) {
+          <div class="flex flex-col items-center">
+            <div
+              class="w-20 h-20 rounded-xl border-2 border-gray-600 shadow-lg mb-2"
+              [style.backgroundColor]="customColors()[colorKey]"
+            ></div>
+            <span class="text-xs text-gray-400 capitalize">{{ colorKey }}</span>
+          </div>
+          }
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-4">
+        <button (click)="resetColors()" class="outer-button px-6 py-3">
+          Reset to Original
+        </button>
+        <button (click)="applyColors()" class="inner-button px-6 py-3">
+          Apply Colors
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
