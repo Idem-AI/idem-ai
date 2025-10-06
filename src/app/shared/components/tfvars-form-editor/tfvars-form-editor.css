@@ -9,15 +9,15 @@
 }
 
 .tfvars-form-editor ::-webkit-scrollbar-track {
-  @apply bg-gray-200 dark:bg-gray-700;
+  @apply bg-gray-600 dark:bg-gray-700;
 }
 
 .tfvars-form-editor ::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-500 rounded-full;
+  @apply bg-gray-500 dark:bg-gray-500 rounded-full;
 }
 
 .tfvars-form-editor ::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-400;
+  @apply bg-gray-600 dark:bg-gray-600;
 }
 
 /* Smooth transitions for section expansion */

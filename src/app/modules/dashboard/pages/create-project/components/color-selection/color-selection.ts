@@ -19,11 +19,12 @@ import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../../../../../auth/services/auth.service';
 import { LoginCardComponent } from '../../../../../auth/components/login-card/login-card';
 import { DialogModule } from 'primeng/dialog';
+import { ColorCustomizerComponent } from '../color-customizer/color-customizer.component';
 
 @Component({
   selector: 'app-color-selection',
   standalone: true,
-  imports: [CommonModule, CarouselComponent, DialogModule, LoginCardComponent],
+  imports: [CommonModule, CarouselComponent, DialogModule, LoginCardComponent, ColorCustomizerComponent],
   templateUrl: './color-selection.html',
   styleUrl: './color-selection.css',
 })
@@ -62,6 +63,10 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
   
   // Authentication modal state
   protected showLoginModal = signal(false);
+  
+  // Color customization state
+  protected showColorCustomizer = signal(false);
+  protected customizedColor = signal<ColorModel | null>(null);
 
   ngOnInit() {
     console.log(this.project());
@@ -169,6 +174,9 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
       (color) => color.id === colorId
     );
     if (selectedColor) {
+      // Save the selected color for potential customization
+      this.customizedColor.set(null); // Reset customization when selecting new color
+      
       this.projectUpdate.emit({
         analysisResultModel: {
           ...this.project().analysisResultModel,
@@ -181,6 +189,44 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
         },
       });
     }
+  }
+
+  protected openColorCustomizer(): void {
+    const selectedColor = this.colorPalettes().find(
+      (color) => color.id === this.selectedColorId()
+    );
+    if (selectedColor) {
+      this.showColorCustomizer.set(true);
+    }
+  }
+
+  protected onColorsCustomized(updatedColor: ColorModel): void {
+    console.log('Colors customized:', updatedColor);
+    this.customizedColor.set(updatedColor);
+    this.showColorCustomizer.set(false);
+    
+    // Update the project with customized colors
+    this.projectUpdate.emit({
+      analysisResultModel: {
+        ...this.project().analysisResultModel,
+        branding: {
+          ...this.project().analysisResultModel?.branding,
+          generatedColors: this.colorPalettes(),
+          colors: updatedColor,
+          generatedTypography: this.typographyOptions(),
+        },
+      },
+    });
+  }
+
+  protected closeColorCustomizer(): void {
+    this.showColorCustomizer.set(false);
+  }
+
+  protected getSelectedColor(): ColorModel | undefined {
+    return this.colorPalettes().find(
+      (color) => color.id === this.selectedColorId()
+    );
   }
 
   protected async retryGeneration(): Promise<void> {

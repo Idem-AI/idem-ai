@@ -14,8 +14,6 @@ import { SafeHtmlPipe } from '../../../projects-list/safehtml.pipe';
 import { LogoModel, LogoPreferences } from '../../../../models/logo.model';
 import { CarouselComponent } from '../../../../../../shared/components/carousel/carousel.component';
 import { LogoPreferencesComponent } from '../logo-preferences/logo-preferences.component';
-import { ColorCustomizerComponent } from '../color-customizer/color-customizer.component';
-import { ColorModel } from '../../../../models/brand-identity.model';
 
 import { Subject, takeUntil } from 'rxjs';
 import { BrandingService } from '../../../../services/ai-agents/branding.service';
@@ -30,7 +28,6 @@ import { ProjectModel } from '../../../../models/project.model';
     SafeHtmlPipe,
     CarouselComponent,
     LogoPreferencesComponent,
-    ColorCustomizerComponent,
   ],
   templateUrl: './logo-selection.html',
   styleUrl: './logo-selection.css',
@@ -63,8 +60,6 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
   protected readonly selectedLogoId = signal<string | null>(null);
   protected readonly showPreferences = signal(true);
   protected readonly logoPreferences = signal<LogoPreferences | null>(null);
-  protected readonly showColorCustomizer = signal(false);
-  protected readonly customizedColors = signal<ColorModel | null>(null);
 
   // Computed properties
   protected readonly shouldShowLoader = computed(() => {
@@ -191,7 +186,7 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
     this.simulateProgress();
 
     const project = this.project();
-    const selectedColor = this.customizedColors() || project?.analysisResultModel?.branding?.colors;
+    const selectedColor = project?.analysisResultModel?.branding?.colors;
     const selectedTypography = project?.analysisResultModel?.branding?.typography;
 
     if (!selectedColor || !selectedTypography) {
@@ -238,19 +233,6 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
       });
   }
 
-  protected openColorCustomizer(): void {
-    this.showColorCustomizer.set(true);
-  }
-
-  protected onColorsUpdated(colors: ColorModel): void {
-    console.log('Colors updated:', colors);
-    this.customizedColors.set(colors);
-    this.showColorCustomizer.set(false);
-  }
-
-  protected closeColorCustomizer(): void {
-    this.showColorCustomizer.set(false);
-  }
 
   // Méthode supprimée car dupliquée
 
