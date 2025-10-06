@@ -340,14 +340,20 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
   }
 
   protected regenerateAllLogos(): void {
-    // Reset state and restart generation
+    const preferences = this.logoPreferences();
+    if (!preferences) {
+      this.error.set('Logo preferences not found. Please restart the generation process.');
+      return;
+    }
+
+    // Reset state
     this.error.set(null);
-    this.hasStartedGeneration.set(false);
     this.generatedLogos.set([]);
     this.generationProgress.set(0);
     this.selectedLogoId.set(null);
-
-    // Keep the preferences to regenerate with same settings
-    // The generation will restart automatically through ngOnInit logic
+    this.hasStartedGeneration.set(false);
+    
+    // Restart generation with same preferences
+    this.startLogoGeneration();
   }
 }
