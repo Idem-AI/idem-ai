@@ -299,16 +299,45 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
   }
 
   protected onLogoSelectedFromChat(logo: LogoModel): void {
-    // Update the logo in the list
     const logoId = this.selectedLogoId();
-    if (logoId) {
-      const updatedLogos = this.generatedLogos().map(l =>
-        l.id === logoId ? logo : l
-      );
-      this.generatedLogos.set(updatedLogos);
+    if (!logoId) {
+      this.closeEditorChat();
+      return;
+    }
+
+    // Keep the same ID so the logo stays selected
+    const updatedLogo: LogoModel = {
+      ...logo,
+      id: logoId, // Keep the original ID
+    };
+
+    // Update the logo in the list - replace the old one with the new one
+    const updatedLogos = this.generatedLogos().map(l =>
+      l.id === logoId ? updatedLogo : l
+    );
+    this.generatedLogos.set(updatedLogos);
+    
+    // Emit the updated logos to parent component
+    this.logosGenerated.emit(updatedLogos);
+    
+    // Update the project with the new logo
+    const currentProject = this.project();
+    if (currentProject) {
+      const currentBranding = currentProject.analysisResultModel?.branding;
       
-      // Emit the updated logos
-      this.logosGenerated.emit(updatedLogos);
+      const updatedBranding = {
+        ...currentBranding,
+        logo: updatedLogo, // Set the edited logo as the selected one
+        generatedLogos: updatedLogos,
+      };
+
+      this.projectUpdate.emit({
+        ...currentProject,
+        analysisResultModel: {
+          ...currentProject.analysisResultModel,
+          branding: updatedBranding,
+        },
+      } as ProjectModel);
     }
     
     this.closeEditorChat();
