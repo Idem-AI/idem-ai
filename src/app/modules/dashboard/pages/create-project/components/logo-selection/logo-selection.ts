@@ -60,6 +60,11 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
   protected readonly selectedLogoId = signal<string | null>(null);
   protected readonly showPreferences = signal(true);
   protected readonly logoPreferences = signal<LogoPreferences | null>(null);
+  
+  // Edit logo state
+  protected readonly showEditModal = signal(false);
+  protected editPrompt = signal('');
+  protected readonly isEditing = signal(false);
 
   // Computed properties
   protected readonly shouldShowLoader = computed(() => {
@@ -272,6 +277,99 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
     this.generatedLogos.set([]);
     this.generationProgress.set(0);
     this.logoPreferences.set(null);
+  }
+
+  protected openEditModal(): void {
+    if (!this.selectedLogoId()) {
+      return;
+    }
+    this.showEditModal.set(true);
+    this.editPrompt.set('');
+  }
+
+  protected closeEditModal(): void {
+    this.showEditModal.set(false);
+    this.editPrompt.set('');
+  }
+
+  protected async editSelectedLogo(): Promise<void> {
+    const logoId = this.selectedLogoId();
+    const projectId = this.projectId();
+    const prompt = this.editPrompt().trim();
+
+    if (!logoId || !projectId || !prompt) {
+      return;
+    }
+
+    this.isEditing.set(true);
+    this.error.set(null);
+
+    this.brandingService
+      .editLogo(projectId, logoId, prompt)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          console.log('Logo edited successfully:', response);
+          
+          // Update the logo in the list
+          const updatedLogos = this.generatedLogos().map(logo =>
+            logo.id === logoId ? response.logo : logo
+          );
+          this.generatedLogos.set(updatedLogos);
+          
+          this.isEditing.set(false);
+          this.closeEditModal();
+        },
+        error: (error) => {
+          console.error('Error editing logo:', error);
+          this.error.set('Failed to edit logo. Please try again.');
+          this.isEditing.set(false);
+        },
+      });
+  }
+
+  protected async regenerateAllLogos(): Promise<void> {
+    const projectId = this.projectId();
+    const project = this.project();
+    const preferences = this.logoPreferences();
+
+    if (!projectId || !project || !preferences) {
+      return;
+    }
+
+    const selectedColor = project.analysisResultModel?.branding?.colors;
+    const selectedTypography = project.analysisResultModel?.branding?.typography;
+
+    if (!selectedColor || !selectedTypography) {
+      this.error.set('Color and typography must be selected before regenerating logos.');
+      return;
+    }
+
+    this.isGenerating.set(true);
+    this.error.set(null);
+    this.generationProgress.set(0);
+    this.currentStep.set('Regenerating logos...');
+
+    this.simulateProgress();
+
+    this.brandingService
+      .regenerateLogos(projectId, selectedColor, selectedTypography, preferences)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          console.log('Logos regenerated successfully:', response);
+          this.generatedLogos.set(response.logos);
+          this.logosGenerated.emit(response.logos);
+          this.isGenerating.set(false);
+          this.generationProgress.set(100);
+          this.currentStep.set('Regeneration completed!');
+        },
+        error: (error) => {
+          console.error('Error regenerating logos:', error);
+          this.error.set('Failed to regenerate logos. Please try again.');
+          this.isGenerating.set(false);
+        },
+      });
     this.showPreferences.set(true);
   }
 }

@@ -89,8 +89,6 @@ export class BrandingService {
       );
   }
 
-
-
   /**
    * Generate logos with user preferences (type and custom description)
    */
@@ -102,9 +100,7 @@ export class BrandingService {
   ): Observable<{
     logos: LogoModel[];
   }> {
-    console.log(
-      'Generating logo concepts with preferences...'
-    );
+    console.log('Generating logo concepts with preferences...');
     console.log('Project ID:', projectId);
     console.log('Selected Color:', selectedColor);
     console.log('Selected Typography:', selectedTypography);
@@ -182,7 +178,49 @@ export class BrandingService {
       );
   }
 
+  /**
+   * Edit selected logo with modification prompt
+   */
+  editLogo(
+    projectId: string,
+    logoId: string,
+    modificationPrompt: string
+  ): Observable<{ logo: LogoModel }> {
+    console.log('Editing logo with prompt...');
+    console.log('Project ID:', projectId);
+    console.log('Logo ID:', logoId);
+    console.log('Modification Prompt:', modificationPrompt);
+    return this.http
+      .post<{ logo: LogoModel }>(`${this.apiUrl}/edit-logo/${projectId}`, {
+        logoId: logoId,
+        modificationPrompt: modificationPrompt,
+      })
+      .pipe(
+        tap((response) => console.log('editLogo response:', response)),
+        catchError((error) => {
+          console.error('Error in editLogo:', error);
+          throw error;
+        })
+      );
+  }
 
+  /**
+   * Regenerate all logos with same preferences
+   */
+  regenerateLogos(
+    projectId: string,
+    selectedColor: ColorModel,
+    selectedTypography: TypographyModel,
+    preferences: LogoPreferences
+  ): Observable<{ logos: LogoModel[] }> {
+    console.log('Regenerating logos...');
+    return this.generateLogosWithPreferences(
+      projectId,
+      selectedColor,
+      selectedTypography,
+      preferences
+    );
+  }
 
   /**
 

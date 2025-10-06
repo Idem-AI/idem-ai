@@ -115,9 +115,35 @@
         Choose Your Perfect Logo
       </h1>
 
-      <p class="text-xs md:text-xl text-gray-300">
+      <p class="text-xs md:text-xl text-gray-300 mb-4">
         Select the logo that best represents your brand identity
       </p>
+
+      <!-- Action Buttons -->
+      <div class="flex justify-center gap-3 mt-4">
+        @if (selectedLogoId()) {
+        <button
+          (click)="openEditModal()"
+          class="outer-button inline-flex items-center px-4 py-2 text-sm"
+        >
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+          </svg>
+          Edit Selected Logo
+        </button>
+        }
+        @if (displayedLogos().length > 0 && !isGenerating()) {
+        <button
+          (click)="regenerateAllLogos()"
+          class="outer-button inline-flex items-center px-4 py-2 text-sm"
+        >
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+          Regenerate Logos
+        </button>
+        }
+      </div>
     </div>
 
     <!-- Responsive Logo Display -->
@@ -220,6 +246,68 @@
         </div>
       </ng-template>
     </app-carousel>
+
+    <!-- Edit Logo Modal -->
+    @if (showEditModal()) {
+    <div class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div class="bg-gray-900/95 backdrop-blur-md rounded-2xl shadow-2xl max-w-lg w-full border border-gray-700/50">
+        <!-- Header -->
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-700/50">
+          <h2 class="text-xl font-bold text-white">Edit Logo</h2>
+          <button (click)="closeEditModal()" class="text-gray-400 hover:text-white transition-colors p-1">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Content -->
+        <div class="p-6">
+          <label class="block text-sm font-medium text-gray-300 mb-2">
+            Describe the modifications you want to make
+          </label>
+          <textarea
+            [(ngModel)]="editPrompt"
+            class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none"
+            rows="4"
+            placeholder="Example: Make the logo more modern, change the icon to a rocket, add a gradient..."
+            [disabled]="isEditing()"
+          ></textarea>
+          <p class="text-xs text-gray-500 mt-2">
+            Be specific about the changes you want. The AI will modify the selected logo based on your instructions.
+          </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="flex gap-3 px-6 py-4 border-t border-gray-700/50">
+          <button
+            (click)="closeEditModal()"
+            class="flex-1 px-4 py-2.5 bg-gray-800 hover:bg-gray-700 text-white text-sm font-medium rounded-lg transition-colors"
+            [disabled]="isEditing()"
+          >
+            Cancel
+          </button>
+          <button
+            (click)="editSelectedLogo()"
+            class="flex-1 px-4 py-2.5 bg-primary hover:bg-primary/90 text-white text-sm font-semibold rounded-lg transition-colors shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
+            [disabled]="isEditing() || !editPrompt().trim()"
+          >
+            @if (isEditing()) {
+            <span class="flex items-center justify-center">
+              <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Editing...
+            </span>
+            } @else {
+            Apply Changes
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+    }
 
     <!-- Retry Button (if generation failed) -->
     @if (currentStep().includes('failed')) {
