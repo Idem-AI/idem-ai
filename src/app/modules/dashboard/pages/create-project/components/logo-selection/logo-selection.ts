@@ -60,7 +60,7 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
   protected readonly selectedLogoId = signal<string | null>(null);
   protected readonly showPreferences = signal(true);
   protected readonly logoPreferences = signal<LogoPreferences | null>(null);
-  
+
   // Edit logo state
   protected readonly showEditModal = signal(false);
   protected editPrompt = signal('');
@@ -135,7 +135,7 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
     if (selectedLogo) {
       const currentProject = this.project();
       const currentBranding = currentProject?.analysisResultModel?.branding;
-      
+
       // Ensure all required BrandIdentityModel properties are present
       const updatedBranding = {
         id: currentBranding?.id,
@@ -150,7 +150,7 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
         sections: currentBranding?.sections || [],
         pdfBlob: currentBranding?.pdfBlob,
       };
-      
+
       this.projectUpdate.emit({
         ...currentProject,
         analysisResultModel: {
@@ -192,7 +192,8 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
 
     const project = this.project();
     const selectedColor = project?.analysisResultModel?.branding?.colors;
-    const selectedTypography = project?.analysisResultModel?.branding?.typography;
+    const selectedTypography =
+      project?.analysisResultModel?.branding?.typography;
 
     if (!selectedColor || !selectedTypography) {
       this.error.set(
@@ -214,12 +215,14 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
         next: (response) => {
           console.log('Logos generated successfully:', response.logos);
 
-          const logosWithUniqueIds = response.logos.map((logo: LogoModel, index: number) => ({
-            ...logo,
-            id: logo.id || `logo-${Date.now()}-${index}`,
-            type: preferences.type,
-            customDescription: preferences.customDescription,
-          }));
+          const logosWithUniqueIds = response.logos.map(
+            (logo: LogoModel, index: number) => ({
+              ...logo,
+              id: logo.id || `logo-${Date.now()}-${index}`,
+              type: preferences.type,
+              customDescription: preferences.customDescription,
+            })
+          );
 
           console.log('Logos with unique IDs:', logosWithUniqueIds);
 
@@ -237,7 +240,6 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
         },
       });
   }
-
 
   // Méthode supprimée car dupliquée
 
@@ -301,22 +303,31 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Find the selected logo to get its SVG
+    const selectedLogo = this.displayedLogos().find(
+      (logo) => logo.id === logoId
+    );
+    if (!selectedLogo || !selectedLogo.svg) {
+      this.error.set('Selected logo not found or has no SVG content.');
+      return;
+    }
+
     this.isEditing.set(true);
     this.error.set(null);
 
     this.brandingService
-      .editLogo(projectId, logoId, prompt)
+      .editLogo(projectId, selectedLogo.svg, prompt)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           console.log('Logo edited successfully:', response);
-          
+
           // Update the logo in the list
-          const updatedLogos = this.generatedLogos().map(logo =>
+          const updatedLogos = this.generatedLogos().map((logo) =>
             logo.id === logoId ? response.logo : logo
           );
           this.generatedLogos.set(updatedLogos);
-          
+
           this.isEditing.set(false);
           this.closeEditModal();
         },
@@ -328,48 +339,15 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
       });
   }
 
-  protected async regenerateAllLogos(): Promise<void> {
-    const projectId = this.projectId();
-    const project = this.project();
-    const preferences = this.logoPreferences();
-
-    if (!projectId || !project || !preferences) {
-      return;
-    }
-
-    const selectedColor = project.analysisResultModel?.branding?.colors;
-    const selectedTypography = project.analysisResultModel?.branding?.typography;
-
-    if (!selectedColor || !selectedTypography) {
-      this.error.set('Color and typography must be selected before regenerating logos.');
-      return;
-    }
-
-    this.isGenerating.set(true);
+  protected regenerateAllLogos(): void {
+    // Reset state and restart generation
     this.error.set(null);
+    this.hasStartedGeneration.set(false);
+    this.generatedLogos.set([]);
     this.generationProgress.set(0);
-    this.currentStep.set('Regenerating logos...');
+    this.selectedLogoId.set(null);
 
-    this.simulateProgress();
-
-    this.brandingService
-      .regenerateLogos(projectId, selectedColor, selectedTypography, preferences)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          console.log('Logos regenerated successfully:', response);
-          this.generatedLogos.set(response.logos);
-          this.logosGenerated.emit(response.logos);
-          this.isGenerating.set(false);
-          this.generationProgress.set(100);
-          this.currentStep.set('Regeneration completed!');
-        },
-        error: (error) => {
-          console.error('Error regenerating logos:', error);
-          this.error.set('Failed to regenerate logos. Please try again.');
-          this.isGenerating.set(false);
-        },
-      });
-    this.showPreferences.set(true);
+    // Keep the preferences to regenerate with same settings
+    // The generation will restart automatically through ngOnInit logic
   }
 }

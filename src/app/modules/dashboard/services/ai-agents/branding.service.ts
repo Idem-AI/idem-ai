@@ -183,16 +183,16 @@ export class BrandingService {
    */
   editLogo(
     projectId: string,
-    logoId: string,
+    logosvg: string,
     modificationPrompt: string
   ): Observable<{ logo: LogoModel }> {
     console.log('Editing logo with prompt...');
     console.log('Project ID:', projectId);
-    console.log('Logo ID:', logoId);
+
     console.log('Modification Prompt:', modificationPrompt);
     return this.http
       .post<{ logo: LogoModel }>(`${this.apiUrl}/edit-logo/${projectId}`, {
-        logoId: logoId,
+        logosvg: logosvg,
         modificationPrompt: modificationPrompt,
       })
       .pipe(
@@ -202,102 +202,6 @@ export class BrandingService {
           throw error;
         })
       );
-  }
-
-  /**
-   * Regenerate all logos with same preferences
-   */
-  regenerateLogos(
-    projectId: string,
-    selectedColor: ColorModel,
-    selectedTypography: TypographyModel,
-    preferences: LogoPreferences
-  ): Observable<{ logos: LogoModel[] }> {
-    console.log('Regenerating logos...');
-    return this.generateLogosWithPreferences(
-      projectId,
-      selectedColor,
-      selectedTypography,
-      preferences
-    );
-  }
-
-  /**
-
-
-  getBrandIdentityModels(projectId: string): Observable<BrandIdentityModel[]> {
-    return this.http
-      .get<BrandIdentityModel[]>(`${this.apiUrl}?projectId=${projectId}`)
-      .pipe(
-        tap((response) =>
-          console.log('getBrandIdentityModels response:', response)
-        ),
-        catchError((error) => {
-          console.error('Error in getBrandIdentityModels:', error);
-          throw error;
-        })
-      );
-  }
-
-  getBrandIdentity(
-    projectId: string,
-    brandingId: string
-  ): Observable<BrandIdentityModel> {
-    return this.http
-      .get<BrandIdentityModel>(`${this.apiUrl}/${projectId}/${brandingId}`)
-      .pipe(
-        tap((response) =>
-          console.log('getBrandIdentityModelById response:', response)
-        ),
-        catchError((error) => {
-          console.error(
-            `Error in getBrandIdentityModelById for ID ${projectId}:`,
-            error
-          );
-          throw error;
-        })
-      );
-  }
-  getBrandIdentityModelById(projectId: string): Observable<BrandIdentityModel> {
-    return this.http.get<BrandIdentityModel>(
-      `${this.apiUrl}/getAll/${projectId}`
-    );
-  }
-
-  updateBrandIdentity(
-    projectId: string,
-    brandingId: string,
-    brandData: Partial<BrandIdentityModel>
-  ): Observable<BrandIdentityModel> {
-    return this.http
-      .put<BrandIdentityModel>(
-        `${this.apiUrl}/${projectId}/update/${brandingId}`,
-        brandData
-      )
-      .pipe(
-        tap((response) =>
-          console.log('updateBrandIdentityModel response:', response)
-        ),
-        catchError((error) => {
-          console.error(
-            `Error in updateBrandIdentityModel for ID ${brandingId}:`,
-            error
-          );
-          throw error;
-        })
-      );
-  }
-
-  deleteBrandIdentityModel(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
-      tap((response) =>
-        console.log('deleteBrandIdentityModel response for ID ${id}:', response)
-      ),
-      catchError((error) => {
-        console.error(`Error in deleteBrandIdentityModel for ID ${id}:`, error);
-        throw error;
-      })
-    );
   }
 
   /**
