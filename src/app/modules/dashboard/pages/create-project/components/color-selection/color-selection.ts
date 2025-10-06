@@ -24,7 +24,13 @@ import { ColorCustomizerComponent } from '../color-customizer/color-customizer.c
 @Component({
   selector: 'app-color-selection',
   standalone: true,
-  imports: [CommonModule, CarouselComponent, DialogModule, LoginCardComponent, ColorCustomizerComponent],
+  imports: [
+    CommonModule,
+    CarouselComponent,
+    DialogModule,
+    LoginCardComponent,
+    ColorCustomizerComponent,
+  ],
   templateUrl: './color-selection.html',
   styleUrl: './color-selection.css',
 })
@@ -60,18 +66,19 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
   protected error = signal<string | null>(null);
   protected hasGenerated = signal(false);
   protected selectedColorId = signal<string | null>(null);
-  
+
   // Authentication modal state
   protected showLoginModal = signal(false);
-  
+
   // Color customization state
   protected showColorCustomizer = signal(false);
   protected customizedColor = signal<ColorModel | null>(null);
 
   ngOnInit() {
     console.log(this.project());
-    const generatedColors = this.project().analysisResultModel?.branding?.generatedColors;
-    
+    const generatedColors =
+      this.project().analysisResultModel?.branding?.generatedColors;
+
     if (!generatedColors || generatedColors.length === 0) {
       this.checkAuthAndGenerate();
     } else {
@@ -176,7 +183,7 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
     if (selectedColor) {
       // Save the selected color for potential customization
       this.customizedColor.set(null); // Reset customization when selecting new color
-      
+
       this.projectUpdate.emit({
         analysisResultModel: {
           ...this.project().analysisResultModel,
@@ -204,13 +211,13 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
     console.log('Colors customized:', updatedColor);
     this.customizedColor.set(updatedColor);
     this.showColorCustomizer.set(false);
-    
+
     // Update the palette in the list with the customized colors
-    const updatedPalettes = this.colorPalettes().map(palette => 
+    const updatedPalettes = this.colorPalettes().map((palette) =>
       palette.id === updatedColor.id ? updatedColor : palette
     );
     this.colorPalettes.set(updatedPalettes);
-    
+
     // Update the project with customized colors
     this.projectUpdate.emit({
       analysisResultModel: {
@@ -244,7 +251,7 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
    */
   protected checkAuthAndGenerate(): void {
     const user = this.authService.getCurrentUser();
-    
+
     if (!user) {
       // User is not authenticated, show login modal
       this.showLoginModal.set(true);
@@ -259,7 +266,7 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
    */
   protected onLoginSuccess(): void {
     this.showLoginModal.set(false);
-    
+
     this.generateColors();
   }
 
@@ -282,7 +289,10 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
   }
 
   // Track function for carousel
-  protected readonly trackColor = (index: number, color: ColorModel): string => {
+  protected readonly trackColor = (
+    index: number,
+    color: ColorModel
+  ): string => {
     return color.id || `color-${index}`;
   };
 
