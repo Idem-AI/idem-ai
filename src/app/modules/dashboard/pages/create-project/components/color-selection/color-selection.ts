@@ -205,13 +205,19 @@ export class ColorSelectionComponent implements OnInit, OnDestroy {
     this.customizedColor.set(updatedColor);
     this.showColorCustomizer.set(false);
     
+    // Update the palette in the list with the customized colors
+    const updatedPalettes = this.colorPalettes().map(palette => 
+      palette.id === updatedColor.id ? updatedColor : palette
+    );
+    this.colorPalettes.set(updatedPalettes);
+    
     // Update the project with customized colors
     this.projectUpdate.emit({
       analysisResultModel: {
         ...this.project().analysisResultModel,
         branding: {
           ...this.project().analysisResultModel?.branding,
-          generatedColors: this.colorPalettes(),
+          generatedColors: updatedPalettes,
           colors: updatedColor,
           generatedTypography: this.typographyOptions(),
         },

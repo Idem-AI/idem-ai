@@ -2,7 +2,7 @@
   class="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4"
 >
   <div
-    class="glass-card max-w-6xl w-full max-h-[95vh] overflow-hidden flex flex-col"
+    class="glass-card max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col"
   >
     <div
       class="glass-dark px-8 py-6 flex justify-between items-center border-b border-gray-700/50"
@@ -36,164 +36,80 @@
       </button>
     </div>
 
-    <div class="flex-1 overflow-y-auto p-8">
-      <div class="mb-8">
-        <h3 class="text-white font-bold text-lg mb-4 flex items-center">
-          <svg
-            class="w-5 h-5 mr-2 text-accent"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-            />
-          </svg>
-          Live Preview
-        </h3>
-        <div
-          class="glass-dark p-8 rounded-2xl border-2 border-gray-700/50"
-          [style.backgroundColor]="customColors().background"
-        >
-          <div
-            class="flex flex-col sm:flex-row items-center justify-between gap-6"
-          >
-            <div class="flex-1">
-              <h4
-                class="text-3xl font-bold mb-3"
-                [style.color]="customColors().primary"
-              >
-                Your Brand
-              </h4>
-              <p class="text-lg mb-4" [style.color]="customColors().text">
-                This is how your colors will look together in your brand
-                materials.
-              </p>
-              <div class="flex gap-3">
-                <div
-                  class="px-6 py-3 rounded-lg font-semibold"
-                  [style.backgroundColor]="customColors().primary"
-                  [style.color]="'white'"
-                >
-                  Primary Button
-                </div>
-                <div
-                  class="px-6 py-3 rounded-lg font-semibold"
-                  [style.backgroundColor]="customColors().accent"
-                  [style.color]="customColors().text"
-                >
-                  Accent
-                </div>
-              </div>
-            </div>
-            <div class="flex gap-3">
-              @for (colorKey of colorKeys; track colorKey) {
-              <div
-                class="w-16 h-16 rounded-xl shadow-lg transition-transform hover:scale-110"
-                [style.backgroundColor]="customColors()[colorKey]"
-                [title]="getColorLabel(colorKey)"
-              ></div>
-              }
-            </div>
+    <div class="flex-1 overflow-y-auto p-6">
+      <!-- Live Preview Compact -->
+      <div class="mb-6 glass-dark p-4 rounded-xl border border-gray-700/50" [style.backgroundColor]="customColors().background">
+        <div class="flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <svg class="w-4 h-4 text-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <span class="text-white font-semibold text-sm">Live Preview</span>
+          </div>
+          <div class="flex gap-2">
+            @for (colorKey of colorKeys; track colorKey) {
+            <div class="w-8 h-8 rounded-lg shadow-md" [style.backgroundColor]="customColors()[colorKey]" [title]="getColorLabel(colorKey)"></div>
+            }
           </div>
         </div>
       </div>
 
-      <div class="mb-6 glass p-4 rounded-xl border border-accent/20">
-        <div class="flex items-start gap-3">
-          <svg
-            class="w-5 h-5 text-accent mt-0.5 flex-shrink-0"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <div class="flex-1">
-            <p class="text-accent font-semibold text-sm mb-1">
-              Smart Color Harmonization Active
-            </p>
-            <p class="text-gray-400 text-xs">
-              When you adjust a color, related colors automatically update to
-              maintain visual harmony
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="space-y-4 mb-8">
+      <!-- Color Editors - Single Column -->
+      <div class="space-y-3">
         @for (colorKey of colorKeys; track colorKey) {
-        <div
-          class="glass p-6 rounded-xl border-2 transition-all duration-300 hover:border-primary/50 group"
-          [class.border-primary]="activeColor() === colorKey"
-          [class.border-gray-700]="activeColor() !== colorKey"
-        >
-          <div class="flex items-center gap-6">
-            <div class="relative">
-              <div
-                class="w-20 h-20 rounded-2xl shadow-xl ring-2 ring-white/10 transition-all duration-300 group-hover:scale-105"
-                [style.backgroundColor]="customColors()[colorKey]"
-              ></div>
+        <div class="glass p-3 rounded-xl border transition-all duration-200 hover:border-primary/50" [class.border-primary]="activeColor() === colorKey" [class.border-gray-700]="activeColor() !== colorKey">
+          <div class="flex items-center gap-3">
+            <!-- Color Preview + Picker with Visual Hint -->
+            <div class="relative flex-shrink-0 group">
+              <input
+                type="color"
+                [value]="customColors()[colorKey]"
+                (input)="updateColor(colorKey, $event)"
+                (focus)="selectColor(colorKey)"
+                class="w-12 h-12 rounded-lg cursor-pointer border-2 border-gray-600 hover:border-primary hover:scale-105 transition-all"
+                [title]="'Click to pick ' + getColorLabel(colorKey)"
+              />
+              <!-- Click Indicator -->
+              <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
+                <svg class="w-5 h-5 text-white drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/>
+                </svg>
+              </div>
+              <!-- Tooltip -->
+              <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs text-gray-400 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+                Click
+              </div>
             </div>
-            <div class="flex-1">
-              <div class="flex items-center justify-between mb-3">
-                <div>
-                  <h3 class="text-white font-bold text-lg">
-                    {{ getColorLabel(colorKey) }}
-                  </h3>
-                  <p class="text-xs text-gray-400 mt-1">
-                    {{ getColorDescription(colorKey) }}
-                  </p>
-                </div>
-                <div
-                  class="text-sm font-mono text-gray-300 bg-gray-800/50 px-3 py-1 rounded-lg"
-                >
-                  {{ customColors()[colorKey] }}
-                </div>
+            
+            <!-- Color Info Compact -->
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between mb-1">
+                <h3 class="text-white font-semibold text-sm">{{ getColorLabel(colorKey) }}</h3>
+                <span class="text-xs text-gray-500 font-mono">{{ customColors()[colorKey] }}</span>
               </div>
-              <div class="flex items-center gap-4">
-                <div class="relative">
-                  <input
-                    type="color"
-                    [value]="customColors()[colorKey]"
-                    (input)="updateColor(colorKey, $event)"
-                    (focus)="selectColor(colorKey)"
-                    class="w-16 h-16 rounded-xl border-2 border-gray-600 cursor-pointer hover:border-primary transition-all"
-                  />
-                  <div
-                    class="absolute -bottom-2 left-1/2 -translate-x-1/2 text-xs text-gray-500 whitespace-nowrap"
-                  >
-                    Pick
-                  </div>
-                </div>
-                <div class="flex-1">
-                  <input
-                    type="text"
-                    [value]="customColors()[colorKey]"
-                    (input)="updateColor(colorKey, $event)"
-                    (focus)="selectColor(colorKey)"
-                    class="input w-full py-3 text-base font-mono text-center"
-                    placeholder="#000000"
-                    maxlength="7"
-                  />
-                </div>
-              </div>
+              <input
+                type="text"
+                [value]="customColors()[colorKey]"
+                (input)="updateColor(colorKey, $event)"
+                (focus)="selectColor(colorKey)"
+                class="input w-full py-1.5 px-2 text-xs font-mono"
+                placeholder="#000000"
+                maxlength="7"
+              />
             </div>
           </div>
         </div>
         }
+      </div>
+
+      <!-- Smart Tip Compact -->
+      <div class="mt-4 glass p-3 rounded-lg border border-accent/20">
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-accent flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+          </svg>
+          <p class="text-xs text-gray-400">Colors auto-adjust for harmony when you change Primary, Secondary, or Background</p>
+        </div>
       </div>
     </div>
 

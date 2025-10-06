@@ -1,7 +1,7 @@
 <!-- Loading State -->
 @if (isGenerating()) {
 <div
-  class="w-full min-h-[78vh] flex flex-col items-center justify-center  sm:mt-0"
+  class="w-full min-h-[78vh] flex flex-col items-center justify-center sm:mt-0"
 >
   <!-- Header Section -->
   <div class="text-center mb-12">
@@ -12,7 +12,7 @@
 
   <div class="w-full max-w-7xl mx-auto">
     <!-- Loading Carousel -->
-    <app-carousel 
+    <app-carousel
       [items]="[1, 2, 3]"
       [selectedItem]="null"
       [trackByFn]="trackSkeleton"
@@ -26,7 +26,9 @@
           <div class="h-6 bg-gray-700/50 rounded-lg animate-pulse mb-3"></div>
           <div class="flex gap-2 mb-4">
             @for (color of [1,2,3,4]; track color) {
-            <div class="w-8 h-8 bg-gray-700/50 rounded-full animate-pulse"></div>
+            <div
+              class="w-8 h-8 bg-gray-700/50 rounded-full animate-pulse"
+            ></div>
             }
           </div>
           <div class="p-3 rounded-lg bg-gray-800/30">
@@ -46,9 +48,7 @@
     <div
       class="bg-gray-900/30 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6 max-w-2xl mx-auto"
     >
-      <h3 class="text-lg font-semibold text-white mb-3">
-        While you wait...
-      </h3>
+      <h3 class="text-lg font-semibold text-white mb-3">While you wait...</h3>
       <p class="text-gray-300 text-sm leading-relaxed">
         Our AI is analyzing your project requirements to create harmonious color
         palettes that reflect your brand's personality and target audience. This
@@ -157,16 +157,26 @@
       Choose the color palette that best represents your brand's personality and
       values.
     </p>
-    
+
     <!-- Customize Colors Button -->
     @if (selectedColorId()) {
     <div class="flex justify-center">
       <button
         (click)="openColorCustomizer()"
-        class="outer-button inline-flex items-center px-6 py-3"
+        class="inner-button inline-flex items-center px-6 py-3"
       >
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
+        <svg
+          class="w-5 h-5 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
+          />
         </svg>
         Customize Selected Colors
       </button>
@@ -176,7 +186,7 @@
 
   <div class="w-full max-w-7xl mx-auto">
     <!-- Responsive Color Display -->
-    <app-carousel 
+    <app-carousel
       [items]="colorPalettes()"
       [selectedItem]="null"
       [trackByFn]="trackColor"
@@ -202,7 +212,9 @@
           ></div>
 
           <div class="relative z-10">
-            <h3 class="text-white text-lg font-medium mb-3">{{ color.name }}</h3>
+            <h3 class="text-white text-lg font-medium mb-3">
+              {{ color.name }}
+            </h3>
 
             <div class="flex flex-wrap gap-2 sm:gap-3 mb-4">
               <div
@@ -294,9 +306,9 @@
 }
 
 <!-- Authentication Modal -->
-<p-dialog 
-  [(visible)]="showLoginModal" 
-  [modal]="true" 
+<p-dialog
+  [(visible)]="showLoginModal"
+  [modal]="true"
   [closable]="true"
   [draggable]="false"
   [resizable]="false"
@@ -305,17 +317,29 @@
   (onHide)="closeLoginModal()"
 >
   <div class="text-center mb-6">
-    <div class="inline-flex items-center justify-center w-16 h-16 bg-primary/20 rounded-full mb-4">
-      <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+    <div
+      class="inline-flex items-center justify-center w-16 h-16 bg-primary/20 rounded-full mb-4"
+    >
+      <svg
+        class="w-8 h-8 text-primary"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+        ></path>
       </svg>
     </div>
     <h3 class="text-xl font-semibold text-white mb-2">Please Sign In</h3>
     <p class="text-gray-400 text-sm">
-      You need to be authenticated to generate color palettes. Please sign in to continue.
+      You need to be authenticated to generate color palettes. Please sign in to
+      continue.
     </p>
   </div>
-  
+
   <app-login-card (loginSuccess)="onLoginSuccess()"></app-login-card>
 </p-dialog>
