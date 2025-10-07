@@ -1,14 +1,18 @@
 <section
-  class="flex flex-col min-h-screen items-center justify-center w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-8"
+  class="flex flex-col  items-center justify-center  w-full px-0 sm:px-6 lg:px-8 py-0 sm:py-8"
 >
   <!-- Step 1: Logo Type Selection -->
   @if (currentStep() === 'type') {
-  <div class="w-full max-w-6xl mx-auto">
+  <div class="w-full max-h-[50vh] sm:max-h-[74vh] max-w-6xl mx-auto">
     <div class="text-center mb-4 sm:mb-8">
-      <h1 class="text-2xl sm:text-4xl lg:text-5xl font-bold text-white mb-2 sm:mb-4">
+      <h1
+        class="text-2xl sm:text-4xl lg:text-5xl font-bold text-white mb-2 sm:mb-4"
+      >
         Choose Logo Type
       </h1>
-      <p class="text-sm sm:text-lg lg:text-xl text-gray-300">Select one logo type</p>
+      <p class="text-sm sm:text-lg lg:text-xl text-gray-300">
+        Select one logo type
+      </p>
     </div>
 
     <div class="grid grid-cols-3 gap-2 sm:gap-4 lg:gap-6 mb-4 sm:mb-6">
@@ -69,8 +73,14 @@
             }
           </div>
 
-          <h3 class="text-xs sm:text-base lg:text-xl font-bold text-white mb-1 sm:mb-2">{{ option.title }}</h3>
-          <p class="text-[10px] sm:text-xs lg:text-sm text-gray-400 mb-1 sm:mb-2 leading-tight hidden sm:block">
+          <h3
+            class="text-xs sm:text-base lg:text-xl font-bold text-white mb-1 sm:mb-2"
+          >
+            {{ option.title }}
+          </h3>
+          <p
+            class="text-[10px] sm:text-xs lg:text-sm text-gray-400 mb-1 sm:mb-2 leading-tight hidden sm:block"
+          >
             {{ option.description }}
           </p>
           <p class="text-[9px] sm:text-xs text-gray-500 italic hidden lg:block">
@@ -113,7 +123,9 @@
   @if (currentStep() === 'mode') {
   <div class="w-full max-w-6xl mx-auto">
     <div class="text-center mb-4 sm:mb-8">
-      <h1 class="text-xl sm:text-3xl lg:text-5xl font-bold text-white mb-2 sm:mb-4">
+      <h1
+        class="text-xl sm:text-3xl lg:text-5xl font-bold text-white mb-2 sm:mb-4"
+      >
         How to create your logo?
       </h1>
       <p class="text-xs sm:text-base lg:text-xl text-gray-300">
@@ -146,8 +158,14 @@
               />
             </svg>
           </div>
-          <h3 class="text-base sm:text-2xl lg:text-3xl font-bold text-white mb-2 sm:mb-3 lg:mb-4">AI Generation</h3>
-          <p class="text-[10px] sm:text-sm lg:text-lg text-gray-400 leading-tight sm:leading-relaxed">
+          <h3
+            class="text-base sm:text-2xl lg:text-3xl font-bold text-white mb-2 sm:mb-3 lg:mb-4"
+          >
+            AI Generation
+          </h3>
+          <p
+            class="text-[10px] sm:text-sm lg:text-lg text-gray-400 leading-tight sm:leading-relaxed"
+          >
             AI creates unique logos based on your brand
           </p>
 
@@ -193,8 +211,14 @@
               />
             </svg>
           </div>
-          <h3 class="text-base sm:text-2xl lg:text-3xl font-bold text-white mb-2 sm:mb-3 lg:mb-4">Custom Description</h3>
-          <p class="text-[10px] sm:text-sm lg:text-lg text-gray-400 leading-tight sm:leading-relaxed">
+          <h3
+            class="text-base sm:text-2xl lg:text-3xl font-bold text-white mb-2 sm:mb-3 lg:mb-4"
+          >
+            Custom Description
+          </h3>
+          <p
+            class="text-[10px] sm:text-sm lg:text-lg text-gray-400 leading-tight sm:leading-relaxed"
+          >
             Describe exactly how you want your logo
           </p>
 
@@ -218,7 +242,12 @@
     </div>
 
     <div class="flex justify-center gap-2 sm:gap-4">
-      <button (click)="goBack()" class="outer-button px-4 py-2 sm:px-8 sm:py-3 text-sm sm:text-base">Back</button>
+      <button
+        (click)="goBack()"
+        class="outer-button px-4 py-2 sm:px-8 sm:py-3 text-sm sm:text-base"
+      >
+        Back
+      </button>
       <button
         (click)="goToDescription()"
         [disabled]="!canProceed()"
@@ -232,9 +261,11 @@
 
   <!-- Step 3: Custom Description -->
   @if (currentStep() === 'description') {
-  <div class="w-full max-w-6xl mx-auto">
+  <div class="w-full sm:max-w-5xl mx-auto">
     <div class="text-center mb-3 sm:mb-6">
-      <h1 class="text-xl sm:text-3xl lg:text-5xl font-bold text-white mb-2 sm:mb-4">
+      <h1
+        class="text-xl sm:text-3xl lg:text-5xl font-bold text-white mb-2 sm:mb-4"
+      >
         Describe Your Logo
       </h1>
       <p class="text-xs sm:text-base lg:text-xl text-gray-300">
@@ -243,7 +274,9 @@
     </div>
 
     <div class="glass-card p-4 sm:p-6 lg:p-8 mb-4 sm:mb-6">
-      <label class="block text-white font-bold text-sm sm:text-lg lg:text-xl mb-2 sm:mb-3 text-left">
+      <label
+        class="block text-white font-bold text-sm sm:text-lg lg:text-xl mb-2 sm:mb-3 text-left"
+      >
         Logo Description
       </label>
       <textarea
@@ -260,7 +293,12 @@
     </div>
 
     <div class="flex justify-center gap-2 sm:gap-4">
-      <button (click)="goBack()" class="outer-button px-4 py-2 sm:px-8 sm:py-3 text-sm sm:text-base">Back</button>
+      <button
+        (click)="goBack()"
+        class="outer-button px-4 py-2 sm:px-8 sm:py-3 text-sm sm:text-base"
+      >
+        Back
+      </button>
       <button
         (click)="completePreferences()"
         [disabled]="!canProceed()"

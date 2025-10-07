@@ -1,6 +1,6 @@
 <!-- Main Container -->
 <section
-  class="flex flex-col min-h-[78vh] items-center justify-center w-full px-4 sm:px-6 lg:px-8 mt-[50px] sm:mt-0"
+  class="flex flex-col min-h-[78vh] items-center justify-center w-full px-4 sm:px-6 lg:px-8"
 >
   <!-- Logo Preferences Step -->
   @if (shouldShowPreferences()) {
@@ -12,7 +12,9 @@
   <!-- Loading State -->
   @if (shouldShowLoader()) {
   <div class="text-center mb-8">
-    <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-100 mb-4 max-w-4xl">
+    <h1
+      class="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-100 mb-4 max-w-4xl"
+    >
       Generating Your Logos...
     </h1>
     <p class="text-gray-400 sm:text-lg text-sm max-w-2xl mx-auto">
@@ -22,7 +24,7 @@
 
   <div class="w-full max-w-7xl mx-auto">
     <!-- Loading Carousel -->
-    <app-carousel 
+    <app-carousel
       [items]="[1, 2, 3]"
       [selectedItem]="null"
       [trackByFn]="trackSkeleton"
@@ -33,8 +35,12 @@
     >
       <ng-template let-item>
         <div class="p-4 sm:p-6 border-2 border-gray-700/50 glass rounded-xl">
-          <div class="w-full h-48 mb-4 bg-gray-800/50 rounded-xl flex items-center justify-center">
-            <div class="w-20 h-20 bg-gray-700/50 rounded-lg animate-pulse"></div>
+          <div
+            class="w-full h-48 mb-4 bg-gray-800/50 rounded-xl flex items-center justify-center"
+          >
+            <div
+              class="w-20 h-20 bg-gray-700/50 rounded-lg animate-pulse"
+            ></div>
           </div>
           <div class="h-6 bg-gray-700/50 rounded-lg animate-pulse mb-2"></div>
           <div class="h-4 bg-gray-700/30 rounded-lg animate-pulse w-3/4"></div>
@@ -44,10 +50,15 @@
   </div>
 
   <div class="mt-12 text-center">
-    <div class="bg-gray-900/30 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6 max-w-2xl mx-auto">
-      <h3 class="text-lg font-semibold text-white mb-3">💡 While you wait...</h3>
+    <div
+      class="bg-gray-900/30 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6 max-w-2xl mx-auto"
+    >
+      <h3 class="text-lg font-semibold text-white mb-3">
+        💡 While you wait...
+      </h3>
       <p class="text-gray-300 text-sm leading-relaxed">
-        Our AI is analyzing your color palette and typography to create logos that perfectly match your brand identity.
+        Our AI is analyzing your color palette and typography to create logos
+        that perfectly match your brand identity.
       </p>
     </div>
   </div>
@@ -108,7 +119,7 @@
 
   <!-- Logo Selection State -->
   @if (!error() && shouldShowLogos()) {
-  <div class="w-full max-w-7xl mt-[50px] sm:mt-0">
+  <div class="w-full max-w-7xl mx-auto mt-[50px] sm:mt-0">
     <!-- Header -->
     <div class="text-center mb-4">
       <h1 class="text-2xl sm:text-4xl font-bold text-white mb-1">
@@ -126,19 +137,38 @@
           (click)="openEditorChat()"
           class="outer-button inline-flex items-center px-4 py-2 text-sm"
         >
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+          <svg
+            class="w-4 h-4 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
+            />
           </svg>
           Edit with AI Assistant
         </button>
-        }
-        @if (displayedLogos().length > 0 && !isGenerating()) {
+        } @if (displayedLogos().length > 0 && !isGenerating()) {
         <button
           (click)="regenerateAllLogos()"
           class="outer-button inline-flex items-center px-4 py-2 text-sm"
         >
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          <svg
+            class="w-4 h-4 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+            />
           </svg>
           Regenerate Logos
         </button>
@@ -147,7 +177,7 @@
     </div>
 
     <!-- Responsive Logo Display -->
-    <app-carousel 
+    <app-carousel
       [items]="displayedLogos()"
       [selectedItem]="null"
       [trackByFn]="trackLogo"
@@ -249,12 +279,12 @@
 
     <!-- Logo Editor Chat -->
     @if (showEditorChat() && selectedLogoForEdit()) {
-      <app-logo-editor-chat
-        [projectId]="projectId()!"
-        [initialLogo]="selectedLogoForEdit()!"
-        (logoSelected)="onLogoSelectedFromChat($event)"
-        (closed)="closeEditorChat()"
-      />
+    <app-logo-editor-chat
+      [projectId]="projectId()!"
+      [initialLogo]="selectedLogoForEdit()!"
+      (logoSelected)="onLogoSelectedFromChat($event)"
+      (closed)="closeEditorChat()"
+    />
     }
 
     <!-- Retry Button (if generation failed) -->

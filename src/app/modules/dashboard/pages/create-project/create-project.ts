@@ -165,6 +165,8 @@ export class CreateProjectComponent implements OnInit {
     if (index >= 0 && index < this.steps.length) {
       this.currentStepIndex.set(index);
       this.saveDraftProject();
+      // Scroll to top of page
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
 
