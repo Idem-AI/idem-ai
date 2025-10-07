@@ -61,7 +61,7 @@ const firebaseConfig = {
   storageBucket: environment.firebase.storageBucket,
   messagingSenderId: environment.firebase.messagingSenderId,
   appId: environment.firebase.appId,
-  measurementId: environment.firebase.measurementId, 
+  measurementId: environment.firebase.measurementId,
 };
 export const appConfig: ApplicationConfig = {
   providers: [

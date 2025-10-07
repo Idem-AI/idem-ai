@@ -18,20 +18,6 @@ export const MyPreset = definePreset(Aura, {
       950: '{blue.950}',
     },
     colorScheme: {
-      light: {
-        primary: {
-          color: '#1447e6',
-          hoverColor: '#0f3ac0',
-          activeColor: '#1447e6',
-        },
-        highlight: {
-          // Use the primary color for selection/highlight backgrounds
-          background: '#1447e6',
-          focusBackground: '#0f3ac0',
-          color: '#ffffff',
-          focusColor: '#ffffff',
-        },
-      },
       dark: {
         primary: {
           // Slightly lighter tints for dark mode interactions

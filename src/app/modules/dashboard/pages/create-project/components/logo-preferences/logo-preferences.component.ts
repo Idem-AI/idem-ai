@@ -1,10 +1,4 @@
-import {
-  Component,
-  output,
-  signal,
-  computed,
-  inject,
-} from '@angular/core';
+import { Component, output, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LogoType, LogoPreferences } from '../../../../models/logo.model';
@@ -24,7 +18,9 @@ export class LogoPreferencesComponent {
   protected readonly selectedType = signal<LogoType | null>(null);
   protected readonly generationMode = signal<'ai' | 'custom' | null>(null);
   protected readonly customDescription = signal<string>('');
-  protected readonly currentStep = signal<'type' | 'mode' | 'description'>('type');
+  protected readonly currentStep = signal<'type' | 'mode' | 'description'>(
+    'type'
+  );
 
   // Computed
   protected readonly canProceed = computed(() => {
@@ -32,7 +28,10 @@ export class LogoPreferencesComponent {
     if (step === 'type') return this.selectedType() !== null;
     if (step === 'mode') return this.generationMode() !== null;
     if (step === 'description') {
-      return this.generationMode() === 'ai' || this.customDescription().trim().length > 10;
+      return (
+        this.generationMode() === 'ai' ||
+        this.customDescription().trim().length > 10
+      );
     }
     return false;
   });
@@ -42,7 +41,8 @@ export class LogoPreferencesComponent {
     {
       type: 'icon' as LogoType,
       title: 'Icon Based',
-      description: 'An easy to remember shape in the center of your logo design',
+      description:
+        'An easy to remember shape in the center of your logo design',
       example: 'Apple, Nike, Twitter',
     },
     {
@@ -93,7 +93,8 @@ export class LogoPreferencesComponent {
     const preferences: LogoPreferences = {
       type,
       useAIGeneration: mode === 'ai',
-      customDescription: mode === 'custom' ? this.customDescription() : undefined,
+      customDescription:
+        mode === 'custom' ? this.customDescription() : undefined,
     };
 
     this.preferencesSelected.emit(preferences);

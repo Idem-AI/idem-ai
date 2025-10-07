@@ -1,14 +1,14 @@
-<section class="flex flex-col min-h-[78vh] items-center justify-center w-full px-4 sm:px-6 lg:px-8 py-12">
+<section
+  class="flex flex-col min-h-[78vh] items-center justify-center w-full px-4 sm:px-6 lg:px-8 py-12"
+>
   <!-- Step 1: Logo Type Selection -->
   @if (currentStep() === 'type') {
-  <div class="w-full max-w-5xl mx-auto">
+  <div class="w-full max-w-6xl mx-auto">
     <div class="text-center mb-12">
-      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-4">
+      <h1 class="text-3xl sm:text-5xl font-bold text-white mb-6">
         Choose Logo Type
       </h1>
-      <p class="text-lg text-gray-300">
-        You can only select one logo type
-      </p>
+      <p class="text-xl text-gray-300">You can only select one logo type</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -22,19 +22,49 @@
         <div class="text-center">
           <div class="mb-6 flex items-center justify-center">
             @if (option.type === 'icon') {
-            <svg class="w-20 h-20 text-primary" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            <svg
+              class="w-20 h-20 text-primary"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
+              />
             </svg>
-            }
-            @if (option.type === 'name') {
-            <svg class="w-20 h-20 text-secondary" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M4 4h16v4H4V4zm0 6h16v4H4v-4zm0 6h16v4H4v-4z"/>
+            } @if (option.type === 'name') {
+            <svg
+              class="w-20 h-20 text-secondary"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M4 4h16v4H4V4zm0 6h16v4H4v-4zm0 6h16v4H4v-4z" />
             </svg>
-            }
-            @if (option.type === 'initial') {
-            <svg class="w-20 h-20 text-accent" fill="currentColor" viewBox="0 0 24 24">
-              <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-size="16" fill="currentColor">A</text>
-              <rect x="2" y="2" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" rx="4"/>
+            } @if (option.type === 'initial') {
+            <svg
+              class="w-20 h-20 text-accent"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <text
+                x="50%"
+                y="50%"
+                text-anchor="middle"
+                dominant-baseline="middle"
+                font-size="16"
+                fill="currentColor"
+              >
+                A
+              </text>
+              <rect
+                x="2"
+                y="2"
+                width="20"
+                height="20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                rx="4"
+              />
             </svg>
             }
           </div>
@@ -49,8 +79,16 @@
 
           @if (selectedType() === option.type) {
           <div class="mt-4 flex items-center justify-center">
-            <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+            <svg
+              class="w-6 h-6 text-primary"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              />
             </svg>
           </div>
           }
@@ -73,38 +111,59 @@
 
   <!-- Step 2: Generation Mode Selection -->
   @if (currentStep() === 'mode') {
-  <div class="w-full max-w-4xl mx-auto">
+  <div class="w-full max-w-6xl mx-auto">
     <div class="text-center mb-12">
-      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-4">
+      <h1 class="text-3xl sm:text-5xl font-bold text-white mb-6">
         How would you like to create your logo?
       </h1>
-      <p class="text-lg text-gray-300">
+      <p class="text-xl text-gray-300">
         Choose between AI generation or provide your own description
       </p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
       <div
         (click)="selectGenerationMode('ai')"
-        class="glass-card p-10 cursor-pointer transition-all duration-300 hover:scale-[1.02]"
+        class="glass-card p-12 cursor-pointer transition-all duration-300 hover:scale-[1.02]"
         [class.border-2]="generationMode() === 'ai'"
         [class.border-primary]="generationMode() === 'ai'"
       >
         <div class="text-center">
-          <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-primary/20 flex items-center justify-center">
-            <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          <div
+            class="w-20 h-20 mx-auto mb-8 rounded-full bg-primary/20 flex items-center justify-center"
+          >
+            <svg
+              class="w-10 h-10 text-primary"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 10V3L4 14h7v7l9-11h-7z"
+              />
             </svg>
           </div>
-          <h3 class="text-2xl font-bold text-white mb-3">AI Generation</h3>
-          <p class="text-gray-400 leading-relaxed">
-            Let our AI create unique logos based on your brand identity, colors, and typography
+          <h3 class="text-3xl font-bold text-white mb-4">AI Generation</h3>
+          <p class="text-gray-400 text-lg leading-relaxed">
+            Let our AI create unique logos based on your brand identity, colors,
+            and typography
           </p>
 
           @if (generationMode() === 'ai') {
           <div class="mt-6 flex items-center justify-center">
-            <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+            <svg
+              class="w-6 h-6 text-primary"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              />
             </svg>
           </div>
           }
@@ -113,25 +172,46 @@
 
       <div
         (click)="selectGenerationMode('custom')"
-        class="glass-card p-10 cursor-pointer transition-all duration-300 hover:scale-[1.02]"
+        class="glass-card p-12 cursor-pointer transition-all duration-300 hover:scale-[1.02]"
         [class.border-2]="generationMode() === 'custom'"
         [class.border-secondary]="generationMode() === 'custom'"
       >
         <div class="text-center">
-          <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-secondary/20 flex items-center justify-center">
-            <svg class="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+          <div
+            class="w-20 h-20 mx-auto mb-8 rounded-full bg-secondary/20 flex items-center justify-center"
+          >
+            <svg
+              class="w-10 h-10 text-secondary"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+              />
             </svg>
           </div>
-          <h3 class="text-2xl font-bold text-white mb-3">Custom Description</h3>
-          <p class="text-gray-400 leading-relaxed">
-            Describe exactly how you want your logo to look and we'll create it for you
+          <h3 class="text-3xl font-bold text-white mb-4">Custom Description</h3>
+          <p class="text-gray-400 text-lg leading-relaxed">
+            Describe exactly how you want your logo to look and we'll create it
+            for you
           </p>
 
           @if (generationMode() === 'custom') {
           <div class="mt-6 flex items-center justify-center">
-            <svg class="w-6 h-6 text-secondary" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+            <svg
+              class="w-6 h-6 text-secondary"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              />
             </svg>
           </div>
           }
@@ -140,12 +220,7 @@
     </div>
 
     <div class="flex justify-center gap-4">
-      <button
-        (click)="goBack()"
-        class="outer-button px-8 py-3"
-      >
-        Back
-      </button>
+      <button (click)="goBack()" class="outer-button px-8 py-3">Back</button>
       <button
         (click)="goToDescription()"
         [disabled]="!canProceed()"
@@ -159,40 +234,35 @@
 
   <!-- Step 3: Custom Description -->
   @if (currentStep() === 'description') {
-  <div class="w-full max-w-3xl mx-auto">
+  <div class="w-full max-w-6xl mx-auto">
     <div class="text-center mb-12">
-      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-4">
+      <h1 class="text-3xl sm:text-5xl font-bold text-white mb-6">
         Describe Your Logo
       </h1>
-      <p class="text-lg text-gray-300">
+      <p class="text-xl text-gray-300">
         Tell us what you want your logo to look like
       </p>
     </div>
 
-    <div class="glass-card p-8 mb-8">
-      <label class="block text-white font-semibold mb-3 text-left">
+    <div class="glass-card p-8 min-w-[500px] mb-6">
+      <label class="block text-white font-bold text-xl mb-4 text-left">
         Logo Description
       </label>
       <textarea
         [value]="customDescription()"
         (input)="updateDescription($event)"
-        class="input w-full h-48 resize-none"
+        class="input w-full h-64 resize-none text-lg"
         placeholder="Example: I want a minimalist logo with a mountain peak, using blue and white colors, giving a sense of adventure and trust..."
       ></textarea>
-      <div class="text-right mt-2">
-        <span class="text-sm text-gray-400">
+      <div class="text-right mt-3">
+        <span class="text-base text-gray-400">
           {{ customDescription().length }} characters (minimum 10)
         </span>
       </div>
     </div>
 
     <div class="flex justify-center gap-4">
-      <button
-        (click)="goBack()"
-        class="outer-button px-8 py-3"
-      >
-        Back
-      </button>
+      <button (click)="goBack()" class="outer-button px-8 py-3">Back</button>
       <button
         (click)="completePreferences()"
         [disabled]="!canProceed()"

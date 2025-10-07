@@ -66,6 +66,9 @@ export class App implements OnInit, OnDestroy {
   );
 
   ngOnInit(): void {
+    // Force dark mode only - prevent light mode
+    this.forceDarkMode();
+
     // Masquer le splash screen après le chargement initial
     this.hideInitialSplashScreen();
 
@@ -79,6 +82,15 @@ export class App implements OnInit, OnDestroy {
           window.scrollTo({ top: 0, behavior: 'auto' });
         }, 0);
       });
+  }
+
+  private forceDarkMode(): void {
+    // Force dark class on html element
+    document.documentElement.classList.add('dark');
+    // Remove light class if it exists
+    document.documentElement.classList.remove('light');
+    // Set color-scheme to dark
+    document.documentElement.style.colorScheme = 'dark';
   }
 
   private hideInitialSplashScreen(): void {
