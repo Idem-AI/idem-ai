@@ -26,10 +26,10 @@ interface ChatMessage {
   selector: 'app-logo-editor-chat',
   standalone: true,
   imports: [CommonModule, FormsModule, SafeHtmlPipe],
-  templateUrl: './logo-editor-chat.component.html',
-  styleUrl: './logo-editor-chat.component.css',
+  templateUrl: './logo-editor-chat.html',
+  styleUrl: './logo-editor-chat.css',
 })
-export class LogoEditorChatComponent implements OnDestroy {
+export class LogoEditorChat implements OnDestroy {
   private readonly brandingService = inject(BrandingService);
   private readonly destroy$ = new Subject<void>();
 

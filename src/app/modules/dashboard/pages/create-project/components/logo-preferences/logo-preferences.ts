@@ -1,18 +1,18 @@
 import { Component, output, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LogoType, LogoPreferences } from '../../../../models/logo.model';
+import { LogoType, LogoPreferencesModel } from '../../../../models/logo.model';
 
 @Component({
   selector: 'app-logo-preferences',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './logo-preferences.component.html',
-  styleUrl: './logo-preferences.component.css',
+  templateUrl: './logo-preferences.html',
+  styleUrl: './logo-preferences.css',
 })
-export class LogoPreferencesComponent {
+export class LogoPreferences {
   // Outputs
-  readonly preferencesSelected = output<LogoPreferences>();
+  readonly preferencesSelected = output<LogoPreferencesModel>();
 
   // State
   protected readonly selectedType = signal<LogoType | null>(null);
@@ -90,7 +90,7 @@ export class LogoPreferencesComponent {
 
     if (!type || !mode) return;
 
-    const preferences: LogoPreferences = {
+    const preferences: LogoPreferencesModel = {
       type,
       useAIGeneration: mode === 'ai',
       customDescription:

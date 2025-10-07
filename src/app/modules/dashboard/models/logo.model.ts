@@ -13,7 +13,7 @@ export interface LogoModel {
 
 export type LogoType = 'icon' | 'name' | 'initial';
 
-export interface LogoPreferences {
+export interface LogoPreferencesModel {
   type: LogoType;
   useAIGeneration: boolean;
   customDescription?: string;

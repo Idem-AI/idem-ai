@@ -11,10 +11,10 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SafeHtmlPipe } from '../../../projects-list/safehtml.pipe';
-import { LogoModel, LogoPreferences } from '../../../../models/logo.model';
+import { LogoModel, LogoPreferencesModel } from '../../../../models/logo.model';
 import { CarouselComponent } from '../../../../../../shared/components/carousel/carousel.component';
-import { LogoPreferencesComponent } from '../logo-preferences/logo-preferences.component';
-import { LogoEditorChatComponent } from '../logo-editor-chat/logo-editor-chat.component';
+import { LogoPreferences } from '../logo-preferences/logo-preferences';
+import { LogoEditorChat } from '../logo-editor-chat/logo-editor-chat';
 
 import { Subject, takeUntil } from 'rxjs';
 import { BrandingService } from '../../../../services/ai-agents/branding.service';
@@ -28,8 +28,8 @@ import { ProjectModel } from '../../../../models/project.model';
     FormsModule,
     SafeHtmlPipe,
     CarouselComponent,
-    LogoPreferencesComponent,
-    LogoEditorChatComponent,
+    LogoPreferences,
+    LogoEditorChat,
   ],
   templateUrl: './logo-selection.html',
   styleUrl: './logo-selection.css',
@@ -61,7 +61,9 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
   protected readonly error = signal<string | null>(null);
   protected readonly selectedLogoId = signal<string | null>(null);
   protected readonly showPreferences = signal(true);
-  protected readonly logoPreferences = signal<LogoPreferences | null>(null);
+  protected readonly logoPreferences = signal<LogoPreferencesModel | null>(
+    null
+  );
 
   // Edit logo state - replaced by chat
   protected readonly showEditorChat = signal(false);
@@ -99,7 +101,7 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
   protected readonly selectedLogoForEdit = computed(() => {
     const logoId = this.selectedLogoId();
     if (!logoId) return null;
-    return this.displayedLogos().find(l => l.id === logoId) || null;
+    return this.displayedLogos().find((l) => l.id === logoId) || null;
   });
 
   // Track function for carousel
@@ -121,6 +123,16 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
     } else if (this.logos() && this.logos()!.length > 0) {
       this.showPreferences.set(false);
       this.generatedLogos.set(this.logos()!);
+
+      // Try to extract preferences from existing logos
+      const firstLogo = this.logos()![0];
+      if (firstLogo.type) {
+        this.logoPreferences.set({
+          type: firstLogo.type,
+          useAIGeneration: !firstLogo.customDescription,
+          customDescription: firstLogo.customDescription,
+        });
+      }
     }
   }
 
@@ -171,7 +183,7 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
     this.nextStep.emit();
   }
 
-  protected onPreferencesSelected(preferences: LogoPreferences): void {
+  protected onPreferencesSelected(preferences: LogoPreferencesModel): void {
     console.log('Logo preferences selected:', preferences);
     this.logoPreferences.set(preferences);
     this.showPreferences.set(false);
@@ -284,7 +296,16 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
     this.hasStartedGeneration.set(false);
     this.generatedLogos.set([]);
     this.generationProgress.set(0);
-    this.logoPreferences.set(null);
+    // Don't reset preferences - keep them for retry
+    // this.logoPreferences.set(null);
+
+    // If preferences exist, restart generation immediately
+    if (this.logoPreferences()) {
+      this.startLogoGeneration();
+    } else {
+      // Show preferences form again
+      this.showPreferences.set(true);
+    }
   }
 
   protected openEditorChat(): void {
@@ -312,19 +333,19 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
     };
 
     // Update the logo in the list - replace the old one with the new one
-    const updatedLogos = this.generatedLogos().map(l =>
+    const updatedLogos = this.generatedLogos().map((l) =>
       l.id === logoId ? updatedLogo : l
     );
     this.generatedLogos.set(updatedLogos);
-    
+
     // Emit the updated logos to parent component
     this.logosGenerated.emit(updatedLogos);
-    
+
     // Update the project with the new logo
     const currentProject = this.project();
     if (currentProject) {
       const currentBranding = currentProject.analysisResultModel?.branding;
-      
+
       const updatedBranding = {
         ...currentBranding,
         logo: updatedLogo, // Set the edited logo as the selected one
@@ -339,16 +360,23 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
         },
       } as ProjectModel);
     }
-    
+
     this.closeEditorChat();
   }
 
   protected regenerateAllLogos(): void {
     const preferences = this.logoPreferences();
+    console.log('🔄 Regenerate clicked. Current preferences:', preferences);
+
     if (!preferences) {
-      this.error.set('Logo preferences not found. Please restart the generation process.');
+      console.error('❌ No preferences found. Showing error message.');
+      this.error.set(
+        'Logo preferences not found. Please restart the generation process.'
+      );
       return;
     }
+
+    console.log('✅ Preferences found. Starting regeneration...');
 
     // Reset state
     this.error.set(null);
@@ -356,7 +384,7 @@ export class LogoSelectionComponent implements OnInit, OnDestroy {
     this.generationProgress.set(0);
     this.selectedLogoId.set(null);
     this.hasStartedGeneration.set(false);
-    
+
     // Restart generation with same preferences
     this.startLogoGeneration();
   }

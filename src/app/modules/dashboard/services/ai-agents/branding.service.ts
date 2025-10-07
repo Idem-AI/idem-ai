@@ -9,7 +9,7 @@ import {
   TypographyModel,
 } from '../../models/brand-identity.model';
 import { ProjectModel } from '../../models/project.model';
-import { LogoModel, LogoPreferences } from '../../models/logo.model';
+import { LogoModel, LogoPreferencesModel } from '../../models/logo.model';
 import { SSEService } from '../../../../shared/services/sse.service';
 import {
   SSEStepEvent,
@@ -96,7 +96,7 @@ export class BrandingService {
     projectId: string,
     selectedColor: ColorModel,
     selectedTypography: TypographyModel,
-    preferences: LogoPreferences
+    preferences: LogoPreferencesModel
   ): Observable<{
     logos: LogoModel[];
   }> {
